@@ -26,6 +26,7 @@ class WorkspacePanelProvider extends PanelProvider
         return $panel
             ->id('workspace')
             ->path('workspace')
+            ->login()
             ->colors([
                 'primary' => Color::Amber,
             ])
