@@ -26,8 +26,10 @@ class CrmPanelProvider extends PanelProvider
         return $panel
             ->id('crm')
             ->path('crm')
+            ->brandName('FlowFlex')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#2563EB'),
+                'gray'    => Color::Slate,
             ])
             ->discoverResources(in: app_path('Filament/Crm/Resources'), for: 'App\Filament\Crm\Resources')
             ->discoverPages(in: app_path('Filament/Crm/Pages'), for: 'App\Filament\Crm\Pages')

@@ -26,8 +26,10 @@ class LegalPanelProvider extends PanelProvider
         return $panel
             ->id('legal')
             ->path('legal')
+            ->brandName('FlowFlex')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#DC2626'),
+                'gray'    => Color::Slate,
             ])
             ->discoverResources(in: app_path('Filament/Legal/Resources'), for: 'App\Filament\Legal\Resources')
             ->discoverPages(in: app_path('Filament/Legal/Pages'), for: 'App\Filament\Legal\Pages')

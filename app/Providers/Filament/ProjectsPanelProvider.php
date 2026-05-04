@@ -26,8 +26,10 @@ class ProjectsPanelProvider extends PanelProvider
         return $panel
             ->id('projects')
             ->path('projects')
+            ->brandName('FlowFlex')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#4F46E5'),
+                'gray'    => Color::Slate,
             ])
             ->discoverResources(in: app_path('Filament/Projects/Resources'), for: 'App\Filament\Projects\Resources')
             ->discoverPages(in: app_path('Filament/Projects/Pages'), for: 'App\Filament\Projects\Pages')

@@ -26,8 +26,10 @@ class EcommercePanelProvider extends PanelProvider
         return $panel
             ->id('ecommerce')
             ->path('ecommerce')
+            ->brandName('FlowFlex')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#0D9488'),
+                'gray'    => Color::Slate,
             ])
             ->discoverResources(in: app_path('Filament/Ecommerce/Resources'), for: 'App\Filament\Ecommerce\Resources')
             ->discoverPages(in: app_path('Filament/Ecommerce/Pages'), for: 'App\Filament\Ecommerce\Pages')

@@ -27,8 +27,10 @@ class WorkspacePanelProvider extends PanelProvider
             ->id('workspace')
             ->path('workspace')
             ->login()
+            ->brandName('FlowFlex')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#2199C8'),
+                'gray'    => Color::Slate,
             ])
             ->discoverResources(in: app_path('Filament/Workspace/Resources'), for: 'App\Filament\Workspace\Resources')
             ->discoverPages(in: app_path('Filament/Workspace/Pages'), for: 'App\Filament\Workspace\Pages')

@@ -26,8 +26,10 @@ class LearningPanelProvider extends PanelProvider
         return $panel
             ->id('learning')
             ->path('learning')
+            ->brandName('FlowFlex')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#EA580C'),
+                'gray'    => Color::Slate,
             ])
             ->discoverResources(in: app_path('Filament/Learning/Resources'), for: 'App\Filament\Learning\Resources')
             ->discoverPages(in: app_path('Filament/Learning/Pages'), for: 'App\Filament\Learning\Pages')

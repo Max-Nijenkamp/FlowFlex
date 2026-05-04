@@ -26,8 +26,10 @@ class CommunicationsPanelProvider extends PanelProvider
         return $panel
             ->id('communications')
             ->path('communications')
+            ->brandName('FlowFlex')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#0284C7'),
+                'gray'    => Color::Slate,
             ])
             ->discoverResources(in: app_path('Filament/Communications/Resources'), for: 'App\Filament\Communications\Resources')
             ->discoverPages(in: app_path('Filament/Communications/Pages'), for: 'App\Filament\Communications\Pages')

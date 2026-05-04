@@ -26,8 +26,10 @@ class ItPanelProvider extends PanelProvider
         return $panel
             ->id('it')
             ->path('it')
+            ->brandName('FlowFlex')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#475569'),
+                'gray'    => Color::Slate,
             ])
             ->discoverResources(in: app_path('Filament/It/Resources'), for: 'App\Filament\It\Resources')
             ->discoverPages(in: app_path('Filament/It/Pages'), for: 'App\Filament\It\Pages')

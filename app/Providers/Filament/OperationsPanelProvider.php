@@ -26,8 +26,10 @@ class OperationsPanelProvider extends PanelProvider
         return $panel
             ->id('operations')
             ->path('operations')
+            ->brandName('FlowFlex')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#D97706'),
+                'gray'    => Color::Slate,
             ])
             ->discoverResources(in: app_path('Filament/Operations/Resources'), for: 'App\Filament\Operations\Resources')
             ->discoverPages(in: app_path('Filament/Operations/Pages'), for: 'App\Filament\Operations\Pages')

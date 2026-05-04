@@ -26,8 +26,10 @@ class AnalyticsPanelProvider extends PanelProvider
         return $panel
             ->id('analytics')
             ->path('analytics')
+            ->brandName('FlowFlex')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#9333EA'),
+                'gray'    => Color::Slate,
             ])
             ->discoverResources(in: app_path('Filament/Analytics/Resources'), for: 'App\Filament\Analytics\Resources')
             ->discoverPages(in: app_path('Filament/Analytics/Pages'), for: 'App\Filament\Analytics\Pages')
