@@ -71,8 +71,7 @@ class RoleResource extends Resource
                         ->options($options)
                         ->bulkToggleable()
                         ->columns(3)
-                        ->gridDirection('row')
-                        ->dehydrated(false),
+                        ->gridDirection('row'),
                 ]);
         }
 

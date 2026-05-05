@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable([
@@ -28,7 +31,7 @@ use Spatie\Permission\Traits\HasRoles;
 #[Hidden(['password', 'remember_token'])]
 class Tenant extends Authenticatable implements FilamentUser, HasAddresses
 {
-    use HasRoles, HasUlids, InteractsWithAddresses, Notifiable, SoftDeletes;
+    use HasRoles, HasUlids, InteractsWithAddresses, LogsActivity, Notifiable, SoftDeletes;
 
     protected function casts(): array
     {
@@ -39,13 +42,35 @@ class Tenant extends Authenticatable implements FilamentUser, HasAddresses
         ];
     }
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logFillable()
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {
             return false;
         }
 
-        return $this->is_enabled && $this->company->is_enabled;
+        $company = $this->company;
+
+        if (! $this->is_enabled || ! $company->is_enabled) {
+            return false;
+        }
+
+        if ($panel->getId() === 'workspace') {
+            return true;
+        }
+
+        return Cache::remember(
+            "company:{$this->company_id}:panel:{$panel->getId()}:access",
+            now()->addMinutes(5),
+            fn () => $company->hasModuleForPanel($panel->getId())
+        );
     }
 
     public function company(): BelongsTo

@@ -19,6 +19,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use App\Http\Middleware\SetLocaleFromCompany;
 use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
@@ -63,8 +64,10 @@ class WorkspacePanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authGuard('tenant')
+            ->viteTheme('resources/css/filament/theme.css')
             ->authMiddleware([
                 Authenticate::class,
+                SetLocaleFromCompany::class,
             ]);
     }
 

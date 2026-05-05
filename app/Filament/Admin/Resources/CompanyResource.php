@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\Country;
+use App\Enums\Language;
 use App\Filament\Admin\Enums\NavigationGroup;
 use App\Filament\Admin\Resources\CompanyResource\Pages\CreateCompany;
 use App\Filament\Admin\Resources\CompanyResource\Pages\EditCompany;
@@ -87,11 +88,11 @@ class CompanyResource extends Resource
 
                     Select::make('locale')
                         ->options(
-                            collect(Country::cases())
-                                ->mapWithKeys(fn (Country $c) => [$c->value => $c->label()])
+                            collect(Language::cases())
+                                ->mapWithKeys(fn (Language $l) => [$l->value => $l->flag() . ' ' . $l->nativeLabel()])
                                 ->toArray()
                         )
-                        ->default(Country::NL->value)
+                        ->default(Language::NL->value)
                         ->required(),
                 ]),
 
