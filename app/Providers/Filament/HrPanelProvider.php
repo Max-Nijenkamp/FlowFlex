@@ -52,8 +52,10 @@ class HrPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->authGuard('tenant')
             ->authMiddleware([
                 Authenticate::class,
             ]);
     }
 }
+

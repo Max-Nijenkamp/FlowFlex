@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Tenant;
 use App\Models\User;
 
 return [
@@ -39,8 +40,13 @@ return [
 
     'guards' => [
         'web' => [
-            'driver' => 'session',
+            'driver'   => 'session',
             'provider' => 'users',
+        ],
+
+        'tenant' => [
+            'driver'   => 'session',
+            'provider' => 'tenants',
         ],
     ],
 
@@ -64,7 +70,12 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', User::class),
+            'model'  => env('AUTH_MODEL', User::class),
+        ],
+
+        'tenants' => [
+            'driver' => 'eloquent',
+            'model'  => Tenant::class,
         ],
 
         // 'users' => [
