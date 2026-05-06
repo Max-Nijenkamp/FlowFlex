@@ -3,6 +3,7 @@
 namespace App\Filament\Workspace\Pages;
 
 use App\Models\Module;
+use App\Notifications\ModuleToggledNotification;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Support\Collection;
@@ -66,6 +67,10 @@ class ManageModules extends Page
             ->success()
             ->title($isEnabled ? "{$module->name} disabled" : "{$module->name} enabled")
             ->send();
+
+        auth('tenant')->user()->notify(
+            new ModuleToggledNotification($module->name, ! $isEnabled)
+        );
     }
 
     public function getViewData(): array

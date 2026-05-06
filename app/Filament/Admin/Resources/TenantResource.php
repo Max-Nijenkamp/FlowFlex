@@ -6,10 +6,13 @@ use App\Filament\Admin\Enums\NavigationGroup;
 use App\Filament\Admin\Resources\TenantResource\Pages\CreateTenant;
 use App\Filament\Admin\Resources\TenantResource\Pages\EditTenant;
 use App\Filament\Admin\Resources\TenantResource\Pages\ListTenants;
+use App\Filament\Admin\Resources\TenantResource\RelationManagers\RolesRelationManager;
 use App\Models\Tenant;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Illuminate\Support\Facades\Auth;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -151,6 +154,24 @@ class TenantResource extends Resource
                     ->placeholder('All users'),
             ])
             ->actions([
+                Action::make('impersonate')
+                    ->label('Impersonate')
+                    ->icon('heroicon-o-arrow-right-on-rectangle')
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading(fn (Tenant $record) => "Impersonate {$record->fullName()}?")
+                    ->modalDescription('You will be logged in as this user in the workspace panel.')
+                    ->action(function (Tenant $record) {
+                        session([
+                            'impersonating_user_id'   => Auth::id(),
+                            'impersonating_user_name' => Auth::user()->name,
+                        ]);
+
+                        Auth::guard('tenant')->login($record);
+
+                        return redirect('/workspace');
+                    }),
+
                 EditAction::make(),
             ])
             ->bulkActions([
@@ -158,6 +179,13 @@ class TenantResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getRelationManagers(): array
+    {
+        return [
+            RolesRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

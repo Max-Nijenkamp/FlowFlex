@@ -1,0 +1,212 @@
+{
+  "main": {
+    "id": "24bba93c7dbc53d5",
+    "type": "split",
+    "children": [
+      {
+        "id": "e9c0b0ab13eb06f7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7f75a16a9361e149",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "7b170bfab113aab8",
+    "type": "split",
+    "children": [
+      {
+        "id": "6cfa7b8406fc5592",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a98cbeb727c2c2a0",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "fb0706b2f76aa2b1",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "6f49f517d349813b",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "8861ca6ec7ff814f",
+    "type": "split",
+    "children": [
+      {
+        "id": "144237adbc8ec96e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a03bcb9c8a45fd3d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Welcome.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for Welcome"
+            }
+          },
+          {
+            "id": "dc8561510d770623",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Welcome.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from Welcome"
+            }
+          },
+          {
+            "id": "6bac7069524e5336",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "61f20de694b72b05",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "82cdb27444f6c0c0",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Welcome.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Welcome"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "7f75a16a9361e149",
+  "lastOpenFiles": [
+    "01 - Core Platform/File Storage.md",
+    "04 - Finance/Accounts Payable & Receivable.md",
+    "Welcome.md",
+    "Untitled.md",
+    "00 - Project Overview/Module Sizing Reference.md",
+    "00 - Project Overview/Environment Setup.md",
+    "00 - Project Overview/Cross-Module Event Map.md",
+    "Filament Panels/Workspace Panel.md",
+    "Filament Panels/Admin Panel.md",
+    "Filament Panels/Panel Map.md",
+    "Design System/Filament Implementation.md",
+    "Design System/Writing Style & Voice.md",
+    "Design System/Data Visualisation.md",
+    "Design System/Dark Mode.md",
+    "Design System/Iconography.md",
+    "Design System/Motion & Animation.md",
+    "Design System/Component Library.md",
+    "Design System/Spacing & Layout.md",
+    "Design System/Typography.md",
+    "Design System/Colour System.md",
+    "Design System/Brand Foundation.md",
+    "13 - Learning & Development/External Training Requests.md",
+    "13 - Learning & Development/Mentoring & Coaching.md",
+    "13 - Learning & Development/Succession Planning.md",
+    "13 - Learning & Development/Skills Matrix & Gap Analysis.md",
+    "13 - Learning & Development/Course Builder & LMS.md",
+    "Untitled.base"
+  ]
+}

@@ -3,6 +3,8 @@
     "allow": [
       "Bash(php artisan *)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "claude-flow"
+  ]
 }
-

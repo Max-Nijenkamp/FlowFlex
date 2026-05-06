@@ -3,12 +3,16 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Filament\Admin\Enums\NavigationGroup;
+use App\Filament\Admin\Resources\ModuleResource\Pages\EditModule;
 use App\Filament\Admin\Resources\ModuleResource\Pages\ListModules;
 use App\Filament\Admin\Resources\ModuleResource\Pages\ViewModule;
 use App\Filament\Admin\Resources\ModuleResource\RelationManagers\SubModulesRelationManager;
 use App\Models\Module;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
@@ -38,7 +42,36 @@ class ModuleResource extends Resource
         return $schema->components([
             Section::make('Module')
                 ->columns(2)
-                ->schema([]),
+                ->schema([
+                    TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
+
+                    TextInput::make('key')
+                        ->required()
+                        ->unique(ignoreRecord: true)
+                        ->maxLength(255)
+                        ->helperText('kebab-case identifier, e.g. hr-payroll'),
+
+                    Textarea::make('description')
+                        ->maxLength(500)
+                        ->columnSpanFull(),
+
+                    TextInput::make('icon')
+                        ->placeholder('heroicon-o-puzzle-piece')
+                        ->maxLength(100),
+
+                    TextInput::make('color')
+                        ->placeholder('#2199C8')
+                        ->maxLength(20),
+                ]),
+
+            Section::make('Availability')
+                ->schema([
+                    Toggle::make('is_available')
+                        ->label('Available to tenants')
+                        ->helperText('Disabling hides this module from all tenant module catalogues.'),
+                ]),
         ]);
     }
 
@@ -172,6 +205,7 @@ class ModuleResource extends Resource
         return [
             'index' => ListModules::route('/'),
             'view'  => ViewModule::route('/{record}'),
+            'edit'  => EditModule::route('/{record}/edit'),
         ];
     }
 }

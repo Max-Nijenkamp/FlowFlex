@@ -3,11 +3,14 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\Country;
+use App\Enums\Currency;
 use App\Enums\Language;
 use App\Filament\Admin\Enums\NavigationGroup;
 use App\Filament\Admin\Resources\CompanyResource\Pages\CreateCompany;
 use App\Filament\Admin\Resources\CompanyResource\Pages\EditCompany;
 use App\Filament\Admin\Resources\CompanyResource\Pages\ListCompanies;
+use App\Filament\Admin\Resources\CompanyResource\RelationManagers\ModulesRelationManager;
+use App\Filament\Admin\Resources\CompanyResource\RelationManagers\TenantsRelationManager;
 use App\Models\Company;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -75,7 +78,7 @@ class CompanyResource extends Resource
                 ]),
 
             Section::make('Localisation')
-                ->columns(2)
+                ->columns(3)
                 ->schema([
                     Select::make('timezone')
                         ->options(fn () => collect(timezone_identifiers_list())
@@ -93,6 +96,16 @@ class CompanyResource extends Resource
                                 ->toArray()
                         )
                         ->default(Language::NL->value)
+                        ->required(),
+
+                    Select::make('currency')
+                        ->options(
+                            collect(Currency::cases())
+                                ->mapWithKeys(fn (Currency $c) => [$c->value => $c->label()])
+                                ->toArray()
+                        )
+                        ->default(Currency::EUR->value)
+                        ->searchable()
                         ->required(),
                 ]),
 
@@ -207,6 +220,14 @@ class CompanyResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getRelationManagers(): array
+    {
+        return [
+            TenantsRelationManager::class,
+            ModulesRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
