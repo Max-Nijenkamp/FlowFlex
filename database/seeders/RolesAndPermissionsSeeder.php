@@ -53,10 +53,25 @@ class RolesAndPermissionsSeeder extends Seeder
             'hr.employees.edit',
             'hr.employees.delete',
 
+            'hr.departments.view',
+            'hr.departments.create',
+            'hr.departments.edit',
+            'hr.departments.delete',
+
             'hr.onboarding.view',
             'hr.onboarding.create',
             'hr.onboarding.edit',
             'hr.onboarding.delete',
+
+            'hr.onboarding-templates.view',
+            'hr.onboarding-templates.create',
+            'hr.onboarding-templates.edit',
+            'hr.onboarding-templates.delete',
+
+            'hr.onboarding-flows.view',
+            'hr.onboarding-flows.create',
+            'hr.onboarding-flows.edit',
+            'hr.onboarding-flows.delete',
 
             'hr.offboarding.view',
             'hr.offboarding.create',
@@ -69,11 +84,36 @@ class RolesAndPermissionsSeeder extends Seeder
             'hr.leave.delete',
             'hr.leave.approve',
 
+            'hr.leave-types.view',
+            'hr.leave-types.create',
+            'hr.leave-types.edit',
+            'hr.leave-types.delete',
+
+            'hr.leave-requests.view',
+            'hr.leave-requests.create',
+            'hr.leave-requests.edit',
+            'hr.leave-requests.delete',
+
             'hr.payroll.view',
             'hr.payroll.create',
             'hr.payroll.edit',
             'hr.payroll.delete',
             'hr.payroll.run',
+
+            'hr.pay-elements.view',
+            'hr.pay-elements.create',
+            'hr.pay-elements.edit',
+            'hr.pay-elements.delete',
+
+            'hr.pay-runs.view',
+            'hr.pay-runs.create',
+            'hr.pay-runs.edit',
+            'hr.pay-runs.delete',
+
+            'hr.salary-records.view',
+            'hr.salary-records.create',
+            'hr.salary-records.edit',
+            'hr.salary-records.delete',
 
             'hr.performance.view',
             'hr.performance.create',
@@ -120,10 +160,20 @@ class RolesAndPermissionsSeeder extends Seeder
             'projects.time.delete',
             'projects.time.approve',
 
+            'projects.timesheets.view',
+            'projects.timesheets.create',
+            'projects.timesheets.edit',
+            'projects.timesheets.delete',
+
             'projects.documents.view',
             'projects.documents.create',
             'projects.documents.edit',
             'projects.documents.delete',
+
+            'projects.document-folders.view',
+            'projects.document-folders.create',
+            'projects.document-folders.edit',
+            'projects.document-folders.delete',
 
             'projects.approvals.view',
             'projects.approvals.create',
@@ -408,13 +458,18 @@ class RolesAndPermissionsSeeder extends Seeder
         $employee->givePermissionTo([
             'hr.leave.view',
             'hr.leave.create',
+            'hr.leave-requests.view',
+            'hr.leave-requests.create',
             'projects.tasks.view',
             'projects.tasks.create',
             'projects.tasks.edit',
             'projects.time.view',
             'projects.time.create',
             'projects.time.edit',
+            'projects.timesheets.view',
+            'projects.timesheets.create',
             'projects.documents.view',
+            'projects.document-folders.view',
             'projects.wiki.view',
             'communications.messaging.view',
             'communications.messaging.create',

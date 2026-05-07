@@ -18,6 +18,46 @@ use App\Policies\PermissionPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\TenantPolicy;
 use App\Policies\UserPolicy;
+
+// HR models
+use App\Models\Hr\Department;
+use App\Models\Hr\Employee;
+use App\Models\Hr\LeaveRequest;
+use App\Models\Hr\LeaveType;
+use App\Models\Hr\OnboardingFlow;
+use App\Models\Hr\OnboardingTemplate;
+use App\Models\Hr\PayRun;
+use App\Models\Hr\Payslip;
+use App\Models\Hr\SalaryRecord;
+
+// HR policies
+use App\Policies\Hr\DepartmentPolicy;
+use App\Policies\Hr\EmployeePolicy;
+use App\Policies\Hr\LeaveRequestPolicy;
+use App\Policies\Hr\LeaveTypePolicy;
+use App\Policies\Hr\OnboardingFlowPolicy;
+use App\Policies\Hr\OnboardingTemplatePolicy;
+use App\Policies\Hr\PayRunPolicy;
+use App\Policies\Hr\PayslipPolicy;
+use App\Policies\Hr\SalaryRecordPolicy;
+
+// Projects models
+use App\Models\Projects\Document;
+use App\Models\Projects\DocumentFolder;
+use App\Models\Projects\Task;
+use App\Models\Projects\TaskAutomation;
+use App\Models\Projects\TaskLabel;
+use App\Models\Projects\TimeEntry;
+use App\Models\Projects\Timesheet;
+
+// Projects policies
+use App\Policies\Projects\DocumentFolderPolicy;
+use App\Policies\Projects\DocumentPolicy;
+use App\Policies\Projects\TaskAutomationPolicy;
+use App\Policies\Projects\TaskLabelPolicy;
+use App\Policies\Projects\TaskPolicy;
+use App\Policies\Projects\TimeEntryPolicy;
+use App\Policies\Projects\TimesheetPolicy;
 use App\Services\FileStorageService;
 use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Carbon\CarbonImmutable;
@@ -51,6 +91,26 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Module::class, ModulePolicy::class);
         Gate::policy(ApiKey::class, ApiKeyPolicy::class);
         Gate::policy(File::class, FilePolicy::class);
+
+        // HR
+        Gate::policy(Department::class, DepartmentPolicy::class);
+        Gate::policy(Employee::class, EmployeePolicy::class);
+        Gate::policy(LeaveRequest::class, LeaveRequestPolicy::class);
+        Gate::policy(LeaveType::class, LeaveTypePolicy::class);
+        Gate::policy(OnboardingFlow::class, OnboardingFlowPolicy::class);
+        Gate::policy(OnboardingTemplate::class, OnboardingTemplatePolicy::class);
+        Gate::policy(PayRun::class, PayRunPolicy::class);
+        Gate::policy(Payslip::class, PayslipPolicy::class);
+        Gate::policy(SalaryRecord::class, SalaryRecordPolicy::class);
+
+        // Projects
+        Gate::policy(Document::class, DocumentPolicy::class);
+        Gate::policy(DocumentFolder::class, DocumentFolderPolicy::class);
+        Gate::policy(Task::class, TaskPolicy::class);
+        Gate::policy(TaskAutomation::class, TaskAutomationPolicy::class);
+        Gate::policy(TaskLabel::class, TaskLabelPolicy::class);
+        Gate::policy(TimeEntry::class, TimeEntryPolicy::class);
+        Gate::policy(Timesheet::class, TimesheetPolicy::class);
     }
 
     protected function configureLanguageSwitch(): void

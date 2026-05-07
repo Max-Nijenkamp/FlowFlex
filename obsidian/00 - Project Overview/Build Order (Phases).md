@@ -37,20 +37,33 @@ The FlowFlex MVP build order. Each phase is deployable and sellable on its own.
 
 ---
 
-## Phase 2 — First Module Cluster (Month 2)
+## Phase 2 — First Module Cluster (Month 2) ✅ Complete
 
 **Goal:** HR and Projects modules live. A company can manage their people and their work inside FlowFlex.
 
 **HR & People modules:**
-- [[Employee Profiles]] — central employee record
-- [[Onboarding]] — pre-boarding portal, templates, task checklists
-- [[Leave Management]] — leave types, requests, approvals, balances
-- [[Payroll]] — basic salary payroll, payslip generation
+- ✅ [[Employee Profiles]] — DepartmentResource, EmployeeResource (with DocumentsRelationManager)
+- ✅ [[Onboarding]] — OnboardingTemplateResource (with TemplateTasksRelationManager), OnboardingFlowResource
+- ✅ [[Leave Management]] — LeaveTypeResource, LeaveRequestResource
+- ✅ [[Payroll]] — PayElementResource, PayRunResource, SalaryRecordResource
 
 **Projects & Work modules:**
-- [[Task Management]] — kanban, list view, subtasks, automations
-- [[Time Tracking]] — one-click timer, manual entry, approval workflow
-- [[Document Management]] — file storage, version history, permissions, search
+- ✅ [[Task Management]] — TaskResource, TaskLabelResource (existing)
+- ✅ [[Time Tracking]] — TimeEntryResource (completed pages), TimesheetResource
+- ✅ [[Document Management]] — DocumentFolderResource, DocumentResource
+
+**What was built in code:**
+- 9 HR Filament resources across People / Onboarding / Leave / Payroll navigation groups
+- 4 Projects Filament resources across Tasks / Time Tracking / Documents navigation groups
+- All granular permissions added to RolesAndPermissionsSeeder
+- `hr-manager` role covers all `hr.*` permissions via wildcard
+- `employee` role gets leave-requests and timesheet view/create
+- `EventServiceProvider` — 8 event→listener pairs wired
+- 6 Notifications: `LeaveRequested`, `LeaveApproved`, `LeaveRejected`, `PayslipGenerated`, `OnboardingStarted`, `TaskAssigned`
+- 8 Listeners (all `ShouldQueue`): notify manager/employee on leave events, dispatch payslip jobs, notify on onboarding/task assigned
+- `GeneratePayslipPdf` queued job — creates Payslip record, fires `PayslipGenerated` (PDF render stub — needs PDF package)
+- 16 Phase 2 policies registered in AppServiceProvider (9 HR + 7 Projects)
+- REST API Phase 2 endpoints: `GET /api/v1/hr/employees`, `/hr/leave-requests`, `/projects/tasks`, `/projects/time-entries` (+ `/{id}` variants)
 
 **What Phase 2 delivers:** A usable HR system and a task/project management system. A small business can replace BambooHR + Jira/Trello with FlowFlex after Phase 2.
 
