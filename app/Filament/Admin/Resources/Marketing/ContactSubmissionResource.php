@@ -27,10 +27,25 @@ class ContactSubmissionResource extends Resource
 
     protected static ?int $navigationSort = 12;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::MarketingContent->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.contact_submissions.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.contact_submissions.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Status')
+            Section::make(__('admin.resources.contact_submissions.sections.status'))
                 ->schema([
                     Select::make('status')
                         ->options([
@@ -41,7 +56,7 @@ class ContactSubmissionResource extends Resource
                         ->required(),
                 ]),
 
-            Section::make('Submission Details')
+            Section::make(__('admin.resources.contact_submissions.sections.submission_details'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('name')->disabled(),

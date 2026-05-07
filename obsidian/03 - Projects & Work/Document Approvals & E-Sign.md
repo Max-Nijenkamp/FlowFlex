@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/projects, approvals, e-signature, phase/5]
+tags: [flowflex, domain/projects, approvals, e-signature, phase/8]
 domain: Projects & Work
 panel: projects
 color: "#4F46E5"
@@ -14,7 +14,7 @@ Formal approval workflows for any document. Built-in e-signature so you never ne
 **Who uses it:** All employees (requesters), managers, legal, HR
 **Filament Panel:** `projects`
 **Depends on:** [[Document Management]]
-**Phase:** 5
+**Phase:** 8
 **Build complexity:** High — 2 resources, 2 pages, 5 tables
 
 ## Events Fired

@@ -3,7 +3,7 @@ tags: [flowflex, domain/crm, support, helpdesk, tickets, phase/3]
 domain: CRM & Sales
 panel: crm
 color: "#2563EB"
-status: planned
+status: built
 last_updated: 2026-05-06
 ---
 

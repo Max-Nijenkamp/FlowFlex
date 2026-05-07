@@ -7,8 +7,6 @@ enum Language: string
     case EN = 'en';
     case NL = 'nl';
     case DE = 'de';
-    case FR = 'fr';
-    case ES = 'es';
 
     public function label(): string
     {
@@ -16,8 +14,6 @@ enum Language: string
             self::EN => 'English',
             self::NL => 'Dutch',
             self::DE => 'German',
-            self::FR => 'French',
-            self::ES => 'Spanish',
         };
     }
 
@@ -27,8 +23,6 @@ enum Language: string
             self::EN => 'English',
             self::NL => 'Nederlands',
             self::DE => 'Deutsch',
-            self::FR => 'Français',
-            self::ES => 'Español',
         };
     }
 
@@ -38,8 +32,6 @@ enum Language: string
             self::EN => '🇬🇧',
             self::NL => '🇳🇱',
             self::DE => '🇩🇪',
-            self::FR => '🇫🇷',
-            self::ES => '🇪🇸',
         };
     }
 }

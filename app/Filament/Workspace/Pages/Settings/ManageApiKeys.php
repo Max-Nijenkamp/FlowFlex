@@ -25,9 +25,12 @@ class ManageApiKeys extends Page implements HasTable
     use InteractsWithTable;
 
 
-    protected static ?string $navigationLabel = 'API Keys';
-
     protected static \UnitEnum|string|null $navigationGroup = 'Settings';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('workspace.pages.api_keys.nav_label');
+    }
 
     protected static ?int $navigationSort = 30;
 
@@ -48,10 +51,10 @@ class ManageApiKeys extends Page implements HasTable
     {
         return $table
             ->query(
-                ApiKey::query()
-                    ->withoutGlobalScopes()
-                    ->where('company_id', auth('tenant')->user()->company_id)
-                    ->whereNull('deleted_at')
+                // BelongsToCompany global scope auto-applies company_id for the tenant guard.
+                // withoutTrashed() explicitly enforces the SoftDeletes scope without bypassing
+                // global scopes or relying on manual whereNull('deleted_at').
+                ApiKey::query()->withoutTrashed()
             )
             ->columns([
                 TextColumn::make('name')
@@ -60,13 +63,13 @@ class ManageApiKeys extends Page implements HasTable
                     ->weight(\Filament\Support\Enums\FontWeight::Medium),
 
                 TextColumn::make('key_prefix')
-                    ->label('Key prefix')
+                    ->label(__('workspace.pages.api_keys.fields.key_prefix'))
                     ->formatStateUsing(fn (string $state) => $state . str_repeat('*', 28))
                     ->fontFamily(FontFamily::Mono)
                     ->color('gray'),
 
                 TextColumn::make('scopes')
-                    ->label('Scopes')
+                    ->label(__('workspace.pages.api_keys.fields.scopes'))
                     ->formatStateUsing(function ($state) {
                         if (empty($state)) {
                             return 'All modules';
@@ -77,21 +80,21 @@ class ManageApiKeys extends Page implements HasTable
                     ->color('primary'),
 
                 TextColumn::make('last_used_at')
-                    ->label('Last used')
+                    ->label(__('workspace.pages.api_keys.fields.last_used'))
                     ->dateTime('d M Y H:i')
                     ->sortable()
                     ->placeholder('Never')
                     ->color('gray'),
 
                 TextColumn::make('expires_at')
-                    ->label('Expires')
+                    ->label(__('workspace.pages.api_keys.fields.expires'))
                     ->dateTime('d M Y')
                     ->sortable()
                     ->placeholder('Never')
                     ->color('gray'),
 
                 TextColumn::make('created_at')
-                    ->label('Created')
+                    ->label(__('workspace.pages.api_keys.fields.created'))
                     ->dateTime('d M Y')
                     ->sortable()
                     ->color('gray')
@@ -99,7 +102,7 @@ class ManageApiKeys extends Page implements HasTable
             ])
             ->headerActions([
                 TableAction::make('create_key')
-                    ->label('Create API key')
+                    ->label(__('workspace.pages.api_keys.actions.create_key'))
                     ->icon('heroicon-o-plus')
                     ->form(fn (Schema $schema) => $this->createKeyForm($schema))
                     ->action(function (array $data): void {
@@ -125,8 +128,8 @@ class ManageApiKeys extends Page implements HasTable
                         if ($this->newlyCreatedKey) {
                             Notification::make()
                                 ->success()
-                                ->title('API key created — copy it now')
-                                ->body('This is the only time the key will be shown. Store it somewhere safe.')
+                                ->title(__('workspace.pages.api_keys.notifications.created'))
+                                ->body(__('workspace.pages.api_keys.notifications.created_body'))
                                 ->persistent()
                                 ->send();
                         }
@@ -134,19 +137,19 @@ class ManageApiKeys extends Page implements HasTable
             ])
             ->actions([
                 TableAction::make('revoke')
-                    ->label('Revoke')
+                    ->label(__('workspace.pages.api_keys.actions.revoke'))
                     ->icon('heroicon-o-trash')
                     ->color('danger')
                     ->requiresConfirmation()
-                    ->modalHeading('Revoke API key')
-                    ->modalDescription('This will immediately invalidate the key. This cannot be undone.')
+                    ->modalHeading(__('workspace.pages.api_keys.modals.revoke_heading'))
+                    ->modalDescription(__('workspace.pages.api_keys.modals.revoke_description'))
                     ->action(function (ApiKey $record): void {
                         $this->authorizeEdit();
                         $record->delete();
 
                         Notification::make()
                             ->success()
-                            ->title('API key revoked')
+                            ->title(__('workspace.pages.api_keys.notifications.revoked'))
                             ->send();
                     }),
             ])
@@ -164,20 +167,20 @@ class ManageApiKeys extends Page implements HasTable
         return $schema->components([
             Section::make()->schema([
                 TextInput::make('name')
-                    ->label('Key name')
+                    ->label(__('workspace.pages.api_keys.fields.name'))
                     ->required()
                     ->maxLength(255)
                     ->placeholder('e.g. Production Integration'),
 
                 Select::make('scopes')
-                    ->label('Allowed modules (scopes)')
+                    ->label(__('workspace.pages.api_keys.fields.scopes'))
                     ->multiple()
                     ->options($moduleOptions)
                     ->helperText('Leave empty to allow access to all active modules.')
                     ->searchable(),
 
                 DateTimePicker::make('expires_at')
-                    ->label('Expiry date')
+                    ->label(__('workspace.pages.api_keys.fields.expires_at'))
                     ->helperText('Leave empty for a key that never expires.')
                     ->native(false)
                     ->minDate(now()),

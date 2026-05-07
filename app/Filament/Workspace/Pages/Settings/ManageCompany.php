@@ -19,9 +19,12 @@ use Illuminate\Support\Facades\Cache;
 class ManageCompany extends Page
 {
 
-    protected static ?string $navigationLabel = 'Company Settings';
-
     protected static \UnitEnum|string|null $navigationGroup = 'Settings';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('workspace.pages.company.nav_label');
+    }
 
     protected static ?int $navigationSort = 10;
 
@@ -59,36 +62,36 @@ class ManageCompany extends Page
         return $schema
             ->statePath('data')
             ->components([
-                Section::make('Company Details')
+                Section::make(__('workspace.pages.company.sections.company_details'))
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
-                            ->label('Company name')
+                            ->label(__('workspace.pages.company.fields.company_name'))
                             ->required()
                             ->maxLength(255),
 
                         TextInput::make('email')
-                            ->label('Email address')
+                            ->label(__('workspace.pages.company.fields.email'))
                             ->email()
                             ->maxLength(255),
 
                         TextInput::make('phone')
-                            ->label('Phone number')
+                            ->label(__('workspace.pages.company.fields.phone'))
                             ->tel()
                             ->maxLength(50),
 
                         TextInput::make('website')
-                            ->label('Website')
+                            ->label(__('workspace.pages.company.fields.website'))
                             ->url()
                             ->placeholder('https://')
                             ->maxLength(255),
                     ]),
 
-                Section::make('Localisation')
+                Section::make(__('workspace.pages.company.sections.localisation'))
                     ->columns(3)
                     ->schema([
                         Select::make('timezone')
-                            ->label('Timezone')
+                            ->label(__('workspace.pages.company.fields.timezone'))
                             ->options(
                                 collect(timezone_identifiers_list())
                                     ->mapWithKeys(fn (string $tz) => [$tz => $tz])
@@ -98,7 +101,7 @@ class ManageCompany extends Page
                             ->required(),
 
                         Select::make('locale')
-                            ->label('Language')
+                            ->label(__('workspace.pages.company.fields.language'))
                             ->options(
                                 collect(Language::cases())
                                     ->mapWithKeys(fn (Language $l) => [$l->value => $l->flag() . ' ' . $l->nativeLabel()])
@@ -107,7 +110,7 @@ class ManageCompany extends Page
                             ->required(),
 
                         Select::make('currency')
-                            ->label('Currency')
+                            ->label(__('workspace.pages.company.fields.currency'))
                             ->options(
                                 collect(Currency::cases())
                                     ->mapWithKeys(fn (Currency $c) => [$c->value => "{$c->symbol()} {$c->label()} ({$c->value})"])
@@ -117,10 +120,10 @@ class ManageCompany extends Page
                             ->required(),
                     ]),
 
-                Section::make('Branding')
+                Section::make(__('workspace.pages.company.sections.branding'))
                     ->schema([
                         FileUpload::make('logo')
-                            ->label('Company logo')
+                            ->label(__('workspace.pages.company.fields.logo'))
                             ->image()
                             ->imageResizeMode('contain')
                             ->imageCropAspectRatio('16:9')
@@ -169,7 +172,7 @@ class ManageCompany extends Page
 
         Notification::make()
             ->success()
-            ->title('Company settings saved')
+            ->title(__('workspace.pages.company.notifications.saved'))
             ->send();
     }
 
@@ -177,7 +180,7 @@ class ManageCompany extends Page
     {
         return [
             Action::make('save')
-                ->label('Save changes')
+                ->label(__('workspace.pages.company.actions.save'))
                 ->submit('save'),
         ];
     }

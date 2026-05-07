@@ -24,7 +24,6 @@ class Payslip extends Model
         'period_start',
         'period_end',
         'status',
-        'pdf_path',
         'generated_at',
         'sent_at',
     ];

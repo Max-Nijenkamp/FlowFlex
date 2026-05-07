@@ -33,13 +33,15 @@ class DocumentShare extends Model
             'expires_at'         => 'datetime',
             'password_protected' => 'boolean',
             'download_only'      => 'boolean',
+            'password_hash'      => 'hashed',
         ];
     }
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['document_id', 'share_token', 'expires_at', 'download_only'])
+            ->logOnly(['document_id', 'share_token', 'expires_at', 'password_protected', 'download_only'])
+            ->dontLogIfAttributeIsEmpty('password_hash')
             ->logOnlyDirty();
     }
 

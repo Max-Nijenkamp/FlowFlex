@@ -33,10 +33,25 @@ class HelpCategoryResource extends Resource
 
     protected static ?int $navigationSort = 10;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::MarketingContent->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.help_categories.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.help_categories.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Help Category')
+            Section::make(__('admin.resources.help_categories.sections.help_category'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('name')

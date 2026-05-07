@@ -19,19 +19,21 @@ class PayrollEntity extends Model
         'name',
         'legal_name',
         'country_code',
-        'tax_reference',
+        'tax_reference_encrypted',
         'is_default',
     ];
 
     protected function casts(): array
     {
         return [
-            'is_default' => 'boolean',
+            'is_default'              => 'boolean',
+            'tax_reference_encrypted' => 'encrypted',
         ];
     }
 
     public function getActivitylogOptions(): LogOptions
     {
+        // tax_reference_encrypted is intentionally excluded — encrypted sensitive fields must not be logged.
         return LogOptions::defaults()
             ->logOnly(['name', 'legal_name', 'country_code', 'is_default'])
             ->logOnlyDirty();

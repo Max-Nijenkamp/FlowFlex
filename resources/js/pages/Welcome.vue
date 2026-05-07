@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
     Users, FolderKanban, DollarSign, Building2, Megaphone, Settings,
@@ -10,21 +11,46 @@ import {
 
 const { t } = useI18n()
 
-const domains = [
-    { name: 'HR & People', gradientFrom: '#7C3AED', gradientTo: '#9333EA', color: '#7C3AED', icon: Users, description: 'Full workforce lifecycle — hiring, onboarding, leave, payroll.', modules: ['Employees', 'Leave Management', 'Onboarding', 'Payroll'] },
-    { name: 'Projects & Work', gradientFrom: '#4F46E5', gradientTo: '#6366F1', color: '#4F46E5', icon: FolderKanban, description: 'Plan, track, and deliver across teams with tasks and timesheets.', modules: ['Tasks', 'Timesheets', 'Documents', 'Time Tracking'] },
-    { name: 'Finance', gradientFrom: '#059669', gradientTo: '#10B981', color: '#059669', icon: DollarSign, description: 'Invoicing, expenses, budgets, and financial reporting in one place.', modules: ['Invoicing', 'Expenses', 'Budgets', 'Reports'] },
-    { name: 'CRM & Sales', gradientFrom: '#2563EB', gradientTo: '#3B82F6', color: '#2563EB', icon: Building2, description: 'Track leads, manage pipeline, and close deals — all connected.', modules: ['Contacts', 'Pipeline', 'Deals', 'Activities'] },
-    { name: 'Marketing', gradientFrom: '#DB2777', gradientTo: '#EC4899', color: '#DB2777', icon: Megaphone, description: 'Run campaigns, manage email lists, and capture leads.', modules: ['Campaigns', 'Email', 'Forms', 'Analytics'] },
-    { name: 'Operations', gradientFrom: '#D97706', gradientTo: '#F59E0B', color: '#D97706', icon: Settings, description: 'Inventory, procurement, and supplier management — all connected.', modules: ['Inventory', 'Procurement', 'Suppliers', 'Logistics'] },
-    { name: 'Analytics', gradientFrom: '#9333EA', gradientTo: '#A855F7', color: '#9333EA', icon: BarChart3, description: 'Custom dashboards and KPI tracking across every module.', modules: ['Dashboards', 'Reports', 'KPIs', 'Forecasts'] },
-    { name: 'IT & Security', gradientFrom: '#475569', gradientTo: '#64748B', color: '#475569', icon: ShieldCheck, description: 'Asset management, access control, and audit logging.', modules: ['Asset Management', 'Access Control', 'Audit Log', 'Tickets'] },
-    { name: 'Legal', gradientFrom: '#DC2626', gradientTo: '#EF4444', color: '#DC2626', icon: Scale, description: 'Contract management, compliance, and digital signatures.', modules: ['Contracts', 'Compliance', 'Signatures', 'Templates'] },
-    { name: 'E-commerce', gradientFrom: '#0D9488', gradientTo: '#14B8A6', color: '#0D9488', icon: ShoppingBag, description: 'Products, orders, and storefront — connected to CRM and finance.', modules: ['Products', 'Orders', 'Storefront', 'Inventory'] },
-    { name: 'Communications', gradientFrom: '#0284C7', gradientTo: '#0EA5E9', color: '#0284C7', icon: MessageSquare, description: 'Internal chat, announcements, and meetings without leaving FlowFlex.', modules: ['Chat', 'Announcements', 'Video', 'Notifications'] },
-    { name: 'Learning & Dev', gradientFrom: '#EA580C', gradientTo: '#F97316', color: '#EA580C', icon: GraduationCap, description: 'Build employee learning with courses, certs, and skill paths.', modules: ['Courses', 'Certifications', 'Skill Tracking', 'Assessments'] },
-    { name: 'Core Platform', gradientFrom: '#2199C8', gradientTo: '#4BB3DC', color: '#2199C8', icon: Layers, description: 'The foundation — auth, permissions, multi-tenancy, API, settings.', modules: ['Auth & Users', 'Permissions', 'API', 'Workspace'] },
-]
+interface DbModule { name: string; description: string }
+interface DbDomain { key: string; count: number; modules: DbModule[] }
+
+const props = defineProps<{
+    domains: DbDomain[]
+    moduleCount: number
+    domainCount: number
+}>()
+
+const { moduleCount, domainCount } = props
+
+const domainVisualConfig: Record<string, { name: string; icon: unknown; gradientFrom: string; gradientTo: string; color: string; description: string }> = {
+    hr:             { name: 'HR & People',      icon: Users,         gradientFrom: '#7C3AED', gradientTo: '#9333EA', color: '#7C3AED', description: 'Full workforce lifecycle — hiring, onboarding, leave, payroll.' },
+    projects:       { name: 'Projects & Work',  icon: FolderKanban,  gradientFrom: '#4F46E5', gradientTo: '#6366F1', color: '#4F46E5', description: 'Plan, track, and deliver across teams with tasks and timesheets.' },
+    finance:        { name: 'Finance',          icon: DollarSign,    gradientFrom: '#059669', gradientTo: '#10B981', color: '#059669', description: 'Invoicing, expenses, budgets, and financial reporting in one place.' },
+    crm:            { name: 'CRM & Sales',      icon: Building2,     gradientFrom: '#2563EB', gradientTo: '#3B82F6', color: '#2563EB', description: 'Track leads, manage pipeline, and close deals — all connected.' },
+    marketing:      { name: 'Marketing',        icon: Megaphone,     gradientFrom: '#DB2777', gradientTo: '#EC4899', color: '#DB2777', description: 'Run campaigns, manage email lists, and capture leads.' },
+    operations:     { name: 'Operations',       icon: Settings,      gradientFrom: '#D97706', gradientTo: '#F59E0B', color: '#D97706', description: 'Inventory, procurement, and supplier management — all connected.' },
+    analytics:      { name: 'Analytics',        icon: BarChart3,     gradientFrom: '#9333EA', gradientTo: '#A855F7', color: '#9333EA', description: 'Custom dashboards and KPI tracking across every module.' },
+    it:             { name: 'IT & Security',    icon: ShieldCheck,   gradientFrom: '#475569', gradientTo: '#64748B', color: '#475569', description: 'Asset management, access control, and audit logging.' },
+    legal:          { name: 'Legal',            icon: Scale,         gradientFrom: '#DC2626', gradientTo: '#EF4444', color: '#DC2626', description: 'Contract management, compliance, and digital signatures.' },
+    ecommerce:      { name: 'E-commerce',       icon: ShoppingBag,   gradientFrom: '#0D9488', gradientTo: '#14B8A6', color: '#0D9488', description: 'Products, orders, and storefront — connected to CRM and finance.' },
+    communications: { name: 'Communications',   icon: MessageSquare, gradientFrom: '#0284C7', gradientTo: '#0EA5E9', color: '#0284C7', description: 'Internal chat, announcements, and meetings without leaving FlowFlex.' },
+    learning:       { name: 'Learning & Dev',   icon: GraduationCap, gradientFrom: '#EA580C', gradientTo: '#F97316', color: '#EA580C', description: 'Build employee learning with courses, certs, and skill paths.' },
+    core:           { name: 'Core Platform',    icon: Layers,        gradientFrom: '#2199C8', gradientTo: '#4BB3DC', color: '#2199C8', description: 'The foundation — auth, permissions, multi-tenancy, API, settings.' },
+}
+
+const domainOrder = ['hr', 'projects', 'finance', 'crm', 'marketing', 'operations', 'analytics', 'it', 'legal', 'ecommerce', 'communications', 'learning', 'core']
+
+const domains = computed(() => {
+    const dbMap = Object.fromEntries(props.domains.map(d => [d.key, d]))
+    return domainOrder
+        .filter(key => dbMap[key])
+        .map(key => ({
+            ...domainVisualConfig[key],
+            key,
+            count: dbMap[key].count,
+            modules: dbMap[key].modules,
+        }))
+})
 
 const toolsReplaced = [
     { name: 'Personio', color: '#FF7A3D' },
@@ -71,7 +97,7 @@ const features = [
         title: "Start small. Scale when you're ready.",
         desc: 'Turn modules on and off from your workspace settings. Add HR, then Finance, then CRM — at your own pace. Billing adjusts automatically. No re-contracting, no data migrations.',
         color: '#2199C8',
-        checklist: ['99+ modules across 13 domains', 'Billing adjusts per billing cycle', 'All your data preserved when toggling'],
+        checklist: [`${props.moduleCount}+ modules across ${props.domainCount} domains`, 'Billing adjusts per billing cycle', 'All your data preserved when toggling'],
     },
     {
         icon: Share2,
@@ -499,10 +525,10 @@ const steps = [
                         <div class="flex flex-wrap gap-1.5">
                             <span
                                 v-for="mod in domain.modules.slice(0, 3)"
-                                :key="mod"
+                                :key="mod.name"
                                 class="text-xs px-2 py-0.5 rounded-full font-medium"
                                 :style="`background: ${domain.color}14; color: ${domain.color}`"
-                            >{{ mod }}</span>
+                            >{{ mod.name }}</span>
                             <span v-if="domain.modules.length > 3" class="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 font-medium">+{{ domain.modules.length - 3 }}</span>
                         </div>
                     </div>
@@ -522,8 +548,8 @@ const steps = [
         <div class="relative max-w-5xl mx-auto">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                 <div v-for="(stat, i) in [
-                    { value: '99+', labelKey: 'stats.modules' },
-                    { value: '13', labelKey: 'stats.domains' },
+                    { value: `${moduleCount}+`, labelKey: 'stats.modules' },
+                    { value: domainCount.toString(), labelKey: 'stats.domains' },
                     { value: '300+', labelKey: 'stats.features' },
                     { value: '1', labelKey: 'stats.dataLayer' },
                 ]" :key="stat.labelKey"

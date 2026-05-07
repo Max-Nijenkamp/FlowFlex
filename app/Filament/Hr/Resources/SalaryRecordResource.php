@@ -33,9 +33,22 @@ class SalaryRecordResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-chart-bar';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::Payroll;
-
     protected static ?int $navigationSort = 3;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Payroll->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('hr.resources.salary_records.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('hr.resources.salary_records.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -60,10 +73,10 @@ class SalaryRecordResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Salary Details')
+            Section::make(__('hr.resources.salary_records.sections.details'))
                 ->schema([
                     Select::make('employee_id')
-                        ->label('Employee')
+                        ->label(__('hr.resources.salary_records.fields.employee'))
                         ->relationship('employee', 'first_name')
                         ->getOptionLabelFromRecordUsing(fn (Employee $record) => trim("{$record->first_name} {$record->last_name}"))
                         ->searchable()
@@ -71,22 +84,22 @@ class SalaryRecordResource extends Resource
                         ->required(),
 
                     DatePicker::make('effective_from')
-                        ->label('Effective From')
+                        ->label(__('hr.resources.salary_records.fields.effective_from'))
                         ->required()
                         ->native(false),
 
                     DatePicker::make('effective_to')
-                        ->label('Effective To')
+                        ->label(__('hr.resources.salary_records.fields.effective_to'))
                         ->nullable()
                         ->native(false),
 
                     TextInput::make('salary_encrypted')
-                        ->label('Annual Salary')
+                        ->label(__('hr.resources.salary_records.fields.annual_salary'))
                         ->numeric()
                         ->required(),
 
                     Select::make('currency')
-                        ->label('Currency')
+                        ->label(__('hr.resources.salary_records.fields.currency'))
                         ->options([
                             'GBP' => 'GBP — British Pound',
                             'EUR' => 'EUR — Euro',
@@ -123,28 +136,28 @@ class SalaryRecordResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('employee_name')
-                    ->label('Employee')
+                    ->label(__('hr.resources.salary_records.columns.employee'))
                     ->getStateUsing(fn (SalaryRecord $record) => trim("{$record->employee?->first_name} {$record->employee?->last_name}")),
 
                 TextColumn::make('effective_from')
-                    ->label('Effective From')
+                    ->label(__('hr.resources.salary_records.columns.effective_from'))
                     ->date('d M Y')
                     ->sortable(),
 
                 TextColumn::make('pay_frequency')
-                    ->label('Frequency')
+                    ->label(__('hr.resources.salary_records.columns.frequency'))
                     ->badge()
                     ->formatStateUsing(fn (?PayFrequency $state) => $state?->label()),
 
                 TextColumn::make('salary_encrypted')
-                    ->label('Annual Salary')
+                    ->label(__('hr.resources.salary_records.columns.annual_salary'))
                     ->getStateUsing(fn (SalaryRecord $record) => $record->salary_encrypted
                         ? number_format((float) $record->salary_encrypted, 2)
                         : '—'
                     ),
 
                 TextColumn::make('currency')
-                    ->label('Currency'),
+                    ->label(__('hr.resources.salary_records.columns.currency')),
 
                 TextColumn::make('created_at')
                     ->dateTime('d M Y')

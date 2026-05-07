@@ -36,20 +36,35 @@ class TenantResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Platform->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.tenants.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.tenants.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Workspace')
+            Section::make(__('admin.resources.tenants.sections.workspace'))
                 ->schema([
                     Select::make('company_id')
-                        ->label('Company')
+                        ->label(__('admin.resources.tenants.fields.company'))
                         ->relationship('company', 'name')
                         ->searchable()
                         ->preload()
                         ->required(),
                 ]),
 
-            Section::make('Name')
+            Section::make(__('admin.resources.tenants.sections.name'))
                 ->columns(3)
                 ->schema([
                     TextInput::make('first_name')
@@ -64,7 +79,7 @@ class TenantResource extends Resource
                         ->maxLength(255),
                 ]),
 
-            Section::make('Contact')
+            Section::make(__('admin.resources.tenants.sections.contact'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('email')
@@ -78,7 +93,7 @@ class TenantResource extends Resource
                         ->maxLength(50),
                 ]),
 
-            Section::make('Password')
+            Section::make(__('admin.resources.tenants.sections.password'))
                 ->schema([
                     TextInput::make('password')
                         ->password()
@@ -92,10 +107,10 @@ class TenantResource extends Resource
                         ->maxLength(255),
                 ]),
 
-            Section::make('Status')
+            Section::make(__('admin.resources.tenants.sections.status'))
                 ->schema([
                     Toggle::make('is_enabled')
-                        ->label('User active')
+                        ->label(__('admin.resources.tenants.fields.user_active'))
                         ->helperText('Inactive users cannot log in to any panel.')
                         ->default(true),
                 ]),
@@ -107,7 +122,7 @@ class TenantResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('full_name')
-                    ->label('Name')
+                    ->label(__('admin.resources.tenants.columns.name'))
                     ->getStateUsing(fn (Tenant $record) => $record->fullName())
                     ->searchable(['first_name', 'last_name'])
                     ->sortable(['last_name'])
@@ -119,19 +134,19 @@ class TenantResource extends Resource
                     ->color('gray'),
 
                 TextColumn::make('company.name')
-                    ->label('Company')
+                    ->label(__('admin.resources.tenants.columns.company'))
                     ->searchable()
                     ->sortable()
                     ->badge()
                     ->color('gray'),
 
                 IconColumn::make('is_enabled')
-                    ->label('Active')
+                    ->label(__('admin.resources.tenants.columns.active'))
                     ->boolean()
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->label('Joined')
+                    ->label(__('admin.resources.tenants.columns.joined'))
                     ->dateTime('d M Y')
                     ->sortable()
                     ->color('gray')
@@ -141,21 +156,21 @@ class TenantResource extends Resource
             ->striped()
             ->filters([
                 SelectFilter::make('company_id')
-                    ->label('Company')
+                    ->label(__('admin.resources.tenants.filters.company'))
                     ->relationship('company', 'name')
                     ->searchable()
                     ->preload(),
 
                 TernaryFilter::make('is_enabled')
-                    ->label('Status')
+                    ->label(__('admin.resources.tenants.filters.status'))
                     ->boolean()
-                    ->trueLabel('Active only')
-                    ->falseLabel('Inactive only')
-                    ->placeholder('All users'),
+                    ->trueLabel(__('admin.resources.tenants.filters.active_only'))
+                    ->falseLabel(__('admin.resources.tenants.filters.inactive_only'))
+                    ->placeholder(__('admin.resources.tenants.filters.all_users')),
             ])
             ->actions([
                 Action::make('impersonate')
-                    ->label('Impersonate')
+                    ->label(__('admin.resources.tenants.actions.impersonate'))
                     ->icon('heroicon-o-arrow-right-on-rectangle')
                     ->color('warning')
                     ->requiresConfirmation()

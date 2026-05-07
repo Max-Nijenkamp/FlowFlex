@@ -42,3 +42,10 @@ Route::prefix('legal')->name('legal.')->group(function () {
     Route::get('/aup', [MarketingController::class, 'aup'])->name('aup');
 });
 Route::get('/security', [MarketingController::class, 'security'])->name('security');
+
+// Help centre
+Route::get('/help', [MarketingController::class, 'help'])->name('help');
+Route::get('/help/{slug}', [MarketingController::class, 'helpArticle'])->name('help.article');
+
+// Module detail pages
+Route::get('/modules/{key}', [MarketingController::class, 'moduleDetail'])->name('modules.show');

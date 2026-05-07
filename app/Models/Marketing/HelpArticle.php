@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 #[Fillable([
     'help_category_id',
@@ -23,7 +25,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class HelpArticle extends Model
 {
-    use HasUlids, SoftDeletes;
+    use HasUlids, LogsActivity, SoftDeletes;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['title', 'slug', 'help_category_id', 'is_published', 'last_reviewed_at'])
+            ->logOnlyDirty();
+    }
 
     protected function casts(): array
     {

@@ -3,8 +3,8 @@ tags: [flowflex, domain/crm, overview, phase/3]
 domain: CRM & Sales
 panel: crm
 color: "#2563EB"
-status: planned
-last_updated: 2026-05-06
+status: built
+last_updated: 2026-05-07
 ---
 
 # CRM Overview
@@ -14,7 +14,7 @@ The customer relationship layer. Contacts, deals, support tickets, and the full 
 **Filament Panel:** `crm`
 **Domain Colour:** Blue `#2563EB` / Light: `#DBEAFE`
 **Domain Icon:** `building-office-2` (Heroicons)
-**Phase:** 3 (core: Contacts, Sales Pipeline, Shared Inbox, Customer Support) + 5 (full suite)
+**Phase:** 3 (core: Contacts, Sales Pipeline, Shared Inbox, Customer Support) · 8 (extensions: Quotes, CDP, Client Portal, Loyalty)
 
 ## Modules in This Domain
 
@@ -24,10 +24,10 @@ The customer relationship layer. Contacts, deals, support tickets, and the full 
 | [[Sales Pipeline]] | 3 | Deal pipeline, forecasting, win/loss |
 | [[Shared Inbox & Email]] | 3 | Shared team inbox, email sequences |
 | [[Customer Support & Helpdesk]] | 3 | Ticket management, SLAs, live chat |
-| [[Quotes & Proposals]] | 5 | Quote builder, e-sign on acceptance |
-| [[Customer Data Platform]] | 5 | Unified customer profile, CDP |
-| [[Client Portal]] | 5 | White-labelled self-service portal |
-| [[Loyalty & Retention]] | 5 | Points, referrals, churn prediction |
+| [[Quotes & Proposals]] | 8 | Quote builder, product lines, e-sign, convert to invoice |
+| [[Customer Data Platform]] | 8 | Unified customer profile, cross-touchpoint data |
+| [[Client Portal]] | 8 | White-labelled self-service portal for clients |
+| [[Loyalty & Retention]] | 8 | Points system, churn scoring, win-back campaigns |
 
 ## Key Events from This Domain
 

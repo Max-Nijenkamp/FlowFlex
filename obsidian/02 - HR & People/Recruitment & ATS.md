@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/hr, recruitment, ats, hiring, phase/5]
+tags: [flowflex, domain/hr, recruitment, ats, hiring, phase/8]
 domain: HR & People
 panel: hr
 color: "#7C3AED"
@@ -14,7 +14,7 @@ Full applicant tracking system. From job requisition to signed offer letter, wit
 **Who uses it:** HR team, hiring managers, recruiters
 **Filament Panel:** `hr`
 **Depends on:** [[Employee Profiles]] (for creating profile on hire)
-**Phase:** 5
+**Phase:** 8
 **Build complexity:** Very High — 5 resources, 3 pages, 10 tables
 
 ## Events Fired

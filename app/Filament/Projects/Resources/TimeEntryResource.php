@@ -30,9 +30,22 @@ class TimeEntryResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-clock';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::TimeTracking;
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::TimeTracking->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('projects.resources.time_entries.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('projects.resources.time_entries.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -57,10 +70,10 @@ class TimeEntryResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Time Entry Details')
+            Section::make(__('projects.resources.time_entries.sections.details'))
                 ->schema([
                     Select::make('task_id')
-                        ->label('Task')
+                        ->label(__('projects.resources.time_entries.fields.task'))
                         ->relationship('task', 'title')
                         ->nullable()
                         ->searchable()
@@ -76,14 +89,14 @@ class TimeEntryResource extends Resource
                         ->rows(3),
 
                     TextInput::make('minutes')
-                        ->label('Time (minutes)')
+                        ->label(__('projects.resources.time_entries.fields.minutes'))
                         ->required()
                         ->numeric()
                         ->minValue(1)
                         ->helperText('60 = 1 hour'),
 
                     Toggle::make('is_billable')
-                        ->label('Billable')
+                        ->label(__('projects.resources.time_entries.fields.is_billable'))
                         ->default(false),
                 ]),
         ]);
@@ -98,7 +111,7 @@ class TimeEntryResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('task.title')
-                    ->label('Task')
+                    ->label(__('projects.resources.time_entries.columns.task'))
                     ->placeholder('—')
                     ->limit(40),
 
@@ -107,7 +120,7 @@ class TimeEntryResource extends Resource
                     ->placeholder('—'),
 
                 TextColumn::make('minutes')
-                    ->label('Duration')
+                    ->label(__('projects.resources.time_entries.columns.duration'))
                     ->formatStateUsing(function (int $state): string {
                         $hours   = intdiv($state, 60);
                         $minutes = $state % 60;
@@ -118,27 +131,27 @@ class TimeEntryResource extends Resource
                     }),
 
                 IconColumn::make('is_billable')
-                    ->label('Billable')
+                    ->label(__('projects.resources.time_entries.columns.is_billable'))
                     ->boolean(),
 
                 IconColumn::make('is_approved')
-                    ->label('Approved')
+                    ->label(__('projects.resources.time_entries.columns.is_approved'))
                     ->boolean(),
             ])
             ->defaultSort('entry_date', 'desc')
             ->striped()
             ->filters([
                 TernaryFilter::make('is_billable')
-                    ->label('Billable')
-                    ->trueLabel('Billable only')
-                    ->falseLabel('Non-billable only')
-                    ->placeholder('All entries'),
+                    ->label(__('projects.resources.time_entries.filters.is_billable'))
+                    ->trueLabel(__('projects.resources.time_entries.filters.billable_only'))
+                    ->falseLabel(__('projects.resources.time_entries.filters.non_billable_only'))
+                    ->placeholder(__('projects.resources.time_entries.filters.all_entries')),
 
                 TernaryFilter::make('is_approved')
-                    ->label('Approval status')
-                    ->trueLabel('Approved only')
-                    ->falseLabel('Pending only')
-                    ->placeholder('All entries'),
+                    ->label(__('projects.resources.time_entries.filters.is_approved'))
+                    ->trueLabel(__('projects.resources.time_entries.filters.approved_only'))
+                    ->falseLabel(__('projects.resources.time_entries.filters.pending_only'))
+                    ->placeholder(__('projects.resources.time_entries.filters.all_entries')),
             ])
             ->actions([
                 EditAction::make(),

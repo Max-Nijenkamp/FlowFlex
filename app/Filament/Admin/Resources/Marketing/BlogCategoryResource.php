@@ -32,10 +32,25 @@ class BlogCategoryResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::MarketingContent->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.blog_categories.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.blog_categories.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Category Details')
+            Section::make(__('admin.resources.blog_categories.sections.category_details'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('name')

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 #[Fillable([
     'name',
@@ -17,13 +19,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class BlogCategory extends Model
 {
-    use HasUlids, SoftDeletes;
+    use HasUlids, LogsActivity, SoftDeletes;
 
     protected function casts(): array
     {
         return [
             'is_published' => 'boolean',
         ];
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name', 'slug', 'is_published'])
+            ->logOnlyDirty();
     }
 
     public function posts(): HasMany

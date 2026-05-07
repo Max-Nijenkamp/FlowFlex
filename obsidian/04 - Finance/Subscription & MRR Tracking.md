@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/finance, subscription, mrr, saas, phase/5]
+tags: [flowflex, domain/finance, subscription, mrr, saas, phase/8]
 domain: Finance & Accounting
 panel: finance
 color: "#059669"
@@ -14,7 +14,7 @@ For SaaS and subscription businesses running on FlowFlex. Revenue metrics, churn
 **Who uses it:** Finance team, founders, investors
 **Filament Panel:** `finance`
 **Depends on:** [[Invoicing]], [[Contact & Company Management]]
-**Phase:** 5
+**Phase:** 8
 
 ## Events Consumed
 

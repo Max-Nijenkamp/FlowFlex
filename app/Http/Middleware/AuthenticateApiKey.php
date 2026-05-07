@@ -17,7 +17,8 @@ class AuthenticateApiKey
             return response()->json(['error' => 'API key required'], 401);
         }
 
-        $apiKey = ApiKey::where('key_hash', hash('sha256', $key))
+        $apiKey = ApiKey::with('company')
+            ->where('key_hash', hash('sha256', $key))
             ->whereNull('deleted_at')
             ->first();
 

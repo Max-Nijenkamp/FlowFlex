@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/finance, fixed-assets, depreciation, phase/5]
+tags: [flowflex, domain/finance, fixed-assets, depreciation, phase/8]
 domain: Finance & Accounting
 panel: finance
 color: "#059669"
@@ -14,7 +14,7 @@ Track capital assets on the balance sheet. Auto-calculate depreciation so financ
 **Who uses it:** Finance team
 **Filament Panel:** `finance`
 **Depends on:** [[Asset Management]] (for physical asset data)
-**Phase:** 5
+**Phase:** 8
 
 ## Features
 

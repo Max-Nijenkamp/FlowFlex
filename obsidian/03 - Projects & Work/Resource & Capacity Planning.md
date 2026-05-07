@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/projects, resources, capacity, phase/5]
+tags: [flowflex, domain/projects, resources, capacity, phase/8]
 domain: Projects & Work
 panel: projects
 color: "#4F46E5"
@@ -14,7 +14,7 @@ Visibility into who has capacity and who is overloaded, before it becomes a prob
 **Who uses it:** Project managers, team leads, HR
 **Filament Panel:** `projects`
 **Depends on:** [[Employee Profiles]], [[Task Management]]
-**Phase:** 5
+**Phase:** 8
 
 ## Features
 

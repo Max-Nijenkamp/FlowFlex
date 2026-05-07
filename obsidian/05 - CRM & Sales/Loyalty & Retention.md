@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/crm, loyalty, retention, churn, phase/5]
+tags: [flowflex, domain/crm, loyalty, retention, churn, phase/8]
 domain: CRM & Sales
 panel: crm
 color: "#2563EB"
@@ -14,7 +14,7 @@ Points, referrals, and churn prediction. Keep your best customers and win back t
 **Who uses it:** Marketing, sales, customer success
 **Filament Panel:** `crm`
 **Depends on:** [[Contact & Company Management]]
-**Phase:** 5
+**Phase:** 8
 
 ## Features
 

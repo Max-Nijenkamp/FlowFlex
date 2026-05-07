@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/projects, knowledge-base, wiki, phase/5]
+tags: [flowflex, domain/projects, knowledge-base, wiki, phase/8]
 domain: Projects & Work
 panel: projects
 color: "#4F46E5"
@@ -14,7 +14,7 @@ The internal brain of the company. SOPs, runbooks, handbooks, and how-tos — se
 **Who uses it:** All employees
 **Filament Panel:** `projects`
 **Depends on:** Core
-**Phase:** 5
+**Phase:** 8
 **Build complexity:** High — 2 resources, 1 page, 4 tables
 
 ## Features

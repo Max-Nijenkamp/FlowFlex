@@ -14,7 +14,7 @@ The work management domain. Everything teams do day-to-day — tasks, planning, 
 **Filament Panel:** `projects`
 **Domain Colour:** Indigo `#4F46E5` / Light: `#EEF2FF`
 **Domain Icon:** `rectangle-stack` (Heroicons)
-**Phase:** 2 (core: Task Management, Time Tracking, Document Management) + 5 (full suite)
+**Phase:** 2 (core: Task Management, Time Tracking, Document Management) · 8 (extensions: Project Planning, E-Sign, Wiki, Collaboration, Capacity, Agile)
 
 ## Modules in This Domain
 
@@ -23,12 +23,12 @@ The work management domain. Everything teams do day-to-day — tasks, planning, 
 | [[Task Management]] | 2 | ✅ complete | Kanban, list, calendar, timeline, automations |
 | [[Time Tracking]] | 2 | ✅ complete | One-click timer, manual entry, approval |
 | [[Document Management]] | 2 | ✅ complete | File storage, versioning, permissions, search |
-| [[Project Planning]] | 5 | Full Gantt, milestones, dependencies |
-| [[Document Approvals & E-Sign]] | 5 | Approval workflows, built-in e-signature |
-| [[Knowledge Base & Wiki]] | 5 | Block editor, SOPs, handbooks |
-| [[Team Collaboration]] | 5 | Comments, @mentions, activity feeds |
-| [[Resource & Capacity Planning]] | 5 | Workload heatmap, availability |
-| [[Agile & Sprint Management]] | 5 | Scrum, backlog, burndown |
+| [[Project Planning]] | 8 | planned | Full Gantt, milestones, dependencies |
+| [[Document Approvals & E-Sign]] | 8 | planned | Approval workflows, built-in e-signature |
+| [[Knowledge Base & Wiki]] | 8 | planned | Block editor, SOPs, handbooks |
+| [[Team Collaboration]] | 8 | planned | Comments, @mentions, activity feeds |
+| [[Resource & Capacity Planning]] | 8 | planned | Workload heatmap, availability |
+| [[Agile & Sprint Management]] | 8 | planned | Scrum, backlog, burndown |
 
 ## Key Events from This Domain
 

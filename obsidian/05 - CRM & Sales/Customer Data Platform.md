@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/crm, cdp, customer-data, phase/5]
+tags: [flowflex, domain/crm, cdp, customer-data, phase/8]
 domain: CRM & Sales
 panel: crm
 color: "#2563EB"
@@ -14,7 +14,7 @@ Unified customer profile across all modules. The single source of truth for ever
 **Who uses it:** Sales, marketing, support, analytics
 **Filament Panel:** `crm`
 **Depends on:** [[Contact & Company Management]]
-**Phase:** 5
+**Phase:** 8
 
 ## Features
 

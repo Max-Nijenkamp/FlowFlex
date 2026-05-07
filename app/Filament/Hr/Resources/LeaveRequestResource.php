@@ -34,9 +34,22 @@ class LeaveRequestResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-paper-airplane';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::Leave;
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Leave->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('hr.resources.leave_requests.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('hr.resources.leave_requests.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -61,10 +74,10 @@ class LeaveRequestResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Leave Request Details')
+            Section::make(__('hr.resources.leave_requests.sections.details'))
                 ->schema([
                     Select::make('employee_id')
-                        ->label('Employee')
+                        ->label(__('hr.resources.leave_requests.fields.employee'))
                         ->relationship('employee', 'first_name')
                         ->getOptionLabelFromRecordUsing(fn (Employee $record) => trim("{$record->first_name} {$record->last_name}"))
                         ->searchable()
@@ -72,7 +85,7 @@ class LeaveRequestResource extends Resource
                         ->required(),
 
                     Select::make('leave_type_id')
-                        ->label('Leave Type')
+                        ->label(__('hr.resources.leave_requests.fields.leave_type'))
                         ->options(fn () => LeaveType::query()->where('is_active', true)->pluck('name', 'id')->toArray())
                         ->required()
                         ->searchable(),
@@ -86,7 +99,7 @@ class LeaveRequestResource extends Resource
                         ->native(false),
 
                     Toggle::make('is_half_day')
-                        ->label('Half Day')
+                        ->label(__('hr.resources.leave_requests.fields.half_day'))
                         ->default(false),
 
                     Textarea::make('reason')
@@ -110,23 +123,23 @@ class LeaveRequestResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('employee_name')
-                    ->label('Employee')
+                    ->label(__('hr.resources.leave_requests.columns.employee'))
                     ->getStateUsing(fn (LeaveRequest $record) => trim("{$record->employee?->first_name} {$record->employee?->last_name}")),
 
                 TextColumn::make('leaveType.name')
-                    ->label('Leave Type'),
+                    ->label(__('hr.resources.leave_requests.columns.leave_type')),
 
                 TextColumn::make('start_date')
-                    ->label('Start')
+                    ->label(__('hr.resources.leave_requests.columns.start'))
                     ->date('d M Y')
                     ->sortable(),
 
                 TextColumn::make('end_date')
-                    ->label('End')
+                    ->label(__('hr.resources.leave_requests.columns.end'))
                     ->date('d M Y'),
 
                 TextColumn::make('total_days')
-                    ->label('Days')
+                    ->label(__('hr.resources.leave_requests.columns.days'))
                     ->numeric(),
 
                 TextColumn::make('status')
@@ -146,7 +159,7 @@ class LeaveRequestResource extends Resource
             ])
             ->actions([
                 Action::make('approve')
-                    ->label('Approve')
+                    ->label(__('hr.resources.leave_requests.actions.approve'))
                     ->color('success')
                     ->icon('heroicon-o-check-circle')
                     ->visible(fn (LeaveRequest $record) => $record->status === LeaveRequestStatus::Pending)
@@ -157,13 +170,13 @@ class LeaveRequestResource extends Resource
                     }),
 
                 Action::make('reject')
-                    ->label('Reject')
+                    ->label(__('hr.resources.leave_requests.actions.reject'))
                     ->color('danger')
                     ->icon('heroicon-o-x-circle')
                     ->visible(fn (LeaveRequest $record) => $record->status === LeaveRequestStatus::Pending)
                     ->form([
                         Textarea::make('rejection_reason')
-                            ->label('Rejection Reason')
+                            ->label(__('hr.resources.leave_requests.fields.rejection_reason'))
                             ->required()
                             ->rows(3),
                     ])

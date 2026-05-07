@@ -3,8 +3,8 @@ tags: [flowflex, domain/finance, overview, phase/3]
 domain: Finance & Accounting
 panel: finance
 color: "#059669"
-status: planned
-last_updated: 2026-05-06
+status: built
+last_updated: 2026-05-07
 ---
 
 # Finance Overview
@@ -14,7 +14,7 @@ The financial nerve system of the business. From invoices to payroll costs, from
 **Filament Panel:** `finance`
 **Domain Colour:** Emerald `#059669` / Light: `#D1FAE5`
 **Domain Icon:** `banknotes` (Heroicons)
-**Phase:** 3 (core: Invoicing, Expenses, Financial Reporting) + 5 (full suite)
+**Phase:** 3 (core: Invoicing, Expenses, Financial Reporting) · 8 (extensions: AP/AR, Bank Reconciliation, Budgeting, Client Billing, Tax/VAT, Fixed Assets, MRR Tracking)
 
 ## Modules in This Domain
 
@@ -23,13 +23,13 @@ The financial nerve system of the business. From invoices to payroll costs, from
 | [[Invoicing]] | 3 | Invoice builder, auto-generate from time/milestones |
 | [[Expense Management]] | 3 | Mobile receipt, OCR, approval, payroll reimbursement |
 | [[Financial Reporting]] | 3 | P&L, balance sheet, cash flow, custom reports |
-| [[Accounts Payable & Receivable]] | 5 | Supplier bills, payment runs, aged reports |
-| [[Bank Reconciliation]] | 5 | Open banking, auto-match, manual reconciliation |
-| [[Budgeting & Forecasting]] | 5 | Department budgets, actuals, variance, scenarios |
-| [[Client Billing & Retainers]] | 5 | Time-to-invoice, retainer management |
-| [[Tax & VAT Compliance]] | 5 | VAT/GST, MTD, multi-jurisdiction |
-| [[Fixed Asset & Depreciation]] | 5 | Asset register, depreciation schedules |
-| [[Subscription & MRR Tracking]] | 5 | MRR/ARR, churn, revenue recognition |
+| [[Accounts Payable & Receivable]] | 8 | Supplier bills, payment runs, aged reports |
+| [[Bank Reconciliation]] | 8 | Open banking, auto-match, manual reconciliation |
+| [[Budgeting & Forecasting]] | 8 | Department budgets, actuals, variance, scenarios |
+| [[Client Billing & Retainers]] | 8 | Time-to-invoice, retainer drawdown, milestone billing |
+| [[Tax & VAT Compliance]] | 8 | VAT/GST, MTD, multi-jurisdiction, filing status |
+| [[Fixed Asset & Depreciation]] | 8 | Asset register, depreciation schedules (SL/DB), disposal |
+| [[Subscription & MRR Tracking]] | 8 | MRR/ARR, churn, expansion revenue, recognition |
 
 ## Key Events from This Domain
 

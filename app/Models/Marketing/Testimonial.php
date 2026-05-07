@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 #[Fillable([
     'name',
@@ -19,7 +21,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class Testimonial extends Model
 {
-    use HasUlids, SoftDeletes;
+    use HasUlids, LogsActivity, SoftDeletes;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name', 'role', 'company', 'is_featured', 'is_published', 'display_order'])
+            ->logOnlyDirty();
+    }
 
     protected function casts(): array
     {

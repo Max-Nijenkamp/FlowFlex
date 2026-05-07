@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/hr, feedback, engagement, enps, phase/5]
+tags: [flowflex, domain/hr, feedback, engagement, enps, phase/8]
 domain: HR & People
 panel: hr
 color: "#7C3AED"
@@ -14,7 +14,7 @@ Ongoing pulse on how employees are feeling. Goes beyond annual surveys — captu
 **Who uses it:** HR team, leadership, managers
 **Filament Panel:** `hr`
 **Depends on:** [[Employee Profiles]]
-**Phase:** 5
+**Phase:** 8
 **Build complexity:** Medium — 2 resources, 2 pages, 4 tables
 
 ## Events Fired

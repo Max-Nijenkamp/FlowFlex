@@ -1,45 +1,83 @@
 ---
-tags: [flowflex, domain/marketing, overview, phase/4]
+tags: [flowflex, domain/marketing, overview, phase/5]
 domain: Marketing & Content
 panel: marketing
 color: "#DB2777"
 status: planned
-last_updated: 2026-05-06
+last_updated: 2026-05-07
 ---
 
 # Marketing Overview
 
-The marketing and content creation domain. CMS, email campaigns, social, forms, SEO, ads, events, and affiliate management.
+CMS, email campaigns, forms, social media, SEO, ads, events, and affiliate management. All 8 modules built in Phase 5 as a complete panel.
 
 **Filament Panel:** `marketing`
 **Domain Colour:** Pink `#DB2777` / Light: `#FCE7F3`
-**Domain Icon:** `megaphone` (Heroicons)
-**Phase:** 4 (core: CMS, Email Marketing, Forms & Lead Capture) + 5 (full suite)
+**Domain Icon:** `heroicon-o-megaphone`
+**Phase:** 5 — complete domain, all modules
 
-## Modules in This Domain
+## Modules
 
-| Module | Phase | Description |
+| Module | Description |
+|---|---|
+| [[CMS & Website Builder]] | Content pages, blocks, media library, redirects, SEO, scheduled publishing |
+| [[Email Marketing]] | Campaign builder, recipients, sequences, A/B testing, analytics, deliverability |
+| [[Forms & Lead Capture]] | Form builder (all field types, conditional logic), submissions, CRM auto-create |
+| [[Social Media Management]] | Multi-platform publishing, content calendar, post analytics |
+| [[SEO & Analytics]] | SEO audits, keyword rankings, GA4 snapshots, redirect manager |
+| [[Ad Campaign Management]] | Google/Meta/LinkedIn/TikTok ad accounts, campaign tracking, ROAS |
+| [[Events & Webinars]] | Event management, registrations, sessions, waitlist, QR check-in |
+| [[Affiliate & Partner Management]] | Affiliates, referral tracking, commissions, payouts |
+
+## Filament Panel Structure
+
+**Navigation Groups:**
+- `Content` — Content Pages, Media Library, Redirects
+- `Campaigns` — Email Campaigns, Email Sequences, Social Posts, Ad Campaigns
+- `Capture` — Forms, Form Submissions
+- `Events` — Events, Registrations
+- `Partners` — Affiliates, Referrals, Payouts
+- `Insights` — SEO Audits, Keyword Rankings, Ad Performance
+
+## Key Events
+
+| Event | Source | Consumed By |
 |---|---|---|
-| [[CMS & Website Builder]] | 4 | Block-based CMS, blog, SEO, media library |
-| [[Email Marketing]] | 4 | Campaign builder, automation flows, A/B testing |
-| [[Forms & Lead Capture]] | 4 | Drag-and-drop form builder, CRM auto-create |
-| [[Social Media Management]] | 5 | Multi-channel publishing, content calendar |
-| [[SEO & Analytics]] | 5 | Rank tracking, technical audit, GA4 |
-| [[Ad Campaign Management]] | 5 | Google Ads, Meta Ads, ROAS dashboard |
-| [[Events & Webinars]] | 5 | Registration, attendees, QR check-in |
-| [[Affiliate & Partner Management]] | 5 | Affiliate portal, commissions, payouts |
+| `FormSubmissionReceived` | Forms | CRM (auto-create contact), Email (trigger sequence) |
+| `EmailCampaignSent` | Email Marketing | Analytics (track stats) |
+| `SocialPostPublished` | Social | Analytics (track engagement) |
+| `SocialPostFailed` | Social | Notifications (alert team) |
+| `CampaignBudgetExhausted` | Ad Campaigns | Notifications (alert marketing manager) |
+| `EventRegistrationReceived` | Events | Email (send confirmation), CRM (create/update contact) |
+| `EventStartingSoon` | Events | Email (send reminder) |
+| `AffiliateCommissionEarned` | Affiliates | Finance (record payable) |
+| `TicketResolved` | CRM (Phase 3) | Email (send CSAT survey) |
+| `CheckoutCompleted` | Ecommerce (Phase 4) | Email (post-purchase sequence) |
+| `CartAbandoned` | Ecommerce (Phase 4) | Email (abandoned cart sequence) |
 
-## Key Events Consumed
+## Permissions Prefix
 
-| Event | From | What Marketing Does |
-|---|---|---|
-| `TicketResolved` | [[Customer Support & Helpdesk]] | Sends CSAT survey via email |
-| `BurnoutSignalDetected` | (n/a — internal HR only) | — |
-| (Churn signal) | [[Loyalty & Retention]] | Triggers win-back campaign |
+`marketing.content.*` · `marketing.email.*` · `marketing.forms.*`  
+`marketing.social.*` · `marketing.seo.*` · `marketing.ads.*`  
+`marketing.events.*` · `marketing.affiliates.*`
+
+## Database Migration Range
+
+`400000–449999`
+
+## Note on CMS vs Marketing Site
+
+The `marketing` panel is the **in-platform marketing tool** for FlowFlex customers — they build their own marketing assets here. This is separate from the FlowFlex **public website** (admin panel CMS, `14 - Marketing Site/`).
 
 ## Related
 
 - [[CMS & Website Builder]]
 - [[Email Marketing]]
 - [[Forms & Lead Capture]]
+- [[Social Media Management]]
+- [[SEO & Analytics]]
+- [[Ad Campaign Management]]
+- [[Events & Webinars]]
+- [[Affiliate & Partner Management]]
 - [[Panel Map]]
+- [[Build Order (Phases)]]

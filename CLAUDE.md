@@ -1,5 +1,42 @@
 # CLAUDE.md — FlowFlex Platform
 
+---
+
+## MANDATORY: Brain-First Workflow
+
+**Before starting ANY task** — run `/brain` to read all 8 Brain files in order. Never skip this.
+
+Brain files (all in `obsidian/_Brain/`):
+
+| File | What it contains |
+|---|---|
+| `Current State.md` | Phase status, test count, active panels, pending decisions |
+| `Patterns.md` | Every enforced code pattern — model traits, Filament 5 API, guard scoping, permission naming |
+| `Bug Registry.md` | Every bug found and fixed, organised by phase — check BEFORE writing code |
+| `Codebase Map.md` | Exact file paths for every model, resource, factory, controller, route |
+| `Domain — Core Platform.md` | Company, Tenant, User, ApiKey, Module, Marketing models — all fields and relations |
+| `Domain — HR.md` | 26 HR models, 14 resources, all enums with backing values |
+| `Domain — Projects.md` | 12 models, 6 resources, task/time/document domain |
+| `Domain — Finance.md` | 10 models, 7 resources, invoicing and expenses |
+| `Domain — CRM.md` | 19 models, 10 resources, all CRM/support/chatbot models |
+| `Relations Map.md` | Cross-domain FKs and relation trees |
+| `Test Suite.md` | Test count, 12-entry pitfalls table, factory states, coverage gaps |
+| `Features.md` | What's live in each panel, API endpoint list, marketing site pages |
+
+**After finishing ANY task that changes code** — run `/brain-update`:
+- `Current State.md` — if test count changed, new panel/model/feature added, phase complete
+- `Bug Registry.md` — if any bug was found and fixed (with root cause + exact fix)
+- `Codebase Map.md` — if new files, models, resources, factories, or routes were added
+- `Patterns.md` — if new patterns established, Filament 5 API gotchas found, or old patterns corrected
+- Domain files — if model fields/relations/enums changed, or new model/resource added
+- `Relations Map.md` — if new cross-domain FK added
+- `Test Suite.md` — if test count changed or new pitfalls discovered
+- `Features.md` — if new user-facing feature, API endpoint, or marketing page added
+
+This is non-negotiable. The Brain is implementation truth — reading it prevents repeating bugs.
+
+---
+
 > **Single source of truth is the Obsidian vault** at `obsidian/` in this repo.
 > Before writing code, check the relevant vault note. Before making architecture decisions, check the vault.
 > This file contains only the critical rules needed for every code change — detail lives in Obsidian.
@@ -16,6 +53,10 @@ Modular, multi-tenant SaaS platform. Customers activate only the modules they ne
 
 ## Obsidian Vault — Where to Look
 
+The vault has two sides:
+
+**Vision (product specs — `00-14` folders):**
+
 | Topic | Vault note |
 |---|---|
 | Full tech stack | `00 - Project Overview/Tech Stack.md` |
@@ -26,13 +67,22 @@ Modular, multi-tenant SaaS platform. Customers activate only the modules they ne
 | Performance rules | `00 - Project Overview/Performance Rules.md` |
 | Module dev checklist | `00 - Project Overview/Module Development Checklist.md` |
 | Cross-module events | `00 - Project Overview/Cross-Module Event Map.md` |
-| Build phase status | `00 - Project Overview/Build Order (Phases).md` |
+| Build phase roadmap | `00 - Project Overview/Build Order (Phases).md` |
 | Environment setup | `00 - Project Overview/Environment Setup.md` |
 | Filament panels & access rules | `Filament Panels/Panel Map.md` |
 | Every module spec | `01–13` domain folders |
 | Design system & brand | `Design System/` folder |
 | Marketing site, SEO, SEM, legal pages | `14 - Marketing Site/` folder |
-| Admin CMS (blog, demo leads, content) | `14 - Marketing Site/Admin Panel CMS.md` |
+
+**Brain (implementation — `_Brain/` folder):**
+
+| Topic | Vault note |
+|---|---|
+| Current build state, active panels, test count | `_Brain/Current State.md` |
+| Where every file lives (models, resources, factories) | `_Brain/Codebase Map.md` |
+| Enforced code patterns (model traits, Filament 5, scoping) | `_Brain/Patterns.md` |
+| Every bug ever found and fixed | `_Brain/Bug Registry.md` |
+| Test count, structure, factory docs, coverage gaps | `_Brain/Test Suite.md` |
 
 ---
 

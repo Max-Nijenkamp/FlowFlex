@@ -37,10 +37,25 @@ class ModuleResource extends Resource
 
     protected static ?int $navigationSort = 5;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Platform->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.modules.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.modules.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Module')
+            Section::make(__('admin.resources.modules.sections.module'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('name')
@@ -66,10 +81,10 @@ class ModuleResource extends Resource
                         ->maxLength(20),
                 ]),
 
-            Section::make('Availability')
+            Section::make(__('admin.resources.modules.sections.availability'))
                 ->schema([
                     Toggle::make('is_available')
-                        ->label('Available to tenants')
+                        ->label(__('admin.resources.modules.fields.available'))
                         ->helperText('Disabling hides this module from all tenant module catalogues.'),
                 ]),
         ]);
@@ -114,14 +129,14 @@ class ModuleResource extends Resource
                     ->formatStateUsing(fn (?string $state) => $state ?? 'core'),
 
                 TextColumn::make('sub_modules_count')
-                    ->label('Sub-modules')
+                    ->label(__('admin.resources.modules.columns.sub_modules'))
                     ->counts('subModules')
                     ->badge()
                     ->color('gray')
                     ->sortable(),
 
                 IconColumn::make('is_core')
-                    ->label('Core')
+                    ->label(__('admin.resources.modules.columns.core'))
                     ->boolean()
                     ->trueIcon('heroicon-o-lock-closed')
                     ->falseIcon('heroicon-o-lock-open')
@@ -129,7 +144,7 @@ class ModuleResource extends Resource
                     ->falseColor('gray'),
 
                 IconColumn::make('is_available')
-                    ->label('Available')
+                    ->label(__('admin.resources.modules.columns.available'))
                     ->boolean()
                     ->sortable(),
             ])

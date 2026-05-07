@@ -32,11 +32,24 @@ class EmployeeResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-users';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::People;
-
     protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'first_name';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::People->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('hr.resources.employees.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('hr.resources.employees.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -61,7 +74,7 @@ class EmployeeResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Personal Details')
+            Section::make(__('hr.resources.employees.sections.personal_details'))
                 ->columns(3)
                 ->schema([
                     TextInput::make('first_name')
@@ -91,7 +104,7 @@ class EmployeeResource extends Resource
                         ->native(false),
                 ]),
 
-            Section::make('Employment')
+            Section::make(__('hr.resources.employees.sections.employment'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('employee_number')
@@ -99,7 +112,7 @@ class EmployeeResource extends Resource
                         ->maxLength(50),
 
                     Select::make('department_id')
-                        ->label('Department')
+                        ->label(__('hr.resources.employees.fields.department'))
                         ->options(fn () => Department::query()->pluck('name', 'id')->toArray())
                         ->nullable()
                         ->searchable(),
@@ -113,7 +126,7 @@ class EmployeeResource extends Resource
                         ->maxLength(255),
 
                     Select::make('manager_id')
-                        ->label('Manager')
+                        ->label(__('hr.resources.employees.fields.manager'))
                         ->relationship('manager', 'first_name')
                         ->getOptionLabelFromRecordUsing(fn (Employee $record) => trim("{$record->first_name} {$record->last_name}"))
                         ->searchable()
@@ -141,27 +154,27 @@ class EmployeeResource extends Resource
                         ->native(false),
 
                     TextInput::make('contracted_hours_per_week')
-                        ->label('Contracted Hours / Week')
+                        ->label(__('hr.resources.employees.fields.contracted_hours_per_week'))
                         ->numeric()
                         ->nullable(),
                 ]),
 
-            Section::make('Emergency Contact')
+            Section::make(__('hr.resources.employees.sections.emergency_contact'))
                 ->columns(3)
                 ->schema([
                     TextInput::make('emergency_contact_name')
-                        ->label('Name')
+                        ->label(__('hr.resources.employees.fields.emergency_contact_name'))
                         ->nullable()
                         ->maxLength(255),
 
                     TextInput::make('emergency_contact_phone')
-                        ->label('Phone')
+                        ->label(__('hr.resources.employees.fields.emergency_contact_phone'))
                         ->tel()
                         ->nullable()
                         ->maxLength(50),
 
                     TextInput::make('emergency_contact_relationship')
-                        ->label('Relationship')
+                        ->label(__('hr.resources.employees.fields.emergency_contact_relationship'))
                         ->nullable()
                         ->maxLength(100),
                 ]),
@@ -173,7 +186,7 @@ class EmployeeResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('full_name')
-                    ->label('Name')
+                    ->label(__('hr.resources.employees.columns.name'))
                     ->getStateUsing(fn (Employee $record) => trim(implode(' ', array_filter([$record->first_name, $record->middle_name, $record->last_name]))))
                     ->searchable(['first_name', 'last_name'])
                     ->weight(FontWeight::Bold),
@@ -183,25 +196,25 @@ class EmployeeResource extends Resource
                     ->placeholder('—'),
 
                 TextColumn::make('department.name')
-                    ->label('Department')
+                    ->label(__('hr.resources.employees.columns.department'))
                     ->badge()
                     ->placeholder('—'),
 
                 TextColumn::make('employment_type')
-                    ->label('Type')
+                    ->label(__('hr.resources.employees.columns.type'))
                     ->badge()
                     ->formatStateUsing(fn (?EmploymentType $state) => $state?->label())
                     ->placeholder('—'),
 
                 TextColumn::make('employment_status')
-                    ->label('Status')
+                    ->label(__('hr.resources.employees.columns.status'))
                     ->badge()
                     ->formatStateUsing(fn (?EmploymentStatus $state) => $state?->label())
                     ->color(fn (?EmploymentStatus $state) => $state?->color())
                     ->placeholder('—'),
 
                 TextColumn::make('start_date')
-                    ->label('Start Date')
+                    ->label(__('hr.resources.employees.columns.start_date'))
                     ->date('d M Y')
                     ->placeholder('—'),
             ])

@@ -14,7 +14,7 @@ The HR & People domain is the people layer of FlowFlex. It manages every stage o
 **Filament Panel:** `hr`
 **Domain Colour:** Violet `#7C3AED` / Light: `#EDE9FE`
 **Domain Icon:** `users` (Heroicons)
-**Phase:** 2 (core: Employee Profiles, Onboarding, Leave, basic Payroll) + 5 (full suite)
+**Phase:** 2 (core: Employee Profiles, Onboarding, Leave, Payroll) · 8 (extensions: Recruitment, Performance, Scheduling, Benefits, Feedback, HR Compliance, Offboarding)
 
 ## Modules in This Domain
 
@@ -24,13 +24,13 @@ The HR & People domain is the people layer of FlowFlex. It manages every stage o
 | [[Onboarding]] | 2 | ✅ complete | Structured new hire journeys |
 | [[Leave Management]] | 2 | ✅ complete | Leave requests, balances, approvals |
 | [[Payroll]] | 2 | ✅ complete | Payroll runs, payslips, tax |
-| [[Offboarding]] | 5 | planned | Exit checklist, access revocation |
-| [[Performance & Reviews]] | 5 | planned | OKRs, review cycles, 360 feedback |
-| [[Recruitment & ATS]] | 5 | planned | Full ATS, applicant pipeline, offers |
-| [[Scheduling & Shifts]] | 5 | planned | Shift building, clock-in/out |
-| [[Benefits & Perks]] | 5 | planned | Benefits catalogue, enrolment |
-| [[Employee Feedback]] | 5 | planned | Pulse surveys, eNPS, burnout signals |
-| [[HR Compliance]] | 5 | planned | Certifications, mandatory training |
+| [[Offboarding]] | 8 | planned | Exit checklist, access revocation, final pay |
+| [[Performance & Reviews]] | 8 | planned | OKRs, review cycles, 360 feedback, ratings |
+| [[Recruitment & ATS]] | 8 | planned | Full ATS, applicant pipeline, offers, handoff to onboarding |
+| [[Scheduling & Shifts]] | 8 | planned | Shift building, clock-in/out, absence coverage |
+| [[Benefits & Perks]] | 8 | planned | Benefits catalogue, enrolment, flex benefits |
+| [[Employee Feedback]] | 8 | planned | Pulse surveys, eNPS, burnout signals |
+| [[HR Compliance]] | 8 | planned | Certifications, mandatory training deadlines |
 
 ## Key Events from This Domain
 

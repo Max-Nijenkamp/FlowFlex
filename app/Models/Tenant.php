@@ -10,6 +10,7 @@ use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -33,7 +34,7 @@ use Spatie\Permission\Traits\HasRoles;
 #[Hidden(['password', 'remember_token'])]
 class Tenant extends Authenticatable implements FilamentUser, HasAddresses, HasName
 {
-    use HasRoles, HasUlids, InteractsWithAddresses, LogsActivity, Notifiable, SoftDeletes;
+    use HasFactory, HasRoles, HasUlids, InteractsWithAddresses, LogsActivity, Notifiable, SoftDeletes;
 
     protected function casts(): array
     {
@@ -89,6 +90,14 @@ class Tenant extends Authenticatable implements FilamentUser, HasAddresses, HasN
         return collect([$this->first_name, $this->middle_name, $this->last_name])
             ->filter()
             ->implode(' ');
+    }
+
+    /**
+     * Eloquent attribute accessor so `$tenant->full_name` works in Filament table columns.
+     */
+    public function getFullNameAttribute(): string
+    {
+        return $this->fullName();
     }
 
     public function getFilamentName(): string

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 #[Fillable([
     'email',
@@ -18,7 +20,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class NewsletterSubscriber extends Model
 {
-    use HasUlids, SoftDeletes;
+    use HasUlids, LogsActivity, SoftDeletes;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['email', 'status', 'source', 'subscribed_at', 'unsubscribed_at'])
+            ->logOnlyDirty();
+    }
 
     protected function casts(): array
     {

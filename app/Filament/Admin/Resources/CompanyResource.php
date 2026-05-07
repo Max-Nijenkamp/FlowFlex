@@ -41,10 +41,25 @@ class CompanyResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Platform->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.companies.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.companies.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Company Details')
+            Section::make(__('admin.resources.companies.sections.company_details'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('name')
@@ -60,7 +75,7 @@ class CompanyResource extends Resource
                         ->maxLength(255)
                         ->unique(ignoreRecord: true)
                         ->rules(['alpha_dash'])
-                        ->helperText('Auto-generated from name. Lowercase, letters, numbers, hyphens only.'),
+                        ->helperText(__('admin.resources.companies.helper_text.slug')),
 
                     TextInput::make('email')
                         ->email()
@@ -77,7 +92,7 @@ class CompanyResource extends Resource
                         ->columnSpanFull(),
                 ]),
 
-            Section::make('Localisation')
+            Section::make(__('admin.resources.companies.sections.localisation'))
                 ->columns(3)
                 ->schema([
                     Select::make('timezone')
@@ -109,12 +124,12 @@ class CompanyResource extends Resource
                         ->required(),
                 ]),
 
-            Section::make('Addresses')
+            Section::make(__('admin.resources.companies.sections.addresses'))
                 ->schema([
                     Repeater::make('addresses')
                         ->relationship()
                         ->columns(2)
-                        ->addActionLabel('Add address')
+                        ->addActionLabel(__('admin.resources.companies.actions.add_address'))
                         ->defaultItems(0)
                         ->schema([
                             Select::make('country')
@@ -127,7 +142,7 @@ class CompanyResource extends Resource
                                 ->required(),
 
                             Toggle::make('is_primary')
-                                ->label('Primary address')
+                                ->label(__('admin.resources.companies.fields.is_primary'))
                                 ->default(false)
                                 ->inline(false),
 
@@ -148,16 +163,16 @@ class CompanyResource extends Resource
                                 ->maxLength(20),
 
                             TextInput::make('house_number_addition')
-                                ->label('Addition')
+                                ->label(__('admin.resources.companies.fields.addition'))
                                 ->maxLength(20),
                         ]),
                 ]),
 
-            Section::make('Status')
+            Section::make(__('admin.resources.companies.sections.status'))
                 ->schema([
                     Toggle::make('is_enabled')
-                        ->label('Company active')
-                        ->helperText('Disabling a company blocks all of its users from logging in.')
+                        ->label(__('admin.resources.companies.fields.company_active'))
+                        ->helperText(__('admin.resources.companies.helper_text.company_disabled'))
                         ->default(true),
                 ]),
         ]);
@@ -184,19 +199,19 @@ class CompanyResource extends Resource
                     ->toggleable(),
 
                 TextColumn::make('tenants_count')
-                    ->label('Users')
+                    ->label(__('admin.resources.companies.columns.users'))
                     ->counts('tenants')
                     ->sortable()
                     ->badge()
                     ->color('gray'),
 
                 IconColumn::make('is_enabled')
-                    ->label('Active')
+                    ->label(__('admin.resources.companies.columns.active'))
                     ->boolean()
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->label('Created')
+                    ->label(__('admin.resources.companies.columns.created'))
                     ->dateTime('d M Y')
                     ->sortable()
                     ->color('gray')
@@ -206,11 +221,11 @@ class CompanyResource extends Resource
             ->striped()
             ->filters([
                 TernaryFilter::make('is_enabled')
-                    ->label('Status')
+                    ->label(__('admin.resources.companies.filters.status'))
                     ->boolean()
-                    ->trueLabel('Active only')
-                    ->falseLabel('Inactive only')
-                    ->placeholder('All companies'),
+                    ->trueLabel(__('admin.resources.companies.filters.active_only'))
+                    ->falseLabel(__('admin.resources.companies.filters.inactive_only'))
+                    ->placeholder(__('admin.resources.companies.filters.all_companies')),
             ])
             ->actions([
                 EditAction::make(),

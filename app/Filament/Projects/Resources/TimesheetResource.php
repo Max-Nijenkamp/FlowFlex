@@ -27,9 +27,22 @@ class TimesheetResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-table-cells';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::TimeTracking;
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::TimeTracking->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('projects.resources.timesheets.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('projects.resources.timesheets.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -54,10 +67,10 @@ class TimesheetResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Timesheet Details')
+            Section::make(__('projects.resources.timesheets.sections.details'))
                 ->schema([
                     DatePicker::make('week_start_date')
-                        ->label('Week Starting')
+                        ->label(__('projects.resources.timesheets.fields.week_start_date'))
                         ->required()
                         ->native(false),
 
@@ -78,7 +91,7 @@ class TimesheetResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('week_start_date')
-                    ->label('Week Starting')
+                    ->label(__('projects.resources.timesheets.columns.week_start_date'))
                     ->date('d M Y')
                     ->sortable(),
 
@@ -88,7 +101,7 @@ class TimesheetResource extends Resource
                     ->color(fn (?TimesheetStatus $state) => $state?->color()),
 
                 TextColumn::make('submitted_at')
-                    ->label('Submitted')
+                    ->label(__('projects.resources.timesheets.columns.submitted_at'))
                     ->dateTime('d M Y H:i')
                     ->placeholder('—'),
 

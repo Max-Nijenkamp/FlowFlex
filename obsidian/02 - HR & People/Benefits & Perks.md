@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/hr, benefits, perks, phase/5]
+tags: [flowflex, domain/hr, benefits, perks, phase/8]
 domain: HR & People
 panel: hr
 color: "#7C3AED"
@@ -14,7 +14,7 @@ Benefits catalogue that employees can browse and enrol in. Eligibility rules kee
 **Who uses it:** HR team, all employees
 **Filament Panel:** `hr`
 **Depends on:** [[Employee Profiles]], [[Payroll]] (for deductions)
-**Phase:** 5
+**Phase:** 8
 **Build complexity:** Medium — 2 resources, 4 tables
 
 ## Features

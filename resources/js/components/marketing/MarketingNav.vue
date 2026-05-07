@@ -1,44 +1,23 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
-import { Menu, X, Sun, Moon, Globe, ChevronDown } from 'lucide-vue-next'
-import { useI18n } from 'vue-i18n'
+import { Menu, X, Sun, Moon } from 'lucide-vue-next'
 import { useAppearance } from '@/composables/useAppearance'
 
-const { t, locale } = useI18n()
 const { appearance, updateAppearance } = useAppearance()
 
 const scrolled = ref(false)
 const mobileOpen = ref(false)
-const langOpen = ref(false)
 
 function onScroll() {
     scrolled.value = window.scrollY > 60
 }
 
-onMounted(() => {
-    window.addEventListener('scroll', onScroll)
-    // Restore saved language preference
-    const savedLang = localStorage.getItem('locale')
-    if (savedLang === 'nl' || savedLang === 'en') {
-        locale.value = savedLang
-    }
-})
-
+onMounted(() => window.addEventListener('scroll', onScroll))
 onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
-function setLocale(lang: string) {
-    locale.value = lang
-    localStorage.setItem('locale', lang)
-    langOpen.value = false
-}
-
 function toggleDarkMode() {
-    if (appearance.value === 'dark') {
-        updateAppearance('light')
-    } else {
-        updateAppearance('dark')
-    }
+    updateAppearance(appearance.value === 'dark' ? 'light' : 'dark')
 }
 
 const isDark = computed(() => appearance.value === 'dark')
@@ -46,11 +25,11 @@ const isDark = computed(() => appearance.value === 'dark')
 const page = usePage()
 const currentPath = computed(() => page.url)
 
-const navLinks = computed(() => [
-    { label: t('nav.features'), href: '/features' },
-    { label: t('nav.pricing'), href: '/pricing' },
-    { label: t('nav.blog'), href: '/blog' },
-])
+const navLinks = [
+    { label: 'Features', href: '/features' },
+    { label: 'Pricing', href: '/pricing' },
+    { label: 'Blog', href: '/blog' },
+]
 
 function isActive(href: string) {
     return currentPath.value === href || currentPath.value.startsWith(href + '/')
@@ -73,7 +52,6 @@ function closeMobile() {
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
             <!-- Logo -->
             <Link href="/" class="flex items-center gap-2.5 select-none shrink-0 group">
-                <!-- Logo mark: stacked flow lines -->
                 <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-ocean-500 to-ocean-600 flex items-center justify-center shadow-sm shadow-ocean-500/30 group-hover:shadow-ocean-400/40 transition-shadow">
                     <svg viewBox="0 0 20 20" fill="none" class="w-4.5 h-4.5">
                         <path d="M3 5h8a4 4 0 0 1 0 8H3" stroke="white" stroke-width="2" stroke-linecap="round"/>
@@ -87,7 +65,7 @@ function closeMobile() {
             <div class="hidden md:flex items-center gap-6">
                 <Link
                     v-for="link in navLinks"
-                    :key="link.href + link.label"
+                    :key="link.href"
                     :href="link.href"
                     :class="[
                         'text-sm font-medium transition-colors relative pb-0.5',
@@ -102,7 +80,6 @@ function closeMobile() {
 
             <!-- Right actions (desktop) -->
             <div class="hidden md:flex items-center gap-2">
-                <!-- Dark mode toggle -->
                 <button
                     type="button"
                     class="p-2 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors"
@@ -113,50 +90,17 @@ function closeMobile() {
                     <Moon v-else class="w-4 h-4" />
                 </button>
 
-                <!-- Language switcher -->
-                <div class="relative">
-                    <button
-                        type="button"
-                        class="flex items-center gap-1.5 p-2 rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors text-sm font-medium"
-                        @click="langOpen = !langOpen"
-                        aria-label="Switch language"
-                    >
-                        <Globe class="w-4 h-4" />
-                        <span class="uppercase text-xs font-semibold">{{ locale }}</span>
-                        <ChevronDown class="w-3 h-3 transition-transform" :class="langOpen ? 'rotate-180' : ''" />
-                    </button>
-                    <div
-                        v-if="langOpen"
-                        class="absolute right-0 top-full mt-1 bg-slate-800 border border-slate-700 rounded-xl shadow-xl py-1 min-w-[100px] z-50"
-                    >
-                        <button
-                            type="button"
-                            :class="['w-full text-left px-4 py-2 text-sm transition-colors', locale === 'en' ? 'text-ocean-400 font-semibold' : 'text-white/70 hover:text-white hover:bg-white/5']"
-                            @click="setLocale('en')"
-                        >
-                            EN — English
-                        </button>
-                        <button
-                            type="button"
-                            :class="['w-full text-left px-4 py-2 text-sm transition-colors', locale === 'nl' ? 'text-ocean-400 font-semibold' : 'text-white/70 hover:text-white hover:bg-white/5']"
-                            @click="setLocale('nl')"
-                        >
-                            NL — Nederlands
-                        </button>
-                    </div>
-                </div>
-
                 <a
                     href="/workspace/login"
                     class="px-4 py-2 rounded-lg border border-white/20 text-white/80 text-sm font-medium hover:bg-white/10 hover:text-white transition-colors"
                 >
-                    {{ t('nav.login') }}
+                    Log in
                 </a>
                 <Link
                     href="/demo"
                     class="px-4 py-2 rounded-lg bg-ocean-500 hover:bg-ocean-400 text-white text-sm font-semibold transition-colors shadow-sm shadow-ocean-900/30"
                 >
-                    {{ t('nav.requestDemo') }}
+                    Request Demo
                 </Link>
             </div>
 
@@ -198,7 +142,7 @@ function closeMobile() {
             >
                 <Link
                     v-for="(link, i) in navLinks"
-                    :key="link.href + link.label + '-mobile'"
+                    :key="link.href + '-mobile'"
                     :href="link.href"
                     :class="[
                         'text-lg font-medium transition-colors py-2 border-b border-white/5',
@@ -210,50 +154,23 @@ function closeMobile() {
                     {{ link.label }}
                 </Link>
 
-                <!-- Language switcher mobile -->
-                <div class="flex items-center gap-3 py-2 border-b border-white/5">
-                    <Globe class="w-4 h-4 text-white/40" />
-                    <button
-                        type="button"
-                        :class="['text-sm font-medium px-2 py-1 rounded transition-colors', locale === 'en' ? 'text-ocean-400' : 'text-white/60 hover:text-white']"
-                        @click="setLocale('en')"
-                    >
-                        EN
-                    </button>
-                    <span class="text-white/20">/</span>
-                    <button
-                        type="button"
-                        :class="['text-sm font-medium px-2 py-1 rounded transition-colors', locale === 'nl' ? 'text-ocean-400' : 'text-white/60 hover:text-white']"
-                        @click="setLocale('nl')"
-                    >
-                        NL
-                    </button>
-                </div>
-
                 <div class="flex flex-col gap-3 pt-2">
                     <a
                         href="/workspace/login"
                         class="px-4 py-3 rounded-xl border border-white/20 text-white text-sm font-medium hover:bg-white/10 transition-colors text-center"
                         @click="closeMobile"
                     >
-                        {{ t('nav.login') }}
+                        Log in
                     </a>
                     <Link
                         href="/demo"
                         class="px-4 py-3 rounded-xl bg-ocean-500 hover:bg-ocean-400 text-white text-sm font-semibold transition-colors text-center shadow-sm"
                         @click="closeMobile"
                     >
-                        {{ t('nav.requestDemo') }}
+                        Request Demo
                     </Link>
                 </div>
             </div>
         </Transition>
     </nav>
-
-    <!-- Click outside to close lang dropdown -->
-    <div
-        v-if="langOpen"
-        class="fixed inset-0 z-40"
-        @click="langOpen = false"
-    />
 </template>

@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Marketing;
 use App\Http\Controllers\Controller;
 use App\Models\Marketing\BlogPost;
 use App\Models\Marketing\ChangelogEntry;
+use App\Models\Marketing\HelpArticle;
+use App\Models\Marketing\HelpCategory;
 use App\Models\Marketing\OpenRole;
 use App\Models\Marketing\TeamMember;
+use App\Models\Module;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,7 +17,13 @@ class MarketingController extends Controller
 {
     public function home(): Response
     {
-        return Inertia::render('Welcome');
+        $domains = $this->domainsData();
+
+        return Inertia::render('Welcome', [
+            'domains' => $domains,
+            'moduleCount' => array_sum(array_column($domains, 'count')),
+            'domainCount' => count($domains),
+        ]);
     }
 
     public function pricing(): Response
@@ -24,7 +33,28 @@ class MarketingController extends Controller
 
     public function features(): Response
     {
-        return Inertia::render('Marketing/Features');
+        return Inertia::render('Marketing/Features', [
+            'domains' => $this->domainsData(),
+        ]);
+    }
+
+    private function domainsData(): array
+    {
+        return Module::where('is_available', true)
+            ->orderBy('domain')
+            ->orderBy('sort_order')
+            ->get(['name', 'description', 'domain'])
+            ->groupBy('domain')
+            ->map(fn ($modules, $domain) => [
+                'key' => $domain,
+                'count' => $modules->count(),
+                'modules' => $modules->map(fn ($m) => [
+                    'name' => $m->name,
+                    'description' => $m->description,
+                ])->values()->toArray(),
+            ])
+            ->values()
+            ->toArray();
     }
 
     public function about(): Response
@@ -112,6 +142,46 @@ class MarketingController extends Controller
     public function security(): Response
     {
         return Inertia::render('Marketing/Security');
+    }
+
+    public function help(): Response
+    {
+        $categories = HelpCategory::where('is_published', true)
+            ->whereNull('parent_id')
+            ->with(['articles' => fn ($q) => $q->where('is_published', true)->orderBy('display_order')])
+            ->orderBy('display_order')
+            ->get();
+
+        return Inertia::render('Marketing/Help', [
+            'categories' => $categories,
+        ]);
+    }
+
+    public function helpArticle(string $slug): Response
+    {
+        $article = HelpArticle::where('slug', $slug)
+            ->where('is_published', true)
+            ->with('category')
+            ->firstOrFail();
+
+        return Inertia::render('Marketing/HelpArticle', [
+            'article' => $article,
+        ]);
+    }
+
+    public function moduleDetail(string $key): Response
+    {
+        $module = Module::where('key', $key)->where('is_available', true)->first();
+
+        if (! $module) {
+            abort(404);
+        }
+
+        $module->load('subModules');
+
+        return Inertia::render('Marketing/Module', [
+            'module' => $module,
+        ]);
     }
 }
 

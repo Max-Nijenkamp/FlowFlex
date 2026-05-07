@@ -47,7 +47,10 @@ class PayRunEmployee extends Model
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->logFillable()->logOnlyDirty();
+        // gross_pay, net_pay, total_deductions are sensitive financial fields and must not be logged.
+        return LogOptions::defaults()
+            ->logOnly(['pay_run_id', 'employee_id'])
+            ->logOnlyDirty();
     }
 
     public function lines(): HasMany

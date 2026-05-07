@@ -23,7 +23,10 @@ class GeneratePayslipPdf implements ShouldQueue
 
     public function handle(): void
     {
-        // Find or create payslip record scoped to the correct company.
+        // withoutGlobalScopes() is used here because queue jobs run outside the HTTP request
+        // lifecycle — there is no authenticated tenant, so BelongsToCompany's global scope
+        // would have no company_id to apply and would produce an incorrect (empty) query.
+        // Safety is maintained by explicitly providing company_id in every where condition below.
         $payslip = Payslip::withoutGlobalScopes()->firstOrCreate(
             [
                 'company_id'  => $this->payRun->company_id,

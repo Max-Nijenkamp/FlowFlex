@@ -28,9 +28,22 @@ class DepartmentResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-building-office-2';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::People;
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::People->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('hr.resources.departments.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('hr.resources.departments.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -55,7 +68,7 @@ class DepartmentResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Department Details')
+            Section::make(__('hr.resources.departments.sections.details'))
                 ->schema([
                     TextInput::make('name')
                         ->required()
@@ -66,7 +79,7 @@ class DepartmentResource extends Resource
                         ->rows(4),
 
                     Select::make('parent_department_id')
-                        ->label('Parent Department')
+                        ->label(__('hr.resources.departments.fields.parent_department'))
                         ->options(function ($record) {
                             $query = Department::query();
                             if ($record?->id) {
@@ -79,7 +92,7 @@ class DepartmentResource extends Resource
                         ->searchable(),
 
                     Select::make('manager_id')
-                        ->label('Manager')
+                        ->label(__('hr.resources.departments.fields.manager'))
                         ->relationship('manager', 'first_name')
                         ->getOptionLabelFromRecordUsing(fn (Employee $record) => trim("{$record->first_name} {$record->last_name}"))
                         ->searchable()
@@ -99,11 +112,11 @@ class DepartmentResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('parentDepartment.name')
-                    ->label('Parent')
+                    ->label(__('hr.resources.departments.columns.parent'))
                     ->placeholder('—'),
 
                 TextColumn::make('manager_name')
-                    ->label('Manager')
+                    ->label(__('hr.resources.departments.columns.manager'))
                     ->getStateUsing(fn (Department $record) => $record->manager
                         ? trim("{$record->manager->first_name} {$record->manager->last_name}")
                         : null

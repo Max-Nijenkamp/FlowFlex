@@ -35,10 +35,25 @@ class HelpArticleResource extends Resource
 
     protected static ?int $navigationSort = 11;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::MarketingContent->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.help_articles.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.help_articles.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Content')
+            Section::make(__('admin.resources.help_articles.sections.content'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('title')
@@ -68,30 +83,30 @@ class HelpArticleResource extends Resource
                         ->columnSpanFull(),
                 ]),
 
-            Section::make('SEO & Publishing')
+            Section::make(__('admin.resources.help_articles.sections.seo_publishing'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('seo_title')
-                        ->label('SEO Title')
+                        ->label(__('admin.resources.help_articles.fields.seo_title'))
                         ->maxLength(255),
 
                     Textarea::make('seo_description')
-                        ->label('SEO Description')
+                        ->label(__('admin.resources.help_articles.fields.seo_description'))
                         ->rows(3),
 
                     Toggle::make('is_published')
-                        ->label('Published')
+                        ->label(__('admin.resources.help_articles.fields.is_published'))
                         ->default(false)
                         ->inline(false),
 
                     DateTimePicker::make('last_reviewed_at')
-                        ->label('Last Reviewed'),
+                        ->label(__('admin.resources.help_articles.fields.last_reviewed')),
                 ]),
 
-            Section::make('Platform')
+            Section::make(__('admin.resources.help_articles.sections.platform'))
                 ->schema([
                     TextInput::make('module_link')
-                        ->label('Module Link')
+                        ->label(__('admin.resources.help_articles.fields.module_link'))
                         ->maxLength(255)
                         ->nullable()
                         ->helperText('Link to a related FlowFlex module slug'),

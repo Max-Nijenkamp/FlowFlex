@@ -7,18 +7,38 @@ last_updated: 2026-05-06
 
 # FlowFlex Knowledge Base
 
-Welcome to the FlowFlex Obsidian vault. This is the complete documentation for the FlowFlex platform — architecture, modules, design system, and build order.
+Welcome to the FlowFlex Obsidian vault.
 
-**Start here when building any feature. Every decision traces back to a note in this vault.**
+This vault has **two sides:**
 
-## Quick Navigation
+| Side | Folder | Purpose |
+|---|---|---|
+| **Vision** | `00–14`, `Design System`, `Filament Panels` | What FlowFlex should be — specs, roadmap, module definitions, design system. These notes are stable. |
+| **Brain** | `_Brain/` | How FlowFlex works right now — current state, codebase map, patterns, bug registry, test suite. Updated after every build session. |
+
+**When building a feature:** read the Vision side first (module spec), then check the Brain (patterns, current state, known issues).
+
+---
+
+## Brain (Implementation)
+
+- [[Brain Index]] — start here for current state
+- [[Current State]] — active panels, test count, API endpoints, pending decisions
+- [[Codebase Map]] — where every file lives
+- [[Patterns]] — enforced code patterns (model traits, Filament 5, tenant scoping)
+- [[Bug Registry]] — every bug ever found and fixed
+- [[Test Suite]] — 384 passing, structure, factories
+
+---
+
+## Vision (Product)
 
 ### Project Overview
 
 - [[FlowFlex Overview]] — what it is, the problem it solves, the promise
 - [[Tech Stack]] — Laravel 12, Filament 5, PostgreSQL, Redis, Stripe
 - [[Architecture]] — modular monolith, event bus, module structure
-- [[Multi-Tenancy]] — tenant isolation, BelongsToTenant, global scopes
+- [[Multi-Tenancy]] — tenant isolation, BelongsToCompany, global scopes
 - [[Build Order (Phases)]] — MVP roadmap, phases 1–6
 - [[Cross-Module Event Map]] — every cross-domain event, who fires, who consumes
 - [[Module Sizing Reference]] — complexity estimates and DB table counts for sprint planning

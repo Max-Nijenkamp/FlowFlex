@@ -31,10 +31,25 @@ class TeamMemberResource extends Resource
 
     protected static ?int $navigationSort = 7;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::MarketingContent->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.team_members.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.team_members.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Team Member')
+            Section::make(__('admin.resources.team_members.sections.team_member'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('name')

@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/crm, quotes, proposals, phase/5]
+tags: [flowflex, domain/crm, quotes, proposals, phase/8]
 domain: CRM & Sales
 panel: crm
 color: "#2563EB"
@@ -14,7 +14,7 @@ Build quotes from the product catalogue. Client views, signs, and it converts to
 **Who uses it:** Sales team, account managers
 **Filament Panel:** `crm`
 **Depends on:** [[Contact & Company Management]], [[Product Catalogue]] (if active)
-**Phase:** 5
+**Phase:** 8
 
 ## Features
 

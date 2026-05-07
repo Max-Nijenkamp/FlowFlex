@@ -32,10 +32,25 @@ class OpenRoleResource extends Resource
 
     protected static ?int $navigationSort = 8;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::MarketingContent->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.open_roles.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.open_roles.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Role Details')
+            Section::make(__('admin.resources.open_roles.sections.role_details'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('title')
@@ -86,7 +101,7 @@ class OpenRoleResource extends Resource
                         ->label('Publish At'),
                 ]),
 
-            Section::make('Job Description')
+            Section::make(__('admin.resources.open_roles.sections.job_description'))
                 ->schema([
                     Textarea::make('about_role')
                         ->required()

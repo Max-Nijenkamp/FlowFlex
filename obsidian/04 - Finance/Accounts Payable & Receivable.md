@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/finance, accounts-payable, accounts-receivable, phase/5]
+tags: [flowflex, domain/finance, accounts-payable, accounts-receivable, phase/8]
 domain: Finance & Accounting
 panel: finance
 color: "#059669"
@@ -14,7 +14,7 @@ Full AP and AR management. Track what you owe and what you're owed.
 **Who uses it:** Finance team
 **Filament Panel:** `finance`
 **Depends on:** Core
-**Phase:** 5
+**Phase:** 8
 
 ## Events Fired
 

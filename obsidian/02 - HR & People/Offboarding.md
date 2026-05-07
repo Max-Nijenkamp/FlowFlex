@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/hr, offboarding, phase/5]
+tags: [flowflex, domain/hr, offboarding, phase/8]
 domain: HR & People
 panel: hr
 color: "#7C3AED"
@@ -14,7 +14,7 @@ Controlled, consistent exit process that protects the company and respects the d
 **Who uses it:** HR team, IT team, managers
 **Filament Panel:** `hr`
 **Depends on:** [[Employee Profiles]]
-**Phase:** 5
+**Phase:** 8
 **Build complexity:** Medium — 2 resources, 2 tables
 
 ## Events Fired

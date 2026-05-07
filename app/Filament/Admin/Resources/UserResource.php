@@ -31,14 +31,29 @@ class UserResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Platform->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.users.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.users.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Account Information')
+            Section::make(__('admin.resources.users.sections.account_information'))
                 ->columns(2)
                 ->footerActions([
                     Action::make('saveAccountInfo')
-                        ->label('Save changes')
+                        ->label(__('admin.resources.users.actions.save_changes'))
                         ->icon('heroicon-o-check')
                         ->visible(fn (string $operation): bool => $operation === 'edit')
                         ->action(fn ($livewire, $component) => $livewire->saveFormComponentOnly($component)),
@@ -55,7 +70,7 @@ class UserResource extends Resource
                         ->maxLength(255),
                 ]),
 
-            Section::make('Password')
+            Section::make(__('admin.resources.users.sections.password'))
                 ->hidden(fn (string $operation): bool => $operation === 'edit')
                 ->schema([
                     TextInput::make('password')
@@ -65,11 +80,11 @@ class UserResource extends Resource
                         ->maxLength(255),
                 ]),
 
-            Section::make('Change Password')
+            Section::make(__('admin.resources.users.sections.change_password'))
                 ->hidden(fn (string $operation): bool => $operation === 'create')
                 ->footerActions([
                     Action::make('updatePassword')
-                        ->label('Update password')
+                        ->label(__('admin.resources.users.actions.update_password'))
                         ->icon('heroicon-o-key')
                         ->action(function ($livewire): void {
                             $current  = $livewire->data['current_password'] ?? null;
@@ -79,7 +94,7 @@ class UserResource extends Resource
                             if (! Hash::check($current, $livewire->getRecord()->getAuthPassword())) {
                                 Notification::make()
                                     ->danger()
-                                    ->title('Current password is incorrect')
+                                    ->title(__('admin.resources.users.notifications.password_incorrect'))
                                     ->send();
 
                                 return;
@@ -88,7 +103,7 @@ class UserResource extends Resource
                             if ($new !== $confirm) {
                                 Notification::make()
                                     ->danger()
-                                    ->title('New passwords do not match')
+                                    ->title(__('admin.resources.users.notifications.passwords_mismatch'))
                                     ->send();
 
                                 return;
@@ -97,7 +112,7 @@ class UserResource extends Resource
                             if (strlen($new) < 8) {
                                 Notification::make()
                                     ->danger()
-                                    ->title('Password must be at least 8 characters')
+                                    ->title(__('admin.resources.users.notifications.password_too_short'))
                                     ->send();
 
                                 return;
@@ -111,21 +126,21 @@ class UserResource extends Resource
 
                             Notification::make()
                                 ->success()
-                                ->title('Password updated')
+                                ->title(__('admin.resources.users.notifications.password_updated'))
                                 ->send();
                         }),
                 ])
                 ->columns(1)
                 ->schema([
                     TextInput::make('current_password')
-                        ->label('Current password')
+                        ->label(__('admin.resources.users.fields.current_password'))
                         ->password()
                         ->revealable()
                         ->dehydrated(false)
                         ->required(),
 
                     TextInput::make('new_password')
-                        ->label('New password')
+                        ->label(__('admin.resources.users.fields.new_password'))
                         ->password()
                         ->revealable()
                         ->dehydrated(false)
@@ -133,7 +148,7 @@ class UserResource extends Resource
                         ->minLength(8),
 
                     TextInput::make('new_password_confirmation')
-                        ->label('Confirm new password')
+                        ->label(__('admin.resources.users.fields.confirm_new_password'))
                         ->password()
                         ->revealable()
                         ->dehydrated(false)
@@ -158,7 +173,7 @@ class UserResource extends Resource
                     ->color('gray'),
 
                 TextColumn::make('created_at')
-                    ->label('Joined')
+                    ->label(__('admin.resources.users.columns.joined'))
                     ->dateTime('d M Y')
                     ->sortable()
                     ->color('gray')

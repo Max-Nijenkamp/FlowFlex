@@ -24,6 +24,21 @@ class NewsletterSubscriberResource extends Resource
 
     protected static ?int $navigationSort = 5;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::MarketingContent->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.newsletter_subscribers.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.newsletter_subscribers.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([]);

@@ -21,6 +21,7 @@ class Task extends Model
 
     protected $fillable = [
         'company_id',
+        'parent_id',
         'title',
         'description',
         'parent_task_id',
@@ -65,6 +66,16 @@ class Task extends Model
     public function subtasks(): HasMany
     {
         return $this->hasMany(Task::class, 'parent_task_id');
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Task::class, 'parent_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Task::class, 'parent_id');
     }
 
     public function labels(): BelongsToMany

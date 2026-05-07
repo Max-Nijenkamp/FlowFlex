@@ -28,9 +28,22 @@ class LeaveTypeResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-calendar-days';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::Leave;
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Leave->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('hr.resources.leave_types.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('hr.resources.leave_types.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -55,7 +68,7 @@ class LeaveTypeResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Leave Type Details')
+            Section::make(__('hr.resources.leave_types.sections.details'))
                 ->schema([
                     TextInput::make('name')
                         ->required()
@@ -71,24 +84,24 @@ class LeaveTypeResource extends Resource
                         ->rows(3),
 
                     Toggle::make('is_paid')
-                        ->label('Paid Leave')
+                        ->label(__('hr.resources.leave_types.fields.paid_leave'))
                         ->default(true),
 
                     Toggle::make('requires_approval')
-                        ->label('Requires Approval')
+                        ->label(__('hr.resources.leave_types.fields.requires_approval'))
                         ->default(true),
 
                     Toggle::make('allow_half_day')
-                        ->label('Allow Half Day')
+                        ->label(__('hr.resources.leave_types.fields.allow_half_day'))
                         ->default(true),
 
                     TextInput::make('min_notice_days')
-                        ->label('Minimum Notice (days)')
+                        ->label(__('hr.resources.leave_types.fields.min_notice_days'))
                         ->numeric()
                         ->default(0),
 
                     Toggle::make('is_active')
-                        ->label('Active')
+                        ->label(__('hr.resources.leave_types.fields.is_active'))
                         ->default(true),
                 ]),
         ]);
@@ -107,15 +120,15 @@ class LeaveTypeResource extends Resource
                     ->badge(),
 
                 IconColumn::make('is_paid')
-                    ->label('Paid')
+                    ->label(__('hr.resources.leave_types.columns.paid'))
                     ->boolean(),
 
                 IconColumn::make('requires_approval')
-                    ->label('Approval Required')
+                    ->label(__('hr.resources.leave_types.columns.approval_required'))
                     ->boolean(),
 
                 IconColumn::make('is_active')
-                    ->label('Active')
+                    ->label(__('hr.resources.leave_types.columns.is_active'))
                     ->boolean(),
             ])
             ->striped()

@@ -522,7 +522,7 @@ class ModuleSeeder extends Seeder
                 'description' => '360° contact and company records with activity timeline, custom fields, data enrichment, duplicate detection.',
                 'domain'      => 'crm',
                 'panel_id'    => 'crm',
-                'icon'        => 'heroicon-o-address-book',
+                'icon'        => 'heroicon-o-identification',
                 'color'       => '#0891B2',
                 'is_core'     => false,
                 'is_available'=> true,

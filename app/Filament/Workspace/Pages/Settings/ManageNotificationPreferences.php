@@ -14,9 +14,12 @@ use Filament\Schemas\Schema;
 class ManageNotificationPreferences extends Page
 {
 
-    protected static ?string $navigationLabel = 'Notifications';
-
     protected static \UnitEnum|string|null $navigationGroup = 'Settings';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('workspace.pages.notifications.nav_label');
+    }
 
     protected static ?int $navigationSort = 20;
 
@@ -73,12 +76,12 @@ class ManageNotificationPreferences extends Page
                 ->columns(3)
                 ->schema([
                     Toggle::make("{$key}.is_enabled")
-                        ->label('Enabled')
+                        ->label(__('workspace.pages.notifications.fields.enabled'))
                         ->default(true)
                         ->inline(false),
 
                     Checkbox::make("{$key}.mail")
-                        ->label('Email')
+                        ->label(__('workspace.pages.notifications.fields.email'))
                         ->helperText('Receive this notification via email.'),
                 ]);
         }
@@ -115,7 +118,7 @@ class ManageNotificationPreferences extends Page
 
         Notification::make()
             ->success()
-            ->title('Notification preferences saved')
+            ->title(__('workspace.pages.notifications.notifications.saved'))
             ->send();
     }
 
@@ -123,7 +126,7 @@ class ManageNotificationPreferences extends Page
     {
         return [
             Action::make('save')
-                ->label('Save preferences')
+                ->label(__('workspace.pages.notifications.actions.save'))
                 ->submit('save'),
         ];
     }

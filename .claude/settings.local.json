@@ -56,7 +56,25 @@
       "Bash(grep -rn 'function isLazy\\\\|protected $lazy\\\\|public $lazy' /Users/maxnijenkamp/Documents/FlowFlex/vendor/filament/widgets/ '--include=*.php')",
       "Bash(grep -v \"^$\\\\|INFO\\\\|running\")",
       "Bash(awk '{print $3}')",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Bash(psql -U postgres flowflex -c \"SELECT domain, count\\(*\\) as cnt, min\\(color\\) as color FROM modules GROUP BY domain ORDER BY domain;\")",
+      "WebSearch",
+      "WebFetch(domain:www.odoo.com)",
+      "WebFetch(domain:www.getknit.dev)",
+      "WebFetch(domain:oduist.com)",
+      "WebFetch(domain:www.fegno.com)",
+      "Bash(grep \"\\\\.php$\")",
+      "Bash(XDEBUG_MODE=off php -d memory_limit=768M vendor/bin/pest --stop-on-failure)",
+      "Bash(XDEBUG_MODE=off php -d memory_limit=768M vendor/bin/pest --filter \"Phase3\" --stop-on-failure)",
+      "Bash(XDEBUG_MODE=off php -d memory_limit=768M vendor/bin/pest --filter \"Phase3\")",
+      "Bash(XDEBUG_MODE=off php -d memory_limit=768M vendor/bin/pest)",
+      "Bash(XDEBUG_MODE=off php -d memory_limit=768M vendor/bin/pest --filter \"TaskSubtask\" -v)",
+      "Bash(XDEBUG_MODE=off php -d memory_limit=768M vendor/bin/pest --filter \"Phase2\")",
+      "Bash(XDEBUG_MODE=off php -d memory_limit=768M vendor/bin/pest --filter \"Phase2|Phase3\")",
+      "Bash(XDEBUG_MODE=off php -d memory_limit=768M vendor/bin/pest tests/Feature/Phase1_5/MarketingRoutesTest.php --no-coverage)",
+      "Bash(XDEBUG_MODE=off php -d memory_limit=768M vendor/bin/pest --no-coverage)",
+      "Bash(grep *)",
+      "Bash(awk '{print $4}')"
     ]
   },
   "enabledMcpjsonServers": [

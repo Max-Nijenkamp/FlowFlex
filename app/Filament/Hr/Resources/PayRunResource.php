@@ -28,9 +28,22 @@ class PayRunResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-currency-pound';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::Payroll;
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Payroll->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('hr.resources.pay_runs.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('hr.resources.pay_runs.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -55,10 +68,10 @@ class PayRunResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Pay Run Details')
+            Section::make(__('hr.resources.pay_runs.sections.details'))
                 ->schema([
                     Select::make('payroll_entity_id')
-                        ->label('Payroll Entity')
+                        ->label(__('hr.resources.pay_runs.fields.payroll_entity'))
                         // payroll_entity_id is NOT NULL in the migration — required
                         ->options(fn () => \App\Models\Hr\PayrollEntity::query()->pluck('name', 'id')->toArray())
                         ->required()
@@ -73,17 +86,17 @@ class PayRunResource extends Resource
                         ->required(),
 
                     DatePicker::make('pay_period_start')
-                        ->label('Period Start')
+                        ->label(__('hr.resources.pay_runs.fields.period_start'))
                         ->required()
                         ->native(false),
 
                     DatePicker::make('pay_period_end')
-                        ->label('Period End')
+                        ->label(__('hr.resources.pay_runs.fields.period_end'))
                         ->required()
                         ->native(false),
 
                     DatePicker::make('payment_date')
-                        ->label('Payment Date')
+                        ->label(__('hr.resources.pay_runs.fields.payment_date'))
                         ->required()
                         ->native(false),
 
@@ -104,20 +117,20 @@ class PayRunResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('pay_period_start')
-                    ->label('Period Start')
+                    ->label(__('hr.resources.pay_runs.columns.period_start'))
                     ->date('d M Y')
                     ->sortable(),
 
                 TextColumn::make('pay_period_end')
-                    ->label('Period End')
+                    ->label(__('hr.resources.pay_runs.columns.period_end'))
                     ->date('d M Y'),
 
                 TextColumn::make('payment_date')
-                    ->label('Payment Date')
+                    ->label(__('hr.resources.pay_runs.columns.payment_date'))
                     ->date('d M Y'),
 
                 TextColumn::make('pay_frequency')
-                    ->label('Frequency')
+                    ->label(__('hr.resources.pay_runs.columns.frequency'))
                     ->badge()
                     ->formatStateUsing(fn (?PayFrequency $state) => $state?->label()),
 
@@ -127,12 +140,12 @@ class PayRunResource extends Resource
                     ->color(fn (?PayRunStatus $state) => $state?->color()),
 
                 TextColumn::make('total_gross')
-                    ->label('Gross')
+                    ->label(__('hr.resources.pay_runs.columns.gross'))
                     ->money(fn ($record) => $record?->payrollEntity?->currency ?? 'EUR')
                     ->placeholder('—'),
 
                 TextColumn::make('total_net')
-                    ->label('Net')
+                    ->label(__('hr.resources.pay_runs.columns.net'))
                     ->money(fn ($record) => $record?->payrollEntity?->currency ?? 'EUR')
                     ->placeholder('—'),
             ])
@@ -147,7 +160,7 @@ class PayRunResource extends Resource
                     ),
 
                 SelectFilter::make('pay_frequency')
-                    ->label('Frequency')
+                    ->label(__('hr.resources.pay_runs.filters.frequency'))
                     ->options(
                         collect(PayFrequency::cases())
                             ->mapWithKeys(fn (PayFrequency $case) => [$case->value => $case->label()])

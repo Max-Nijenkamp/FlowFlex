@@ -29,9 +29,22 @@ class PublicHolidayResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-calendar-days';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::Leave;
-
     protected static ?int $navigationSort = 3;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Leave->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('hr.resources.public_holidays.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('hr.resources.public_holidays.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -56,14 +69,14 @@ class PublicHolidayResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Public Holiday Details')
+            Section::make(__('hr.resources.public_holidays.sections.details'))
                 ->schema([
                     TextInput::make('name')
                         ->required()
                         ->maxLength(255),
 
                     TextInput::make('country_code')
-                        ->label('Country Code')
+                        ->label(__('hr.resources.public_holidays.fields.country_code'))
                         ->helperText('ISO 3166-1 alpha-2, e.g. GB, NL, US')
                         ->required()
                         ->maxLength(2)
@@ -75,7 +88,7 @@ class PublicHolidayResource extends Resource
                         ->native(false),
 
                     Toggle::make('is_recurring')
-                        ->label('Recurring Annually')
+                        ->label(__('hr.resources.public_holidays.fields.is_recurring'))
                         ->default(true),
                 ]),
         ]);
@@ -91,7 +104,7 @@ class PublicHolidayResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('country_code')
-                    ->label('Country')
+                    ->label(__('hr.resources.public_holidays.columns.country'))
                     ->badge(),
 
                 TextColumn::make('date')
@@ -99,7 +112,7 @@ class PublicHolidayResource extends Resource
                     ->sortable(),
 
                 IconColumn::make('is_recurring')
-                    ->label('Recurring')
+                    ->label(__('hr.resources.public_holidays.columns.is_recurring'))
                     ->boolean(),
 
                 TextColumn::make('created_at')
@@ -112,7 +125,7 @@ class PublicHolidayResource extends Resource
             ->striped()
             ->filters([
                 SelectFilter::make('country_code')
-                    ->label('Country')
+                    ->label(__('hr.resources.public_holidays.filters.country'))
                     ->options(fn () => PublicHoliday::query()
                         ->distinct()
                         ->pluck('country_code', 'country_code')

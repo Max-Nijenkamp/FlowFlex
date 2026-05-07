@@ -29,9 +29,22 @@ class PayElementResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-banknotes';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::Payroll;
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Payroll->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('hr.resources.pay_elements.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('hr.resources.pay_elements.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -56,14 +69,14 @@ class PayElementResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Pay Element Details')
+            Section::make(__('hr.resources.pay_elements.sections.details'))
                 ->schema([
                     TextInput::make('name')
                         ->required()
                         ->maxLength(255),
 
                     Select::make('element_type')
-                        ->label('Element Type')
+                        ->label(__('hr.resources.pay_elements.fields.element_type'))
                         ->options(
                             collect(PayElementType::cases())
                                 ->mapWithKeys(fn (PayElementType $case) => [$case->value => $case->label()])
@@ -73,15 +86,15 @@ class PayElementResource extends Resource
                         ->required(),
 
                     Toggle::make('is_taxable')
-                        ->label('Taxable')
+                        ->label(__('hr.resources.pay_elements.fields.is_taxable'))
                         ->default(true),
 
                     Toggle::make('is_pensionable')
-                        ->label('Pensionable')
+                        ->label(__('hr.resources.pay_elements.fields.is_pensionable'))
                         ->default(false),
 
                     Toggle::make('is_active')
-                        ->label('Active')
+                        ->label(__('hr.resources.pay_elements.fields.is_active'))
                         ->default(true),
                 ]),
         ]);
@@ -97,16 +110,16 @@ class PayElementResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('element_type')
-                    ->label('Type')
+                    ->label(__('hr.resources.pay_elements.columns.type'))
                     ->badge()
                     ->formatStateUsing(fn (?PayElementType $state) => $state?->label()),
 
                 IconColumn::make('is_taxable')
-                    ->label('Taxable')
+                    ->label(__('hr.resources.pay_elements.columns.is_taxable'))
                     ->boolean(),
 
                 IconColumn::make('is_active')
-                    ->label('Active')
+                    ->label(__('hr.resources.pay_elements.columns.is_active'))
                     ->boolean(),
             ])
             ->striped()

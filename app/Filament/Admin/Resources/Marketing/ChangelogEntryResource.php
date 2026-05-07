@@ -33,10 +33,25 @@ class ChangelogEntryResource extends Resource
 
     protected static ?int $navigationSort = 9;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::MarketingContent->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.changelog_entries.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.changelog_entries.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Changelog Entry')
+            Section::make(__('admin.resources.changelog_entries.sections.changelog_entry'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('title')
@@ -97,12 +112,12 @@ class ChangelogEntryResource extends Resource
                     }),
 
                 TextColumn::make('published_at')
-                    ->label('Publish At')
+                    ->label(__('admin.resources.changelog_entries.columns.published_at'))
                     ->dateTime('d M Y')
                     ->sortable(),
 
                 IconColumn::make('is_published')
-                    ->label('Published')
+                    ->label(__('admin.resources.changelog_entries.columns.is_published'))
                     ->boolean()
                     ->sortable(),
             ])

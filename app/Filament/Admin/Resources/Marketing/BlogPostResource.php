@@ -37,10 +37,25 @@ class BlogPostResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::MarketingContent->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.blog_posts.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.blog_posts.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Content')
+            Section::make(__('admin.resources.blog_posts.sections.content'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('title')
@@ -88,7 +103,7 @@ class BlogPostResource extends Resource
                         ->hidden(),
                 ]),
 
-            Section::make('Publishing')
+            Section::make(__('admin.resources.blog_posts.sections.publishing'))
                 ->columns(2)
                 ->schema([
                     Select::make('status')
@@ -101,35 +116,35 @@ class BlogPostResource extends Resource
                         ->required(),
 
                     DateTimePicker::make('published_at')
-                        ->label('Publish At'),
+                        ->label(__('admin.resources.blog_posts.fields.published_at')),
                 ]),
 
-            Section::make('SEO')
+            Section::make(__('admin.resources.blog_posts.sections.seo'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('seo_title')
-                        ->label('SEO Title')
+                        ->label(__('admin.resources.blog_posts.fields.seo_title'))
                         ->maxLength(255),
 
                     Textarea::make('seo_description')
-                        ->label('SEO Description')
+                        ->label(__('admin.resources.blog_posts.fields.seo_description'))
                         ->rows(3),
 
                     Toggle::make('seo_noindex')
-                        ->label('No Index')
+                        ->label(__('admin.resources.blog_posts.fields.seo_noindex'))
                         ->inline(false),
 
                     FileUpload::make('og_image')
-                        ->label('OG Image')
+                        ->label(__('admin.resources.blog_posts.fields.og_image'))
                         ->image()
                         ->nullable(),
                 ]),
 
-            Section::make('Settings')
+            Section::make(__('admin.resources.blog_posts.sections.settings'))
                 ->columns(2)
                 ->schema([
                     Select::make('cta_type')
-                        ->label('CTA Type')
+                        ->label(__('admin.resources.blog_posts.fields.cta_type'))
                         ->options([
                             'demo'    => 'Demo',
                             'module'  => 'Module',
@@ -140,7 +155,7 @@ class BlogPostResource extends Resource
                         ->live(),
 
                     TextInput::make('cta_module')
-                        ->label('CTA Module')
+                        ->label(__('admin.resources.blog_posts.fields.cta_module'))
                         ->maxLength(255)
                         ->visible(fn (callable $get): bool => $get('cta_type') === 'module'),
                 ]),

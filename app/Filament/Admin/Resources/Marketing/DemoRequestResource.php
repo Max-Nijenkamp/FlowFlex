@@ -29,10 +29,25 @@ class DemoRequestResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::MarketingContent->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.demo_requests.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.demo_requests.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('CRM')
+            Section::make(__('admin.resources.demo_requests.sections.crm'))
                 ->columns(2)
                 ->schema([
                     Select::make('status')
@@ -60,7 +75,7 @@ class DemoRequestResource extends Resource
                         ->columnSpanFull(),
                 ]),
 
-            Section::make('Lead Information')
+            Section::make(__('admin.resources.demo_requests.sections.lead_information'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('first_name')->disabled(),
@@ -73,7 +88,7 @@ class DemoRequestResource extends Resource
                     Textarea::make('notes')->disabled()->columnSpanFull(),
                 ]),
 
-            Section::make('UTM Tracking')
+            Section::make(__('admin.resources.demo_requests.sections.utm_tracking'))
                 ->columns(3)
                 ->collapsed()
                 ->schema([

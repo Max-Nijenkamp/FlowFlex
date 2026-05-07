@@ -4,10 +4,13 @@ namespace App\Models\Pivots;
 
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class CompanyModule extends Pivot
 {
-    use HasUlids;
+    use HasUlids, LogsActivity, SoftDeletes;
 
     protected $table = 'company_module';
 
@@ -30,5 +33,12 @@ class CompanyModule extends Pivot
             'enabled_at'  => 'datetime',
             'disabled_at' => 'datetime',
         ];
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['company_id', 'module_id', 'is_enabled', 'enabled_at', 'disabled_at'])
+            ->logOnlyDirty();
     }
 }

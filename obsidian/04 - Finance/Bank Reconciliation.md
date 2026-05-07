@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/finance, bank-reconciliation, phase/5]
+tags: [flowflex, domain/finance, bank-reconciliation, phase/8]
 domain: Finance & Accounting
 panel: finance
 color: "#059669"
@@ -14,7 +14,7 @@ Connect bank accounts and match transactions automatically to invoices and bills
 **Who uses it:** Finance team, bookkeepers
 **Filament Panel:** `finance`
 **Depends on:** [[Invoicing]], [[Accounts Payable & Receivable]]
-**Phase:** 5
+**Phase:** 8
 **Build complexity:** Very High — 2 resources, 2 pages, 4 tables
 
 ## Events Consumed

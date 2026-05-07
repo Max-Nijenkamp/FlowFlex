@@ -3,7 +3,7 @@ tags: [flowflex, domain/finance, expenses, phase/3]
 domain: Finance & Accounting
 panel: finance
 color: "#059669"
-status: planned
+status: built
 last_updated: 2026-05-06
 ---
 

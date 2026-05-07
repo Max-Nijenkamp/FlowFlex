@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/crm, client-portal, white-label, phase/5]
+tags: [flowflex, domain/crm, client-portal, white-label, phase/8]
 domain: CRM & Sales
 panel: crm
 color: "#2563EB"
@@ -14,7 +14,7 @@ Branded self-service portal your clients log into. No FlowFlex branding — full
 **Who uses it:** Clients (external), account managers
 **Filament Panel:** `crm`
 **Depends on:** [[Contact & Company Management]], ideally [[Invoicing]], [[Document Management]] active
-**Phase:** 5
+**Phase:** 8
 
 ## Features
 

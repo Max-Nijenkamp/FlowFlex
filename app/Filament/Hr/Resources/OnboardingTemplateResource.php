@@ -29,9 +29,22 @@ class OnboardingTemplateResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-clipboard-document-list';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::Onboarding;
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Onboarding->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('hr.resources.onboarding_templates.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('hr.resources.onboarding_templates.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -56,7 +69,7 @@ class OnboardingTemplateResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Template Details')
+            Section::make(__('hr.resources.onboarding_templates.sections.details'))
                 ->schema([
                     TextInput::make('name')
                         ->required()
@@ -67,7 +80,7 @@ class OnboardingTemplateResource extends Resource
                         ->rows(4),
 
                     Toggle::make('is_active')
-                        ->label('Active')
+                        ->label(__('hr.resources.onboarding_templates.fields.is_active'))
                         ->default(true),
                 ]),
         ]);
@@ -83,7 +96,7 @@ class OnboardingTemplateResource extends Resource
                     ->sortable(),
 
                 IconColumn::make('is_active')
-                    ->label('Active')
+                    ->label(__('hr.resources.onboarding_templates.columns.is_active'))
                     ->boolean(),
 
                 TextColumn::make('created_at')

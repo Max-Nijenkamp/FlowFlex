@@ -17,16 +17,16 @@ All Filament panels in FlowFlex, their URLs, auth guards, and access rules.
 | `workspace` | Workspace settings, billing, module management | `/app/settings` | Workspace admins | ✅ built |
 | `hr` | HR & People | `/app/hr` | HR team, managers | ✅ built (Phase 2) |
 | `projects` | Projects & Work | `/app/projects` | All employees | ✅ built (Phase 2) |
-| `finance` | Finance & Accounting | `/app/finance` | Finance team | planned (Phase 3) |
-| `crm` | CRM & Sales | `/app/crm` | Sales, support | planned (Phase 3) |
-| `marketing` | Marketing & Content | `/app/marketing` | Marketing team | planned (Phase 4) |
+| `finance` | Finance & Accounting | `/app/finance` | Finance team | ✅ built (Phase 3) |
+| `crm` | CRM & Sales | `/app/crm` | Sales, support | ✅ built (Phase 3) |
 | `operations` | Operations & Field Service | `/app/ops` | Ops, field teams | planned (Phase 4) |
-| `it` | IT & Security | `/app/it` | IT team | planned (Phase 5) |
-| `legal` | Legal & Compliance | `/app/legal` | Legal, compliance | planned (Phase 5) |
-| `ecommerce` | E-commerce | `/app/store` | Ecommerce team | planned (Phase 5) |
-| `lms` | Learning & Development | `/app/learn` | All employees | planned (Phase 5) |
+| `ecommerce` | E-commerce | `/app/store` | Ecommerce team | planned (Phase 4) |
+| `marketing` | Marketing & Content | `/app/marketing` | Marketing team | planned (Phase 5) |
 | `communications` | Communications | `/app/comms` | All employees | planned (Phase 5) |
-| `analytics` | Analytics & BI | `/app/analytics` | Managers, leadership | planned (Phase 5) |
+| `analytics` | Analytics & BI | `/app/analytics` | Managers, leadership | planned (Phase 6) |
+| `it` | IT & Security | `/app/it` | IT team | planned (Phase 6) |
+| `legal` | Legal & Compliance | `/app/legal` | Legal, compliance | planned (Phase 7) |
+| `lms` | Learning & Development | `/app/learn` | All employees | planned (Phase 7) |
 
 ## Panel Access Rules
 

@@ -32,6 +32,21 @@ class RoleResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::AccessControl->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.roles.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.roles.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         $modules = [
@@ -76,7 +91,7 @@ class RoleResource extends Resource
         }
 
         return $schema->components([
-            Section::make('Role')
+            Section::make(__('admin.resources.roles.sections.role'))
                 ->schema([
                     TextInput::make('name')
                         ->required()
@@ -85,7 +100,7 @@ class RoleResource extends Resource
                         ->helperText('Use kebab-case: hr-manager, workspace-admin'),
                 ]),
 
-            Section::make('Permissions')
+            Section::make(__('admin.resources.roles.sections.permissions'))
                 ->schema([
                     Tabs::make('PermissionTabs')
                         ->tabs($tabs)
@@ -104,14 +119,14 @@ class RoleResource extends Resource
                     ->weight(FontWeight::Medium),
 
                 TextColumn::make('permissions_count')
-                    ->label('Permissions')
+                    ->label(__('admin.resources.roles.columns.permissions'))
                     ->counts('permissions')
                     ->sortable()
                     ->badge()
                     ->color('gray'),
 
                 TextColumn::make('created_at')
-                    ->label('Created')
+                    ->label(__('admin.resources.roles.columns.created'))
                     ->dateTime('d M Y')
                     ->sortable()
                     ->color('gray')

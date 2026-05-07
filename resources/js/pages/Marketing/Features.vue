@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {
     Users, FolderKanban, DollarSign, Building2, Megaphone, Settings,
@@ -10,245 +10,53 @@ import {
 
 const { t } = useI18n()
 
-interface Module {
-    name: string
-    description: string
-}
+interface DbModule { name: string; description: string }
+interface DbDomain { key: string; count: number; modules: DbModule[] }
 
 interface Domain {
+    key: string
     name: string
-    slug: string
     gradientFrom: string
     gradientTo: string
     color: string
     icon: unknown
     description: string
-    modules: Module[]
+    count: number
+    modules: DbModule[]
 }
 
-const domains: Domain[] = [
-    {
-        name: 'HR & People',
-        slug: 'hr-people',
-        gradientFrom: '#7C3AED',
-        gradientTo: '#9333EA',
-        color: '#7C3AED',
-        icon: Users,
-        description: 'Manage your entire workforce lifecycle — from hiring and onboarding to payroll and offboarding. Built for HR teams that need one reliable system.',
-        modules: [
-            { name: 'Employees', description: 'Central employee records with contracts, documents, custom fields, and org chart.' },
-            { name: 'Leave Management', description: 'Configurable leave types, approval workflows, and team absence calendar.' },
-            { name: 'Onboarding', description: 'Task-based onboarding flows with e-signatures, checklists, and welcome packs.' },
-            { name: 'Payroll', description: 'Dutch and UK payroll calculation with payslip generation and export to accountants.' },
-            { name: 'Performance', description: 'Review cycles, OKRs, 360-feedback, and development plans.' },
-            { name: 'Recruitment', description: 'Job board, application pipeline, interview scheduling, and offer letters.' },
-        ],
-    },
-    {
-        name: 'Projects & Work',
-        slug: 'projects-work',
-        gradientFrom: '#4F46E5',
-        gradientTo: '#6366F1',
-        color: '#4F46E5',
-        icon: FolderKanban,
-        description: 'Plan, track, and deliver work across teams. Tasks, timesheets, documents, and time tracking — all connected to clients and invoices.',
-        modules: [
-            { name: 'Tasks', description: 'Kanban boards, lists, sprints, dependencies, subtasks, and custom statuses.' },
-            { name: 'Timesheets', description: 'Weekly timesheets, approval flows, and export to payroll or invoicing.' },
-            { name: 'Documents', description: 'Rich-text docs, file storage, version history, and shared folders.' },
-            { name: 'Time Tracking', description: 'Timer widget, manual entries, and auto-linkage to tasks and projects.' },
-            { name: 'Milestones', description: 'Project milestones with Gantt-style timeline and deadline tracking.' },
-            { name: 'Resource Planning', description: 'Capacity planning, team allocation, and workload overview.' },
-        ],
-    },
-    {
-        name: 'Finance',
-        slug: 'finance',
-        gradientFrom: '#059669',
-        gradientTo: '#10B981',
-        color: '#059669',
-        icon: DollarSign,
-        description: 'Invoicing, expense tracking, budgets, and financial reporting in one place. Connects to CRM, projects, and payroll so numbers always match.',
-        modules: [
-            { name: 'Invoicing', description: 'Create, send, and track invoices. Supports recurring billing and SEPA payment links.' },
-            { name: 'Expenses', description: 'Employee expense claims with receipt upload, category rules, and approval workflows.' },
-            { name: 'Budgets', description: 'Department and project budgets with real-time spend tracking and alerts.' },
-            { name: 'Financial Reports', description: 'P&L, cashflow, and custom report builder with export to Excel/PDF.' },
-            { name: 'Purchase Orders', description: 'PO creation, supplier approval, and three-way matching with invoices.' },
-            { name: 'Tax Management', description: 'VAT/BTW setup, filing period tracking, and tax report generation.' },
-        ],
-    },
-    {
-        name: 'CRM & Sales',
-        slug: 'crm-sales',
-        gradientFrom: '#2563EB',
-        gradientTo: '#3B82F6',
-        color: '#2563EB',
-        icon: Building2,
-        description: 'Track leads, manage your pipeline, and close deals. Built for how European sales teams actually work — connected to finance and communications.',
-        modules: [
-            { name: 'Contacts', description: 'Companies and contacts with activity timeline, custom fields, and duplicate detection.' },
-            { name: 'Pipeline', description: 'Visual deal stages with probability weighting, stale deal alerts, and forecasting.' },
-            { name: 'Deals', description: 'Deal records with line items, linked quotes, and conversion tracking.' },
-            { name: 'Activities', description: 'Tasks, calls, meetings, and emails logged against contacts and deals.' },
-            { name: 'Quotes', description: 'Proposal builder with product catalog, discounts, and one-click conversion to invoice.' },
-            { name: 'Lead Capture', description: 'Web forms, email parsing, and lead routing rules with duplicate checks.' },
-        ],
-    },
-    {
-        name: 'Marketing',
-        slug: 'marketing',
-        gradientFrom: '#DB2777',
-        gradientTo: '#EC4899',
-        color: '#DB2777',
-        icon: Megaphone,
-        description: 'Run campaigns, manage email lists, and capture leads — all connected to your CRM. No separate marketing stack required.',
-        modules: [
-            { name: 'Campaigns', description: 'Multi-channel campaign management with send scheduling and A/B testing.' },
-            { name: 'Email', description: 'Drag-and-drop email builder, list segmentation, and delivery analytics.' },
-            { name: 'Forms', description: 'Embeddable lead capture forms with conditional logic and CRM sync.' },
-            { name: 'Automations', description: 'Trigger-based automation flows: lead scoring, nurture sequences, and alerts.' },
-            { name: 'Landing Pages', description: 'No-code landing page builder with conversion tracking and A/B variants.' },
-            { name: 'Analytics', description: 'Campaign attribution, funnel visualisation, and ROI reporting.' },
-        ],
-    },
-    {
-        name: 'Operations',
-        slug: 'operations',
-        gradientFrom: '#D97706',
-        gradientTo: '#F59E0B',
-        color: '#D97706',
-        icon: Settings,
-        description: 'Manage inventory, procurement, and supplier relationships. All connected to finance and projects so operations and accounting stay in sync.',
-        modules: [
-            { name: 'Inventory', description: 'Stock levels, locations, movement history, low-stock alerts, and barcode scanning.' },
-            { name: 'Procurement', description: 'Supplier catalogue, purchase requisitions, approval rules, and order tracking.' },
-            { name: 'Suppliers', description: 'Supplier profiles, contract terms, performance scoring, and payment terms.' },
-            { name: 'Logistics', description: 'Shipment tracking, delivery scheduling, and carrier integrations.' },
-            { name: 'Facilities', description: 'Office locations, maintenance requests, and space management.' },
-            { name: 'Quality', description: 'Quality checklists, non-conformance reports, and corrective action tracking.' },
-        ],
-    },
-    {
-        name: 'Analytics',
-        slug: 'analytics',
-        gradientFrom: '#9333EA',
-        gradientTo: '#A855F7',
-        color: '#9333EA',
-        icon: BarChart3,
-        description: 'Custom dashboards, KPI tracking, and cross-module reports. One analytics layer over every module in your workspace — no data warehouse needed.',
-        modules: [
-            { name: 'Dashboards', description: 'Drag-and-drop widgets pulling live data from any active module.' },
-            { name: 'Reports', description: 'Report builder with filters, grouping, calculated columns, and scheduled delivery.' },
-            { name: 'KPIs', description: 'Define targets, track actuals, and alert when thresholds are breached.' },
-            { name: 'Forecasts', description: 'Revenue, headcount, and cashflow forecasting with scenario modelling.' },
-            { name: 'Data Export', description: 'Scheduled exports to CSV, Excel, or direct connection via REST API.' },
-            { name: 'Audit Trail', description: 'Full change history across all modules — who changed what and when.' },
-        ],
-    },
-    {
-        name: 'IT & Security',
-        slug: 'it-security',
-        gradientFrom: '#475569',
-        gradientTo: '#64748B',
-        color: '#475569',
-        icon: ShieldCheck,
-        description: 'Asset management, access control, and audit logging for IT teams. Manage hardware, software licences, and security policies without separate tools.',
-        modules: [
-            { name: 'Asset Management', description: 'Hardware and software assets with lifecycle tracking, assignment, and warranty dates.' },
-            { name: 'Access Control', description: 'Role-based permissions, IP allowlisting, SSO configuration, and session management.' },
-            { name: 'Audit Log', description: 'Immutable event log for all user actions across every module — essential for compliance.' },
-            { name: 'IT Ticketing', description: 'Internal helpdesk for IT requests with SLA tracking and escalation rules.' },
-            { name: 'Licence Management', description: 'Track software subscriptions, renewal dates, and per-seat usage.' },
-            { name: 'Security Policies', description: 'Password policies, 2FA enforcement, and data retention rules.' },
-        ],
-    },
-    {
-        name: 'Legal',
-        slug: 'legal',
-        gradientFrom: '#DC2626',
-        gradientTo: '#EF4444',
-        color: '#DC2626',
-        icon: Scale,
-        description: 'Contract management, compliance tracking, and digital signatures — with a full audit trail. Built for European legal and compliance requirements.',
-        modules: [
-            { name: 'Contracts', description: 'Contract repository with version control, expiry alerts, and clause library.' },
-            { name: 'Compliance', description: 'Compliance obligation tracking, evidence collection, and review scheduling.' },
-            { name: 'Signatures', description: 'EU-compliant e-signature via qualified signatures (eIDAS) or simple electronic signatures.' },
-            { name: 'Templates', description: 'Contract template library with variable fields and auto-population from CRM.' },
-            { name: 'GDPR Tools', description: 'Data subject request management, processing records (RoPA), and consent tracking.' },
-            { name: 'Document Control', description: 'Policy management with version approval workflows and acknowledgement tracking.' },
-        ],
-    },
-    {
-        name: 'E-commerce',
-        slug: 'ecommerce',
-        gradientFrom: '#0D9488',
-        gradientTo: '#14B8A6',
-        color: '#0D9488',
-        icon: ShoppingBag,
-        description: 'Manage products, orders, and your online storefront — with inventory, CRM, and finance modules all connected by default.',
-        modules: [
-            { name: 'Products', description: 'Product catalogue with variants, pricing rules, categories, and stock links.' },
-            { name: 'Orders', description: 'Order management with fulfilment tracking, returns, and refund workflows.' },
-            { name: 'Storefront', description: 'Hosted storefront builder with custom domain, SEO settings, and payment gateway.' },
-            { name: 'Customers', description: 'Storefront customer records synced to CRM contacts automatically.' },
-            { name: 'Promotions', description: 'Discount codes, bundle pricing, flash sales, and loyalty rules.' },
-            { name: 'Analytics', description: 'Sales by product, conversion funnels, and customer lifetime value.' },
-        ],
-    },
-    {
-        name: 'Communications',
-        slug: 'communications',
-        gradientFrom: '#0284C7',
-        gradientTo: '#0EA5E9',
-        color: '#0284C7',
-        icon: MessageSquare,
-        description: 'Internal chat, company announcements, and video meetings — without leaving FlowFlex. Reduce inbox noise and keep team communication in context.',
-        modules: [
-            { name: 'Chat', description: 'Threaded channels, direct messages, and context-linked conversations tied to tasks or deals.' },
-            { name: 'Announcements', description: 'Company-wide broadcasts with read receipts, reactions, and scheduled publishing.' },
-            { name: 'Video', description: 'Browser-based video calls with screen sharing — no app install required.' },
-            { name: 'Notifications', description: 'Unified notification centre across all modules with snooze, mute, and digest settings.' },
-            { name: 'Email Integration', description: 'Send and receive emails directly from CRM contact and deal records.' },
-            { name: 'Shared Inboxes', description: 'Team inboxes for support@, sales@, and info@ with assignment and SLA tracking.' },
-        ],
-    },
-    {
-        name: 'Learning & Dev',
-        slug: 'learning-dev',
-        gradientFrom: '#EA580C',
-        gradientTo: '#F97316',
-        color: '#EA580C',
-        icon: GraduationCap,
-        description: 'Build and track employee learning with courses, certifications, and skill development paths — connected to HR for compliance reporting.',
-        modules: [
-            { name: 'Courses', description: 'Course builder with video, quizzes, SCORM import, and completion certificates.' },
-            { name: 'Certifications', description: 'Certification tracking with expiry alerts and re-enrollment triggers.' },
-            { name: 'Skill Tracking', description: 'Skill gap analysis, competency frameworks, and development plan templates.' },
-            { name: 'Assessments', description: 'Knowledge checks, scored quizzes, and manager-assessed practical skills.' },
-            { name: 'Learning Paths', description: 'Structured onboarding and role-based learning journeys with prerequisites.' },
-            { name: 'Compliance Training', description: 'Mandatory training assignment with completion tracking and audit records.' },
-        ],
-    },
-    {
-        name: 'Core Platform',
-        slug: 'core-platform',
-        gradientFrom: '#2199C8',
-        gradientTo: '#4BB3DC',
-        color: '#2199C8',
-        icon: Layers,
-        description: 'The foundation of FlowFlex — authentication, permissions, multi-tenancy, API, and workspace settings. Included in every plan.',
-        modules: [
-            { name: 'Auth & Users', description: 'User management, password policies, 2FA, and SSO (SAML/OAuth — coming soon).' },
-            { name: 'Permissions', description: 'Granular role-based access control with per-module and per-record permissions.' },
-            { name: 'API', description: 'REST API with per-key scopes, rate limiting, and full OpenAPI documentation.' },
-            { name: 'Workspace Settings', description: 'Company profile, billing management, module activation, and branding.' },
-            { name: 'Webhooks', description: 'Event-driven webhooks for every module action — integrate with any external system.' },
-            { name: 'Audit & Compliance', description: 'Platform-wide audit log, GDPR data export, and account deletion tools.' },
-        ],
-    },
-]
+const props = defineProps<{ domains: DbDomain[] }>()
+
+const domainVisualConfig: Record<string, { name: string; icon: unknown; gradientFrom: string; gradientTo: string; color: string; description: string }> = {
+    hr:             { name: 'HR & People',      icon: Users,         gradientFrom: '#7C3AED', gradientTo: '#9333EA', color: '#7C3AED', description: 'Manage your entire workforce lifecycle — from hiring and onboarding to payroll and offboarding. Built for HR teams that need one reliable system.' },
+    projects:       { name: 'Projects & Work',  icon: FolderKanban,  gradientFrom: '#4F46E5', gradientTo: '#6366F1', color: '#4F46E5', description: 'Plan, track, and deliver work across teams. Tasks, timesheets, documents, and time tracking — all connected to clients and invoices.' },
+    finance:        { name: 'Finance',          icon: DollarSign,    gradientFrom: '#059669', gradientTo: '#10B981', color: '#059669', description: 'Invoicing, expense tracking, budgets, and financial reporting in one place. Connects to CRM, projects, and payroll so numbers always match.' },
+    crm:            { name: 'CRM & Sales',      icon: Building2,     gradientFrom: '#2563EB', gradientTo: '#3B82F6', color: '#2563EB', description: 'Track leads, manage your pipeline, and close deals. Built for how European sales teams actually work — connected to finance and communications.' },
+    marketing:      { name: 'Marketing',        icon: Megaphone,     gradientFrom: '#DB2777', gradientTo: '#EC4899', color: '#DB2777', description: 'Run campaigns, manage email lists, and capture leads — all connected to your CRM. No separate marketing stack required.' },
+    operations:     { name: 'Operations',       icon: Settings,      gradientFrom: '#D97706', gradientTo: '#F59E0B', color: '#D97706', description: 'Manage inventory, procurement, and supplier relationships. All connected to finance and projects so operations and accounting stay in sync.' },
+    analytics:      { name: 'Analytics',        icon: BarChart3,     gradientFrom: '#9333EA', gradientTo: '#A855F7', color: '#9333EA', description: 'Custom dashboards, KPI tracking, and cross-module reports. One analytics layer over every module in your workspace — no data warehouse needed.' },
+    it:             { name: 'IT & Security',    icon: ShieldCheck,   gradientFrom: '#475569', gradientTo: '#64748B', color: '#475569', description: 'Asset management, access control, and audit logging for IT teams. Manage hardware, software licences, and security policies without separate tools.' },
+    legal:          { name: 'Legal',            icon: Scale,         gradientFrom: '#DC2626', gradientTo: '#EF4444', color: '#DC2626', description: 'Contract management, compliance tracking, and digital signatures — with a full audit trail. Built for European legal and compliance requirements.' },
+    ecommerce:      { name: 'E-commerce',       icon: ShoppingBag,   gradientFrom: '#0D9488', gradientTo: '#14B8A6', color: '#0D9488', description: 'Manage products, orders, and your online storefront — with inventory, CRM, and finance modules all connected by default.' },
+    communications: { name: 'Communications',   icon: MessageSquare, gradientFrom: '#0284C7', gradientTo: '#0EA5E9', color: '#0284C7', description: 'Internal chat, company announcements, and video meetings — without leaving FlowFlex. Reduce inbox noise and keep team communication in context.' },
+    learning:       { name: 'Learning & Dev',   icon: GraduationCap, gradientFrom: '#EA580C', gradientTo: '#F97316', color: '#EA580C', description: 'Build and track employee learning with courses, certifications, and skill development paths — connected to HR for compliance reporting.' },
+    core:           { name: 'Core Platform',    icon: Layers,        gradientFrom: '#2199C8', gradientTo: '#4BB3DC', color: '#2199C8', description: 'The foundation of FlowFlex — authentication, permissions, multi-tenancy, API, and workspace settings. Included in every plan.' },
+}
+
+const domainOrder = ['hr', 'projects', 'finance', 'crm', 'marketing', 'operations', 'analytics', 'it', 'legal', 'ecommerce', 'communications', 'learning', 'core']
+
+const domains = computed<Domain[]>(() => {
+    const dbMap = Object.fromEntries(props.domains.map(d => [d.key, d]))
+    return domainOrder
+        .filter(key => dbMap[key])
+        .map(key => ({
+            ...domainVisualConfig[key],
+            key,
+            count: dbMap[key].count,
+            modules: dbMap[key].modules,
+        }))
+})
+
 
 const selectedDomain = ref<Domain | null>(null)
 
@@ -290,7 +98,8 @@ onUnmounted(() => {
                 <component :is="d.icon" class="w-6 h-6 text-white" />
             </div>
         </div>
-        <div class="relative max-w-4xl mx-auto text-center space-y-6">            <h1 class="text-6xl sm:text-7xl font-black text-white leading-tight tracking-tighter">
+        <div class="relative max-w-4xl mx-auto text-center space-y-6">
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-black text-white leading-tight tracking-tighter">
                 {{ t('features.heading') }}
             </h1>
             <p class="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">

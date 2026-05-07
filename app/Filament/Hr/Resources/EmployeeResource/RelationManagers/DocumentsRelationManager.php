@@ -18,12 +18,17 @@ class DocumentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'documents';
 
-    protected static ?string $title = 'Documents';
+    protected static ?string $title = null;
+
+    public static function getTitle(\Illuminate\Database\Eloquent\Model $ownerRecord, string $pageClass): string
+    {
+        return __('hr.resources.employee_documents.title');
+    }
 
     public function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Document Details')
+            Section::make(__('hr.resources.employee_documents.sections.details'))
                 ->schema([
                     TextInput::make('title')
                         ->required()

@@ -192,6 +192,11 @@ class RolesAndPermissionsSeeder extends Seeder
             'projects.sprints.edit',
             'projects.sprints.delete',
 
+            'projects.task-labels.view',
+            'projects.task-labels.create',
+            'projects.task-labels.edit',
+            'projects.task-labels.delete',
+
             // ── Finance ──
             'finance.invoices.view',
             'finance.invoices.create',
@@ -204,6 +209,23 @@ class RolesAndPermissionsSeeder extends Seeder
             'finance.expenses.edit',
             'finance.expenses.delete',
             'finance.expenses.approve',
+
+            'finance.expense-categories.view',
+            'finance.expense-categories.create',
+            'finance.expense-categories.edit',
+            'finance.expense-categories.delete',
+
+            'finance.credit-notes.view',
+            'finance.credit-notes.create',
+            'finance.credit-notes.edit',
+            'finance.credit-notes.delete',
+
+            'finance.mileage-rates.view',
+            'finance.mileage-rates.create',
+            'finance.mileage-rates.edit',
+            'finance.mileage-rates.delete',
+
+            'finance.reports.view',
 
             'finance.bills.view',
             'finance.bills.create',
@@ -224,11 +246,54 @@ class RolesAndPermissionsSeeder extends Seeder
             'finance.tax.view',
             'finance.tax.edit',
 
+            'finance.recurring-invoices.view',
+            'finance.recurring-invoices.create',
+            'finance.recurring-invoices.edit',
+            'finance.recurring-invoices.delete',
+
+            'finance.expense-reports.view',
+            'finance.expense-reports.create',
+            'finance.expense-reports.edit',
+            'finance.expense-reports.delete',
+            'finance.expense-reports.approve',
+
             // ── CRM ──
             'crm.contacts.view',
             'crm.contacts.create',
             'crm.contacts.edit',
             'crm.contacts.delete',
+
+            'crm.companies.view',
+            'crm.companies.create',
+            'crm.companies.edit',
+            'crm.companies.delete',
+
+            'crm.deals.view',
+            'crm.deals.create',
+            'crm.deals.edit',
+            'crm.deals.delete',
+
+            'crm.pipelines.view',
+            'crm.pipelines.create',
+            'crm.pipelines.edit',
+            'crm.pipelines.delete',
+
+            'crm.deal-stages.view',
+            'crm.deal-stages.create',
+            'crm.deal-stages.edit',
+            'crm.deal-stages.delete',
+
+            'crm.tickets.view',
+            'crm.tickets.create',
+            'crm.tickets.edit',
+            'crm.tickets.delete',
+            'crm.tickets.assign',
+            'crm.tickets.resolve',
+
+            'crm.canned-responses.view',
+            'crm.canned-responses.create',
+            'crm.canned-responses.edit',
+            'crm.canned-responses.delete',
 
             'crm.pipeline.view',
             'crm.pipeline.create',
@@ -251,6 +316,25 @@ class RolesAndPermissionsSeeder extends Seeder
             'crm.support.edit',
             'crm.support.delete',
             'crm.support.assign',
+
+            'crm.sla-rules.view',
+            'crm.sla-rules.create',
+            'crm.sla-rules.edit',
+            'crm.sla-rules.delete',
+
+            'crm.ticket-sla-rules.view',
+            'crm.ticket-sla-rules.create',
+            'crm.ticket-sla-rules.edit',
+            'crm.ticket-sla-rules.delete',
+
+            'crm.chatbot-rules.view',
+            'crm.chatbot-rules.create',
+            'crm.chatbot-rules.edit',
+            'crm.chatbot-rules.delete',
+
+            'crm.csat.view',
+            'crm.csat.create',
+            'crm.csat.delete',
 
             // ── Marketing ──
             'marketing.cms.view',
@@ -456,6 +540,31 @@ class RolesAndPermissionsSeeder extends Seeder
                 ->get()
         );
 
+        $financeManager = Role::firstOrCreate(['name' => 'finance-manager', 'guard_name' => 'tenant']);
+        $financeManager->givePermissionTo(
+            Permission::where('guard_name', 'tenant')
+                ->where('name', 'like', 'finance.%')
+                ->get()
+        );
+
+        $salesRep = Role::firstOrCreate(['name' => 'sales-rep', 'guard_name' => 'tenant']);
+        $salesRep->givePermissionTo([
+            'crm.contacts.view',
+            'crm.contacts.create',
+            'crm.contacts.edit',
+            'crm.contacts.delete',
+            'crm.companies.view',
+            'crm.companies.create',
+            'crm.companies.edit',
+            'crm.companies.delete',
+            'crm.deals.view',
+            'crm.deals.create',
+            'crm.deals.edit',
+            'crm.deals.delete',
+            'crm.pipelines.view',
+            'crm.deal-stages.view',
+        ]);
+
         $employee = Role::firstOrCreate(['name' => 'employee', 'guard_name' => 'tenant']);
         $employee->givePermissionTo([
             'hr.leave.view',
@@ -465,6 +574,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'projects.tasks.view',
             'projects.tasks.create',
             'projects.tasks.edit',
+            'projects.task-labels.view',
             'projects.time.view',
             'projects.time.create',
             'projects.time.edit',

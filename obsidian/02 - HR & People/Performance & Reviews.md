@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/hr, performance, reviews, okr, phase/5]
+tags: [flowflex, domain/hr, performance, reviews, okr, phase/8]
 domain: HR & People
 panel: hr
 color: "#7C3AED"
@@ -14,7 +14,7 @@ Structured performance management. OKRs, review cycles, 360 feedback, and develo
 **Who uses it:** All employees, managers, HR team
 **Filament Panel:** `hr`
 **Depends on:** [[Employee Profiles]]
-**Phase:** 5
+**Phase:** 8
 **Build complexity:** High — 3 resources, 2 pages, 8 tables
 
 ## Events Consumed

@@ -24,41 +24,54 @@ class TaskLabelResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-tag';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::Tasks;
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Tasks->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('projects.resources.task_labels.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('projects.resources.task_labels.plural');
+    }
 
     public static function canViewAny(): bool
     {
-        return auth()->user()?->can('projects.tasks.view') ?? false;
+        return auth()->user()?->can('projects.task-labels.view') ?? false;
     }
 
     public static function canCreate(): bool
     {
-        return auth()->user()?->can('projects.tasks.create') ?? false;
+        return auth()->user()?->can('projects.task-labels.create') ?? false;
     }
 
     public static function canEdit($record): bool
     {
-        return auth()->user()?->can('projects.tasks.edit') ?? false;
+        return auth()->user()?->can('projects.task-labels.edit') ?? false;
     }
 
     public static function canDelete($record): bool
     {
-        return auth()->user()?->can('projects.tasks.delete') ?? false;
+        return auth()->user()?->can('projects.task-labels.delete') ?? false;
     }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Label Details')
+            Section::make(__('projects.resources.task_labels.sections.details'))
                 ->schema([
                     TextInput::make('name')
                         ->required()
                         ->maxLength(255),
 
                     TextInput::make('color')
-                        ->label('Color (hex)')
+                        ->label(__('projects.resources.task_labels.fields.color'))
                         ->nullable()
                         ->placeholder('#3B82F6')
                         ->maxLength(7),
@@ -81,7 +94,7 @@ class TaskLabelResource extends Resource
                     ->color(fn (?string $state) => $state ?? 'gray'),
 
                 TextColumn::make('tasks_count')
-                    ->label('Tasks')
+                    ->label(__('projects.resources.task_labels.columns.tasks_count'))
                     ->counts('tasks')
                     ->sortable(),
             ])

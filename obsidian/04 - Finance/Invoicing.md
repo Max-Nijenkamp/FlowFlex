@@ -3,7 +3,7 @@ tags: [flowflex, domain/finance, invoicing, phase/3]
 domain: Finance & Accounting
 panel: finance
 color: "#059669"
-status: planned
+status: built
 last_updated: 2026-05-06
 ---
 

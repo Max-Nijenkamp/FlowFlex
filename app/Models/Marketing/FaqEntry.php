@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 #[Fillable([
     'question',
@@ -17,7 +19,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 ])]
 class FaqEntry extends Model
 {
-    use HasUlids, SoftDeletes;
+    use HasUlids, LogsActivity, SoftDeletes;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['question', 'context', 'display_order', 'is_published'])
+            ->logOnlyDirty();
+    }
 
     protected function casts(): array
     {

@@ -27,9 +27,22 @@ class PayrollEntityResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-building-office';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::Payroll;
-
     protected static ?int $navigationSort = 0;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Payroll->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('hr.resources.payroll_entities.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('hr.resources.payroll_entities.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -54,33 +67,35 @@ class PayrollEntityResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Payroll Entity Details')
+            Section::make(__('hr.resources.payroll_entities.sections.details'))
                 ->schema([
                     TextInput::make('name')
-                        ->label('Display Name')
+                        ->label(__('hr.resources.payroll_entities.fields.display_name'))
                         ->required()
                         ->maxLength(255),
 
                     TextInput::make('legal_name')
-                        ->label('Legal Name')
+                        ->label(__('hr.resources.payroll_entities.fields.legal_name'))
                         ->nullable()
                         ->maxLength(255),
 
                     TextInput::make('country_code')
-                        ->label('Country Code')
+                        ->label(__('hr.resources.payroll_entities.fields.country_code'))
                         ->helperText('ISO 3166-1 alpha-2, e.g. GB, NL, US')
                         ->required()
                         ->maxLength(2)
                         ->minLength(2)
                         ->dehydrateStateUsing(fn (?string $state) => $state ? strtoupper($state) : $state),
 
-                    TextInput::make('tax_reference')
-                        ->label('Tax Reference')
+                    TextInput::make('tax_reference_encrypted')
+                        ->label(__('hr.resources.payroll_entities.fields.tax_reference'))
                         ->nullable()
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->password()
+                        ->revealable(),
 
                     Toggle::make('is_default')
-                        ->label('Default Entity')
+                        ->label(__('hr.resources.payroll_entities.fields.default_entity'))
                         ->default(false),
                 ]),
         ]);
@@ -96,19 +111,20 @@ class PayrollEntityResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('legal_name')
-                    ->label('Legal Name')
+                    ->label(__('hr.resources.payroll_entities.columns.legal_name'))
                     ->placeholder('—'),
 
                 TextColumn::make('country_code')
-                    ->label('Country')
+                    ->label(__('hr.resources.payroll_entities.columns.country'))
                     ->badge(),
 
-                TextColumn::make('tax_reference')
-                    ->label('Tax Reference')
+                TextColumn::make('tax_reference_encrypted')
+                    ->label(__('hr.resources.payroll_entities.columns.tax_reference'))
+                    ->formatStateUsing(fn ($state) => $state ? '••••••••' : '—')
                     ->placeholder('—'),
 
                 IconColumn::make('is_default')
-                    ->label('Default')
+                    ->label(__('hr.resources.payroll_entities.columns.is_default'))
                     ->boolean(),
 
                 TextColumn::make('created_at')

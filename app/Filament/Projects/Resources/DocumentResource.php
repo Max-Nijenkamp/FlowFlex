@@ -27,9 +27,22 @@ class DocumentResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::Documents;
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Documents->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('projects.resources.documents.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('projects.resources.documents.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -54,14 +67,14 @@ class DocumentResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Document Details')
+            Section::make(__('projects.resources.documents.sections.details'))
                 ->schema([
                     TextInput::make('title')
                         ->required()
                         ->maxLength(255),
 
                     Select::make('folder_id')
-                        ->label('Folder')
+                        ->label(__('projects.resources.documents.fields.folder_id'))
                         ->relationship('folder', 'name')
                         ->nullable()
                         ->searchable()
@@ -80,7 +93,7 @@ class DocumentResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('folder.name')
-                    ->label('Folder')
+                    ->label(__('projects.resources.documents.columns.folder'))
                     ->placeholder('Root'),
 
                 TextColumn::make('created_at')

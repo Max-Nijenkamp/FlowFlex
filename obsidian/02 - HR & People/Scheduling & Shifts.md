@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/hr, scheduling, shifts, phase/5]
+tags: [flowflex, domain/hr, scheduling, shifts, phase/8]
 domain: HR & People
 panel: hr
 color: "#7C3AED"
@@ -14,7 +14,7 @@ Shift planning for hourly workers, retail, hospitality, and any team with rotas.
 **Who uses it:** Shift managers, operations managers, employees
 **Filament Panel:** `hr` or `operations` (configurable)
 **Depends on:** [[Employee Profiles]]
-**Phase:** 5
+**Phase:** 8
 **Build complexity:** High — 2 resources, 2 pages, 5 tables
 
 ## Events Fired

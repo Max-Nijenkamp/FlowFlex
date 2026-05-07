@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/finance, client-billing, retainers, phase/5]
+tags: [flowflex, domain/finance, client-billing, retainers, phase/8]
 domain: Finance & Accounting
 panel: finance
 color: "#059669"
@@ -14,7 +14,7 @@ For professional services firms. Convert time and expenses into client invoices,
 **Who uses it:** Account managers, finance team
 **Filament Panel:** `finance`
 **Depends on:** [[Invoicing]], [[Time Tracking]], [[Contact & Company Management]] (client records)
-**Phase:** 5
+**Phase:** 8
 
 ## Events Consumed
 

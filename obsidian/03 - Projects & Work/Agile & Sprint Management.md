@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/projects, agile, sprint, scrum, phase/5]
+tags: [flowflex, domain/projects, agile, sprint, scrum, phase/8]
 domain: Projects & Work
 panel: projects
 color: "#4F46E5"
@@ -14,7 +14,7 @@ For software and product teams. Full scrum/kanban support, backlog grooming, and
 **Who uses it:** Engineering and product teams
 **Filament Panel:** `projects`
 **Depends on:** [[Task Management]]
-**Phase:** 5
+**Phase:** 8
 **Build complexity:** (uses Task Management infrastructure — incremental)
 
 ## Features

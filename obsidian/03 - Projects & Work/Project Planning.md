@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/projects, planning, gantt, milestones, phase/5]
+tags: [flowflex, domain/projects, planning, gantt, milestones, phase/8]
 domain: Projects & Work
 panel: projects
 color: "#4F46E5"
@@ -14,7 +14,7 @@ For managing larger bodies of work with milestones, dependencies, and resource a
 **Who uses it:** Project managers, team leads
 **Filament Panel:** `projects`
 **Depends on:** [[Task Management]]
-**Phase:** 5
+**Phase:** 8
 **Build complexity:** Very High — 2 resources, 3 pages, 5 tables
 
 ## Events Fired

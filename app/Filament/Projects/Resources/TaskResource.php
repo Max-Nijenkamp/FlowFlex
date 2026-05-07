@@ -33,9 +33,22 @@ class TaskResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-check-circle';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::Tasks;
-
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Tasks->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('projects.resources.tasks.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('projects.resources.tasks.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -60,7 +73,7 @@ class TaskResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Task Details')
+            Section::make(__('projects.resources.tasks.sections.details'))
                 ->schema([
                     TextInput::make('title')
                         ->required()
@@ -89,10 +102,10 @@ class TaskResource extends Resource
                         ->required(),
                 ]),
 
-            Section::make('Assignment')
+            Section::make(__('projects.resources.tasks.sections.assignment'))
                 ->schema([
                     Select::make('assignee_tenant_id')
-                        ->label('Assignee')
+                        ->label(__('projects.resources.tasks.fields.assignee'))
                         ->options(
                             fn () => Tenant::query()
                                 ->where('company_id', auth()->user()?->company_id)
@@ -112,14 +125,14 @@ class TaskResource extends Resource
                         ->native(false),
 
                     TextInput::make('estimated_hours')
-                        ->label('Estimated Hours')
+                        ->label(__('projects.resources.tasks.fields.estimated_hours'))
                         ->numeric()
                         ->nullable()
                         ->minValue(0),
                 ])
                 ->columns(2),
 
-            Section::make('Labels')
+            Section::make(__('projects.resources.tasks.sections.labels'))
                 ->schema([
                     Select::make('labels')
                         ->relationship('labels', 'name')
@@ -152,7 +165,7 @@ class TaskResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('assignee.email')
-                    ->label('Assignee')
+                    ->label(__('projects.resources.tasks.columns.assignee'))
                     ->placeholder('Unassigned')
                     ->sortable(),
 
@@ -162,7 +175,7 @@ class TaskResource extends Resource
                     ->color(fn (?string $state) => $state && now()->isAfter($state) ? 'danger' : null),
 
                 TextColumn::make('estimated_hours')
-                    ->label('Est. Hours')
+                    ->label(__('projects.resources.tasks.columns.estimated_hours'))
                     ->numeric(2)
                     ->placeholder('—'),
             ])

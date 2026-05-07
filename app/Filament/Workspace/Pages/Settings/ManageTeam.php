@@ -32,9 +32,12 @@ class ManageTeam extends Page implements HasTable
     use InteractsWithTable;
 
 
-    protected static ?string $navigationLabel = 'Team';
-
     protected static \UnitEnum|string|null $navigationGroup = 'Settings';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('workspace.pages.team.nav_label');
+    }
 
     protected static ?int $navigationSort = 15;
 
@@ -59,7 +62,7 @@ class ManageTeam extends Page implements HasTable
             )
             ->columns([
                 TextColumn::make('full_name')
-                    ->label('Name')
+                    ->label(__('workspace.pages.team.columns.name'))
                     ->getStateUsing(fn (Tenant $record) => $record->fullName())
                     ->searchable(['first_name', 'last_name'])
                     ->sortable(['last_name'])
@@ -71,18 +74,18 @@ class ManageTeam extends Page implements HasTable
                     ->color('gray'),
 
                 TextColumn::make('roles.name')
-                    ->label('Roles')
+                    ->label(__('workspace.pages.team.columns.roles'))
                     ->badge()
                     ->color('primary')
                     ->separator(','),
 
                 IconColumn::make('is_enabled')
-                    ->label('Active')
+                    ->label(__('workspace.pages.team.columns.active'))
                     ->boolean()
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->label('Joined')
+                    ->label(__('workspace.pages.team.columns.joined'))
                     ->dateTime('d M Y')
                     ->sortable()
                     ->color('gray')
@@ -117,7 +120,7 @@ class ManageTeam extends Page implements HasTable
                     ->successNotification(
                         Notification::make()
                             ->success()
-                            ->title('Team member updated')
+                            ->title(__('workspace.pages.team.notifications.member_updated'))
                     ),
 
                 TableAction::make('toggle_enabled')
@@ -133,7 +136,7 @@ class ManageTeam extends Page implements HasTable
                         if ($record->id === $currentTenant->id) {
                             Notification::make()
                                 ->warning()
-                                ->title('You cannot disable your own account')
+                                ->title(__('workspace.pages.team.notifications.cannot_disable_self'))
                                 ->send();
                             return;
                         }
@@ -142,13 +145,13 @@ class ManageTeam extends Page implements HasTable
 
                         Notification::make()
                             ->success()
-                            ->title($record->is_enabled ? 'Member enabled' : 'Member disabled')
+                            ->title($record->is_enabled ? __('workspace.pages.team.notifications.member_enabled') : __('workspace.pages.team.notifications.member_disabled'))
                             ->send();
                     }),
             ])
             ->headerActions([
                 TableAction::make('add_member')
-                    ->label('Add member')
+                    ->label(__('workspace.pages.team.actions.add_member'))
                     ->icon('heroicon-o-user-plus')
                     ->form(fn (Schema $schema) => $this->newMemberForm($schema))
                     ->action(function (array $data): void {
@@ -178,7 +181,7 @@ class ManageTeam extends Page implements HasTable
 
                         Notification::make()
                             ->success()
-                            ->title('Team member added')
+                            ->title(__('workspace.pages.team.notifications.member_added'))
                             ->send();
                     }),
             ])
@@ -189,7 +192,7 @@ class ManageTeam extends Page implements HasTable
     private function memberForm(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Personal details')
+            Section::make(__('workspace.pages.team.sections.personal_details'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('first_name')
@@ -231,7 +234,7 @@ class ManageTeam extends Page implements HasTable
     private function newMemberForm(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Personal details')
+            Section::make(__('workspace.pages.team.sections.personal_details'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('first_name')

@@ -30,10 +30,25 @@ class PermissionResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::AccessControl->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.permissions.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.permissions.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Permission')
+            Section::make(__('admin.resources.permissions.sections.permission'))
                 ->schema([
                     TextInput::make('name')
                         ->required()
@@ -55,14 +70,14 @@ class PermissionResource extends Resource
                     ->fontFamily(FontFamily::Mono),
 
                 TextColumn::make('roles_count')
-                    ->label('Roles')
+                    ->label(__('admin.resources.permissions.columns.roles'))
                     ->counts('roles')
                     ->sortable()
                     ->badge()
                     ->color('gray'),
 
                 TextColumn::make('created_at')
-                    ->label('Created')
+                    ->label(__('admin.resources.permissions.columns.created'))
                     ->dateTime('d M Y')
                     ->sortable()
                     ->color('gray')

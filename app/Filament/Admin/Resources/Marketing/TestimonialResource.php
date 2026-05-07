@@ -31,10 +31,25 @@ class TestimonialResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::MarketingContent->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.testimonials.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.testimonials.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Testimonial Details')
+            Section::make(__('admin.resources.testimonials.sections.testimonial_details'))
                 ->columns(2)
                 ->schema([
                     TextInput::make('name')

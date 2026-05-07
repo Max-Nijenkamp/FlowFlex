@@ -27,9 +27,22 @@ class OnboardingFlowResource extends Resource
 
     protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-rocket-launch';
 
-    protected static \UnitEnum|string|null $navigationGroup = NavigationGroup::Onboarding;
-
     protected static ?int $navigationSort = 2;
+
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::Onboarding->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('hr.resources.onboarding_flows.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('hr.resources.onboarding_flows.plural');
+    }
 
     public static function canViewAny(): bool
     {
@@ -54,10 +67,10 @@ class OnboardingFlowResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Flow Details')
+            Section::make(__('hr.resources.onboarding_flows.sections.details'))
                 ->schema([
                     Select::make('employee_id')
-                        ->label('Employee')
+                        ->label(__('hr.resources.onboarding_flows.fields.employee'))
                         ->relationship('employee', 'first_name')
                         ->getOptionLabelFromRecordUsing(fn (Employee $record) => trim("{$record->first_name} {$record->last_name}"))
                         ->searchable()
@@ -65,7 +78,7 @@ class OnboardingFlowResource extends Resource
                         ->required(),
 
                     Select::make('template_id')
-                        ->label('Template')
+                        ->label(__('hr.resources.onboarding_flows.fields.template'))
                         ->options(fn () => OnboardingTemplate::query()->where('is_active', true)->pluck('name', 'id')->toArray())
                         ->nullable()
                         ->searchable(),
@@ -87,7 +100,7 @@ class OnboardingFlowResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('employee_name')
-                    ->label('Employee')
+                    ->label(__('hr.resources.onboarding_flows.columns.employee'))
                     ->getStateUsing(fn (OnboardingFlow $record) => trim("{$record->employee?->first_name} {$record->employee?->last_name}")),
 
                 TextColumn::make('status')
@@ -96,7 +109,7 @@ class OnboardingFlowResource extends Resource
                     ->color(fn (?OnboardingFlowStatus $state) => $state?->color()),
 
                 TextColumn::make('started_at')
-                    ->label('Started')
+                    ->label(__('hr.resources.onboarding_flows.columns.started'))
                     ->dateTime('d M Y H:i')
                     ->placeholder('—'),
 

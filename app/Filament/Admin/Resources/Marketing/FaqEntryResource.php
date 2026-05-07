@@ -31,10 +31,25 @@ class FaqEntryResource extends Resource
 
     protected static ?int $navigationSort = 6;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return NavigationGroup::MarketingContent->label();
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.resources.faq_entries.label');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('admin.resources.faq_entries.plural');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('FAQ Entry')
+            Section::make(__('admin.resources.faq_entries.sections.faq_entry'))
                 ->schema([
                     Textarea::make('question')
                         ->required()

@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/hr, compliance, certifications, phase/5]
+tags: [flowflex, domain/hr, compliance, certifications, phase/8]
 domain: HR & People
 panel: hr
 color: "#7C3AED"
@@ -14,7 +14,7 @@ Tracks all mandatory training, certification requirements, policy acknowledgemen
 **Who uses it:** HR team, compliance managers, all employees (their own records)
 **Filament Panel:** `hr`
 **Depends on:** [[Employee Profiles]], [[Course Builder & LMS]] (if active), [[Policy Management]] (if active)
-**Phase:** 5
+**Phase:** 8
 **Build complexity:** Medium — 2 resources, 1 page, 3 tables
 
 ## Events Fired

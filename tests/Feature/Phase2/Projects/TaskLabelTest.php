@@ -13,10 +13,10 @@ beforeEach(function () {
 
     attachModule($this->company, 'projects', 'projects');
     givePermissions($this->tenant, [
-        'projects.tasks.view',
-        'projects.tasks.create',
-        'projects.tasks.edit',
-        'projects.tasks.delete',
+        'projects.task-labels.view',
+        'projects.task-labels.create',
+        'projects.task-labels.edit',
+        'projects.task-labels.delete',
     ]);
 
     $this->label = TaskLabel::withoutGlobalScopes()->create([
@@ -107,7 +107,7 @@ it('soft-deleted task labels do not appear in list', function () {
 it('tenant from another company cannot see task labels from this company', function () {
     $otherCompany = makeCompany();
     $otherTenant  = makeTenant($otherCompany);
-    givePermission($otherTenant, 'projects.tasks.view');
+    givePermission($otherTenant, 'projects.task-labels.view');
 
     $this->actingAs($otherTenant, 'tenant');
 

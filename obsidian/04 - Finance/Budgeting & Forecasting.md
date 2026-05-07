@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/finance, budgeting, forecasting, phase/5]
+tags: [flowflex, domain/finance, budgeting, forecasting, phase/8]
 domain: Finance & Accounting
 panel: finance
 color: "#059669"
@@ -14,7 +14,7 @@ Set budgets, track actuals, forecast the year ahead. No more end-of-month surpri
 **Who uses it:** Finance team, department heads, leadership
 **Filament Panel:** `finance`
 **Depends on:** Core
-**Phase:** 5
+**Phase:** 8
 
 ## Features
 

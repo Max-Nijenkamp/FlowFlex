@@ -1,5 +1,5 @@
 ---
-tags: [flowflex, domain/finance, tax, vat, phase/5]
+tags: [flowflex, domain/finance, tax, vat, phase/8]
 domain: Finance & Accounting
 panel: finance
 color: "#059669"
@@ -14,7 +14,7 @@ Tax calculation, return preparation, and submission. Jurisdiction-aware.
 **Who uses it:** Finance team, accountants
 **Filament Panel:** `finance`
 **Depends on:** Core
-**Phase:** 5
+**Phase:** 8
 
 ## Features
 

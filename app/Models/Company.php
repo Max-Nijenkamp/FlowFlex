@@ -9,6 +9,7 @@ use App\Enums\Language;
 use App\Services\FileStorageService;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -32,7 +33,7 @@ use Spatie\Activitylog\Models\Concerns\LogsActivity;
 ])]
 class Company extends Model implements HasAddresses
 {
-    use HasUlids, InteractsWithAddresses, LogsActivity, SoftDeletes;
+    use HasFactory, HasUlids, InteractsWithAddresses, LogsActivity, SoftDeletes;
 
     protected function casts(): array
     {
