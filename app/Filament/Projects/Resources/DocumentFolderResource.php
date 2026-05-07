@@ -59,11 +59,18 @@ class DocumentFolderResource extends Resource
                         ->required()
                         ->maxLength(255),
 
-                    Select::make('parent_id')
+                    Select::make('parent_folder_id')
                         ->label('Parent Folder')
-                        ->options(fn () => DocumentFolder::query()->pluck('name', 'id')->toArray())
+                        ->relationship(
+                            'parent',
+                            'name',
+                            fn ($query, $record) => $record?->id
+                                ? $query->where('id', '!=', $record->id)
+                                : $query
+                        )
                         ->nullable()
-                        ->searchable(),
+                        ->searchable()
+                        ->preload(),
                 ]),
         ]);
     }
@@ -96,6 +103,11 @@ class DocumentFolderResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['parent']);
     }
 
     public static function getPages(): array

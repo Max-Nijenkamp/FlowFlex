@@ -7,10 +7,12 @@ use App\Filament\Hr\Resources\DepartmentResource\Pages\CreateDepartment;
 use App\Filament\Hr\Resources\DepartmentResource\Pages\EditDepartment;
 use App\Filament\Hr\Resources\DepartmentResource\Pages\ListDepartments;
 use App\Models\Hr\Department;
+use App\Models\Hr\Employee;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -62,6 +64,27 @@ class DepartmentResource extends Resource
                     Textarea::make('description')
                         ->nullable()
                         ->rows(4),
+
+                    Select::make('parent_department_id')
+                        ->label('Parent Department')
+                        ->options(function ($record) {
+                            $query = Department::query();
+                            if ($record?->id) {
+                                $query->where('id', '!=', $record->id);
+                            }
+
+                            return $query->pluck('name', 'id')->toArray();
+                        })
+                        ->nullable()
+                        ->searchable(),
+
+                    Select::make('manager_id')
+                        ->label('Manager')
+                        ->relationship('manager', 'first_name')
+                        ->getOptionLabelFromRecordUsing(fn (Employee $record) => trim("{$record->first_name} {$record->last_name}"))
+                        ->searchable()
+                        ->preload()
+                        ->nullable(),
                 ]),
         ]);
     }
@@ -74,6 +97,18 @@ class DepartmentResource extends Resource
                     ->searchable()
                     ->weight(FontWeight::Bold)
                     ->sortable(),
+
+                TextColumn::make('parentDepartment.name')
+                    ->label('Parent')
+                    ->placeholder('—'),
+
+                TextColumn::make('manager_name')
+                    ->label('Manager')
+                    ->getStateUsing(fn (Department $record) => $record->manager
+                        ? trim("{$record->manager->first_name} {$record->manager->last_name}")
+                        : null
+                    )
+                    ->placeholder('—'),
 
                 TextColumn::make('created_at')
                     ->dateTime('d M Y')
@@ -90,6 +125,11 @@ class DepartmentResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['manager', 'parentDepartment']);
     }
 
     public static function getPages(): array

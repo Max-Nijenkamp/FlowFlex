@@ -58,9 +58,11 @@ class OnboardingFlowResource extends Resource
                 ->schema([
                     Select::make('employee_id')
                         ->label('Employee')
-                        ->options(fn () => Employee::query()->get()->mapWithKeys(fn (Employee $e) => [$e->id => trim("{$e->first_name} {$e->last_name}")])->toArray())
-                        ->required()
-                        ->searchable(),
+                        ->relationship('employee', 'first_name')
+                        ->getOptionLabelFromRecordUsing(fn (Employee $record) => trim("{$record->first_name} {$record->last_name}"))
+                        ->searchable()
+                        ->preload()
+                        ->required(),
 
                     Select::make('template_id')
                         ->label('Template')
@@ -86,8 +88,7 @@ class OnboardingFlowResource extends Resource
             ->columns([
                 TextColumn::make('employee_name')
                     ->label('Employee')
-                    ->getStateUsing(fn (OnboardingFlow $record) => trim("{$record->employee->first_name} {$record->employee->last_name}"))
-                    ->searchable(['employee.first_name', 'employee.last_name']),
+                    ->getStateUsing(fn (OnboardingFlow $record) => trim("{$record->employee?->first_name} {$record->employee?->last_name}")),
 
                 TextColumn::make('status')
                     ->badge()

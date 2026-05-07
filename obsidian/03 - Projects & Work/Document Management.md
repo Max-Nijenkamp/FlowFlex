@@ -3,8 +3,8 @@ tags: [flowflex, domain/projects, documents, files, phase/2]
 domain: Projects & Work
 panel: projects
 color: "#4F46E5"
-status: planned
-last_updated: 2026-05-06
+status: complete
+last_updated: 2026-05-07
 ---
 
 # Document Management
@@ -16,6 +16,28 @@ Centralised file storage for the entire organisation. Organised, versioned, perm
 **Depends on:** Core (file storage abstraction — AWS S3 / Cloudflare R2)
 **Phase:** 2
 **Build complexity:** High — 2 resources, 1 page, 4 tables
+
+## Implementation (Phase 2 — Built)
+
+**Filament Resources:**
+- `DocumentFolderResource` — nav group: Documents, sort: 1
+- `DocumentResource` — nav group: Documents, sort: 2
+
+**Models:** `DocumentFolder`, `Document`, `DocumentVersion`, `DocumentShare`
+
+**Events declared (fired by model observers/service — wiring future phase):**
+- `DocumentUploaded`, `DocumentVersioned`, `DocumentShared`
+
+**What's live:**
+- Folder resource: create/edit folders, name
+- Document resource: name, folder assignment (select scoped to company), table shows name, folder name, created_at
+- All models: `HasUlids`, `SoftDeletes`, `BelongsToCompany`, `LogsActivity`
+
+**Table name note:** DB tables are `document_folders`, `documents`, `document_versions`, `document_shares` (not `folders`/`files` — the Phase 1 `File` model covers the generic file abstraction layer).
+
+**Permissions enforced:** `projects.documents.*`, `projects.document-folders.*`
+
+**Not yet built (future phases):** file upload UI (using FileStorageService + S3/R2), version history UI, sharing links, search/OCR, Google Drive/OneDrive sync, in-browser preview
 
 ## Events Fired
 

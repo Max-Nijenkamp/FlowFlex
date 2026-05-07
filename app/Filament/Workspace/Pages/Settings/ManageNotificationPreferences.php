@@ -13,7 +13,6 @@ use Filament\Schemas\Schema;
 
 class ManageNotificationPreferences extends Page
 {
-    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-bell';
 
     protected static ?string $navigationLabel = 'Notifications';
 
@@ -42,6 +41,8 @@ class ManageNotificationPreferences extends Page
 
     public function mount(): void
     {
+        abort_unless(auth('tenant')->check(), 403);
+
         $tenant = auth('tenant')->user();
 
         $existing = NotificationPreference::where('tenant_id', $tenant->id)

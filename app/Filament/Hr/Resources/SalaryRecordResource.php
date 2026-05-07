@@ -23,6 +23,10 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
+// ISO 4217 currency options for the salary currency select field.
+// Extend this list as needed — company-level default currency wiring is deferred.
+
+
 class SalaryRecordResource extends Resource
 {
     protected static ?string $model = SalaryRecord::class;
@@ -60,22 +64,44 @@ class SalaryRecordResource extends Resource
                 ->schema([
                     Select::make('employee_id')
                         ->label('Employee')
-                        ->options(fn () => Employee::query()->get()->mapWithKeys(fn (Employee $e) => [$e->id => trim("{$e->first_name} {$e->last_name}")])->toArray())
-                        ->required()
-                        ->searchable(),
+                        ->relationship('employee', 'first_name')
+                        ->getOptionLabelFromRecordUsing(fn (Employee $record) => trim("{$record->first_name} {$record->last_name}"))
+                        ->searchable()
+                        ->preload()
+                        ->required(),
 
-                    DatePicker::make('effective_date')
+                    DatePicker::make('effective_from')
+                        ->label('Effective From')
                         ->required()
                         ->native(false),
 
-                    TextInput::make('salary')
+                    DatePicker::make('effective_to')
+                        ->label('Effective To')
+                        ->nullable()
+                        ->native(false),
+
+                    TextInput::make('salary_encrypted')
                         ->label('Annual Salary')
                         ->numeric()
                         ->required(),
 
-                    TextInput::make('currency')
-                        ->default('GBP')
-                        ->maxLength(3),
+                    Select::make('currency')
+                        ->label('Currency')
+                        ->options([
+                            'GBP' => 'GBP — British Pound',
+                            'EUR' => 'EUR — Euro',
+                            'USD' => 'USD — US Dollar',
+                            'NZD' => 'NZD — New Zealand Dollar',
+                            'AUD' => 'AUD — Australian Dollar',
+                            'CAD' => 'CAD — Canadian Dollar',
+                            'CHF' => 'CHF — Swiss Franc',
+                            'DKK' => 'DKK — Danish Krone',
+                            'NOK' => 'NOK — Norwegian Krone',
+                            'SEK' => 'SEK — Swedish Krona',
+                        ])
+                        ->default('EUR')
+                        ->required()
+                        ->searchable(),
 
                     Select::make('pay_frequency')
                         ->options(
@@ -98,10 +124,10 @@ class SalaryRecordResource extends Resource
             ->columns([
                 TextColumn::make('employee_name')
                     ->label('Employee')
-                    ->getStateUsing(fn (SalaryRecord $record) => trim("{$record->employee->first_name} {$record->employee->last_name}")),
+                    ->getStateUsing(fn (SalaryRecord $record) => trim("{$record->employee?->first_name} {$record->employee?->last_name}")),
 
-                TextColumn::make('effective_date')
-                    ->label('Effective Date')
+                TextColumn::make('effective_from')
+                    ->label('Effective From')
                     ->date('d M Y')
                     ->sortable(),
 
@@ -109,6 +135,13 @@ class SalaryRecordResource extends Resource
                     ->label('Frequency')
                     ->badge()
                     ->formatStateUsing(fn (?PayFrequency $state) => $state?->label()),
+
+                TextColumn::make('salary_encrypted')
+                    ->label('Annual Salary')
+                    ->getStateUsing(fn (SalaryRecord $record) => $record->salary_encrypted
+                        ? number_format((float) $record->salary_encrypted, 2)
+                        : '—'
+                    ),
 
                 TextColumn::make('currency')
                     ->label('Currency'),
@@ -119,7 +152,7 @@ class SalaryRecordResource extends Resource
                     ->color('gray')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('effective_date', 'desc')
+            ->defaultSort('effective_from', 'desc')
             ->striped()
             ->actions([
                 EditAction::make(),

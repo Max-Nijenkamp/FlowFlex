@@ -57,6 +57,13 @@ class PayRunResource extends Resource
         return $schema->components([
             Section::make('Pay Run Details')
                 ->schema([
+                    Select::make('payroll_entity_id')
+                        ->label('Payroll Entity')
+                        // payroll_entity_id is NOT NULL in the migration — required
+                        ->options(fn () => \App\Models\Hr\PayrollEntity::query()->pluck('name', 'id')->toArray())
+                        ->required()
+                        ->searchable(),
+
                     Select::make('pay_frequency')
                         ->options(
                             collect(PayFrequency::cases())
@@ -121,12 +128,12 @@ class PayRunResource extends Resource
 
                 TextColumn::make('total_gross')
                     ->label('Gross')
-                    ->money('GBP')
+                    ->money(fn ($record) => $record?->payrollEntity?->currency ?? 'EUR')
                     ->placeholder('—'),
 
                 TextColumn::make('total_net')
                     ->label('Net')
-                    ->money('GBP')
+                    ->money(fn ($record) => $record?->payrollEntity?->currency ?? 'EUR')
                     ->placeholder('—'),
             ])
             ->defaultSort('pay_period_start', 'desc')
@@ -155,6 +162,11 @@ class PayRunResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['payrollEntity']);
     }
 
     public static function getPages(): array

@@ -9,36 +9,36 @@ class PayRunPolicy
 {
     public function viewAny(Tenant $tenant): bool
     {
-        return $tenant->can('hr.payroll.view');
+        return $tenant->can('hr.pay-runs.view');
     }
 
     public function view(Tenant $tenant, PayRun $payRun): bool
     {
         return $tenant->company_id === $payRun->company_id
-            && $tenant->can('hr.payroll.view');
+            && $tenant->can('hr.pay-runs.view');
     }
 
     public function create(Tenant $tenant): bool
     {
-        return $tenant->can('hr.payroll.create');
+        return $tenant->can('hr.pay-runs.create');
     }
 
     public function update(Tenant $tenant, PayRun $payRun): bool
     {
         return $tenant->company_id === $payRun->company_id
-            && $tenant->can('hr.payroll.edit');
+            && $tenant->can('hr.pay-runs.edit');
     }
 
     public function delete(Tenant $tenant, PayRun $payRun): bool
     {
         return $tenant->company_id === $payRun->company_id
-            && $tenant->can('hr.payroll.delete');
+            && $tenant->can('hr.pay-runs.delete');
     }
 
     public function process(Tenant $tenant, PayRun $payRun): bool
     {
         return $tenant->company_id === $payRun->company_id
-            && $tenant->can('hr.payroll.run');
+            && $tenant->can('hr.pay-runs.run');
     }
 
     public function restore(Tenant $tenant, PayRun $payRun): bool

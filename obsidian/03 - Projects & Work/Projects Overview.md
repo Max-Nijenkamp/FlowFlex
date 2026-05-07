@@ -3,8 +3,8 @@ tags: [flowflex, domain/projects, overview, phase/2]
 domain: Projects & Work
 panel: projects
 color: "#4F46E5"
-status: planned
-last_updated: 2026-05-06
+status: complete
+last_updated: 2026-05-07
 ---
 
 # Projects Overview
@@ -18,11 +18,11 @@ The work management domain. Everything teams do day-to-day — tasks, planning, 
 
 ## Modules in This Domain
 
-| Module | Phase | Description |
-|---|---|---|
-| [[Task Management]] | 2 | Kanban, list, calendar, timeline, automations |
-| [[Time Tracking]] | 2 | One-click timer, manual entry, approval |
-| [[Document Management]] | 2 | File storage, versioning, permissions, search |
+| Module | Phase | Status | Description |
+|---|---|---|---|
+| [[Task Management]] | 2 | ✅ complete | Kanban, list, calendar, timeline, automations |
+| [[Time Tracking]] | 2 | ✅ complete | One-click timer, manual entry, approval |
+| [[Document Management]] | 2 | ✅ complete | File storage, versioning, permissions, search |
 | [[Project Planning]] | 5 | Full Gantt, milestones, dependencies |
 | [[Document Approvals & E-Sign]] | 5 | Approval workflows, built-in e-signature |
 | [[Knowledge Base & Wiki]] | 5 | Block editor, SOPs, handbooks |

@@ -2,7 +2,7 @@
 tags: [flowflex, filament, panels, access-control]
 domain: Platform
 status: built
-last_updated: 2026-05-06
+last_updated: 2026-05-07
 ---
 
 # Panel Map
@@ -11,52 +11,55 @@ All Filament panels in FlowFlex, their URLs, auth guards, and access rules.
 
 ## Panel Overview
 
-| Panel ID | Domain | URL path | Access |
-|---|---|---|---|
-| `admin` | Platform super-admin | `/admin` | FlowFlex staff only |
-| `workspace` | Workspace settings, billing, module management | `/app/settings` | Workspace admins |
-| `hr` | HR & People | `/app/hr` | HR team, managers |
-| `projects` | Projects & Work | `/app/projects` | All employees |
-| `finance` | Finance & Accounting | `/app/finance` | Finance team |
-| `crm` | CRM & Sales | `/app/crm` | Sales, support |
-| `marketing` | Marketing & Content | `/app/marketing` | Marketing team |
-| `operations` | Operations & Field Service | `/app/ops` | Ops, field teams |
-| `it` | IT & Security | `/app/it` | IT team |
-| `legal` | Legal & Compliance | `/app/legal` | Legal, compliance |
-| `ecommerce` | E-commerce | `/app/store` | Ecommerce team |
-| `lms` | Learning & Development | `/app/learn` | All employees |
-| `communications` | Communications | `/app/comms` | All employees |
-| `analytics` | Analytics & BI | `/app/analytics` | Managers, leadership |
+| Panel ID | Domain | URL path | Access | Status |
+|---|---|---|---|---|
+| `admin` | Platform super-admin | `/admin` | FlowFlex staff only | ✅ built |
+| `workspace` | Workspace settings, billing, module management | `/app/settings` | Workspace admins | ✅ built |
+| `hr` | HR & People | `/app/hr` | HR team, managers | ✅ built (Phase 2) |
+| `projects` | Projects & Work | `/app/projects` | All employees | ✅ built (Phase 2) |
+| `finance` | Finance & Accounting | `/app/finance` | Finance team | planned (Phase 3) |
+| `crm` | CRM & Sales | `/app/crm` | Sales, support | planned (Phase 3) |
+| `marketing` | Marketing & Content | `/app/marketing` | Marketing team | planned (Phase 4) |
+| `operations` | Operations & Field Service | `/app/ops` | Ops, field teams | planned (Phase 4) |
+| `it` | IT & Security | `/app/it` | IT team | planned (Phase 5) |
+| `legal` | Legal & Compliance | `/app/legal` | Legal, compliance | planned (Phase 5) |
+| `ecommerce` | E-commerce | `/app/store` | Ecommerce team | planned (Phase 5) |
+| `lms` | Learning & Development | `/app/learn` | All employees | planned (Phase 5) |
+| `communications` | Communications | `/app/comms` | All employees | planned (Phase 5) |
+| `analytics` | Analytics & BI | `/app/analytics` | Managers, leadership | planned (Phase 5) |
 
 ## Panel Access Rules
 
-A panel is only visible to a user if **both** conditions are true:
+A panel is only visible to a Tenant if **both** conditions are true:
 
-1. The module is active for their tenant (`tenant_modules` table)
-2. The user has at least one permission within that panel (`hr.panel.access`, etc.)
+1. The module is active for their company (`Company::hasModuleForPanel()` → checks `company_modules` pivot)
+2. The tenant is enabled (`is_enabled = true`) and their company is enabled
 
-Filament's `canAccess()` method on each panel checks both conditions.
+`Tenant::canAccessPanel()` enforces both conditions. Panel-level permission checks (`hr.panel.access`) are deferred to individual resource `canViewAny()` methods.
 
-Super-admins see all panels regardless.
+Super-admins (`User` model, `web` guard, `/admin` panel) are entirely separate from tenants.
 
-## Implementation Pattern
+## As-Built Panel Patterns
 
 ```php
-// In each Panel Provider
-public function canAccess(): bool
-{
-    $user = auth()->user();
-    $tenant = Filament::getTenant();
+// HrPanelProvider / ProjectsPanelProvider
+->authGuard('tenant')
+->authMiddleware([
+    AuthenticateTenant::class,   // sets tenant session
+    SetLocaleFromCompany::class, // applies company locale
+])
+->viteTheme('resources/css/filament/theme.css')
 
-    // Check 1: module is active for this tenant
-    if (!$tenant->hasModuleActive('hr')) {
-        return false;
-    }
-
-    // Check 2: user has panel access permission
-    return $user->can('hr.panel.access');
-}
+// Tenant::canAccessPanel()
+if ($panel->getId() === 'workspace') return true;
+return Cache::remember(
+    "company:{$this->company_id}:panel:{$panel->getId()}:access",
+    now()->addMinutes(5),
+    fn () => $company->hasModuleForPanel($panel->getId())
+);
 ```
+
+All workspace panels use the `tenant` guard. The `admin` panel uses the default `web` guard.
 
 ## Panel Domain Colours
 

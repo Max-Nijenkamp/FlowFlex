@@ -59,6 +59,7 @@ class Company extends Model implements HasAddresses
     public function modules(): BelongsToMany
     {
         return $this->belongsToMany(Module::class, 'company_module')
+            ->using(\App\Models\Pivots\CompanyModule::class)
             ->withPivot(['is_enabled', 'enabled_at', 'disabled_at'])
             ->withTimestamps();
     }

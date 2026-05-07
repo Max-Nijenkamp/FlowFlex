@@ -62,17 +62,23 @@ class PayElementResource extends Resource
                         ->required()
                         ->maxLength(255),
 
-                    TextInput::make('code')
-                        ->required()
-                        ->maxLength(20),
-
-                    Select::make('type')
+                    Select::make('element_type')
+                        ->label('Element Type')
                         ->options(
                             collect(PayElementType::cases())
                                 ->mapWithKeys(fn (PayElementType $case) => [$case->value => $case->label()])
                                 ->toArray()
                         )
+                        ->default('basic_salary')
                         ->required(),
+
+                    Toggle::make('is_taxable')
+                        ->label('Taxable')
+                        ->default(true),
+
+                    Toggle::make('is_pensionable')
+                        ->label('Pensionable')
+                        ->default(false),
 
                     Toggle::make('is_active')
                         ->label('Active')
@@ -90,12 +96,14 @@ class PayElementResource extends Resource
                     ->weight(FontWeight::Bold)
                     ->sortable(),
 
-                TextColumn::make('code')
-                    ->badge(),
-
-                TextColumn::make('type')
+                TextColumn::make('element_type')
+                    ->label('Type')
                     ->badge()
                     ->formatStateUsing(fn (?PayElementType $state) => $state?->label()),
+
+                IconColumn::make('is_taxable')
+                    ->label('Taxable')
+                    ->boolean(),
 
                 IconColumn::make('is_active')
                     ->label('Active')

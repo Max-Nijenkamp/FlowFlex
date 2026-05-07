@@ -31,6 +31,8 @@ Modular, multi-tenant SaaS platform. Customers activate only the modules they ne
 | Filament panels & access rules | `Filament Panels/Panel Map.md` |
 | Every module spec | `01–13` domain folders |
 | Design system & brand | `Design System/` folder |
+| Marketing site, SEO, SEM, legal pages | `14 - Marketing Site/` folder |
+| Admin CMS (blog, demo leads, content) | `14 - Marketing Site/Admin Panel CMS.md` |
 
 ---
 

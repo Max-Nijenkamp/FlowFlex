@@ -25,6 +25,8 @@ class ManageModules extends Page
 
     public function mount(): void
     {
+        abort_unless(auth('tenant')->user()?->can('workspace.modules.edit'), 403);
+
         $this->enabledModuleIds = $this->company()
             ->modules()
             ->wherePivot('is_enabled', true)

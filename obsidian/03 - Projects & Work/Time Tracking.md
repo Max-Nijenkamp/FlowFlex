@@ -3,8 +3,8 @@ tags: [flowflex, domain/projects, time-tracking, timesheets, phase/2]
 domain: Projects & Work
 panel: projects
 color: "#4F46E5"
-status: planned
-last_updated: 2026-05-06
+status: complete
+last_updated: 2026-05-07
 ---
 
 # Time Tracking
@@ -16,6 +16,29 @@ One-click or manual time logging. Feeds automatically to payroll and client bill
 **Depends on:** [[Task Management]] (optional — time can be logged independently)
 **Phase:** 2
 **Build complexity:** High — 2 resources, 2 pages, 3 tables
+
+## Implementation (Phase 2 — Built)
+
+**Filament Resources:**
+- `TimeEntryResource` — nav group: Time Tracking, sort: 1
+- `TimesheetResource` — nav group: Time Tracking, sort: 2
+
+**Models:** `TimeEntry`, `Timesheet`, `TimesheetApproval`
+
+**What's live:**
+- Time entry form: task (optional, BelongsTo Task), entry_date, description, minutes (with "60 = 1 hour" helper), is_billable toggle
+- Time entry table: date, task title (limit 40), description, formatted duration (Xh Ym), billable icon, approved icon
+- Ternary filters for billable and approval status
+- `tenant_id` auto-set on create (current auth tenant) via `mutateFormDataBeforeCreate`
+- Timesheet form: week_start_date picker, status select (draft/submitted/approved/rejected)
+- Timesheet table: week_start_date, status badge, submitted_at
+- `tenant_id` auto-set on create (current auth tenant) via `mutateFormDataBeforeCreate`
+
+**Column note:** `timesheets` table uses `week_start_date` (single date). Week end is implicit (start + 6 days).
+
+**Permissions enforced:** `projects.time.*`, `projects.timesheets.*`
+
+**Not yet built (future phases):** one-click timer, bulk CSV import, overtime calculation, rounding rules, time reports by employee/project/client
 
 ## Events Fired
 

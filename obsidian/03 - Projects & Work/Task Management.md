@@ -3,8 +3,8 @@ tags: [flowflex, domain/projects, tasks, kanban, phase/2]
 domain: Projects & Work
 panel: projects
 color: "#4F46E5"
-status: planned
-last_updated: 2026-05-06
+status: complete
+last_updated: 2026-05-07
 ---
 
 # Task Management
@@ -16,6 +16,29 @@ The foundation of all project work. Tasks can exist independently or within proj
 **Depends on:** Core
 **Phase:** 2
 **Build complexity:** High — 3 resources, 4 pages, 6 tables
+
+## Implementation (Phase 2 — Built)
+
+**Filament Resources:**
+- `TaskResource` — nav group: Tasks, sort: 1
+- `TaskLabelResource` — nav group: Tasks, sort: 2
+
+**Models:** `Task`, `TaskLabel`, `TaskDependency`, `TaskAutomation`, `TaskAutomationLog`
+Pivot table: `task_label_assignments` (many-to-many Task ↔ TaskLabel)
+
+**Events wired:**
+- `TaskAssigned` → `NotifyAssigneeTaskAssigned` → `TaskAssignedNotification` to assignee tenant
+
+**What's live:**
+- Task form: title, description, priority enum (P1–P4), status enum (todo/in_progress/done etc.), assignee (tenant select scoped to company), due_date, start_date, estimated_hours
+- Label multi-select with `belongsToMany` via `task_label_assignments`
+- Task table: title, status badge (with colour), priority badge (with colour), assignee email, due_date (red if overdue), estimated_hours
+- Filter by status and priority
+- Default sort: `created_at DESC`
+
+**Permissions enforced:** `projects.tasks.*`, `projects.labels.*`
+
+**Not yet built (future phases):** Kanban board view, calendar view, timeline view, subtasks, recurring tasks, task automations UI, dependency visualization
 
 ## Events Fired
 

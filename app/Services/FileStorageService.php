@@ -16,8 +16,8 @@ class FileStorageService
         ?Model $model = null
     ): File {
         $disk        = $disk ?? config('filesystems.default', 'local');
-        $company     = auth('tenant')->user()?->company;
-        $companySlug = $company?->slug ?? 'general';
+        $companyId   = $this->resolveCompanyId();
+        $companySlug = $this->resolveCompanySlug();
 
         $path = $file->store(
             "companies/{$companySlug}/{$collection}",
@@ -25,7 +25,7 @@ class FileStorageService
         );
 
         return File::create([
-            'company_id'             => $company?->id,
+            'company_id'             => $companyId,
             'uploaded_by_tenant_id'  => auth('tenant')->id(),
             'disk'                   => $disk,
             'path'                   => $path,
@@ -36,6 +36,39 @@ class FileStorageService
             'model_type'             => $model ? get_class($model) : null,
             'model_id'               => $model?->getKey(),
         ]);
+    }
+
+    /**
+     * Resolve the company ID from the active authentication context.
+     *
+     * Supports three contexts:
+     *  - Filament / HTTP (tenant guard active)
+     *  - API (AuthenticateApiKey middleware sets api_company on the request)
+     *  - Job / console (returns null; callers must set company_id explicitly)
+     */
+    private function resolveCompanyId(): ?string
+    {
+        if (auth('tenant')->check()) {
+            return auth('tenant')->user()->company_id;
+        }
+
+        $apiCompany = request()->attributes->get('api_company');
+
+        return $apiCompany?->id ?? null;
+    }
+
+    /**
+     * Resolve a slug-safe company identifier for use in storage paths.
+     */
+    private function resolveCompanySlug(): string
+    {
+        if (auth('tenant')->check()) {
+            return auth('tenant')->user()->company?->slug ?? 'general';
+        }
+
+        $apiCompany = request()->attributes->get('api_company');
+
+        return $apiCompany?->slug ?? 'general';
     }
 
     public function delete(File $file): bool

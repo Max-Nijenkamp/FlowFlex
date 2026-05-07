@@ -3,8 +3,8 @@ tags: [flowflex, domain/hr, employee-profiles, phase/2]
 domain: HR & People
 panel: hr
 color: "#7C3AED"
-status: planned
-last_updated: 2026-05-06
+status: complete
+last_updated: 2026-05-07
 ---
 
 # Employee Profiles
@@ -16,6 +16,26 @@ The central record for every person in the organisation. All other HR modules re
 **Depends on:** Core (Auth, RBAC, Tenancy)
 **Phase:** 2
 **Build complexity:** Medium — 1 resource, 1 page, 5 tables
+
+## Implementation (Phase 2 — Built)
+
+**Filament Resources:**
+- `DepartmentResource` — nav group: People, sort: 1
+- `EmployeeResource` — nav group: People, sort: 2, with `DocumentsRelationManager`
+
+**Models:** `Employee`, `Department`, `EmployeeDocument`, `EmployeeCustomField`, `EmployeeCustomFieldValue`
+All use `HasUlids`, `SoftDeletes`, `BelongsToCompany`, `LogsActivity`.
+
+**What's live:**
+- Full employee form: personal details, employment details (type, status, department, manager, contracted hours), emergency contact
+- Department select with company-scoped options (BelongsToCompany global scope)
+- Employment type + status as backed enums with badge colours
+- DocumentsRelationManager on employee edit page
+- `Employee` model: `full_name` accessor, relationships to department, manager, direct reports, documents, leave balances, salary records, onboarding flows, payslips
+
+**Permissions enforced:** `hr.employees.*`, `hr.departments.*`
+
+**Not yet built (future phases):** self-service portal, org chart visualisation, profile photo upload UI, employee number auto-generation
 
 ## Events Fired
 

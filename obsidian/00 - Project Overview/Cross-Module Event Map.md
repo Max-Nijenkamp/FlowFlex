@@ -2,7 +2,7 @@
 tags: [flowflex, events, architecture, cross-module, event-bus]
 domain: Platform
 status: built
-last_updated: 2026-05-06
+last_updated: 2026-05-07
 ---
 
 # Cross-Module Event Map
@@ -50,11 +50,26 @@ Every cross-domain event in FlowFlex and which modules react to it. When both so
 
 | Phase | Key Events Enabled |
 |---|---|
-| Phase 1 | `UserLoggedIn`, `ModuleActivated`, `ModuleDeactivated`, `TenantCreated` |
-| Phase 2 | `EmployeeHired`, `TimeEntryApproved`, `LeaveApproved`, `TaskCompleted` |
+| Phase 1 ✅ | `UserLoggedIn`, `ModuleActivated`, `ModuleDeactivated`, `TenantCreated` |
+| Phase 2 ✅ | `LeaveRequested`, `LeaveApproved`, `LeaveRejected`, `OnboardingStarted`, `OnboardingTaskCompleted`, `PayRunProcessed`, `PayslipGenerated`, `TaskAssigned` |
 | Phase 3 | `InvoiceOverdue`, `InvoicePaid`, `TicketResolved`, `CandidateHired` |
 | Phase 4 | `StockBelowReorderPoint`, `OrderPlaced`, `FieldJobCompleted` |
 | Phase 5 | `CourseCompleted`, `ContractExpiring`, `BurnoutSignalDetected`, `SaaSLicenceExpiring` |
+
+## Phase 2 Events — As Built in `EventServiceProvider`
+
+| Event | Listener | Notification Sent |
+|---|---|---|
+| `Hr\LeaveRequested` | `NotifyManagerOfLeaveRequest` | `LeaveRequestedNotification` → manager |
+| `Hr\LeaveApproved` | `NotifyEmployeeLeaveApproved` | `LeaveApprovedNotification` → employee |
+| `Hr\LeaveRejected` | `NotifyEmployeeLeaveRejected` | `LeaveRejectedNotification` → employee |
+| `Hr\OnboardingStarted` | `NotifyEmployeeOnboardingStarted` | `OnboardingStartedNotification` → employee |
+| `Hr\OnboardingTaskCompleted` | `NotifyHrOnboardingTaskCompleted` | (HR notification stub) |
+| `Hr\PayRunProcessed` | `DispatchPayslipGenerationJobs` | dispatches `GeneratePayslipPdf` job per employee |
+| `Hr\PayslipGenerated` | `NotifyEmployeePayslipGenerated` | `PayslipGeneratedNotification` → employee |
+| `Projects\TaskAssigned` | `NotifyAssigneeTaskAssigned` | `TaskAssignedNotification` → assignee |
+
+All listeners implement `ShouldQueue`. All fire via `event()` call at the appropriate model/service layer.
 
 ---
 

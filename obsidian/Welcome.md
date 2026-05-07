@@ -142,7 +142,22 @@ Welcome to the FlowFlex Obsidian vault. This is the complete documentation for t
 - [[Iconography]] — [[Dark Mode]] — [[Data Visualisation]]
 - [[Writing Style & Voice]] — [[Filament Implementation]]
 
+### Marketing Site (Public-Facing)
+
+- [[Marketing Site Overview]] — tech approach, goals, analytics, conversion events
+- [[Page Structure & Sitemap]] — every public URL, redirects, subdomain map
+- [[Homepage]] — section-by-section content spec, footer
+- [[Pricing Page]] — plan cards, comparison table, FAQ, structured data
+- [[Features & Modules Pages]] — domain overviews, module pages, comparison pages
+- [[Demo Request Flow]] — form spec, lead handling, admin pipeline, tracking
+- [[SEO Strategy]] — technical SEO, content clusters, structured data, link building
+- [[SEM & Paid Advertising]] — Google Ads structure, LinkedIn, remarketing, geo targeting
+- [[Blog & Content Strategy]] — categories, content types, newsletter, help centre, changelog
+- [[About & Company Pages]] — about, contact, careers, partners, status page
+- [[Legal & Compliance Pages]] — privacy policy, terms, cookies, DPA, AUP, security page
+- [[Admin Panel CMS]] — all content management resources in the admin panel
+
 ---
 
-**133 notes · 13 domains · 99+ modules**
+**144 notes · 13 domains · 99+ modules · 1 marketing site**
 *Last updated: May 2026*

@@ -40,6 +40,7 @@ class Module extends Model
     public function companies(): BelongsToMany
     {
         return $this->belongsToMany(Company::class, 'company_module')
+            ->using(\App\Models\Pivots\CompanyModule::class)
             ->withPivot(['is_enabled', 'enabled_at', 'disabled_at'])
             ->withTimestamps();
     }

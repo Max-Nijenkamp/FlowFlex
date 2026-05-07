@@ -93,6 +93,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'hr.leave-requests.create',
             'hr.leave-requests.edit',
             'hr.leave-requests.delete',
+            'hr.leave-requests.approve',
 
             'hr.payroll.view',
             'hr.payroll.create',
@@ -109,6 +110,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'hr.pay-runs.create',
             'hr.pay-runs.edit',
             'hr.pay-runs.delete',
+            'hr.pay-runs.run',
 
             'hr.salary-records.view',
             'hr.salary-records.create',

@@ -193,6 +193,11 @@ class TaskResource extends Resource
             ]);
     }
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['assignee', 'labels']);
+    }
+
     public static function getPages(): array
     {
         return [

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Concerns\InteractsWithAddresses;
 use App\Contracts\HasAddresses;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -30,7 +31,7 @@ use Spatie\Permission\Traits\HasRoles;
     'is_enabled',
 ])]
 #[Hidden(['password', 'remember_token'])]
-class Tenant extends Authenticatable implements FilamentUser, HasAddresses
+class Tenant extends Authenticatable implements FilamentUser, HasAddresses, HasName
 {
     use HasRoles, HasUlids, InteractsWithAddresses, LogsActivity, Notifiable, SoftDeletes;
 
@@ -88,6 +89,11 @@ class Tenant extends Authenticatable implements FilamentUser, HasAddresses
         return collect([$this->first_name, $this->middle_name, $this->last_name])
             ->filter()
             ->implode(' ');
+    }
+
+    public function getFilamentName(): string
+    {
+        return $this->fullName();
     }
 
     public function setting(string $key, mixed $default = null): mixed

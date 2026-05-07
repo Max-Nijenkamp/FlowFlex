@@ -9,30 +9,30 @@ class OnboardingTemplatePolicy
 {
     public function viewAny(Tenant $tenant): bool
     {
-        return $tenant->can('hr.onboarding.view');
+        return $tenant->can('hr.onboarding-templates.view');
     }
 
     public function view(Tenant $tenant, OnboardingTemplate $template): bool
     {
         return $tenant->company_id === $template->company_id
-            && $tenant->can('hr.onboarding.view');
+            && $tenant->can('hr.onboarding-templates.view');
     }
 
     public function create(Tenant $tenant): bool
     {
-        return $tenant->can('hr.onboarding.create');
+        return $tenant->can('hr.onboarding-templates.create');
     }
 
     public function update(Tenant $tenant, OnboardingTemplate $template): bool
     {
         return $tenant->company_id === $template->company_id
-            && $tenant->can('hr.onboarding.edit');
+            && $tenant->can('hr.onboarding-templates.edit');
     }
 
     public function delete(Tenant $tenant, OnboardingTemplate $template): bool
     {
         return $tenant->company_id === $template->company_id
-            && $tenant->can('hr.onboarding.delete');
+            && $tenant->can('hr.onboarding-templates.delete');
     }
 
     public function restore(Tenant $tenant, OnboardingTemplate $template): bool

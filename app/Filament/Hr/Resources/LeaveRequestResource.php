@@ -3,6 +3,8 @@
 namespace App\Filament\Hr\Resources;
 
 use App\Enums\Hr\LeaveRequestStatus;
+use App\Events\Hr\LeaveApproved;
+use App\Events\Hr\LeaveRejected;
 use App\Filament\Hr\Enums\NavigationGroup;
 use App\Filament\Hr\Resources\LeaveRequestResource\Pages\CreateLeaveRequest;
 use App\Filament\Hr\Resources\LeaveRequestResource\Pages\EditLeaveRequest;
@@ -21,6 +23,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -62,9 +65,11 @@ class LeaveRequestResource extends Resource
                 ->schema([
                     Select::make('employee_id')
                         ->label('Employee')
-                        ->options(fn () => Employee::query()->get()->mapWithKeys(fn (Employee $e) => [$e->id => trim("{$e->first_name} {$e->last_name}")])->toArray())
-                        ->required()
-                        ->searchable(),
+                        ->relationship('employee', 'first_name')
+                        ->getOptionLabelFromRecordUsing(fn (Employee $record) => trim("{$record->first_name} {$record->last_name}"))
+                        ->searchable()
+                        ->preload()
+                        ->required(),
 
                     Select::make('leave_type_id')
                         ->label('Leave Type')
@@ -106,7 +111,7 @@ class LeaveRequestResource extends Resource
             ->columns([
                 TextColumn::make('employee_name')
                     ->label('Employee')
-                    ->getStateUsing(fn (LeaveRequest $record) => trim("{$record->employee->first_name} {$record->employee->last_name}")),
+                    ->getStateUsing(fn (LeaveRequest $record) => trim("{$record->employee?->first_name} {$record->employee?->last_name}")),
 
                 TextColumn::make('leaveType.name')
                     ->label('Leave Type'),
@@ -140,6 +145,36 @@ class LeaveRequestResource extends Resource
                     ),
             ])
             ->actions([
+                Action::make('approve')
+                    ->label('Approve')
+                    ->color('success')
+                    ->icon('heroicon-o-check-circle')
+                    ->visible(fn (LeaveRequest $record) => $record->status === LeaveRequestStatus::Pending)
+                    ->requiresConfirmation()
+                    ->action(function (LeaveRequest $record): void {
+                        $record->update(['status' => LeaveRequestStatus::Approved]);
+                        event(new LeaveApproved($record));
+                    }),
+
+                Action::make('reject')
+                    ->label('Reject')
+                    ->color('danger')
+                    ->icon('heroicon-o-x-circle')
+                    ->visible(fn (LeaveRequest $record) => $record->status === LeaveRequestStatus::Pending)
+                    ->form([
+                        Textarea::make('rejection_reason')
+                            ->label('Rejection Reason')
+                            ->required()
+                            ->rows(3),
+                    ])
+                    ->action(function (LeaveRequest $record, array $data): void {
+                        $record->update([
+                            'status'           => LeaveRequestStatus::Rejected,
+                            'rejection_reason' => $data['rejection_reason'],
+                        ]);
+                        event(new LeaveRejected($record));
+                    }),
+
                 EditAction::make(),
             ])
             ->bulkActions([

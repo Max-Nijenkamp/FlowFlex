@@ -95,7 +95,6 @@ class TimeEntryResource extends Resource
             ->columns([
                 TextColumn::make('entry_date')
                     ->date('d M Y')
-                    ->sortable()
                     ->sortable(),
 
                 TextColumn::make('task.title')
@@ -149,6 +148,11 @@ class TimeEntryResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['task']);
     }
 
     public static function getPages(): array

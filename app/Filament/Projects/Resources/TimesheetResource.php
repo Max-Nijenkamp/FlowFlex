@@ -56,13 +56,8 @@ class TimesheetResource extends Resource
         return $schema->components([
             Section::make('Timesheet Details')
                 ->schema([
-                    DatePicker::make('week_start')
-                        ->label('Week Start')
-                        ->required()
-                        ->native(false),
-
-                    DatePicker::make('week_end')
-                        ->label('Week End')
+                    DatePicker::make('week_start_date')
+                        ->label('Week Starting')
                         ->required()
                         ->native(false),
 
@@ -82,14 +77,10 @@ class TimesheetResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('week_start')
-                    ->label('Week Start')
+                TextColumn::make('week_start_date')
+                    ->label('Week Starting')
                     ->date('d M Y')
                     ->sortable(),
-
-                TextColumn::make('week_end')
-                    ->label('Week End')
-                    ->date('d M Y'),
 
                 TextColumn::make('status')
                     ->badge()
@@ -107,7 +98,7 @@ class TimesheetResource extends Resource
                     ->color('gray')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('week_start', 'desc')
+            ->defaultSort('week_start_date', 'desc')
             ->striped()
             ->filters([
                 SelectFilter::make('status')

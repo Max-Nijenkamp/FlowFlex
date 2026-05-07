@@ -21,6 +21,10 @@ class Payslip extends Model
         'employee_id',
         'pay_run_employee_id',
         'pdf_file_id',
+        'period_start',
+        'period_end',
+        'status',
+        'pdf_path',
         'generated_at',
         'sent_at',
     ];
@@ -28,6 +32,8 @@ class Payslip extends Model
     protected function casts(): array
     {
         return [
+            'period_start' => 'date',
+            'period_end'   => 'date',
             'generated_at' => 'datetime',
             'sent_at'      => 'datetime',
         ];

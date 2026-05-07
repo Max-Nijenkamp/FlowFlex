@@ -114,9 +114,11 @@ class EmployeeResource extends Resource
 
                     Select::make('manager_id')
                         ->label('Manager')
-                        ->options(fn () => Employee::query()->get()->mapWithKeys(fn (Employee $e) => [$e->id => trim("{$e->first_name} {$e->last_name}")])->toArray())
-                        ->nullable()
-                        ->searchable(),
+                        ->relationship('manager', 'first_name')
+                        ->getOptionLabelFromRecordUsing(fn (Employee $record) => trim("{$record->first_name} {$record->last_name}"))
+                        ->searchable()
+                        ->preload()
+                        ->nullable(),
 
                     Select::make('employment_type')
                         ->options(
@@ -172,7 +174,7 @@ class EmployeeResource extends Resource
             ->columns([
                 TextColumn::make('full_name')
                     ->label('Name')
-                    ->getStateUsing(fn (Employee $record) => trim("{$record->first_name} {$record->last_name}"))
+                    ->getStateUsing(fn (Employee $record) => trim(implode(' ', array_filter([$record->first_name, $record->middle_name, $record->last_name]))))
                     ->searchable(['first_name', 'last_name'])
                     ->weight(FontWeight::Bold),
 
@@ -227,6 +229,11 @@ class EmployeeResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['department']);
     }
 
     public static function getRelationManagers(): array

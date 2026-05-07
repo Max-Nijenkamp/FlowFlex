@@ -18,7 +18,7 @@ use Filament\Tables\Table;
 
 class TemplateTasksRelationManager extends RelationManager
 {
-    protected static string $relationship = 'templateTasks';
+    protected static string $relationship = 'tasks';
 
     protected static ?string $title = 'Tasks';
 

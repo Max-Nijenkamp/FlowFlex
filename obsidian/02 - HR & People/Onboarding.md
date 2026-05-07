@@ -3,8 +3,8 @@ tags: [flowflex, domain/hr, onboarding, phase/2]
 domain: HR & People
 panel: hr
 color: "#7C3AED"
-status: planned
-last_updated: 2026-05-06
+status: complete
+last_updated: 2026-05-07
 ---
 
 # Onboarding
@@ -16,6 +16,28 @@ Structured, templated journeys for every new hire. The goal is a consistent, pro
 **Depends on:** [[Employee Profiles]]
 **Phase:** 2
 **Build complexity:** High — 3 resources, 2 pages, 6 tables
+
+## Implementation (Phase 2 — Built)
+
+**Filament Resources:**
+- `OnboardingTemplateResource` — nav group: Onboarding, sort: 1, with `TemplateTasksRelationManager`
+- `OnboardingFlowResource` — nav group: Onboarding, sort: 2, eager-loads employee
+
+**Models:** `OnboardingTemplate`, `OnboardingTemplateTask`, `OnboardingFlow`, `OnboardingTask`, `OnboardingCheckin`, `OnboardingCheckinResponse`
+
+**Events wired:**
+- `OnboardingStarted` → `NotifyEmployeeOnboardingStarted` (queued, sends `OnboardingStartedNotification`)
+- `OnboardingTaskCompleted` → `NotifyHrOnboardingTaskCompleted` (queued)
+
+**What's live:**
+- Template builder with active/inactive flag
+- Template tasks via relation manager (name, description, assignee role, due-day-offset, is_required)
+- Onboarding flow creation: link employee to template, set status (`not_started` → `in_progress` → `completed`)
+- Flow table shows employee name (eager-loaded), status badge, started_at timestamp
+
+**Permissions enforced:** `hr.onboarding-templates.*`, `hr.onboarding-flows.*`
+
+**Not yet built (future phases):** pre-boarding portal, 30/60/90-day check-in UI, task progress tracking UI, auto-start from `CandidateHired` event
 
 ## Events Fired
 

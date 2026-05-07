@@ -13,7 +13,7 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontFamily;
-use Filament\Tables\Actions\Action as TableAction;
+use Filament\Actions\Action as TableAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -24,7 +24,6 @@ class ManageApiKeys extends Page implements HasTable
 {
     use InteractsWithTable;
 
-    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-key';
 
     protected static ?string $navigationLabel = 'API Keys';
 
@@ -40,7 +39,7 @@ class ManageApiKeys extends Page implements HasTable
     public function mount(): void
     {
         abort_unless(
-            auth('tenant')->check(),
+            auth('tenant')->user()?->can('workspace.settings.edit'),
             403
         );
     }
@@ -50,8 +49,9 @@ class ManageApiKeys extends Page implements HasTable
         return $table
             ->query(
                 ApiKey::query()
-                    ->where('company_id', auth('tenant')->user()->company_id)
                     ->withoutGlobalScopes()
+                    ->where('company_id', auth('tenant')->user()->company_id)
+                    ->whereNull('deleted_at')
             )
             ->columns([
                 TextColumn::make('name')

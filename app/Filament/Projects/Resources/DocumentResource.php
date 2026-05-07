@@ -56,15 +56,16 @@ class DocumentResource extends Resource
         return $schema->components([
             Section::make('Document Details')
                 ->schema([
-                    TextInput::make('name')
+                    TextInput::make('title')
                         ->required()
                         ->maxLength(255),
 
                     Select::make('folder_id')
                         ->label('Folder')
-                        ->options(fn () => DocumentFolder::query()->pluck('name', 'id')->toArray())
+                        ->relationship('folder', 'name')
                         ->nullable()
-                        ->searchable(),
+                        ->searchable()
+                        ->preload(),
                 ]),
         ]);
     }
@@ -73,7 +74,7 @@ class DocumentResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('title')
                     ->searchable()
                     ->weight(FontWeight::Bold)
                     ->sortable(),
@@ -97,6 +98,11 @@ class DocumentResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()->with(['folder']);
     }
 
     public static function getPages(): array

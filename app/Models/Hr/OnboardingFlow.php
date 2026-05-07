@@ -58,6 +58,10 @@ class OnboardingFlow extends Model
 
     public function checkins(): HasMany
     {
+        // NOTE: The onboarding_checkins table has no flow_id FK — only employee_id.
+        // This relationship returns ALL checkins for the employee, not just those
+        // belonging to this specific flow instance. A future migration should add a
+        // nullable flow_id column to onboarding_checkins to allow proper scoping.
         return $this->hasMany(OnboardingCheckin::class, 'employee_id', 'employee_id');
     }
 

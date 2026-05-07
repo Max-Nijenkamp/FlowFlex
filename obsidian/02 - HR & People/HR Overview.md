@@ -3,8 +3,8 @@ tags: [flowflex, domain/hr, overview, phase/2]
 domain: HR & People
 panel: hr
 color: "#7C3AED"
-status: in-progress
-last_updated: 2026-05-06
+status: complete
+last_updated: 2026-05-07
 ---
 
 # HR Overview
@@ -20,10 +20,10 @@ The HR & People domain is the people layer of FlowFlex. It manages every stage o
 
 | Module | Phase | Status | Description |
 |---|---|---|---|
-| [[Employee Profiles]] | 2 | planned | Central employee record, directory |
-| [[Onboarding]] | 2 | planned | Structured new hire journeys |
-| [[Leave Management]] | 2 | planned | Leave requests, balances, approvals |
-| [[Payroll]] | 2 | planned | Payroll runs, payslips, tax |
+| [[Employee Profiles]] | 2 | ✅ complete | Central employee record, directory |
+| [[Onboarding]] | 2 | ✅ complete | Structured new hire journeys |
+| [[Leave Management]] | 2 | ✅ complete | Leave requests, balances, approvals |
+| [[Payroll]] | 2 | ✅ complete | Payroll runs, payslips, tax |
 | [[Offboarding]] | 5 | planned | Exit checklist, access revocation |
 | [[Performance & Reviews]] | 5 | planned | OKRs, review cycles, 360 feedback |
 | [[Recruitment & ATS]] | 5 | planned | Full ATS, applicant pipeline, offers |

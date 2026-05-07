@@ -9,30 +9,30 @@ class SalaryRecordPolicy
 {
     public function viewAny(Tenant $tenant): bool
     {
-        return $tenant->can('hr.payroll.view');
+        return $tenant->can('hr.salary-records.view');
     }
 
     public function view(Tenant $tenant, SalaryRecord $record): bool
     {
         return $tenant->company_id === $record->company_id
-            && $tenant->can('hr.payroll.view');
+            && $tenant->can('hr.salary-records.view');
     }
 
     public function create(Tenant $tenant): bool
     {
-        return $tenant->can('hr.payroll.create');
+        return $tenant->can('hr.salary-records.create');
     }
 
     public function update(Tenant $tenant, SalaryRecord $record): bool
     {
         return $tenant->company_id === $record->company_id
-            && $tenant->can('hr.payroll.edit');
+            && $tenant->can('hr.salary-records.edit');
     }
 
     public function delete(Tenant $tenant, SalaryRecord $record): bool
     {
         return $tenant->company_id === $record->company_id
-            && $tenant->can('hr.payroll.delete');
+            && $tenant->can('hr.salary-records.delete');
     }
 
     public function restore(Tenant $tenant, SalaryRecord $record): bool

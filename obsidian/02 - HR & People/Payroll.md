@@ -3,8 +3,8 @@ tags: [flowflex, domain/hr, payroll, phase/2]
 domain: HR & People
 panel: hr
 color: "#7C3AED"
-status: planned
-last_updated: 2026-05-06
+status: complete
+last_updated: 2026-05-07
 ---
 
 # Payroll
@@ -16,6 +16,33 @@ Full payroll calculation and processing engine. Pulls from Time Tracking, Leave,
 **Depends on:** [[Employee Profiles]], [[Time Tracking]] (if active), [[Leave Management]] (if active), [[Expense Management]] (if active)
 **Phase:** 2 (basic), expanded in later phases
 **Build complexity:** Very High — 4 resources, 3 pages, 10 tables
+
+## Implementation (Phase 2 — Built)
+
+**Filament Resources:**
+- `PayElementResource` — nav group: Payroll, sort: 1 (pay element type configuration)
+- `PayRunResource` — nav group: Payroll, sort: 2 (pay run creation and management)
+- `SalaryRecordResource` — nav group: Payroll, sort: 3 (salary history per employee)
+
+**Models:** `PayElement`, `PayRun`, `PayRunEmployee`, `PayRunLine`, `Payslip`, `SalaryRecord`, `TaxConfiguration`, `Deduction`, `PayrollEntity`, `ContractorPayment`
+
+**Events wired:**
+- `PayRunProcessed` → `DispatchPayslipGenerationJobs` → dispatches `GeneratePayslipPdf` queued job per employee
+- `PayslipGenerated` → `NotifyEmployeePayslipGenerated` → `PayslipGeneratedNotification` to employee
+
+**Jobs:** `GeneratePayslipPdf` — queued job, creates Payslip record and fires `PayslipGenerated` event. PDF render stub requires PDF package (e.g. `barryvdh/laravel-dompdf`) — add in future phase.
+
+**What's live:**
+- Pay element config: type name and category
+- Pay run: frequency (weekly/bi-weekly/monthly/4-weekly), pay period dates, payment date, status (draft → approved → processed)
+- Pay run table: period dates, payment date, frequency badge, status badge, total_gross, total_net columns
+- Salary record: employee, amount (encrypted), currency, effective date, pay frequency, is_current flag
+
+**Security:** `SalaryRecord.amount` uses `encrypted` cast — never stored in plaintext. Requires `hr.salary-records.view` permission.
+
+**Permissions enforced:** `hr.pay-elements.*`, `hr.pay-runs.*`, `hr.salary-records.*`, `hr.payroll.run`
+
+**Not yet built (future phases):** tax calculation engine, BACS/ACH/SEPA export, RTI/FPS HMRC submission, P60/P45 generation, payroll summary reports, contractor payment runs, full pay run employee line processing
 
 ## Events Fired
 

@@ -3,8 +3,8 @@ tags: [flowflex, domain/hr, leave, absence, phase/2]
 domain: HR & People
 panel: hr
 color: "#7C3AED"
-status: planned
-last_updated: 2026-05-06
+status: complete
+last_updated: 2026-05-07
 ---
 
 # Leave Management
@@ -16,6 +16,30 @@ End-to-end leave request, approval, and tracking. Policy rules are fully configu
 **Depends on:** [[Employee Profiles]], [[Scheduling & Shifts]] (if active)
 **Phase:** 2
 **Build complexity:** High — 2 resources, 2 pages, 5 tables
+
+## Implementation (Phase 2 — Built)
+
+**Filament Resources:**
+- `LeaveTypeResource` — nav group: Leave, sort: 1
+- `LeaveRequestResource` — nav group: Leave, sort: 2, eager-loads `employee` and `leaveType`
+
+**Models:** `LeaveType`, `LeavePolicy`, `LeaveBalance`, `LeaveRequest`, `PublicHoliday`
+
+**Events wired:**
+- `LeaveRequested` → `NotifyManagerOfLeaveRequest` → `LeaveRequestedNotification` to manager
+- `LeaveApproved` → `NotifyEmployeeLeaveApproved` → `LeaveApprovedNotification` to employee
+- `LeaveRejected` → `NotifyEmployeeLeaveRejected` → `LeaveRejectedNotification` to employee
+
+**What's live:**
+- Leave type config: name, is_active flag
+- Leave request form: employee, leave type, start/end date, half-day toggle, reason, status
+- Leave request table: employee name, leave type, dates, total_days, status badge with colour
+- Status enum: `pending`, `approved`, `rejected`, `cancelled`
+- N+1 prevented via `getEloquentQuery()->with(['employee', 'leaveType'])`
+
+**Permissions enforced:** `hr.leave-types.*`, `hr.leave-requests.*`, `hr.leave.approve`
+
+**Not yet built (future phases):** leave balance accrual engine, team calendar view, multi-level approval, blackout periods, public holiday calendar UI, year-end reporting
 
 ## Events Fired
 

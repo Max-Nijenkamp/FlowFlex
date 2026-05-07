@@ -9,30 +9,30 @@ class OnboardingFlowPolicy
 {
     public function viewAny(Tenant $tenant): bool
     {
-        return $tenant->can('hr.onboarding.view');
+        return $tenant->can('hr.onboarding-flows.view');
     }
 
     public function view(Tenant $tenant, OnboardingFlow $flow): bool
     {
         return $tenant->company_id === $flow->company_id
-            && $tenant->can('hr.onboarding.view');
+            && $tenant->can('hr.onboarding-flows.view');
     }
 
     public function create(Tenant $tenant): bool
     {
-        return $tenant->can('hr.onboarding.create');
+        return $tenant->can('hr.onboarding-flows.create');
     }
 
     public function update(Tenant $tenant, OnboardingFlow $flow): bool
     {
         return $tenant->company_id === $flow->company_id
-            && $tenant->can('hr.onboarding.edit');
+            && $tenant->can('hr.onboarding-flows.edit');
     }
 
     public function delete(Tenant $tenant, OnboardingFlow $flow): bool
     {
         return $tenant->company_id === $flow->company_id
-            && $tenant->can('hr.onboarding.delete');
+            && $tenant->can('hr.onboarding-flows.delete');
     }
 
     public function restore(Tenant $tenant, OnboardingFlow $flow): bool

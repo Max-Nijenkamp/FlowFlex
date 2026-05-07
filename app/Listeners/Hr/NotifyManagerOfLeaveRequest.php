@@ -11,23 +11,40 @@ class NotifyManagerOfLeaveRequest implements ShouldQueue
 {
     public function handle(LeaveRequested $event): void
     {
-        $leaveRequest = $event->leaveRequest;
-        $employee = $leaveRequest->employee;
+        // Eager-load employee and their manager in one query to avoid N+1.
+        $leaveRequest = $event->leaveRequest->load('employee.manager');
+        $employee     = $leaveRequest->employee;
 
-        // Notify the employee's manager if they have one linked to a Tenant.
-        if ($employee && $employee->manager_id) {
-            $managerEmployee = $employee->manager;
-
-            // Find tenant by email match.
-            if ($managerEmployee && $managerEmployee->email) {
-                $manager = Tenant::where('company_id', $leaveRequest->company_id)
-                    ->where('email', $managerEmployee->email)
-                    ->first();
-
-                if ($manager) {
-                    $manager->notify(new LeaveRequestedNotification($leaveRequest));
-                }
-            }
+        if (! $employee || ! $employee->manager_id) {
+            return;
         }
+
+        $managerEmployee = $employee->manager;
+
+        if (! $managerEmployee || ! $managerEmployee->email) {
+            // Manager employee record has no email — cannot resolve a Tenant. Skip silently.
+            logger()->debug('NotifyManagerOfLeaveRequest: manager employee has no email', [
+                'leave_request_id' => $leaveRequest->id,
+                'manager_id'       => $employee->manager_id,
+            ]);
+
+            return;
+        }
+
+        // Resolve the Tenant account for the manager by matching email within the same company.
+        $managerTenant = Tenant::where('company_id', $leaveRequest->company_id)
+            ->where('email', $managerEmployee->email)
+            ->first();
+
+        if (! $managerTenant) {
+            logger()->debug('NotifyManagerOfLeaveRequest: no matching Tenant found for manager email', [
+                'leave_request_id' => $leaveRequest->id,
+                'manager_email'    => $managerEmployee->email,
+            ]);
+
+            return;
+        }
+
+        $managerTenant->notify(new LeaveRequestedNotification($leaveRequest));
     }
 }

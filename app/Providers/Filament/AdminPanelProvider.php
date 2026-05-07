@@ -4,6 +4,8 @@ namespace App\Providers\Filament;
 
 use App\Filament\Admin\Pages\Auth\Login;
 use App\Filament\Admin\Widgets\AdminStatsOverviewWidget;
+use App\Filament\Admin\Widgets\MarketingStatsWidget;
+use App\Filament\Admin\Widgets\RecentCompaniesWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -43,6 +45,8 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\Filament\Admin\Widgets')
             ->widgets([
                 AdminStatsOverviewWidget::class,
+                RecentCompaniesWidget::class,
+                MarketingStatsWidget::class,
                 AccountWidget::class,
             ])
             ->viteTheme('resources/css/filament/theme.css')

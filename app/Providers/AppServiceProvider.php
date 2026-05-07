@@ -26,8 +26,11 @@ use App\Models\Hr\LeaveRequest;
 use App\Models\Hr\LeaveType;
 use App\Models\Hr\OnboardingFlow;
 use App\Models\Hr\OnboardingTemplate;
+use App\Models\Hr\PayElement;
 use App\Models\Hr\PayRun;
 use App\Models\Hr\Payslip;
+use App\Models\Hr\PayrollEntity;
+use App\Models\Hr\PublicHoliday;
 use App\Models\Hr\SalaryRecord;
 
 // HR policies
@@ -37,8 +40,11 @@ use App\Policies\Hr\LeaveRequestPolicy;
 use App\Policies\Hr\LeaveTypePolicy;
 use App\Policies\Hr\OnboardingFlowPolicy;
 use App\Policies\Hr\OnboardingTemplatePolicy;
+use App\Policies\Hr\PayElementPolicy;
 use App\Policies\Hr\PayRunPolicy;
 use App\Policies\Hr\PayslipPolicy;
+use App\Policies\Hr\PayrollEntityPolicy;
+use App\Policies\Hr\PublicHolidayPolicy;
 use App\Policies\Hr\SalaryRecordPolicy;
 
 // Projects models
@@ -66,6 +72,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Spatie\Health\Checks\Checks\CacheCheck;
+use Spatie\Health\Checks\Checks\DatabaseCheck;
+use Spatie\Health\Checks\Checks\UsedDiskSpaceCheck;
+use Spatie\Health\Facades\Health;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -79,6 +89,7 @@ class AppServiceProvider extends ServiceProvider
         $this->registerPolicies();
         $this->configureDefaults();
         $this->configureLanguageSwitch();
+        $this->configureHealthChecks();
     }
 
     protected function registerPolicies(): void
@@ -99,8 +110,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(LeaveType::class, LeaveTypePolicy::class);
         Gate::policy(OnboardingFlow::class, OnboardingFlowPolicy::class);
         Gate::policy(OnboardingTemplate::class, OnboardingTemplatePolicy::class);
+        Gate::policy(PayElement::class, PayElementPolicy::class);
         Gate::policy(PayRun::class, PayRunPolicy::class);
         Gate::policy(Payslip::class, PayslipPolicy::class);
+        Gate::policy(PayrollEntity::class, PayrollEntityPolicy::class);
+        Gate::policy(PublicHoliday::class, PublicHolidayPolicy::class);
         Gate::policy(SalaryRecord::class, SalaryRecordPolicy::class);
 
         // Projects
@@ -128,6 +142,24 @@ class AppServiceProvider extends ServiceProvider
                     'es' => asset('flags/es.svg'),
                 ]);
         });
+    }
+
+    protected function configureHealthChecks(): void
+    {
+        $checks = [
+            DatabaseCheck::new(),
+            CacheCheck::new(),
+            UsedDiskSpaceCheck::new()
+                ->warnWhenUsedSpaceIsAbovePercentage(70)
+                ->failWhenUsedSpaceIsAbovePercentage(90),
+        ];
+
+        // Add Redis check only when the extension is available (production)
+        if (extension_loaded('redis')) {
+            $checks[] = \Spatie\Health\Checks\Checks\RedisCheck::new();
+        }
+
+        Health::checks($checks);
     }
 
     protected function configureDefaults(): void

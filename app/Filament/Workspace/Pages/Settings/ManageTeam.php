@@ -4,6 +4,7 @@ namespace App\Filament\Workspace\Pages\Settings;
 
 use App\Models\Role;
 use App\Models\Tenant;
+use App\Notifications\WorkspaceInviteNotification;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\Select;
@@ -14,8 +15,8 @@ use Filament\Pages\Page;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontWeight;
-use Filament\Tables\Actions\Action as TableAction;
-use Filament\Tables\Actions\EditAction;
+use Filament\Actions\Action as TableAction;
+use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
@@ -30,7 +31,6 @@ class ManageTeam extends Page implements HasTable
 {
     use InteractsWithTable;
 
-    protected static \BackedEnum|string|null $navigationIcon = 'heroicon-o-users';
 
     protected static ?string $navigationLabel = 'Team';
 
@@ -53,8 +53,9 @@ class ManageTeam extends Page implements HasTable
         return $table
             ->query(
                 Tenant::query()
-                    ->where('company_id', auth('tenant')->user()->company_id)
                     ->withoutGlobalScopes()
+                    ->where('company_id', auth('tenant')->user()->company_id)
+                    ->whereNull('deleted_at')
             )
             ->columns([
                 TextColumn::make('full_name')
@@ -153,7 +154,7 @@ class ManageTeam extends Page implements HasTable
                     ->action(function (array $data): void {
                         $this->authorizeEdit();
 
-                        $password = ! empty($data['password'])
+                        $plainPassword = ! empty($data['password'])
                             ? $data['password']
                             : Str::password(16);
 
@@ -162,13 +163,18 @@ class ManageTeam extends Page implements HasTable
                             'first_name' => $data['first_name'],
                             'last_name'  => $data['last_name'],
                             'email'      => $data['email'],
-                            'password'   => $password,
+                            'password'   => $plainPassword,
                             'is_enabled' => $data['is_enabled'] ?? true,
                         ]);
 
                         if (! empty($data['roles'])) {
                             $tenant->syncRoles($data['roles']);
                         }
+
+                        $tenant->notify(new WorkspaceInviteNotification(
+                            $plainPassword,
+                            auth('tenant')->user()->company->name,
+                        ));
 
                         Notification::make()
                             ->success()
