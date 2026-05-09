@@ -1,0 +1,50 @@
+{
+  "switcher:open": [
+    {
+      "modifiers": ["Mod"],
+      "key": "K"
+    }
+  ],
+  "graph:open": [
+    {
+      "modifiers": ["Mod"],
+      "key": "G"
+    }
+  ],
+  "markdown:toggle-preview": [
+    {
+      "modifiers": ["Mod"],
+      "key": "E"
+    }
+  ],
+  "backlink:open": [
+    {
+      "modifiers": ["Mod", "Alt"],
+      "key": "B"
+    }
+  ],
+  "insert-template": [
+    {
+      "modifiers": ["Mod"],
+      "key": "T"
+    }
+  ],
+  "editor:open-search": [
+    {
+      "modifiers": ["Mod"],
+      "key": "F"
+    }
+  ],
+  "file-explorer:open": [
+    {
+      "modifiers": ["Mod", "Shift"],
+      "key": "E"
+    }
+  ],
+  "outline:open": [
+    {
+      "modifiers": ["Mod", "Shift"],
+      "key": "O"
+    }
+  ]
+}

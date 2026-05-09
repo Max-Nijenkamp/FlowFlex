@@ -12,9 +12,9 @@ Discovered during the build. Links the real work back to the spec.
 
 ## Open Gaps
 
-| ID | Gap | Domain | Type | Priority | File |
-|---|---|---|---|---|---|
-| GAP-001 | Phase placement corrections for ATS, Sales Sequences, Bank Feeds, Partner Mgmt | Cross-domain | `#gap/spec` | High | [[gap-phase-placement-corrections]] |
+| ID | Gap | Severity | Category | Module | Discovered | File |
+|---|---|---|---|---|---|---|
+| GAP-001 | Phase placement corrections for ATS, Sales Sequences, Bank Feeds, Partner Mgmt | high | spec | Cross-domain | 2026-05-08 | [[gap-phase-placement-corrections]] |
 
 ---
 

@@ -26,6 +26,9 @@ Complete inventory of all files in this vault.
 - [[tpl_entity]] — entity note template
 - [[tpl_domain-moc]] — domain MOC template
 - [[tpl_concept]] — concept note template
+- [[tpl_gap]] — gap / missing spec note template
+- [[tpl_adr]] — architectural decision record template
+- [[tpl_builder-log]] — per-module build session log template
 
 ---
 
@@ -97,7 +100,7 @@ Complete inventory of all files in this vault.
 - AI: [[ai-document-processing]], [[ai-meeting-intelligence]], [[ai-customer-service-bot]]
 - IT: [[team-password-secrets-vault]]
 - HR: [[employee-wellbeing-mental-health]], [[global-payroll]], [[employee-self-service-portal]]
-- Legal: [[dsar-self-service-portal]]
+- Legal: [[dsar-self-service-portal]], [[contract-management]], [[policy-management]], [[data-privacy]], [[insurance-licence-tracking]], [[ai-contract-intelligence]], [[esignature-native]]
 - Core: [[notification-preferences]]
 - Concepts: [[concept-platform-features]]
 - Core: [[audit-log]], [[data-import-engine]], [[sandbox-environment]]
@@ -106,7 +109,7 @@ Complete inventory of all files in this vault.
 - Operations: [[lot-batch-serial-tracking]], [[demand-planning-forecasting]], [[supplier-qualification-onboarding]]
 - HR: [[time-attendance]], [[hr-people-analytics]]
 - Marketing: [[landing-page-builder]], [[utm-link-management]]
-- LMS: [[scorm-xapi-support]]
+- LMS: [[scorm-xapi-support]], [[course-builder-lms]], [[skills-matrix]], [[succession-planning]], [[mentoring-coaching]], [[external-training]], [[ai-learning-coach]], [[certification-compliance-training]], [[external-learner-portal]], [[live-virtual-classroom]]
 - IT: [[it-procurement-requests]]
 - Ecommerce: [[product-bundles]], [[headless-commerce-api]]
 - Analytics: [[scheduled-reports]], [[embedded-analytics]]
@@ -184,6 +187,7 @@ Complete inventory of all files in this vault.
 ### validation
 
 - [[MOC_Validation]] — validation checklist index
+- [[build-checklist]] — pre/post-build checklist (copy per module)
 
 ### gaps
 

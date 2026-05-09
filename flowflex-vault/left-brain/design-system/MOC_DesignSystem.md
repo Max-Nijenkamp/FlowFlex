@@ -14,23 +14,39 @@ Brand foundation, colour system, typography, spacing, components, motion, iconog
 
 Each business domain has its own colour. Used for panel navigation, domain badges, and dashboard widgets.
 
-| Domain | Colour | Hex | Tailwind Class |
-|---|---|---|---|
-| Core Platform | Gray | `#111827` | `gray-900` |
-| HR & People | Violet | `#7C3AED` | `violet-600` |
-| Projects & Work | Indigo | `#4F46E5` | `indigo-600` |
-| Finance & Accounting | Emerald | `#059669` | `emerald-600` |
-| CRM & Sales | Red | `#DC2626` | `red-600` |
-| Marketing & Content | Pink | `#DB2777` | `pink-600` |
-| Operations | Amber | `#D97706` | `amber-600` |
-| Analytics & BI | Sky | `#0284C7` | `sky-600` |
-| IT & Security | Gray-500 | `#6B7280` | `gray-500` |
-| Legal & Compliance | Amber-800 | `#92400E` | `amber-800` |
-| E-commerce | Cyan | `#0891B2` | `cyan-600` |
-| Communications | Violet-700 | `#6D28D9` | `violet-700` |
-| Learning & Dev | Green | `#16A34A` | `green-600` |
-| AI & Automation | Indigo-500 | `#6366F1` | `indigo-500` |
-| Community | Amber-400 | `#F59E0B` | `amber-400` |
+| # | Domain | Colour | CSS Accent | cssclass |
+|---|---|---|---|---|
+| 01 | Core Platform | Slate | `#94A3B8` | `domain-admin` |
+| 02 | HR & People | Purple | `#A78BFA` | `domain-hr` |
+| 03 | Projects & Work | Indigo | `#818CF8` | `domain-projects` |
+| 04 | Finance & Accounting | Emerald | `#34D399` | `domain-finance` |
+| 05 | CRM & Sales | Rose | `#FB7185` | `domain-crm` |
+| 06 | Marketing & Content | Pink | `#F472B6` | `domain-marketing` |
+| 07 | Operations | Amber | `#FCD34D` | `domain-operations` |
+| 08 | Analytics & BI | Sky | `#38BDF8` | `domain-analytics` |
+| 09 | IT & Security | Gray | `#9CA3AF` | `domain-it` |
+| 10 | Legal & Compliance | Amber-warm | `#D97706` | `domain-legal` |
+| 11 | E-commerce | Cyan | `#22D3EE` | `domain-ecommerce` |
+| 12 | Communications | Light-cyan | `#67E8F9` | `domain-comms` |
+| 13 | Learning & Dev | Green | `#4ADE80` | `domain-lms` |
+| 14 | AI & Automation | Violet | `#C084FC` | `domain-ai` |
+| 15 | Community & Social | Amber-gold | `#FDE68A` | `domain-community` |
+| 16 | Workplace & Facility | Teal | `#2DD4BF` | `domain-workplace` |
+| 17 | PSA | Fuchsia | `#D946EF` | `domain-psa` |
+| 18 | Product-Led Growth | Blue | `#60A5FA` | `domain-plg` |
+| 19 | Business Travel | Blue-500 | `#3B82F6` | `domain-travel` |
+| 20 | ESG & Sustainability | Green-300 | `#86EFAC` | `domain-esg` |
+| 21 | Real Estate & Property | Stone | `#D6D3D1` | `domain-realestate` |
+| 22 | Customer Success | Sky | `#38BDF8` | `domain-cs` |
+| 23 | Subscription Billing | Emerald-500 | `#10B981` | `domain-subscriptions` |
+| 24 | Procurement | Orange | `#F97316` | `domain-procurement` |
+| 25 | FP&A | Indigo-400 | `#818CF8` | `domain-fpa` |
+| 26 | Events Management | Pink-500 | `#EC4899` | `domain-events` |
+| 27 | Document Management | Violet | `#8B5CF6` | `domain-dms` |
+| 28 | Whistleblowing & Ethics | Violet-700 | `#6D28D9` | `domain-whistleblowing` |
+| 29 | Field Service Management | Orange-600 | `#EA580C` | `domain-fsm` |
+| 30 | Pricing Management | Teal-600 | `#0D9488` | `domain-pricing` |
+| 31 | Enterprise Risk Management | Red-700 | `#B91C1C` | `domain-risk` |
 
 ---
 

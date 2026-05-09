@@ -79,5 +79,6 @@ Run this against every completed module:
 
 ## Related
 
+- [[build-checklist]] — pre/post-build checklist (use this before marking a module ✅)
 - [[STATUS_Dashboard]]
 - [[ACTIVATION_GUIDE]]
