@@ -153,7 +153,7 @@ class CreatePayrollRecordListener implements ShouldQueue
 3. Events carry scalar IDs, not Eloquent models
 4. Listeners are always queued
 5. Listener failure must not break emitting transaction — use `ShouldQueue`
-6. Dead-letter queue for failed jobs → alert Notifications domain
+6. Failed jobs after `$tries = 3` → go to Laravel's `failed_jobs` table (queue: `domain-events-failed`). Horizon monitors this queue and fires `JobFailed` → Notifications domain sends Slack alert to `#platform-alerts`. Retention: 30 days in `failed_jobs`, then purged by scheduled command
 
 ---
 

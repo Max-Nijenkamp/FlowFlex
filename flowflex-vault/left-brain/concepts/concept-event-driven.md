@@ -6,6 +6,8 @@ last_updated: 2026-05-08
 
 # Concept: Event-Driven Cross-Domain Communication
 
+> **Canonical implementation**: [[event-bus]] — full event map, listener registration, queued listener pattern, dead-letter policy.
+
 Domains communicate exclusively through Laravel Events. No direct service-to-service calls across domain boundaries.
 
 ---

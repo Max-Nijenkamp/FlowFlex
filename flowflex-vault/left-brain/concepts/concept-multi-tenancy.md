@@ -6,6 +6,8 @@ last_updated: 2026-05-08
 
 # Concept: Multi-Tenancy
 
+> **Canonical implementation**: [[multi-tenancy]] — full code, BelongsToCompany trait, CompanyScope, CompanyContext, bypass patterns.
+
 One database, shared schema. Every row on every module table carries `company_id`. Global scope enforces isolation automatically.
 
 ---

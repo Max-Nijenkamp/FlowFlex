@@ -12,7 +12,7 @@ Cross-cutting features that apply to the entire FlowFlex platform, not specific 
 
 ## Multi-Language / i18n
 
-**Status:** Phase 1 (must be in from day 1)
+**Status:** Phase 1 — bootstrapped in Core Platform (string loading, locale resolution, number/date formatting), expanded in Phase 3+ (translated content via spatie/laravel-translatable)
 
 - UI translations via Laravel `lang/` files + Vue i18n
 - Minimum EU languages: EN, NL, DE, FR, ES
@@ -20,6 +20,9 @@ Cross-cutting features that apply to the entire FlowFlex platform, not specific 
 - User-level locale preference stored on `users.locale`
 - Company-level default locale on `companies.locale`
 - Number, date, currency formatting per locale
+- String translation files live in `lang/{locale}/*.php` — one file per domain module
+- Vue frontend uses vue-i18n, strings loaded from the same source via API endpoint
+- Locale resolved in order: user preference → company default → app default (en)
 - RTL support for Arabic/Hebrew (future phase)
 
 ---
@@ -71,7 +74,7 @@ Single account manages multiple legal entities. Each entity = separate `company`
 - SDKs: PHP, JavaScript, Python (auto-generated)
 - Sandbox environment (separate tenant with test data)
 - Webhook documentation + event catalogue
-- Rate limit documentation per plan tier
+- Rate limit documentation per module tier
 
 ---
 

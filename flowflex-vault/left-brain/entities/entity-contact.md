@@ -85,9 +85,17 @@ Deduplication: check `email` + `company_id` before creating.
 
 ---
 
+## CRM Company (Account) Entity
+
+`crm_companies` is the B2B account record — a company that a contact belongs to (e.g. "Acme Corp" employs the contact "John Smith"). This is separate from `companies` (FlowFlex tenants).
+
+> `crm_companies` is defined in the CRM domain (Phase 3) as part of the Account Management module — not a standalone entity doc because it's domain-specific. The `crm_company_id` FK on this table references `crm_companies.id`.
+
+---
+
 ## Related
 
 - [[MOC_Entities]]
-- [[entity-company]]
+- [[entity-company]] — tenant root (do not confuse with CRM company accounts)
 - [[entity-invoice]]
 - [[MOC_CRM]]

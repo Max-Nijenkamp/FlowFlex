@@ -79,7 +79,8 @@
       "Bash(mkdir -p \"/Users/maxnijenkamp/Documents/FlowFlex/obsidian/16 - Community & Social\")",
       "Bash(xargs -I{} sh -c 'echo \"=== {} ===\" && grep -A2 \"| Module\" {} | head -30')",
       "Bash(awk -F'/' '{print $1, $2}')",
-      "PowerShell(composer *)"
+      "PowerShell(composer *)",
+      "Bash(bc)"
     ]
   },
   "enabledMcpjsonServers": [

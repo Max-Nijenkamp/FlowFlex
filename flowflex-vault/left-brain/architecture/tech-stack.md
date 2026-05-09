@@ -61,7 +61,7 @@ graph TD
 
 | Package | Version | Purpose |
 |---|---|---|
-| `laravel/framework` | 13.x | Core framework |
+| `laravel/framework` | 13.x | Core framework — confirmed Laravel 13 |
 | `laravel/sanctum` | 4.x | SPA auth + API tokens |
 | `laravel/horizon` | 5.x | Queue monitoring |
 | `laravel/pulse` | 1.x | App health metrics |

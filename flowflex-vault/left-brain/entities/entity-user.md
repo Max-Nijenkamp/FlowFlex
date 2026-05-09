@@ -76,7 +76,7 @@ See [[auth-rbac]] for full details.
 ## Business Rules
 
 1. Email unique per company (same email OK in different companies)
-2. Company owner role assigned at registration — cannot be removed
+2. Company owner role assigned at company creation — cannot be removed
 3. Soft-deleted users lose all panel access immediately
 4. User deletion triggers `UserDeactivated` event → IT domain revokes SSO
 

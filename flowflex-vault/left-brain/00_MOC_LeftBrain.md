@@ -1,12 +1,14 @@
 ---
 type: moc
 section: left-brain
-last_updated: 2026-05-08
+last_updated: 2026-05-09
 ---
 
 # Left Brain — Master Index
 
 Static knowledge base for FlowFlex. Everything here is reference-grade: read before building, update only when the spec changes.
+
+**32 domains · 311 modules · 11 entities · 11 concepts**
 
 ---
 
@@ -17,8 +19,8 @@ graph TD
     LB["Left Brain"]
 
     LB --> ARCH["Architecture"]
-    LB --> FE["Frontend"]
-    LB --> DOM["Domains (×15)"]
+    LB --> FE["Frontend & Portals"]
+    LB --> DOM["32 Domains"]
     LB --> ENT["Entities"]
     LB --> CON["Concepts"]
     LB --> DS["Design System"]
@@ -30,17 +32,14 @@ graph TD
     ARCH --> A4["Module System"]
     ARCH --> A5["Event Bus"]
     ARCH --> A6["Data Architecture"]
+    ARCH --> A7["Analytics Architecture"]
+    ARCH --> A8["Portal Architecture"]
+    ARCH --> A9["AI & GDPR"]
 
-    FE --> F1["Vue+Inertia Overview"]
+    FE --> F1["MOC Frontend"]
     FE --> F2["Marketing Site"]
     FE --> F3["Client Portal"]
     FE --> F4["Public Pages"]
-
-    DOM --> D1["01 Core Platform"]
-    DOM --> D2["02 HR & People"]
-    DOM --> D3["03 Projects & Work"]
-    DOM --> D14["14 AI & Automation"]
-    DOM --> D15["15 Community"]
 ```
 
 ---
@@ -53,16 +52,16 @@ graph TD
 - [[multi-tenancy]] — company isolation, global scopes, BelongsToCompany
 - [[module-system]] — Interface→Service→Controller, ServiceProvider binding
 - [[event-bus]] — Laravel events, cross-domain communication
-- [[data-architecture]] — DTOs, migrations, ULID keys
-- [[error-handling]] — Inertia errors, custom pages, logging
-- [[rate-limiting]] — per-user, per-tenant, per-plan limits
+- [[data-architecture]] — DTOs, migrations, ULID keys, migration ranges
+- [[analytics-data-architecture]] — read replica, ClickHouse, materialised views
+- [[portal-architecture]] — unified PortalKernel, 6 portal types, guards
+- [[ai-gdpr-data-residency]] — LLM routing, EU AI Act, data residency
 
 ---
 
-## Frontend (Public Pages)
+## Frontend (Public Pages & Portals)
 
-- [[MOC_Frontend]] — all public Vue+Inertia pages (non-Filament)
-- [[vue-inertia-overview]] — frontend architecture, TypeScript, SSR
+- [[MOC_Frontend]] — all public Vue+Inertia pages and portal architecture
 - [[marketing-site]] — public website, landing pages, pricing
 - [[client-portal]] — customer-facing portal
 - [[public-pages]] — booking, checkout, learner portal, community
@@ -73,25 +72,41 @@ graph TD
 
 | # | Domain | Panel | Phase | Modules |
 |---|---|---|---|---|
-| 01 | [[MOC_CorePlatform\|Core Platform]] | `admin` | 1 | 8 |
-| 02 | [[MOC_HR\|HR & People]] | `hr` | 2/8 | 15 |
-| 03 | [[MOC_Projects\|Projects & Work]] | `projects` | 2/8 | 11 |
-| 04 | [[MOC_Finance\|Finance & Accounting]] | `finance` | 3/6 | 14 |
-| 05 | [[MOC_CRM\|CRM & Sales]] | `crm` | 3/8 | 13 |
-| 06 | [[MOC_Marketing\|Marketing & Content]] | `marketing` | 5 | 12 |
-| 07 | [[MOC_Operations\|Operations & Field Service]] | `operations` | 4/5 | 11 |
-| 08 | [[MOC_Analytics\|Analytics & BI]] | `analytics` | 6 | 8 |
-| 09 | [[MOC_IT\|IT & Security]] | `it` | 4/6 | 8 |
-| 10 | [[MOC_Legal\|Legal & Compliance]] | `legal` | 4/7 | 7 |
-| 11 | [[MOC_Ecommerce\|E-commerce]] | `ecommerce` | 4/5 | 10 |
-| 12 | [[MOC_Communications\|Communications]] | `comms` | 5 | 9 |
-| 13 | [[MOC_LMS\|Learning & Development]] | `lms` | 7 | 9 |
-| 14 | [[MOC_AI\|AI & Automation]] | `ai` | 6 | 9 |
-| 15 | [[MOC_Community\|Community & Social]] | `community` | 7 | 6 |
-| 16 | [[MOC_Workplace\|Workplace & Facility]] | `workplace` | 6 | 6 |
-| 17 | [[MOC_PSA\|Professional Services (PSA)]] | `psa` | 7 | 6 |
-| 18 | [[MOC_PLG\|Product-Led Growth]] | `plg` | 7 | 6 |
-| 19 | [[MOC_Travel\|Business Travel]] | `travel` | 7 | 6 |
+| 00 | [[MOC_Foundation\|Foundation]] | `admin/app` | 0 | 3 |
+| 01 | [[MOC_CorePlatform\|Core Platform]] | `admin` | 1 | 12 |
+| 02 | [[MOC_HR\|HR & People]] | `hr` | 2/8 | 21 |
+| 03 | [[MOC_Projects\|Projects & Work]] | `projects` | 2/8 | 13 |
+| 04 | [[MOC_Finance\|Finance & Accounting]] | `finance` | 3/6 | 23 |
+| 05 | [[MOC_CRM\|CRM & Sales]] | `crm` | 3/8 | 22 |
+| 06 | [[MOC_Marketing\|Marketing & Content]] | `marketing` | 5 | 19 |
+| 07 | [[MOC_Operations\|Operations]] | `operations` | 4/5 | 18 |
+| 08 | [[MOC_Analytics\|Analytics & BI]] | `analytics` | 6 | 10 |
+| 09 | [[MOC_IT\|IT & Security]] | `it` | 4/6 | 12 |
+| 10 | [[MOC_Legal\|Legal & Compliance]] | `legal` | 4/7 | 8 |
+| 11 | [[MOC_Ecommerce\|E-commerce]] | `ecommerce` | 4/5 | 15 |
+| 12 | [[MOC_Communications\|Communications]] | `comms` | 5 | 11 |
+| 13 | [[MOC_LMS\|Learning & Development]] | `lms` | 7 | 10 |
+| 14 | [[MOC_AI\|AI & Automation]] | `ai` | 6 | 10 |
+| 15 | [[MOC_Community\|Community & Social]] | `community` | 7 | 7 |
+| 16 | [[MOC_Workplace\|Workplace & Facility]] | `workplace` | 4/6 | 6 |
+| 17 | [[MOC_PSA\|Professional Services (PSA)]] | `psa` | 5/7 | 6 |
+| 18 | [[MOC_PLG\|Product-Led Growth]] | `plg` | 6/7 | 6 |
+| 19 | [[MOC_Travel\|Business Travel]] | `travel` | 5/7 | 6 |
+| 20 | [[MOC_ESG\|ESG & Sustainability]] | `esg` | 5/6 | 6 |
+| 21 | [[MOC_RealEstate\|Real Estate & Property]] | `realestate` | 6 | 6 |
+| 22 | [[MOC_CustomerSuccess\|Customer Success]] | `cs` | 5 | 6 |
+| 23 | [[MOC_SubscriptionBilling\|Subscription Billing]] | `subscriptions` | 3 | 6 |
+| 24 | [[MOC_Procurement\|Procurement]] | `procurement` | 3 | 6 |
+| 25 | [[MOC_FPA\|FP&A]] | `fpa` | 4 | 6 |
+| 26 | [[MOC_Events\|Events Management]] | `events` | 5 | 6 |
+| 27 | [[MOC_DMS\|Document Management]] | `dms` | 4 | 6 |
+| 28 | [[MOC_Whistleblowing\|Whistleblowing & Ethics]] | `whistleblowing` | 4 | 6 |
+| 29 | [[MOC_FieldService\|Field Service Management]] | `fsm` | 5 | 8 |
+| 30 | [[MOC_Pricing\|Pricing Management]] | `pricing` | 4 | 5 |
+| 31 | [[MOC_RiskManagement\|Enterprise Risk Management]] | `risk` | 5 | 6 |
+
+**Total: 32 domains · 311 modules**  
+See [[MOC_Domains]] for full registry with panel names, colours, and competitive displacement map.
 
 ---
 
@@ -99,48 +114,45 @@ graph TD
 
 - [[MOC_Entities]] — all core data models with ERD
 - [[entity-company]] — tenant anchor record
-- [[entity-user]] — platform user (admin-side)
+- [[entity-admin]] — FlowFlex staff (admins table, Layer 1 RBAC)
+- [[entity-user]] — tenant platform user (users table, Layer 2 RBAC)
 - [[entity-employee]] — HR employee profile
-- [[entity-contact]] — CRM contact
+- [[entity-contact]] — CRM contact / lead
 - [[entity-project]] — project record
 - [[entity-invoice]] — financial document
 - [[entity-product]] — catalogue item
-- [[entity-module-subscription]] — which modules a company has enabled
+- [[entity-portal-user]] — external portal users (ESS, client, B2B, partner, learner, member)
+- [[entity-module-subscription]] — which modules a company has active
+- [[entity-module-catalog]] — module pricing (per-user monthly rates)
 
 ---
 
 ## Concepts
 
-- [[MOC_Concepts]] — all cross-cutting concepts
-- [[concept-multi-tenancy]]
-- [[concept-interface-service-pattern]]
-- [[concept-dto-pattern]]
-- [[concept-event-driven]]
-- [[concept-rbac]]
-- [[concept-soft-deletes]]
-- [[concept-ulid-keys]]
+- [[MOC_Concepts]] — all cross-cutting patterns
+- [[concept-multi-tenancy]] — overview → see [[multi-tenancy]] for implementation
+- [[concept-interface-service-pattern]] — overview → see [[module-system]] for implementation
+- [[concept-dto-pattern]] — spatie/laravel-data, input validation + output serialisation
+- [[concept-event-driven]] — overview → see [[event-bus]] for full event map
+- [[concept-rbac]] — overview → see [[auth-rbac]] for implementation
+- [[concept-soft-deletes]] — all models, 3 hard-delete exceptions
+- [[concept-ulid-keys]] — ULID vs UUID, HasUlids trait
+- [[concept-platform-features]] — i18n, notifications, workflow rules
+- [[concept-custom-objects]] — extensible schema for tenant customisation
+- [[concept-formula-engine]] — calculated fields engine
+- [[concept-workflow-rules]] — automation trigger/condition/action model
 
 ---
 
 ## Design System
 
-- [[MOC_DesignSystem]] — brand, tokens, components
-- [[brand-foundation]]
-- [[colour-system]]
-- [[typography]]
-- [[component-library]]
-- [[filament-implementation]]
+- [[MOC_DesignSystem]] — navigation hub
+- [[brand-foundation]] — master branding: identity, colours, typography, iconography, voice
+- [[colour-system]] — CSS custom properties and Tailwind config
+- [[typography]] — Bunny Fonts (Inter), type scale, Filament font config
 
 ---
 
 ## Roadmap
 
-- [[MOC_Roadmap]] — phase plan, dependencies, milestones
-- [[phase-1]] — Core Platform
-- [[phase-2]] — HR + Projects (core)
-- [[phase-3]] — Finance + CRM (core)
-- [[phase-4]] — Operations + IT + Legal + Ecommerce
-- [[phase-5]] — Marketing + Communications + Ecommerce extensions
-- [[phase-6]] — Analytics + AI & Automation + Finance extensions
-- [[phase-7]] — Legal + LMS + Community
-- [[phase-8]] — HR + Projects + CRM + all extensions
+- [[MOC_Roadmap]] — full 9-phase build plan, Gantt, milestones, dependencies

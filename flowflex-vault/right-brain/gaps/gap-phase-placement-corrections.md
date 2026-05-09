@@ -1,6 +1,8 @@
 ---
 type: gap
-status: open
+status: closed
+color: "#F97316"
+resolved: 2026-05-09
 priority: high
 identified: 2026-05-09
 source: competitive-research
@@ -97,12 +99,12 @@ Several key features are currently planned for Phase 7–8 but should be moved e
 
 ---
 
-## Actions Required
+## Actions
 
-| Item | Action | Owner | Priority |
-|---|---|---|---|
-| ATS/Recruitment | Add module specs to MOC_HR, phase 4 | Architecture | High |
-| Sales Sequences | Add module spec to MOC_CRM, phase 3 | Architecture | High |
-| Bank Feeds | Add module spec to MOC_Finance, phase 3 | Architecture | High |
-| Partner Portal | Update [[partner-relationship-management]] phase 5→5 | Architecture | Medium |
-| AI Phase review | Sprint planning — review AI domain phases | Architecture | Medium |
+| Item | Action | Status |
+|---|---|---|
+| ATS/Recruitment | MOC_HR already has Recruitment & ATS at Phase 4 | ✅ done |
+| Sales Sequences | MOC_CRM updated: Phase 8 → Phase 3 | ✅ done |
+| Bank Feeds | MOC_Finance updated: Open Banking Phase 6 → Phase 3 | ✅ done |
+| Partner Portal | [[partner-relationship-management]] — Phase already 5, no change needed | ✅ done |
+| AI Phase review | Core AI features (compose, summaries, doc extraction) noted in module specs; agentic remains Phase 6 | ✅ accepted |

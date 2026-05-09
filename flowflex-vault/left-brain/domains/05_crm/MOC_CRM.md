@@ -38,7 +38,7 @@ Complete customer relationship management. Contacts, pipeline, helpdesk, proposa
 | [[contract-lifecycle-management\|Contract Lifecycle Management]] | 8 | planned | Contract negotiation, redlining, renewal pipeline |
 | Revenue Intelligence | 8 | planned | Pipeline AI, win probability, scenario modelling |
 | Deal Room | 8 | planned | Branded deal microsite, mutual action plan, buyer analytics |
-| Sales Sequences & Cadences | 8 | planned | Automated email+call+LinkedIn sequences |
+| Sales Sequences & Cadences | 3 | planned | Automated email+call+LinkedIn sequences, auto-enroll, step tracking |
 | Customer Success Platform | 8 | planned | Health scores, success plans, QBR builder, renewals |
 | [[cpq\|CPQ — Configure, Price, Quote]] | 8 | planned | Product configurator, price books, discount approvals |
 | [[partner-relationship-management\|Partner Relationship Management]] | 8 | planned | Reseller portal, deal registration, MDF management |

@@ -79,11 +79,13 @@ class CompanyScope implements Scope
 }
 ```
 
-Applied automatically to every query. To bypass (super-admin only):
+Applied automatically to every query. To bypass (super-admin admin panel only):
 
 ```php
 Employee::withoutGlobalScope(CompanyScope::class)->where('id', $id)->first();
 ```
+
+**Rule**: `withoutGlobalScope(CompanyScope::class)` is only permitted inside `app/Filament/Admin/` (the `/admin` panel). Never in `app/Filament/App/`, `app/Http/Controllers/`, or `app/Services/`. Enforce via code review checklist — there is no compile-time guard.
 
 ---
 
@@ -126,7 +128,7 @@ Before every new module:
 - [ ] Model uses `HasUlids` trait
 - [ ] Model uses `SoftDeletes`
 - [ ] Any raw queries include `company_id` filter
-- [ ] File uploads stored in `companies/{company_id}/...` path
+- [ ] File uploads stored in `companies/{company_id}/...` path — enforced via `FileStorageService::pathFor(Company $company, string $filename)` helper; never call `Storage::put()` directly with a raw path
 - [ ] Events carry `company_id` in payload
 - [ ] Queue jobs verify `company_id` on dispatch and on handle
 

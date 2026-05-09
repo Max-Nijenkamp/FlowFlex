@@ -42,7 +42,7 @@ graph TD
 ### Layer 2 — `users` Table
 
 - Scoped to `company_id`
-- Company owner gets all permissions at registration
+- Company owner gets all permissions at company creation
 - All other users assigned one or more custom roles
 - Roles are per-company (Spatie's `team` concept)
 - Permissions format: `domain.module.action`
@@ -114,7 +114,7 @@ sequenceDiagram
 When a new company is created:
 
 ```php
-// In TenantRegistrationService
+// In CompanyCreationService (called from Admin panel when Max creates a company)
 $owner = User::create([...]);
 $role = Role::create(['name' => 'owner', 'team_id' => $company->id]);
 $allPermissions = Permission::all();

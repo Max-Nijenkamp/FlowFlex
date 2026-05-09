@@ -4,7 +4,7 @@ domain: Core Platform
 table: companies
 primary_key: ulid
 soft_deletes: true
-last_updated: 2026-05-08
+last_updated: 2026-05-09
 ---
 
 # Entity: Company
@@ -24,12 +24,12 @@ The tenant anchor record. Every other record in the system has a `company_id` po
         string name
         string slug
         string email
-        string plan
         string status
         string timezone
         string locale
         string currency
         json branding
+        json ai_config
         timestamp trial_ends_at
         timestamp subscribed_at
         timestamp created_at
@@ -39,6 +39,7 @@ The tenant anchor record. Every other record in the system has a `company_id` po
 
     companies ||--o{ users : "has many"
     companies ||--o{ company_module_subscriptions : "subscribes to"
+    companies ||--o{ company_domains : "custom domains"
 ```
 
 ---
@@ -49,14 +50,14 @@ The tenant anchor record. Every other record in the system has a `company_id` po
 |---|---|---|
 | `id` | ULID | Primary key |
 | `name` | string(255) | Company display name |
-| `slug` | string(100) | URL-safe identifier, unique |
+| `slug` | string(100) | URL-safe identifier, unique — used for subdomain routing |
 | `email` | string(255) | Primary billing/contact email |
-| `plan` | enum | `starter`, `growth`, `scale`, `enterprise` |
 | `status` | enum | `trial`, `active`, `suspended`, `cancelled` |
 | `timezone` | string | IANA timezone (e.g. `Europe/Amsterdam`) |
 | `locale` | string | BCP 47 locale code (e.g. `nl-NL`) |
 | `currency` | string | ISO 4217 (e.g. `EUR`) |
-| `branding` | JSON | `{primary_color, logo_url, favicon_url}` |
+| `branding` | JSON | `{primary_color, logo_url, favicon_url, portal_domain, hide_powered_by}` |
+| `ai_config` | JSON | `{llm_provider, data_residency, pii_masking, high_risk_ai_enabled}` — see [[ai-gdpr-data-residency]] |
 | `trial_ends_at` | timestamp | null if not on trial |
 
 ---
@@ -65,7 +66,7 @@ The tenant anchor record. Every other record in the system has a `company_id` po
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Trial : registration
+    [*] --> Trial : admin creates company
     Trial --> Active : subscription activated
     Trial --> Cancelled : trial expired without payment
     Active --> Suspended : payment failed (grace period)
@@ -95,7 +96,7 @@ stateDiagram-v2
 2. `status = suspended` blocks all panel access (middleware check)
 3. Company deletion is soft — no hard delete except GDPR erasure flow
 4. `branding` JSON controls client portal and learner portal appearance
-5. `currency` and `locale` default to company owner's registration country
+5. `currency` and `locale` set by Max at company creation time
 
 ---
 
@@ -111,3 +112,4 @@ Every module in every domain. The `BelongsToCompany` trait and `CompanyScope` re
 - [[entity-user]]
 - [[entity-module-subscription]]
 - [[multi-tenancy]]
+- [[brand-foundation]] — white-label overrides for `branding` JSON column

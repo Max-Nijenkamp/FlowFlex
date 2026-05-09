@@ -35,7 +35,7 @@ Complete accounting suite. Invoicing, expenses, AP/AR, bank reconciliation, payr
 | [[fixed-assets\|Fixed Asset & Depreciation]] | 3 | planned | Asset register, depreciation schedules, disposal journals |
 | Subscription & MRR Tracking | 3 | 📅 planned | MRR/ARR dashboard, churn analysis |
 | Multi-Currency & FX Management | 6 | planned | Real-time FX, multi-currency reporting |
-| Open Banking & Bank Feeds | 6 | planned | PSD2 bank feeds, auto-categorisation |
+| Open Banking & Bank Feeds | 3 | planned | PSD2/Plaid bank feeds, auto-match transactions, daily sync |
 | [[cash-flow-forecasting\|Cash Flow Forecasting]] | 6 | planned | 13-week rolling forecast, committed spend, scenarios |
 | Revenue Recognition | 6 | planned | IFRS 15 / ASC 606, deferred revenue, 5-step model |
 | [[credit-control\|Credit Control]] | 3 | planned | Aged debtors, dunning sequences, disputes, payment plans |

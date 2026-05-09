@@ -1,7 +1,7 @@
 ---
 type: architecture
 category: data
-last_updated: 2026-05-08
+last_updated: 2026-05-09
 ---
 
 # Data Architecture
@@ -12,23 +12,48 @@ Conventions for database schema, migrations, models, and DTOs.
 
 ## Migration Ranges
 
-| Domain | Range |
-|---|---|
-| Core Platform | 000000–099999 |
-| HR & People | 100000–149999 |
-| Projects & Work | 150000–199999 |
-| Finance & Accounting | 200000–249999 |
-| CRM & Sales | 250000–299999 |
-| Operations | 300000–399999 |
-| Marketing & Content | 400000–449999 |
-| Analytics & BI | 450000–499999 |
-| IT & Security | 500000–549999 |
-| Legal & Compliance | 550000–599999 |
-| E-commerce | 600000–649999 |
-| Communications | 650000–699999 |
-| Learning & Development | 700000–749999 |
-| AI & Automation | 750000–799999 |
-| Community & Social | 800000–849999 |
+Every domain owns a numeric range. Migrations within a domain must stay in that domain's range. Ranges are assigned in build order (Phase 0 first).
+
+| # | Domain | Range | Phase |
+|---|---|---|---|
+| 00 | Foundation | `000000–009999` | 0 |
+| 01 | Core Platform | `010000–099999` | 1 |
+| 02 | HR & People | `100000–149999` | 2/8 |
+| 03 | Projects & Work | `150000–199999` | 2/8 |
+| 04 | Finance & Accounting | `200000–249999` | 3/6 |
+| 05 | CRM & Sales | `250000–299999` | 3/8 |
+| 06 | Marketing & Content | `400000–449999` | 5 |
+| 07 | Operations | `300000–399999` | 4/5 |
+| 08 | Analytics & BI | `450000–499999` | 6 |
+| 09 | IT & Security | `500000–549999` | 4/6 |
+| 10 | Legal & Compliance | `550000–599999` | 4/7 |
+| 11 | E-commerce | `600000–649999` | 4/5 |
+| 12 | Communications | `650000–699999` | 5 |
+| 13 | Learning & Development | `700000–749999` | 7 |
+| 14 | AI & Automation | `750000–799999` | 6 |
+| 15 | Community & Social | `800000–849999` | 7 |
+| 16 | Workplace & Facility | `850000–869999` | 4/6 |
+| 17 | Professional Services (PSA) | `870000–889999` | 5/7 |
+| 18 | Product-Led Growth | `890000–909999` | 6/7 |
+| 19 | Business Travel | `910000–929999` | 5/7 |
+| 20 | ESG & Sustainability | `930000–949999` | 5/6 |
+| 21 | Real Estate & Property | `950000–969999` | 6 |
+| 22 | Customer Success | `970000–974999` | 5 |
+| 23 | Subscription Billing & RevOps | `975000–979999` | 3 |
+| 24 | Procurement & Spend Management | `980000–984999` | 3 |
+| 25 | Financial Planning & Analysis | `985000–989999` | 4 |
+| 26 | Events Management | `990000–994999` | 5 |
+| 27 | Document Management | `995000–999999` | 4 |
+| 28 | Whistleblowing & Ethics | `1000000–1049999` | 4 |
+| 29 | Field Service Management | `1050000–1099999` | 5 |
+| 30 | Pricing Management | `1100000–1149999` | 4 |
+| 31 | Enterprise Risk Management | `1150000–1199999` | 5 |
+
+> **Note on Core Platform range**: Foundation takes `000000–009999` (companies, users, admins, company_module_subscriptions). Core Platform starts at `010000`. The existing Core Platform module spec files reference `000000–099999` — treat this as the broad domain range; specific module migrations should use `010000+` within that range.
+
+> **Note on range ordering**: Migration ranges are assigned by build phase, not domain number. Domain 07 (Operations, Phase 4) gets range `300000–399999` before domain 06 (Marketing, Phase 5) which gets `400000–449999`. This is intentional — table is sorted by domain number for readability, but ranges follow phase order.
+
+> **Note on sub-range conflicts**: Some module spec files contain sub-ranges that were assigned before the domain-level ranges were finalised. These are reference-only — the domain-level ranges in this table are authoritative. Correct per-module ranges at build time.
 
 ---
 
@@ -224,17 +249,6 @@ $table->decimal('fx_rate', 12, 6)->nullable();   // rate at time of record
 Rationale: retrofitting currency columns onto 200+ tables in Phase 6 is a high-risk migration. Nullable `amount_base` and `fx_rate` add minimal storage overhead but enable Phase 6 consolidation reporting without schema changes.
 
 `FxRateService` converts on write. `ExchangeRate` table caches daily rates from ECB / OpenExchangeRates.
-
----
-
-## New Domains (added Phase 4+)
-
-| Domain | Range |
-|---|---|
-| Workplace | 850000–869999 |
-| PSA | 870000–889999 |
-| PLG | 890000–909999 |
-| Travel & Expenses | 910000–929999 |
 
 ---
 

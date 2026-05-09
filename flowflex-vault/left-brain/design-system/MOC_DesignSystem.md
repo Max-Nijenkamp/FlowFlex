@@ -1,137 +1,84 @@
 ---
 type: moc
 section: left-brain/design-system
-last_updated: 2026-05-08
+last_updated: 2026-05-09
 ---
 
 # Design System — Map of Content
 
-Brand foundation, colour system, typography, spacing, components, motion, iconography, dark mode, data visualisation, and Filament implementation.
+Navigation hub for the FlowFlex design system. This file points to where things live — it does not store the values itself.
 
 ---
 
-## Domain Colour Palette
+## Single source of truth
 
-Each business domain has its own colour. Used for panel navigation, domain badges, and dashboard widgets.
-
-| # | Domain | Colour | CSS Accent | cssclass |
-|---|---|---|---|---|
-| 01 | Core Platform | Slate | `#94A3B8` | `domain-admin` |
-| 02 | HR & People | Purple | `#A78BFA` | `domain-hr` |
-| 03 | Projects & Work | Indigo | `#818CF8` | `domain-projects` |
-| 04 | Finance & Accounting | Emerald | `#34D399` | `domain-finance` |
-| 05 | CRM & Sales | Rose | `#FB7185` | `domain-crm` |
-| 06 | Marketing & Content | Pink | `#F472B6` | `domain-marketing` |
-| 07 | Operations | Amber | `#FCD34D` | `domain-operations` |
-| 08 | Analytics & BI | Sky | `#38BDF8` | `domain-analytics` |
-| 09 | IT & Security | Gray | `#9CA3AF` | `domain-it` |
-| 10 | Legal & Compliance | Amber-warm | `#D97706` | `domain-legal` |
-| 11 | E-commerce | Cyan | `#22D3EE` | `domain-ecommerce` |
-| 12 | Communications | Light-cyan | `#67E8F9` | `domain-comms` |
-| 13 | Learning & Dev | Green | `#4ADE80` | `domain-lms` |
-| 14 | AI & Automation | Violet | `#C084FC` | `domain-ai` |
-| 15 | Community & Social | Amber-gold | `#FDE68A` | `domain-community` |
-| 16 | Workplace & Facility | Teal | `#2DD4BF` | `domain-workplace` |
-| 17 | PSA | Fuchsia | `#D946EF` | `domain-psa` |
-| 18 | Product-Led Growth | Blue | `#60A5FA` | `domain-plg` |
-| 19 | Business Travel | Blue-500 | `#3B82F6` | `domain-travel` |
-| 20 | ESG & Sustainability | Green-300 | `#86EFAC` | `domain-esg` |
-| 21 | Real Estate & Property | Stone | `#D6D3D1` | `domain-realestate` |
-| 22 | Customer Success | Sky | `#38BDF8` | `domain-cs` |
-| 23 | Subscription Billing | Emerald-500 | `#10B981` | `domain-subscriptions` |
-| 24 | Procurement | Orange | `#F97316` | `domain-procurement` |
-| 25 | FP&A | Indigo-400 | `#818CF8` | `domain-fpa` |
-| 26 | Events Management | Pink-500 | `#EC4899` | `domain-events` |
-| 27 | Document Management | Violet | `#8B5CF6` | `domain-dms` |
-| 28 | Whistleblowing & Ethics | Violet-700 | `#6D28D9` | `domain-whistleblowing` |
-| 29 | Field Service Management | Orange-600 | `#EA580C` | `domain-fsm` |
-| 30 | Pricing Management | Teal-600 | `#0D9488` | `domain-pricing` |
-| 31 | Enterprise Risk Management | Red-700 | `#B91C1C` | `domain-risk` |
+[[brand-foundation]] is the master branding document. Everything in this section either derives from or links back to it. If any value here conflicts with `brand-foundation`, `brand-foundation` wins.
 
 ---
 
-## Brand Foundation
+## Module registry
 
-FlowFlex brand:
-- **Primary**: Indigo `#4F46E5` (platform-level CTAs, links, focus rings)
-- **Neutral**: Gray-900 `#111827` (text), Gray-50 `#F9FAFB` (background)
-- **Accent**: Violet `#7C3AED` (marketing highlights, AI features)
-- **Success**: Emerald `#059669`
-- **Warning**: Amber `#D97706`
-- **Danger**: Red `#DC2626`
+| File | What it covers |
+|---|---|
+| [[brand-foundation]] | Identity, brand values, logo, full colour palette (platform + all 32 domains), typography, spacing, iconography, motion, voice and tone, Filament implementation, white-label rules |
+| [[colour-system]] | Colour token quick-reference, CSS variable declarations, Tailwind config extension, dark mode notes |
+| [[typography]] | Type scale reference, Bunny Fonts loading, Filament font setup, Tailwind config, prose typography |
 
 ---
 
-## Typography
+## Domain colour palette
 
-- **Display/Hero**: Inter or Geist — 48–72px, weight 700–900
-- **Heading**: Inter — 24–36px, weight 600
-- **Body**: Inter — 16px, weight 400
-- **Code**: JetBrains Mono — 14px
-- **UI Labels**: Inter — 12–14px, weight 500
+FlowFlex has 32 domain colours (Foundation/Admin + 31 business domains). Each colour is a fixed identifier used in panel navigation, domain badges, and data visualisation.
+
+For the full authoritative table with hex values, light-background variants, and Tailwind names, see [[brand-foundation#5. Platform Colour Palette]].
+
+**Platform primary**: `#4F46E5` Indigo-600 — used for the FlowFlex brand itself, not for any domain.
 
 ---
 
-## Iconography
+## Filament implementation note
 
-All icons from **Heroicons** (outline variant by default, solid for active states):
+Each domain `PanelProvider` registers its domain colour via:
 
 ```php
-// Filament resource
-protected static string $navigationIcon = 'heroicon-o-users';
-
-// In Blade/Vue
-<x-heroicon-o-users class="w-5 h-5" />
+->colors(['primary' => Color::hex('#7C3AED')])
+->font('Inter')
+->brandLogo(fn () => view('filament.brand.logo'))
+->sidebarCollapsibleOnDesktop()
+->darkMode(Feature::Enabled)
 ```
 
-Custom icons (FlowFlex-specific modules not covered by Heroicons) live in `resources/js/icons/`.
+The full pattern with all panel options is documented in [[brand-foundation#11. Filament Panel Implementation]].
 
 ---
 
-## Component Library
+## Dark mode
 
-Core UI components (Vue + Tailwind):
+All components support dark mode via Tailwind's `dark:` prefix. Filament 5 includes a built-in dark mode toggle. User preference is stored in `users.theme` (`light` | `dark` | `system`). Domain colours do not change value in dark mode — only their usage context (text vs background) adapts.
+
+---
+
+## Component library
+
+Core Vue + Tailwind UI components referenced throughout domain specs:
 
 | Component | Usage |
 |---|---|
 | `<FlowCard>` | Content container |
-| `<FlowBadge>` | Status and category badges |
-| `<FlowAvatar>` | User/company avatars |
+| `<FlowBadge>` | Status and domain category badges |
+| `<FlowAvatar>` | User and company avatars |
 | `<FlowTable>` | Sortable, filterable data tables |
 | `<FlowModal>` | Modal dialogs |
 | `<FlowDropdown>` | Context menus and select dropdowns |
 | `<FlowToast>` | Notification toasts |
-| `<FlowProgress>` | Progress bars (projects, onboarding) |
+| `<FlowProgress>` | Progress bars (onboarding, project completion) |
 | `<FlowChart>` | Chart.js wrapper |
 | `<FlowRichText>` | Tiptap rich text editor |
-
----
-
-## Filament Implementation
-
-Filament panels use domain colour for navigation accent:
-
-```php
-// In each Panel provider
-->colors([
-    'primary' => Color::hex('#7C3AED'), // HR violet
-])
-->brandLogo(fn () => view('filament.logos.hr'))
-->sidebarCollapsibleOnDesktop()
-->navigationGroups([...])
-```
-
----
-
-## Dark Mode
-
-All components support dark mode via Tailwind `dark:` prefix.  
-Filament 5 has built-in dark mode toggle.  
-User preference stored in `users.theme` column.
 
 ---
 
 ## Related
 
 - [[00_MOC_LeftBrain]]
-- [[tech-stack]] — Tailwind CSS v4
+- [[tech-stack]] — Tailwind CSS v4, Vue 3, Filament 5
+- [[MOC_Domains]] — authoritative domain registry (colours sourced here)

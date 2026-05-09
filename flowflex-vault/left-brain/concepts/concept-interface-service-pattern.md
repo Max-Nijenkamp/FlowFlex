@@ -6,6 +6,8 @@ last_updated: 2026-05-08
 
 # Concept: Interface/Service Pattern
 
+> **Canonical implementation**: [[module-system]] — full file structure, code examples, rules, Filament resource integration.
+
 Every domain module has an Interface contract, a ServiceProvider that binds the concrete implementation, a Service with all business logic, and a thin Controller that only calls the interface.
 
 ---

@@ -1,7 +1,8 @@
 ---
 type: moc
 section: right-brain/gaps
-last_updated: 2026-05-08
+color: "#F97316"
+last_updated: 2026-05-09
 ---
 
 # Gaps — Missing Features & Tech Debt
@@ -14,7 +15,7 @@ Discovered during the build. Links the real work back to the spec.
 
 | ID | Gap | Severity | Category | Module | Discovered | File |
 |---|---|---|---|---|---|---|
-| GAP-001 | Phase placement corrections for ATS, Sales Sequences, Bank Feeds, Partner Mgmt | high | spec | Cross-domain | 2026-05-08 | [[gap-phase-placement-corrections]] |
+| _none_ | | | | | | |
 
 ---
 
@@ -67,9 +68,9 @@ How should this be fixed?
 
 ## Resolved Gaps
 
-| ID | Resolution | Date |
-|---|---|---|
-| _none yet_ | | |
+| ID | Gap | Resolution | Date |
+|---|---|---|---|
+| GAP-001 | Phase placement corrections (ATS, Sales Sequences, Bank Feeds, Partner Mgmt) | Specs updated: Sales Sequences → Phase 3, Open Banking → Phase 3; ATS already Phase 4 | 2026-05-09 |
 
 ---
 

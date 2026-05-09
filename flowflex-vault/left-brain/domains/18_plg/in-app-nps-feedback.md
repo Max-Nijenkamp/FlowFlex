@@ -64,7 +64,7 @@ Timing:
 - Trend: monthly NPS over 12 months
 - Response breakdown: promoter/passive/detractor %
 - Open-text verbatim responses, grouped by sentiment (auto-tagged: product/support/pricing/performance)
-- Segment breakdown: NPS by plan, cohort, geography
+- Segment breakdown: NPS by active modules, cohort, geography
 
 ### CES Dashboard
 - Average CES per flow
@@ -72,7 +72,7 @@ Timing:
 
 ### Feature Votes
 - Top-voted features list
-- Voter segments (what plan/persona is asking for this?)
+- Voter segments (what persona/module-set is asking for this?)
 
 ---
 

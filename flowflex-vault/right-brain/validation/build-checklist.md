@@ -1,6 +1,7 @@
 ---
 type: right-brain
 section: validation
+color: "#F97316"
 last_updated: 2026-05-09
 ---
 
@@ -41,13 +42,13 @@ Per-module checklist to run before marking a module as ✅ complete on [[STATUS_
 - [ ] All relationships defined
 - [ ] `$fillable` list complete
 - [ ] Casts defined for JSON columns, dates, booleans
-- [ ] DTO created (`app/DTOs/{Domain}/{Model}DTO.php`)
+- [ ] DTO created (`app/Data/{Domain}/{Model}Data.php`) — spatie/laravel-data
 
 ---
 
 ## Service / Interface
 
-- [ ] Interface defined in `app/Interfaces/{Domain}/{Module}ServiceInterface.php`
+- [ ] Interface defined in `app/Contracts/{Domain}/{Module}ServiceInterface.php`
 - [ ] Service implements interface
 - [ ] Service bound in ServiceProvider
 - [ ] All CRUD operations implemented

@@ -1,7 +1,8 @@
 ---
 type: moc
 section: right-brain/validation
-last_updated: 2026-05-08
+color: "#F97316"
+last_updated: 2026-05-09
 ---
 
 # Validation — Module Review Checklists

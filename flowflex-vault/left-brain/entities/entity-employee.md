@@ -65,7 +65,8 @@ The HR profile for a person employed by the company. Source of truth for all HR 
 | Relationship | Type | Description |
 |---|---|---|
 | `company()` | belongsTo | Tenant |
-| `user()` | belongsTo | Optional platform user account |
+| `user()` | belongsTo | Optional platform user account (Filament `/app` login) |
+| `portalUser()` | hasOne | Optional ESS portal user (`portal_type = employee`) |
 | `manager()` | belongsTo | Direct manager (self-referencing) |
 | `directReports()` | hasMany | Employees who report to this employee |
 | `leaveBalances()` | hasMany | Leave entitlement per type |

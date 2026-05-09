@@ -41,7 +41,9 @@ erDiagram
 | [[entity-project]] | `projects` | Projects & Work | Work container — tasks, time, documents live here. |
 | [[entity-invoice]] | `invoices` | Finance | Financial document — sale, service, or subscription. |
 | [[entity-product]] | `products` | E-commerce / Operations | Sellable or physical item. Used by ecommerce + inventory. |
+| [[entity-admin]] | `admins` | Foundation | FlowFlex internal staff — Layer 1 RBAC, `/admin` panel only. |
 | [[entity-module-subscription]] | `company_module_subscriptions` | Core Platform | Which modules a company has enabled. |
+| [[entity-module-catalog]] | `module_catalog` | Core Platform | Master pricing table — per-user monthly price per module key. |
 
 ---
 

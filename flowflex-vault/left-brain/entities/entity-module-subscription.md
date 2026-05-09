@@ -9,7 +9,7 @@ last_updated: 2026-05-08
 
 # Entity: Module Subscription
 
-Controls which modules a company has enabled. The gate between plan limits and actual feature access.
+Controls which modules a company has enabled. Each active module is billed at its per-user monthly rate × company's active user count. No fixed plans — fully à la carte.
 
 **Table:** `company_module_subscriptions`  
 **Multi-Tenant:** Yes — `company_id`.
@@ -79,12 +79,21 @@ Individual features within a panel check specific module keys.
 
 ---
 
+## Billing Model
+
+Billing = sum over all active modules of `module_catalog.per_user_monthly_price × company.active_user_count`
+
+Monthly Stripe invoice is generated per company from this calculation. See [[entity-module-catalog]] for price definitions.
+
+---
+
 ## Business Rules
 
-1. On company creation → bootstrap starter plan modules (auto-activate)
-2. Upgrading plan → activate additional modules
+1. On company creation → activate modules selected by admin at creation time
+2. Any module can be activated or deactivated at any time by admin
 3. Deactivating module → `deactivated_at` set, data retained (not deleted)
 4. Re-activating restores all data
+5. Billing updates immediately on activation/deactivation (prorate in Stripe)
 
 ---
 
@@ -92,5 +101,6 @@ Individual features within a panel check specific module keys.
 
 - [[MOC_Entities]]
 - [[entity-company]]
+- [[entity-module-catalog]] — pricing definitions per module
 - [[MOC_CorePlatform]]
 - [[auth-rbac]]

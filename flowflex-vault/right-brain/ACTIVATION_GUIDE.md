@@ -1,7 +1,8 @@
 ---
 type: right-brain
 section: meta
-last_updated: 2026-05-08
+color: "#F97316"
+last_updated: 2026-05-09
 ---
 
 # Activation Guide
@@ -44,13 +45,18 @@ Mark the module as `🔄 In progress`.
 type: builder-log
 module: {{module-name}}
 domain: {{domain}}
+panel: {{panel-slug}}
+phase: {{phase-number}}
 started: YYYY-MM-DD
 status: in-progress
+color: "#F97316"
+left_brain_source: "[[{{module-note-slug}}]]"
+last_updated: YYYY-MM-DD
 ---
 
 # Builder Log: {{Module Name}}
 
-Left Brain source: [[module-note-link]]
+Left Brain source: [[{{module-note-slug}}]]
 
 ## Sessions
 
@@ -115,5 +121,5 @@ If you find something missing or wrong in the spec:
 ## Related
 
 - [[STATUS_Dashboard]]
-- [[00_README]]
-- [[00_PHILOSOPHY]]
+- [[00_MOC_LeftBrain]]
+- [[MOC_Roadmap]]
