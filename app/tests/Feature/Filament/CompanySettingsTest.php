@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Support\Services\CompanyContext;
 use Filament\Facades\Filament;
 use Livewire\Livewire;
+use Spatie\Permission\Models\Role;
 
 describe('Company Settings', function () {
     beforeEach(function () {
@@ -25,6 +26,10 @@ describe('Company Settings', function () {
             'company_id' => $this->company->id,
             'status'     => 'active',
         ]);
+
+        setPermissionsTeamId($this->company->id);
+        $ownerRole = Role::firstOrCreate(['name' => 'owner', 'guard_name' => 'web']);
+        $this->user->assignRole($ownerRole);
 
         app(CompanyContext::class)->set($this->company);
         $this->actingAs($this->user, 'web');
@@ -78,5 +83,16 @@ describe('Company Settings', function () {
             ->set('data.currency', 'EUR')
             ->call('save')
             ->assertHasNoErrors();
+    });
+
+    it('non-owner user cannot access company settings', function () {
+        $nonOwner = User::factory()->create([
+            'company_id' => $this->company->id,
+            'status'     => 'active',
+        ]);
+
+        $this->actingAs($nonOwner, 'web');
+
+        expect(CompanySettings::canAccess())->toBeFalse();
     });
 });

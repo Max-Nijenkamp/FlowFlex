@@ -92,7 +92,11 @@
       "Bash(curl *)",
       "Bash(composer install *)",
       "Bash(docker exec flowflex_app *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(docker exec flowflex_postgres *)",
+      "Bash(docker cp *)",
+      "Bash(./vendor/bin/pest --stop-on-failure)"
     ]
   },
   "enabledMcpjsonServers": [

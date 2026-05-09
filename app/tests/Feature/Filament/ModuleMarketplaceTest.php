@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Support\Services\CompanyContext;
 use Filament\Facades\Filament;
 use Livewire\Livewire;
+use Spatie\Permission\Models\Role;
 
 describe('Module Marketplace', function () {
     beforeEach(function () {
@@ -18,6 +19,10 @@ describe('Module Marketplace', function () {
 
         $this->company = Company::factory()->create(['status' => 'active']);
         $this->user = User::factory()->create(['company_id' => $this->company->id, 'status' => 'active']);
+
+        setPermissionsTeamId($this->company->id);
+        $ownerRole = Role::firstOrCreate(['name' => 'owner', 'guard_name' => 'web']);
+        $this->user->assignRole($ownerRole);
 
         app(CompanyContext::class)->set($this->company);
         $this->actingAs($this->user, 'web');
@@ -91,5 +96,26 @@ describe('Module Marketplace', function () {
         Livewire::test(ModuleMarketplace::class)
             ->call('enableModule', 'nonexistent.module')
             ->assertNotified();
+    });
+
+    it('non-owner cannot enable a module', function () {
+        $nonOwner = User::factory()->create(['company_id' => $this->company->id, 'status' => 'active']);
+        $this->actingAs($nonOwner, 'web');
+
+        // abort_unless(403) is caught by Livewire internally — verify by asserting module was NOT activated
+        try {
+            Livewire::test(ModuleMarketplace::class)
+                ->call('enableModule', 'test.feature-x');
+        } catch (\Throwable) {
+            // Expected: Livewire may propagate or swallow the 403
+        }
+
+        expect(
+            CompanyModuleSubscription::withoutGlobalScopes()
+                ->where('company_id', $this->company->id)
+                ->where('module_key', 'test.feature-x')
+                ->where('status', 'active')
+                ->exists()
+        )->toBeFalse();
     });
 });

@@ -4,21 +4,24 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
+use App\Events\Foundation\PlatformAnnouncementSent;
 use App\Filament\Admin\Resources\PlatformAnnouncementResource\Pages\CreatePlatformAnnouncement;
 use App\Filament\Admin\Resources\PlatformAnnouncementResource\Pages\EditPlatformAnnouncement;
 use App\Filament\Admin\Resources\PlatformAnnouncementResource\Pages\ListPlatformAnnouncements;
+use App\Jobs\Foundation\DispatchAnnouncementJob;
 use App\Models\Company;
 use App\Models\PlatformAnnouncement;
+use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Utilities\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
-use Filament\Actions\Action;
-use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
@@ -108,12 +111,21 @@ class PlatformAnnouncementResource extends Resource
                     ->visible(fn (PlatformAnnouncement $record) => $record->isDraft())
                     ->action(function (PlatformAnnouncement $record): void {
                         $record->update(['sent_at' => now()]);
+                        event(new PlatformAnnouncementSent($record));
+                        DispatchAnnouncementJob::dispatch($record->id);
                         Notification::make()
-                            ->title('Announcement sent')
+                            ->title('Announcement queued for delivery')
                             ->success()
                             ->send();
                     }),
             ]);
+    }
+
+    public static function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['created_by'] = Auth::id();
+
+        return $data;
     }
 
     public static function getPages(): array

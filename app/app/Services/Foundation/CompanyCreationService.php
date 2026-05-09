@@ -11,6 +11,7 @@ use App\Models\Company;
 use App\Models\CompanyModuleSubscription;
 use App\Models\ModuleCatalog;
 use App\Models\User;
+use App\Models\UserInvitation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
@@ -80,15 +81,15 @@ class CompanyCreationService
                 $this->activateStarterModules($company, $data->starter_modules);
             }
 
-            // 9. Generate invite token
+            // 9. Generate invite token and persist to DB
             $inviteToken = Str::random(64);
 
-            // Store token in cache (7-day expiry)
-            cache()->put(
-                "invite_token:{$inviteToken}",
-                ['user_id' => $owner->id, 'company_id' => $company->id],
-                now()->addDays(7),
-            );
+            UserInvitation::create([
+                'user_id'    => $owner->id,
+                'company_id' => $company->id,
+                'token'      => $inviteToken,
+                'expires_at' => now()->addDays(7),
+            ]);
 
             // 10. Fire events
             event(new CompanyCreated($company, $owner));

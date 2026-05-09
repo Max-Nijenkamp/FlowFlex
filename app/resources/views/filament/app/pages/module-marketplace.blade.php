@@ -98,28 +98,34 @@
                                         <x-heroicon-s-check-circle class="h-4 w-4" />
                                         Included
                                     </span>
-                                @elseif ($isActive)
-                                    <x-filament::button
-                                        wire:click="disableModule('{{ $module->module_key }}')"
-                                        wire:confirm="Your data will be preserved but this module will be hidden from all users. Continue?"
-                                        wire:loading.attr="disabled"
-                                        wire:target="disableModule('{{ $module->module_key }}')"
-                                        color="gray"
-                                        size="sm"
-                                        outlined
-                                    >
-                                        Disable
-                                    </x-filament::button>
+                                @elseif ($this->canManageModules())
+                                    @if ($isActive)
+                                        <x-filament::button
+                                            wire:click="disableModule('{{ $module->module_key }}')"
+                                            wire:confirm="Your data will be preserved but this module will be hidden from all users. Continue?"
+                                            wire:loading.attr="disabled"
+                                            wire:target="disableModule('{{ $module->module_key }}')"
+                                            color="gray"
+                                            size="sm"
+                                            outlined
+                                        >
+                                            Disable
+                                        </x-filament::button>
+                                    @else
+                                        <x-filament::button
+                                            wire:click="enableModule('{{ $module->module_key }}')"
+                                            wire:loading.attr="disabled"
+                                            wire:target="enableModule('{{ $module->module_key }}')"
+                                            color="primary"
+                                            size="sm"
+                                        >
+                                            Enable
+                                        </x-filament::button>
+                                    @endif
                                 @else
-                                    <x-filament::button
-                                        wire:click="enableModule('{{ $module->module_key }}')"
-                                        wire:loading.attr="disabled"
-                                        wire:target="enableModule('{{ $module->module_key }}')"
-                                        color="primary"
-                                        size="sm"
-                                    >
-                                        Enable
-                                    </x-filament::button>
+                                    <span class="text-xs text-gray-400 dark:text-gray-500">
+                                        {{ $isActive ? 'Active' : 'Inactive' }}
+                                    </span>
                                 @endif
                             </div>
                         </div>

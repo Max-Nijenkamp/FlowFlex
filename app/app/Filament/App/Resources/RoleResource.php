@@ -12,7 +12,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Spatie\Permission\Models\Role;
@@ -79,7 +81,20 @@ class RoleResource extends Resource
                     ->toggleable(),
             ])
             ->actions([
-                EditAction::make(),
+                EditAction::make()
+                    ->visible(fn (Role $record) => $record->name !== 'owner'),
+                DeleteAction::make()
+                    ->visible(fn (Role $record) => $record->name !== 'owner')
+                    ->before(function (Role $record, DeleteAction $action): void {
+                        if ($record->users()->count() > 0) {
+                            Notification::make()
+                                ->title('Cannot delete role')
+                                ->body('This role is still assigned to ' . $record->users()->count() . ' user(s). Reassign them first.')
+                                ->danger()
+                                ->send();
+                            $action->cancel();
+                        }
+                    }),
             ]);
     }
 

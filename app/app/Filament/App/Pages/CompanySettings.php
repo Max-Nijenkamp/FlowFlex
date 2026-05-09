@@ -38,6 +38,13 @@ class CompanySettings extends Page
         return 10;
     }
 
+    public static function canAccess(): bool
+    {
+        $user = auth()->user();
+
+        return $user && $user->hasRole('owner');
+    }
+
     public function getView(): string
     {
         return 'filament.app.pages.company-settings';
@@ -115,6 +122,8 @@ class CompanySettings extends Page
 
     public function save(): void
     {
+        abort_unless(static::canAccess(), 403);
+
         $data = $this->form->getState();
         $company = app(CompanyContext::class)->current();
 

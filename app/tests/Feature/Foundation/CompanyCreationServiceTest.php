@@ -6,6 +6,7 @@ use App\Data\Foundation\CreateCompanyData;
 use App\Models\Company;
 use App\Models\CompanyModuleSubscription;
 use App\Models\User;
+use App\Models\UserInvitation;
 use App\Services\Foundation\CompanyCreationService;
 use Spatie\Permission\Models\Role;
 
@@ -119,7 +120,7 @@ describe('CompanyCreationService', function () {
             ->toContain('core.rbac');
     });
 
-    it('stores an invite token in cache', function () {
+    it('persists invite token to the database', function () {
         $data = new CreateCompanyData(
             name: 'Echo LLC',
             slug: 'echo-llc',
@@ -132,17 +133,18 @@ describe('CompanyCreationService', function () {
             owner_email: 'sara@echo.com',
         );
 
-        $owner = User::withoutGlobalScopes()
-            ->where('email', 'sara@echo.com')
+        $company = app(CompanyCreationService::class)->create($data);
+
+        $owner = User::withoutGlobalScopes()->where('email', 'sara@echo.com')->first();
+
+        $invitation = UserInvitation::where('user_id', $owner->id)
+            ->where('company_id', $company->id)
             ->first();
 
-        app(CompanyCreationService::class)->create($data);
-
-        // At least one cache key for sara's invite should exist
-        // (We can't know the random token, but we can verify via the UserInvited event)
-        // Verify the owner user was created and has invited status as proxy
-        $owner = User::withoutGlobalScopes()->where('email', 'sara@echo.com')->first();
-        expect($owner->status)->toBe('invited');
+        expect($invitation)->not->toBeNull();
+        expect($invitation->token)->toHaveLength(64);
+        expect($invitation->isPending())->toBeTrue();
+        expect($invitation->expires_at->isFuture())->toBeTrue();
     });
 
     it('wraps creation in a transaction — rolls back on failure', function () {

@@ -74,6 +74,56 @@ Auth config in `config/auth.php` has `admins` provider pointing to `Admin::class
 
 ---
 
+## Session — 2026-05-09 (All Phase 0 Gaps Closed)
+
+### GAP-003 Fixed — WithCompanyContext Job Middleware
+
+**`app/Jobs/Middleware/WithCompanyContext.php`** (new)
+- Constructor takes `string $companyId`
+- `handle()`: loads company with `withoutGlobalScopes()`, calls `$context->set()` + `setPermissionsTeamId()` before delegating to job
+- `finally` block: `$context->clear()` + `setPermissionsTeamId(null)` — runs even on job failure/exception
+- Usage: add `new WithCompanyContext($this->companyId)` to any queued job's `middleware()` array
+
+### GAP-004 Fixed — Invite Token DB Persistence
+
+**`database/migrations/000010_create_user_invitations_table.php`** (new)
+- ULID PK, `user_id` + `company_id` FK with cascade delete, `token varchar(64) unique`, `expires_at`, `accepted_at nullable`, indexes on `(token, expires_at)` and `company_id`
+
+**`app/Models/UserInvitation.php`** (new)
+- `HasUlids`, `isExpired()`, `isAccepted()`, `isPending()` helpers, `user()` + `company()` BelongsTo
+
+**`app/Services/Foundation/CompanyCreationService.php`**
+- Replaced `cache()->put("invite_token:{$token}", ...)` with `UserInvitation::create([...])`
+- Token now survives Redis flushes; retrievable even if cache is cold
+
+**`tests/Feature/Foundation/CompanyCreationServiceTest.php`**
+- Renamed test `stores an invite token in cache` → `persists invite token to the database`
+- Now asserts `UserInvitation` row exists with 64-char token, `isPending()`, `expires_at` in future
+
+### GAP-005 Fixed — Announcement Dispatch Wired Up
+
+**`app/Events/Foundation/PlatformAnnouncementSent.php`** (new)
+- Carries `PlatformAnnouncement $announcement`
+
+**`app/Jobs/Foundation/DispatchAnnouncementJob.php`** (new)
+- `ShouldQueue`, 3 tries, 30s backoff
+- Resolves target users: `target='company'` → active users in that company; `target='all'` → active users across all active companies
+- Sends `PlatformAnnouncementNotification` to each user via `$user->notify()`
+
+**`app/Notifications/Foundation/PlatformAnnouncementNotification.php`** (new)
+- Channels: `database` (always) — stores `announcement_id`, `title`, `body`
+- `toMail()` stub ready for Phase 5 comms module (`emails.announcements.platform` template)
+
+**`app/Filament/Admin/Resources/PlatformAnnouncementResource.php`**
+- Send action now: `$record->update(['sent_at' => now()])` + `event(new PlatformAnnouncementSent($record))` + `DispatchAnnouncementJob::dispatch($record->id)`
+- Notification title changed to "Announcement queued for delivery"
+
+### 89 Tests Pass
+
+`89 passed (159 assertions)` — all green, no regressions.
+
+---
+
 ## Session — 2026-05-09 (Filament Tailwind Theme — Custom Classes Now Compile)
 
 ### Root Cause

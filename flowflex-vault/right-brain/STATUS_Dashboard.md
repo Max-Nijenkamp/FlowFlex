@@ -100,6 +100,9 @@ pie title Module Distribution by Phase Group (311 total)
 
 | Date | Module | Outcome |
 |---|---|---|
+| 2026-05-09 | GAP-007/008/009 resolved — Phase 0 fully clean, 0 open gaps | GAP-007: `CompanySettings::canAccess()` + `abort_unless(canManageModules(), 403)` in ModuleMarketplace; blade hides Enable/Disable for non-owners; 2 auth tests added. GAP-008: `RoleResource` has `DeleteAction` — hidden for `owner` role; blocks delete if users still assigned. GAP-009: migration 000013 indexes `sent_at`, `target`, `created_by` on `platform_announcements`. 91 tests pass (161 assertions). |
+| 2026-05-09 | Phase 0 audit #2 — 4 bugs fixed, 3 gaps logged | Fixed: (1) PlatformAnnouncementResource `created_by` FK null violation — added `mutateFormDataBeforeCreate`. (2) Missing `notifications` table (migration 000011) — needed by `DispatchAnnouncementJob` database channel. (3) `company_feature_flags` NULL uniqueness bug in PostgreSQL — partial unique index on `(flag) WHERE company_id IS NULL` (migration 000012). (4) `DispatchAnnouncementJob` OOM — replaced `->get()` with `->chunk(200)`. Logged: GAP-007 (module/settings auth), GAP-008 (role delete), GAP-009 (announcement indexes). 89 tests pass. |
+| 2026-05-09 | GAP-003/004/005 resolved — all Phase 0 gaps closed | GAP-003: `WithCompanyContext` job middleware (sets+clears CompanyContext + setPermissionsTeamId in finally). GAP-004: `user_invitations` table (migration 000010, ULID PK, token unique indexed, expires_at); `CompanyCreationService` now persists to DB instead of Redis cache; test updated to assert DB row. GAP-005: `PlatformAnnouncementSent` event, `DispatchAnnouncementJob` (ShouldQueue, 3 tries), `PlatformAnnouncementNotification` (database channel), resource send action now dispatches job + fires event. 89 tests pass (159 assertions). |
 | 2026-05-09 | Filament Tailwind themes — custom classes now compile | Created per-panel theme CSS (app + admin). Root cause: Filament has own CSS pipeline; app.css never loaded in panels. Fix: theme.css files with source(none) + explicit @source paths, registered via ->viteTheme(). Build: 610KB + 618KB. 89 tests pass. |
 | 2026-05-09 | TypeError fix, CRUD full-width, Marketplace redesign, GAP-006 closed | Fixed: PlatformAnnouncement TypeError (Filament 5 Get import), all CRUD forms half-width (columnSpanFull on sections). ModuleMarketplace redesigned: summary bar, domain sections, color-coded cards, core modules marked included. 15 new tests (89 total). GAP-006 resolved. |
 | 2026-05-09 | Phase 0 Audit — Bugs + Security + Indexes | Fixed 6 issues: UserResource deactivate double-fire (update+delete), country field not persisted (new migration), AdminFactory invalid role, email uniqueness not company-scoped, CompanySettings slug missing unique validation, bcrypt redundancy. Added 4 missing DB indexes. 4 gaps logged (GAP-003–006). 74/74 pass. |
@@ -115,14 +118,11 @@ pie title Module Distribution by Phase Group (311 total)
 
 ## Open Gaps
 
-4 open gaps — see `right-brain/gaps/MOC_Gaps.md` for full index.
-
-| ID | Summary | Severity |
-|---|---|---|
-| GAP-003 | CompanyContext singleton queue worker leak | high |
-| GAP-004 | Invite token cache-only (Redis flush = lockout) | medium |
-| GAP-005 | PlatformAnnouncement Send is a stub | medium |
-| GAP-006 ✅ | Missing tests: CompanyCreationService, ModuleMarketplace, CompanySettings | **resolved** |
+0 open gaps — Phase 0 is fully clean. See `right-brain/gaps/MOC_Gaps.md` for full history.
+| GAP-003 ✅ | CompanyContext singleton queue worker leak | high | **resolved** |
+| GAP-004 ✅ | Invite token cache-only (Redis flush = lockout) | medium | **resolved** |
+| GAP-005 ✅ | PlatformAnnouncement Send is a stub | medium | **resolved** |
+| GAP-006 ✅ | Missing tests: CompanyCreationService, ModuleMarketplace, CompanySettings | medium | **resolved** |
 
 ---
 

@@ -82,6 +82,8 @@ class ModuleMarketplace extends Page
 
     public function enableModule(string $moduleKey): void
     {
+        abort_unless($this->canManageModules(), 403);
+
         $company = app(CompanyContext::class)->current();
 
         $catalog = ModuleCatalog::where('module_key', $moduleKey)->where('is_active', true)->first();
@@ -107,6 +109,8 @@ class ModuleMarketplace extends Page
 
     public function disableModule(string $moduleKey): void
     {
+        abort_unless($this->canManageModules(), 403);
+
         $company = app(CompanyContext::class)->current();
 
         CompanyModuleSubscription::withoutGlobalScopes()
@@ -120,6 +124,13 @@ class ModuleMarketplace extends Page
             ->title('Module disabled — data preserved')
             ->warning()
             ->send();
+    }
+
+    public function canManageModules(): bool
+    {
+        $user = auth()->user();
+
+        return $user && $user->hasRole('owner');
     }
 
     private function refreshActiveKeys(): void

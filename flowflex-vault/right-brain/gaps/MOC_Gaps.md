@@ -16,9 +16,6 @@ Discovered during the build. Links the real work back to the spec.
 | ID | Gap | Severity | Category | Module | Discovered | File |
 |---|---|---|---|---|---|---|
 | GAP-002 (fixed) | Company scope not applied in Filament panel — data leak | critical | architecture | testing-standards | 2026-05-09 | [[gap_company-scope-filament-middleware]] |
-| GAP-003 | CompanyContext singleton leaks across Horizon worker jobs | high | architecture | admin-panel-flowflex | 2026-05-09 | [[gap_company-context-queue-singleton]] |
-| GAP-004 | Invite tokens stored only in Redis cache — cache flush = permanent lockout | medium | architecture | admin-panel-flowflex | 2026-05-09 | [[gap_invite-token-cache-only]] |
-| GAP-005 | PlatformAnnouncement "Send" action is a stub — dispatches nothing | medium | feature | admin-panel-flowflex | 2026-05-09 | [[gap_announcement-send-stub]] |
 | GAP-006 (fixed) | Missing tests for CompanyCreationService, ModuleMarketplace, CompanySettings | medium | spec | admin-panel-flowflex | 2026-05-09 | [[gap_missing-critical-path-tests]] |
 
 ---
@@ -75,6 +72,12 @@ How should this be fixed?
 | ID | Gap | Resolution | Date |
 |---|---|---|---|
 | GAP-001 | Phase placement corrections (ATS, Sales Sequences, Bank Feeds, Partner Mgmt) | Specs updated: Sales Sequences → Phase 3, Open Banking → Phase 3; ATS already Phase 4 | 2026-05-09 |
+| GAP-007 | ModuleMarketplace + CompanySettings: no authorization check | `canAccess()` + `abort_unless(canManageModules(), 403)` added; blade hides buttons for non-owners; 2 new tests | 2026-05-09 |
+| GAP-008 | RoleResource: no delete action for custom tenant roles | `DeleteAction` added; protected: `owner` role hidden from edit/delete; blocks delete if role has assigned users | 2026-05-09 |
+| GAP-009 | platform_announcements: missing indexes on sent_at, target, created_by | Migration 000013 adds all 3 indexes | 2026-05-09 |
+| GAP-003 | CompanyContext singleton leaks across Horizon worker jobs | `WithCompanyContext` job middleware created — sets + clears context + permissions team in `finally` block | 2026-05-09 |
+| GAP-004 | Invite tokens stored only in Redis cache — cache flush = permanent lockout | `user_invitations` table created (migration 000010); `CompanyCreationService` now persists to DB | 2026-05-09 |
+| GAP-005 | PlatformAnnouncement "Send" action is a stub — dispatches nothing | `PlatformAnnouncementSent` event + `DispatchAnnouncementJob` + `PlatformAnnouncementNotification` created; resource wired up | 2026-05-09 |
 
 ---
 
