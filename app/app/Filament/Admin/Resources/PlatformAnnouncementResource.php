@@ -12,7 +12,7 @@ use App\Models\PlatformAnnouncement;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Get;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
@@ -45,7 +45,7 @@ class PlatformAnnouncementResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Announcement Details')->schema([
+            Section::make('Announcement Details')->columnSpanFull()->schema([
                 TextInput::make('title')
                     ->required()
                     ->maxLength(255),

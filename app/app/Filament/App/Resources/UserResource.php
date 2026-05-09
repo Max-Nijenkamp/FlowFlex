@@ -49,7 +49,7 @@ class UserResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('User Details')->schema([
+            Section::make('User Details')->columnSpanFull()->schema([
                 TextInput::make('first_name')
                     ->required()
                     ->maxLength(100)

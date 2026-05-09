@@ -46,7 +46,7 @@ class AdminUserResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Admin Details')->schema([
+            Section::make('Admin Details')->columnSpanFull()->schema([
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),

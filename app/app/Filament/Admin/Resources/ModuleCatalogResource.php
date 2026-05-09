@@ -46,7 +46,7 @@ class ModuleCatalogResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Module Details')->schema([
+            Section::make('Module Details')->columnSpanFull()->schema([
                 TextInput::make('module_key')
                     ->required()
                     ->maxLength(100)

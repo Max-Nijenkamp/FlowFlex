@@ -46,7 +46,7 @@ class CompanyResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Company Details')->schema([
+            Section::make('Company Details')->columnSpanFull()->schema([
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -100,6 +100,7 @@ class CompanyResource extends Resource
             ])->columns(2),
 
             Section::make('Owner Details')
+                ->columnSpanFull()
                 ->schema([
                     TextInput::make('owner_first_name')
                         ->required()

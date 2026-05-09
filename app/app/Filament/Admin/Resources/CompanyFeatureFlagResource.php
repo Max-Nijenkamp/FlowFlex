@@ -48,7 +48,7 @@ class CompanyFeatureFlagResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Feature Flag Details')->schema([
+            Section::make('Feature Flag Details')->columnSpanFull()->schema([
                 Select::make('company_id')
                     ->label('Company (leave blank for global flag)')
                     ->options(fn () => Company::withoutGlobalScopes()->pluck('name', 'id'))

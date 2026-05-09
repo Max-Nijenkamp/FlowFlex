@@ -53,10 +53,31 @@ class ModuleMarketplace extends Page
     public function getModules(): Collection
     {
         return ModuleCatalog::where('is_active', true)
+            ->orderByRaw("CASE WHEN domain = 'core' THEN 0 ELSE 1 END")
             ->orderBy('domain')
             ->orderBy('name')
             ->get()
             ->groupBy('domain');
+    }
+
+    public function getActiveCount(): int
+    {
+        return count(array_filter(
+            $this->activeKeys,
+            fn ($key) => ! str_starts_with($key, 'core.'),
+        ));
+    }
+
+    public function getMonthlyEstimate(): string
+    {
+        $company = app(CompanyContext::class)->current();
+        $userCount = $company->users()->count();
+
+        $total = ModuleCatalog::whereIn('module_key', $this->activeKeys)
+            ->where('per_user_monthly_price', '>', 0)
+            ->sum('per_user_monthly_price');
+
+        return '€' . number_format((float) $total * $userCount, 2);
     }
 
     public function enableModule(string $moduleKey): void
