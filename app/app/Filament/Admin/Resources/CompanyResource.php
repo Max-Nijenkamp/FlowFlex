@@ -7,6 +7,8 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\CompanyResource\Pages\CreateCompany;
 use App\Filament\Admin\Resources\CompanyResource\Pages\EditCompany;
 use App\Filament\Admin\Resources\CompanyResource\Pages\ListCompanies;
+use App\Filament\Admin\Resources\CompanyResource\Pages\ViewCompany;
+use App\Filament\Admin\Resources\CompanyResource\RelationManagers\UsersRelationManager;
 use App\Models\Company;
 use App\Services\Foundation\CompanyService;
 use Filament\Forms\Components\Select;
@@ -17,6 +19,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -163,6 +166,7 @@ class CompanyResource extends Resource
                     ]),
             ])
             ->actions([
+                ViewAction::make(),
                 EditAction::make(),
                 Action::make('activate')
                     ->label('Activate')
@@ -209,7 +213,9 @@ class CompanyResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            UsersRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
@@ -217,6 +223,7 @@ class CompanyResource extends Resource
         return [
             'index'  => ListCompanies::route('/'),
             'create' => CreateCompany::route('/create'),
+            'view'   => ViewCompany::route('/{record}'),
             'edit'   => EditCompany::route('/{record}/edit'),
         ];
     }

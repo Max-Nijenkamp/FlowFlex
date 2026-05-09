@@ -9,16 +9,12 @@ use App\Services\Foundation\CompanyService;
 use App\Support\Services\CompanyContext;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Schema;
 
-class CompanySettings extends Page implements HasForms
+class CompanySettings extends Page
 {
-    use InteractsWithForms;
-
     public ?array $data = [];
 
     public static function getNavigationIcon(): string
@@ -60,11 +56,11 @@ class CompanySettings extends Page implements HasForms
         ]);
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                \Filament\Schemas\Components\Section::make('Company Information')->schema([
+        return $schema
+            ->components([
+                \Filament\Schemas\Components\Section::make('Company Information')->components([
                     TextInput::make('name')
                         ->required()
                         ->maxLength(255)
@@ -79,7 +75,7 @@ class CompanySettings extends Page implements HasForms
                         ->maxLength(255)
                         ->label('Billing email'),
                 ])->columns(2),
-                \Filament\Schemas\Components\Section::make('Localisation')->schema([
+                \Filament\Schemas\Components\Section::make('Localisation')->components([
                     Select::make('timezone')
                         ->options(fn () => array_combine(
                             \DateTimeZone::listIdentifiers(),

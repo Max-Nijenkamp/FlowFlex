@@ -9,9 +9,12 @@ use App\Models\ModuleCatalog;
 use App\Support\Services\CompanyContext;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Illuminate\Support\Collection;
 
 class ModuleMarketplace extends Page
 {
+    public array $activeKeys = [];
+
     public static function getNavigationIcon(): string
     {
         return 'heroicon-o-puzzle-piece';
@@ -42,22 +45,18 @@ class ModuleMarketplace extends Page
         return 'filament.app.pages.module-marketplace';
     }
 
-    public function getViewData(): array
+    public function mount(): void
     {
-        $company = app(CompanyContext::class)->current();
+        $this->refreshActiveKeys();
+    }
 
-        $activeKeys = collect($company->activeModuleKeys());
-
-        $modules = ModuleCatalog::where('is_active', true)
+    public function getModules(): Collection
+    {
+        return ModuleCatalog::where('is_active', true)
             ->orderBy('domain')
             ->orderBy('name')
             ->get()
             ->groupBy('domain');
-
-        return [
-            'modules'    => $modules,
-            'activeKeys' => $activeKeys,
-        ];
     }
 
     public function enableModule(string $moduleKey): void
@@ -77,8 +76,10 @@ class ModuleMarketplace extends Page
             ['status' => 'active', 'activated_at' => now()],
         );
 
+        $this->refreshActiveKeys();
+
         Notification::make()
-            ->title("Module '{$catalog->name}' enabled")
+            ->title("{$catalog->name} enabled")
             ->success()
             ->send();
     }
@@ -92,9 +93,17 @@ class ModuleMarketplace extends Page
             ->where('module_key', $moduleKey)
             ->update(['status' => 'inactive', 'deactivated_at' => now()]);
 
+        $this->refreshActiveKeys();
+
         Notification::make()
-            ->title('Module disabled — your data has been preserved')
+            ->title('Module disabled — data preserved')
             ->warning()
             ->send();
+    }
+
+    private function refreshActiveKeys(): void
+    {
+        $company = app(CompanyContext::class)->current();
+        $this->activeKeys = $company->activeModuleKeys();
     }
 }
