@@ -9,12 +9,12 @@ last_updated: 2026-05-07
 
 # Ecommerce Overview
 
-Product catalogue, order management, storefront, marketplace sync, subscriptions, and digital products. All 6 modules built in Phase 4 as a complete panel.
+Product catalogue, order management, storefront, marketplace sync, subscriptions, digital products, AI recommendations, B2B portal, returns management, and abandoned cart recovery. All 10 modules built in Phase 4–5.
 
 **Filament Panel:** `ecommerce`
 **Domain Colour:** Teal `#0D9488` / Light: `#CCFBF1`
 **Domain Icon:** `heroicon-o-shopping-bag`
-**Phase:** 4 — complete domain, all modules
+**Phase:** 4–5 — complete domain, all modules
 
 ## Modules
 
@@ -26,6 +26,10 @@ Product catalogue, order management, storefront, marketplace sync, subscriptions
 | [[Marketplace Channel Sync]] | Amazon/eBay/Etsy/Shopify connections, listings, sync logs |
 | [[Subscription Products]] | Plans, subscriptions, invoices, dunning, trial management |
 | [[Digital Products & Downloads]] | Digital products, download links, licence keys, streaming |
+| [[AI Product Recommendations]] | Collaborative + content-based personalised product recs, trending, bundles |
+| [[Returns & Refunds Management]] | Self-service return portal, return labels, Stripe auto-refund, EU right of withdrawal |
+| [[Abandoned Cart Recovery]] | Multi-channel recovery sequences (email/SMS/push), AI discount optimisation |
+| [[B2B Commerce Portal]] | Wholesale portal, account-based pricing, PO workflow, net payment terms |
 
 ## Filament Panel Structure
 

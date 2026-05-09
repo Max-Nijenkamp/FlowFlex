@@ -9,7 +9,7 @@ last_updated: 2026-05-07
 
 # LMS Overview
 
-Learning and development platform — courses, skills matrix, succession planning, mentoring, and external training. All 5 modules built in Phase 7.
+Learning and development platform — courses, skills matrix, succession planning, mentoring, external training, compliance, AI coaching, live classroom, and external learner portal. All 9 modules built in Phase 7.
 
 **Filament Panel:** `lms`
 **Domain Colour:** Orange `#EA580C` / Light: `#FFEDD5`
@@ -25,6 +25,10 @@ Learning and development platform — courses, skills matrix, succession plannin
 | [[Succession Planning]] | Key roles, 9-box grid, succession candidates, readiness levels, periodic reviews |
 | [[Mentoring & Coaching]] | Mentor profiles, mentor-mentee matching, session tracking, goals |
 | [[External Training Requests]] | Training request + approval flow, completion tracking, certificate uploads |
+| [[AI Learning Coach]] | Personalised AI tutor: spaced repetition, adaptive paths, daily nudges, tutor chat |
+| [[Certification & Compliance Training]] | Mandatory training recurrence, certification tracking, GDPR/ARBO compliance dashboards |
+| [[External Learner Portal]] | White-label portal for selling/sharing training externally; B2B seats, paid tiers |
+| [[Live Virtual Classroom]] | Instructor-led sessions in-browser: breakout rooms, polls, recording, AI transcript |
 
 ## Filament Panel Structure
 

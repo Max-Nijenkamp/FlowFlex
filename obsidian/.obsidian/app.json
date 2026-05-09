@@ -1,1 +1,33 @@
-{}
+{
+  "legacyEditor": false,
+  "livePreview": true,
+  "defaultViewMode": "source",
+  "promptDelete": false,
+  "trashOption": "local",
+  "useMarkdownLinks": false,
+  "newLinkFormat": "shortest",
+  "attachmentFolderPath": "_assets",
+  "foldIndent": true,
+  "showLineNumber": false,
+  "strictLineBreaks": false,
+  "showFrontmatter": true,
+  "allowOpeningFilesOutsideVault": false,
+  "spellcheck": false,
+  "spellcheckLanguages": ["en-US"],
+  "readableLineLength": true,
+  "tabSize": 2,
+  "baseFontSize": 16,
+  "baseFontSizeAction": true,
+  "cssTheme": "",
+  "interfaceFontFamily": "Inter",
+  "textFontFamily": "Inter",
+  "monospaceFontFamily": "JetBrains Mono",
+  "showInlineTitle": true,
+  "showNoteIconOnTitle": false,
+  "pdfExportSettings": {
+    "pageSize": "letter",
+    "landscape": false,
+    "margin": "0",
+    "downscaleEmbeddedFonts": true
+  }
+}

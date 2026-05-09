@@ -9,12 +9,12 @@ last_updated: 2026-05-07
 
 # Operations Overview
 
-Physical operations management — inventory, assets, purchasing, field service, quality, safety, and point of sale. All 9 modules are built in Phase 4 as a complete panel.
+Physical operations management — inventory, assets, purchasing, field service, quality, safety, point of sale, and route optimization. All 10 modules built in Phase 4–5 as a complete panel.
 
 **Filament Panel:** `operations`
 **Domain Colour:** Amber `#D97706` / Light: `#FEF3C7`
 **Domain Icon:** `heroicon-o-wrench-screwdriver`
-**Phase:** 4 — complete domain, all modules
+**Phase:** 4–5 — complete domain, all modules
 
 ## Modules
 
@@ -29,6 +29,8 @@ Physical operations management — inventory, assets, purchasing, field service,
 | [[Quality Control & Inspections]] | Inspection templates, records, pass/fail, non-conformance reports |
 | [[Supply Chain Visibility]] | Shipment tracking, carrier events, supplier performance scoring |
 | [[HSE]] | Safety incidents, risk assessments, safety observations, investigations |
+| [[Route Optimization & Dispatch]] | AI multi-stop route planning, live GPS tracking, proof of delivery, customer ETAs |
+| [[Vendor Portal]] | Supplier self-service: PO visibility, invoice submission, compliance docs, delivery updates |
 
 ## Filament Panel Structure
 

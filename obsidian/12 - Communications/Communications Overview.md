@@ -9,7 +9,7 @@ last_updated: 2026-05-07
 
 # Communications Overview
 
-Internal messaging, announcements, video meetings, company intranet, and appointment booking. All 5 modules built in Phase 5 as a complete panel.
+Internal messaging, announcements, native video calls, voice channels, async video, external chat widget, company intranet, and appointment booking. All 9 modules built in Phase 5 as a complete panel.
 
 **Filament Panel:** `communications`
 **Domain Colour:** Sky `#0284C7` / Light: `#E0F2FE`
@@ -25,6 +25,10 @@ Internal messaging, announcements, video meetings, company intranet, and appoint
 | [[Meeting & Video Integration]] | Meeting scheduling, Google Meet/Zoom/Teams links, notes, action items |
 | [[Company Intranet]] | Company pages, news feed, org chart, pinned content, search |
 | [[Booking & Appointment Scheduling]] | Booking pages, availability, appointments, confirmation emails, calendar sync |
+| [[Native Video Calls]] | WebRTC 1:1 and group calls, screen share, recording, AI transcript + task extraction |
+| [[Voice Channels]] | Discord-style always-on voice rooms, persistent HUD, room modes |
+| [[Async Video Messaging]] | Loom replacement: screen/camera recording, AI transcript, viewer analytics |
+| [[External Chat Widget]] | Intercom replacement: embeddable live chat, CRM auto-link, canned responses, AI drafts |
 
 ## Filament Panel Structure
 

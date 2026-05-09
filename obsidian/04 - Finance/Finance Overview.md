@@ -30,6 +30,10 @@ The financial nerve system of the business. From invoices to payroll costs, from
 | [[Tax & VAT Compliance]] | 8 | VAT/GST, MTD, multi-jurisdiction, filing status |
 | [[Fixed Asset & Depreciation]] | 8 | Asset register, depreciation schedules (SL/DB), disposal |
 | [[Subscription & MRR Tracking]] | 8 | MRR/ARR, churn, expansion revenue, recognition |
+| [[Multi-Currency & FX Management]] | 6 | ECB rates, FX revaluation, journal entries |
+| [[Open Banking & Bank Feeds]] | 6 | GoCardless/Plaid, AI categorisation, 2,300+ EU banks |
+| [[Cash Flow Forecasting & Scenario Planning]] | 6 | 13-week rolling forecast, Float replacement |
+| [[Revenue Recognition]] | 6 | IFRS 15 / ASC 606 automation, deferred revenue, journal entries |
 
 ## Key Events from This Domain
 

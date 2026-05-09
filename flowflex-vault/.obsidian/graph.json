@@ -1,0 +1,268 @@
+{
+  "collapse-filter": true,
+  "search": "",
+  "showTags": false,
+  "showAttachments": false,
+  "hideUnresolved": false,
+  "showOrphans": false,
+  "collapse-color-groups": true,
+  "colorGroups": [
+    {
+      "query": "path:left-brain/domains/01_core-platform",
+      "color": {
+        "a": 1,
+        "rgb": 1120295
+      }
+    },
+    {
+      "query": "path:left-brain/domains/02_hr",
+      "color": {
+        "a": 1,
+        "rgb": 8141549
+      }
+    },
+    {
+      "query": "path:left-brain/domains/03_projects",
+      "color": {
+        "a": 1,
+        "rgb": 5195493
+      }
+    },
+    {
+      "query": "path:left-brain/domains/04_finance",
+      "color": {
+        "a": 1,
+        "rgb": 1346149
+      }
+    },
+    {
+      "query": "path:left-brain/domains/05_crm",
+      "color": {
+        "a": 1,
+        "rgb": 14427686
+      }
+    },
+    {
+      "query": "path:left-brain/domains/06_marketing",
+      "color": {
+        "a": 1,
+        "rgb": 14362487
+      }
+    },
+    {
+      "query": "path:left-brain/domains/07_operations",
+      "color": {
+        "a": 1,
+        "rgb": 14251782
+      }
+    },
+    {
+      "query": "path:left-brain/domains/08_analytics",
+      "color": {
+        "a": 1,
+        "rgb": 165063
+      }
+    },
+    {
+      "query": "path:left-brain/domains/09_it",
+      "color": {
+        "a": 1,
+        "rgb": 7041664
+      }
+    },
+    {
+      "query": "path:left-brain/domains/10_legal",
+      "color": {
+        "a": 1,
+        "rgb": 9584654
+      }
+    },
+    {
+      "query": "path:left-brain/domains/11_ecommerce",
+      "color": {
+        "a": 1,
+        "rgb": 561586
+      }
+    },
+    {
+      "query": "path:left-brain/domains/12_communications",
+      "color": {
+        "a": 1,
+        "rgb": 448178
+      }
+    },
+    {
+      "query": "path:left-brain/domains/13_lms",
+      "color": {
+        "a": 1,
+        "rgb": 1483850
+      }
+    },
+    {
+      "query": "path:left-brain/domains/14_ai",
+      "color": {
+        "a": 1,
+        "rgb": 6513393
+      }
+    },
+    {
+      "query": "path:left-brain/domains/15_community",
+      "color": {
+        "a": 1,
+        "rgb": 16089611
+      }
+    },
+    {
+      "query": "path:left-brain/domains/16_workplace",
+      "color": {
+        "a": 1,
+        "rgb": 1013390
+      }
+    },
+    {
+      "query": "path:left-brain/domains/17_psa",
+      "color": {
+        "a": 1,
+        "rgb": 8265422
+      }
+    },
+    {
+      "query": "path:left-brain/domains/18_plg",
+      "color": {
+        "a": 1,
+        "rgb": 223649
+      }
+    },
+    {
+      "query": "path:left-brain/domains/19_travel",
+      "color": {
+        "a": 1,
+        "rgb": 1916632
+      }
+    },
+    {
+      "query": "path:left-brain/domains/20_esg",
+      "color": {
+        "a": 1,
+        "rgb": 1409085
+      }
+    },
+    {
+      "query": "path:left-brain/domains/21_realestate",
+      "color": {
+        "a": 1,
+        "rgb": 5722958
+      }
+    },
+    {
+      "query": "path:left-brain/domains/22_customer-success",
+      "color": {
+        "a": 1,
+        "rgb": 959977
+      }
+    },
+    {
+      "query": "path:left-brain/domains/23_subscription-billing",
+      "color": {
+        "a": 1,
+        "rgb": 1096065
+      }
+    },
+    {
+      "query": "path:left-brain/domains/24_procurement",
+      "color": {
+        "a": 1,
+        "rgb": 16347926
+      }
+    },
+    {
+      "query": "path:left-brain/domains/25_fpa",
+      "color": {
+        "a": 1,
+        "rgb": 6514417
+      }
+    },
+    {
+      "query": "path:left-brain/domains/26_events",
+      "color": {
+        "a": 1,
+        "rgb": 15481049
+      }
+    },
+    {
+      "query": "path:left-brain/domains/27_dms",
+      "color": {
+        "a": 1,
+        "rgb": 9133302
+      }
+    },
+    {
+      "query": "path:left-brain/domains/28_whistleblowing",
+      "color": {
+        "a": 1,
+        "rgb": 7153881
+      }
+    },
+    {
+      "query": "path:left-brain/domains/29_field-service",
+      "color": {
+        "a": 1,
+        "rgb": 15357964
+      }
+    },
+    {
+      "query": "path:left-brain/domains/30_pricing",
+      "color": {
+        "a": 1,
+        "rgb": 889992
+      }
+    },
+    {
+      "query": "path:left-brain/domains/31_risk-management",
+      "color": {
+        "a": 1,
+        "rgb": 12131356
+      }
+    },
+    {
+      "query": "path:left-brain/architecture",
+      "color": {
+        "a": 1,
+        "rgb": 3430459
+      }
+    },
+    {
+      "query": "path:left-brain/entities",
+      "color": {
+        "a": 1,
+        "rgb": 15906442
+      }
+    },
+    {
+      "query": "path:left-brain/concepts",
+      "color": {
+        "a": 1,
+        "rgb": 10526880
+      }
+    },
+    {
+      "query": "path:right-brain",
+      "color": {
+        "a": 1,
+        "rgb": 16492920
+      }
+    }
+  ],
+  "collapse-display": true,
+  "showArrow": true,
+  "textFadeMultiplier": 0,
+  "nodeSizeMultiplier": 1.2,
+  "lineSizeMultiplier": 0.8,
+  "collapse-forces": true,
+  "centerStrength": 0.518713248970312,
+  "repelStrength": 14,
+  "linkStrength": 0.8,
+  "linkDistance": 200,
+  "scale": 0.391451114774126,
+  "close": false
+}

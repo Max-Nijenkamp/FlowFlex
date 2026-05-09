@@ -1,0 +1,219 @@
+{
+  "main": {
+    "id": "cfc6a7d355defaff",
+    "type": "split",
+    "children": [
+      {
+        "id": "63159cdcbdbd5e08",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5a89808e3ece1962",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "5272f5f0d27e1cff",
+    "type": "split",
+    "children": [
+      {
+        "id": "a56f5e87216ad36f",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f8e6ad6e2382e9bf",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "3f85130260136186",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "815d60d0726713db",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "637a5f6b8c9f2c25",
+    "type": "split",
+    "children": [
+      {
+        "id": "4e70fcd704b5202e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9d70de50e60d6183",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "b1009b13360dd0c9",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "0e62dd4d3f3cc12a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "fcd63f9c24176f2a",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "d69535c7a3326539",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "5a89808e3ece1962",
+  "lastOpenFiles": [
+    "right-brain/gaps/gap-phase-placement-corrections.md",
+    "left-brain/domains/06_marketing/contact-behavioral-scoring.md",
+    "left-brain/domains/02_hr/talent-intelligence.md",
+    "left-brain/domains/04_finance/embedded-payments.md",
+    "left-brain/domains/14_ai/eu-ai-act-compliance.md",
+    "left-brain/concepts/concept-workflow-rules.md",
+    "left-brain/concepts/concept-formula-engine.md",
+    "left-brain/concepts/concept-custom-objects.md",
+    "left-brain/domains/31_risk-management/business-continuity-planning.md",
+    "left-brain/domains/31_risk-management/incident-management-risk.md",
+    "left-brain/domains/31_risk-management/heat-maps-risk-reporting.md",
+    "left-brain/domains/31_risk-management/controls-library.md",
+    "left-brain/domains/31_risk-management/risk-assessments-rcsa.md",
+    "left-brain/domains/31_risk-management/risk-register.md",
+    "left-brain/domains/30_pricing/pricing-analytics.md",
+    "left-brain/domains/30_pricing/competitor-price-monitoring.md",
+    "left-brain/domains/30_pricing/ai-price-optimization.md",
+    "left-brain/domains/30_pricing/discount-approval-workflows.md",
+    "left-brain/domains/30_pricing/price-book-management.md",
+    "left-brain/domains/29_field-service/parts-inventory-fsm.md",
+    "left-brain/domains/29_field-service/field-invoicing.md",
+    "left-brain/domains/29_field-service/customer-sign-off.md",
+    "left-brain/domains/29_field-service/technician-management.md",
+    "left-brain/domains/29_field-service/mobile-field-app.md",
+    "left-brain/domains/29_field-service/job-dispatch-scheduling.md",
+    "left-brain/domains/28_whistleblowing/reporter-communication-portal.md",
+    "left-brain/domains/31_risk-management",
+    "left-brain/domains/30_pricing",
+    "left-brain/domains/29_field-service",
+    "left-brain/domains/28_whistleblowing",
+    "left-brain/domains/27_dms",
+    "left-brain/domains/26_events",
+    "left-brain/domains/25_fpa",
+    "left-brain/domains/24_procurement",
+    "left-brain/domains/23_subscription-billing",
+    "left-brain/domains/22_customer-success",
+    "Untitled.canvas"
+  ]
+}

@@ -9,7 +9,7 @@ last_updated: 2026-05-07
 
 # Analytics Overview
 
-Business intelligence and reporting across all active modules. Build dashboards, run reports, track KPIs, and monitor team velocity — without writing SQL. All 6 modules built in Phase 6.
+Business intelligence and reporting across all active modules. Build dashboards, run reports, track KPIs, monitor team velocity, ask AI questions in plain English, and get predictive forecasts. All 8 modules built in Phase 6.
 
 **Filament Panel:** `analytics`
 **Domain Colour:** Purple `#9333EA` / Light: `#F3E8FF`
@@ -26,6 +26,8 @@ Business intelligence and reporting across all active modules. Build dashboards,
 | [[Team Velocity & Ops Metrics]] | Cycle time, throughput, burnout signals, operational metrics snapshots |
 | [[Audit Log & Activity Trail]] | Immutable activity log viewer, advanced filtering, export for compliance |
 | [[Data Warehouse & Export]] | BigQuery/Snowflake/S3 export jobs — Enterprise-tier feature |
+| [[AI Insights Engine]] | Natural language queries → charts + summaries; proactive anomaly and trend alerts |
+| [[Predictive Analytics]] | Win probability, churn risk, attrition, demand forecasting, maintenance prediction |
 
 ## Filament Panel Structure
 

@@ -1,0 +1,266 @@
+/* FlowFlex Domain Color System
+   ─────────────────────────────────────────────────────────────────────────────
+   Each domain gets a unique accent color applied via the cssclasses frontmatter
+   property (e.g. cssclasses: domain-hr).
+   When active, the body gets that class → CSS vars override → everything tints.
+   ─────────────────────────────────────────────────────────────────────────────
+*/
+
+/* ── Global defaults (dark mode base) ──────────────────────────────────────── */
+body {
+  --color-accent: #4F46E5;
+  --domain-h: 244;
+  --domain-s: 76%;
+  --domain-l: 57%;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   DOMAIN ACCENT COLOR OVERRIDES
+   Applied when file has: cssclasses: domain-[panel]
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* 01 Core Platform (panel: admin / core) ── Slate */
+body.domain-admin,
+body.domain-core  { --color-accent: #94A3B8; --domain-rgb: 148, 163, 184; }
+
+/* 02 HR & People ── Purple */
+body.domain-hr    { --color-accent: #A78BFA; --domain-rgb: 167, 139, 250; }
+
+/* 03 Projects & Work ── Indigo */
+body.domain-projects { --color-accent: #818CF8; --domain-rgb: 129, 140, 248; }
+
+/* 04 Finance & Accounting ── Emerald */
+body.domain-finance  { --color-accent: #34D399; --domain-rgb: 52, 211, 153; }
+
+/* 05 CRM & Sales ── Rose */
+body.domain-crm      { --color-accent: #FB7185; --domain-rgb: 251, 113, 133; }
+
+/* 06 Marketing ── Pink */
+body.domain-marketing { --color-accent: #F472B6; --domain-rgb: 244, 114, 182; }
+
+/* 07 Operations ── Amber */
+body.domain-operations { --color-accent: #FCD34D; --domain-rgb: 252, 211, 77; }
+
+/* 08 Analytics ── Sky */
+body.domain-analytics  { --color-accent: #38BDF8; --domain-rgb: 56, 189, 248; }
+
+/* 09 IT & Security ── Cool Gray */
+body.domain-it         { --color-accent: #9CA3AF; --domain-rgb: 156, 163, 175; }
+
+/* 10 Legal ── Warm Brown */
+body.domain-legal      { --color-accent: #D97706; --domain-rgb: 217, 119, 6; }
+
+/* 11 E-commerce ── Cyan */
+body.domain-ecommerce  { --color-accent: #22D3EE; --domain-rgb: 34, 211, 238; }
+
+/* 12 Communications ── Light Cyan */
+body.domain-comms      { --color-accent: #67E8F9; --domain-rgb: 103, 232, 249; }
+
+/* 13 LMS ── Green */
+body.domain-lms        { --color-accent: #4ADE80; --domain-rgb: 74, 222, 128; }
+
+/* 14 AI & Automation ── Violet */
+body.domain-ai         { --color-accent: #C084FC; --domain-rgb: 192, 132, 252; }
+
+/* 15 Community ── Amber-Gold */
+body.domain-community  { --color-accent: #FDE68A; --domain-rgb: 253, 230, 138; }
+
+/* 16 Workplace ── Teal */
+body.domain-workplace  { --color-accent: #2DD4BF; --domain-rgb: 45, 212, 191; }
+
+/* 17 PSA ── Deep Purple */
+body.domain-psa        { --color-accent: #D946EF; --domain-rgb: 217, 70, 239; }
+
+/* 18 PLG ── Sky Blue */
+body.domain-plg        { --color-accent: #60A5FA; --domain-rgb: 96, 165, 250; }
+
+/* 19 Travel ── Blue */
+body.domain-travel     { --color-accent: #3B82F6; --domain-rgb: 59, 130, 246; }
+
+/* 20 ESG ── Forest Green */
+body.domain-esg        { --color-accent: #86EFAC; --domain-rgb: 134, 239, 172; }
+
+/* 21 Real Estate ── Warm Stone */
+body.domain-realestate { --color-accent: #D6D3D1; --domain-rgb: 214, 211, 209; }
+
+/* 22 Customer Success ── Sky */
+body.domain-cs         { --color-accent: #38BDF8; --domain-rgb: 56, 189, 248; }
+
+/* 23 Subscription Billing ── Emerald */
+body.domain-subscriptions { --color-accent: #10B981; --domain-rgb: 16, 185, 129; }
+
+/* 24 Procurement ── Orange */
+body.domain-procurement { --color-accent: #F97316; --domain-rgb: 249, 115, 22; }
+
+/* 25 FP&A ── Indigo */
+body.domain-fpa        { --color-accent: #818CF8; --domain-rgb: 129, 140, 248; }
+
+/* 26 Events ── Pink */
+body.domain-events     { --color-accent: #EC4899; --domain-rgb: 236, 72, 153; }
+
+/* 27 Document Management ── Violet */
+body.domain-dms        { --color-accent: #8B5CF6; --domain-rgb: 139, 92, 246; }
+
+/* 28 Whistleblowing & Ethics ── Violet-700 */
+body.domain-whistleblowing { --color-accent: #6D28D9; --domain-rgb: 109, 40, 217; }
+
+/* 29 Field Service Management ── Orange-600 */
+body.domain-fsm        { --color-accent: #EA580C; --domain-rgb: 234, 88, 12; }
+
+/* 30 Pricing Management ── Teal-600 */
+body.domain-pricing    { --color-accent: #0D9488; --domain-rgb: 13, 148, 136; }
+
+/* 31 Enterprise Risk Management ── Red-700 */
+body.domain-risk       { --color-accent: #B91C1C; --domain-rgb: 185, 28, 28; }
+
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   VISUAL APPLICATION OF DOMAIN COLOR
+   These rules apply the --color-accent / --domain-rgb to UI elements
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+/* H1 — domain-colored left border ─────────────────────────────────────────── */
+.markdown-rendered h1 {
+  border-left: 4px solid var(--color-accent);
+  padding-left: 0.6em;
+}
+
+/* H2 — subtle domain-tinted bottom separator ───────────────────────────────── */
+.markdown-rendered h2 {
+  border-bottom-color: rgba(var(--domain-rgb), 0.35);
+}
+
+/* H3 — domain color text ───────────────────────────────────────────────────── */
+.markdown-rendered h3 {
+  color: var(--color-accent);
+  opacity: 0.9;
+}
+
+/* Frontmatter domain value pill ─────────────────────────────────────────────── */
+.metadata-property[data-property-key="domain"] .metadata-property-value {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Frontmatter panel value ───────────────────────────────────────────────────── */
+.metadata-property[data-property-key="panel"] .metadata-property-value {
+  background: rgba(var(--domain-rgb), 0.15);
+  border-radius: 4px;
+  padding: 0 0.4em;
+  font-weight: 600;
+  font-size: 0.85em;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Frontmatter phase badge ───────────────────────────────────────────────────── */
+.metadata-property[data-property-key="phase"] .metadata-property-value {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* Frontmatter status badge ──────────────────────────────────────────────────── */
+.metadata-property[data-property-key="status"] .metadata-property-value {
+  font-weight: 600;
+}
+
+/* Internal links in domain color ─────────────────────────────────────────────  */
+.markdown-rendered a.internal-link {
+  color: var(--color-accent);
+  border-bottom-color: rgba(var(--domain-rgb), 0.5);
+}
+
+/* Code block left accent bar ────────────────────────────────────────────────── */
+.markdown-rendered pre:has(code.language-php),
+.markdown-rendered pre:has(code.language-sql),
+.markdown-rendered pre:has(code.language-js),
+.markdown-rendered pre:has(code.language-javascript),
+.markdown-rendered pre:has(code.language-typescript) {
+  border-left: 3px solid var(--color-accent);
+}
+
+/* Mermaid diagrams ──────────────────────────────────────────────────────────── */
+.markdown-rendered pre:has(code.language-mermaid) {
+  background: var(--background-secondary);
+}
+.markdown-rendered .mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Blockquote domain tint ────────────────────────────────────────────────────── */
+.markdown-rendered blockquote {
+  border-left-color: var(--color-accent);
+  background: rgba(var(--domain-rgb), 0.07);
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   CALLOUT COLORS (domain-specific callout blocks)
+   Usage: > [!hr] HR Note | > [!finance] Finance note
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.callout[data-callout="core"],
+.callout[data-callout="admin"]     { --callout-color: 148, 163, 184; }
+.callout[data-callout="hr"]        { --callout-color: 167, 139, 250; }
+.callout[data-callout="projects"]  { --callout-color: 129, 140, 248; }
+.callout[data-callout="finance"]   { --callout-color: 52,  211, 153; }
+.callout[data-callout="crm"]       { --callout-color: 251, 113, 133; }
+.callout[data-callout="marketing"] { --callout-color: 244, 114, 182; }
+.callout[data-callout="operations"]{ --callout-color: 252, 211, 77;  }
+.callout[data-callout="analytics"] { --callout-color: 56,  189, 248; }
+.callout[data-callout="it"]        { --callout-color: 156, 163, 175; }
+.callout[data-callout="legal"]     { --callout-color: 217, 119, 6;   }
+.callout[data-callout="ecommerce"] { --callout-color: 34,  211, 238; }
+.callout[data-callout="comms"]     { --callout-color: 103, 232, 249; }
+.callout[data-callout="lms"]       { --callout-color: 74,  222, 128; }
+.callout[data-callout="ai"]        { --callout-color: 192, 132, 252; }
+.callout[data-callout="community"] { --callout-color: 253, 230, 138; }
+.callout[data-callout="workplace"] { --callout-color: 45,  212, 191; }
+.callout[data-callout="psa"]       { --callout-color: 217, 70,  239; }
+.callout[data-callout="plg"]       { --callout-color: 96,  165, 250; }
+.callout[data-callout="travel"]    { --callout-color: 59,  130, 246; }
+.callout[data-callout="esg"]       { --callout-color: 134, 239, 172; }
+.callout[data-callout="realestate"]{ --callout-color: 214, 211, 209; }
+.callout[data-callout="cs"]        { --callout-color: 56,  189, 248; }
+.callout[data-callout="subscriptions"] { --callout-color: 16, 185, 129; }
+.callout[data-callout="procurement"]{ --callout-color: 249, 115, 22;  }
+.callout[data-callout="fpa"]       { --callout-color: 129, 140, 248; }
+.callout[data-callout="events"]    { --callout-color: 236, 72,  153; }
+.callout[data-callout="dms"]       { --callout-color: 139, 92,  246; }
+.callout[data-callout="whistleblowing"] { --callout-color: 109, 40, 217; }
+.callout[data-callout="fsm"]       { --callout-color: 234, 88,  12;  }
+.callout[data-callout="pricing"]   { --callout-color: 13,  148, 136; }
+.callout[data-callout="risk"]      { --callout-color: 185, 28,  28;  }
+
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   TABLE STYLES
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+.markdown-rendered table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.markdown-rendered table th {
+  background: var(--background-secondary);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75em;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--color-accent);
+}
+
+.markdown-rendered table tr:hover {
+  background: rgba(var(--domain-rgb), 0.08);
+}
+
+/* Phase column (2nd col in module tables) ────────────────────────────────────  */
+.markdown-rendered table td:nth-child(2) {
+  font-weight: 600;
+  color: var(--color-accent);
+}

@@ -16,8 +16,8 @@ The homepage must do one job: make a qualified SMB decision-maker say "this is e
 ## Meta
 
 ```
-<title>FlowFlex — One Platform. Every Tool. Your Way.</title>
-<meta name="description" content="FlowFlex replaces your stack of disconnected tools with one modular platform. HR, finance, projects, CRM, and 99+ more — activate only what you need.">
+<title>FlowFlex — The AI-Native Platform That Replaces Your Entire Stack</title>
+<meta name="description" content="FlowFlex replaces 10+ disconnected SaaS tools with one AI-native platform. HR, finance, CRM, projects, and 155+ modules — self-serve setup, no consultant needed. One login. One bill.">
 <link rel="canonical" href="https://flowflex.com/">
 ```
 
@@ -38,14 +38,21 @@ The homepage must do one job: make a qualified SMB decision-maker say "this is e
 
 **Content:**
 ```
-OVERLINE: "One platform. Every tool."
-H1: Your business, your tools — in flow.
-BODY LG: Replace 8 disconnected tools with one modular platform.
-         HR, finance, projects, CRM, and 99+ modules — activate only
-         what you need. One login. One data layer. One bill.
-CTA ROW: [Request a Demo →]  [See all modules]
-SUBTEXT: No credit card required · Setup in minutes · Cancel any time
+OVERLINE: "AI-native. Self-serve. No consultants needed."
+H1: One platform. Every tool. Activate in minutes.
+BODY LG: Replace Slack, BambooHR, Xero, HubSpot, Jira, and 6 more
+         with a single AI-native workspace. 16 domains, 160+ modules
+         — flip on what you need, skip what you don't.
+         One login. One data layer. One bill.
+CTA ROW: [Start for free →]  [See all modules]
+SUBTEXT: No credit card required · Setup wizard takes 15 minutes · Cancel any time
 ```
+
+**Hero Differentiators Bar** (below CTA, icon + text):
+- ⚡ Self-serve setup — no implementation partner
+- 🤖 AI built into every module
+- 🔒 EU data residency · GDPR-first
+- 💶 Transparent module pricing
 
 **Visual:** Product screenshot or short looping video showing the workspace dashboard — ideally showing the module switcher and a populated dashboard. Use real-looking dummy data, not Lorem Ipsum.
 
@@ -86,19 +93,40 @@ SUBTEXT: No credit card required · Setup in minutes · Cancel any time
 **Layout:** Full-width, white background
 
 **Headline:** "Everything your business needs. In one place."
-**Subtext:** "13 domains. 99+ modules. Only pay for what you activate."
+**Subtext:** "16 domains. 160+ modules. Only pay for what you activate."
 
 **Display:** Horizontal scroll or grid of domain cards. Each card shows:
 - Domain colour accent (left border or icon background)
 - Domain icon
 - Domain name
-- 3–4 key module names
+- 3–4 key module names + "AI-powered" badge where applicable
 - `Explore →` link to `/modules/{domain}`
 
 **Domains shown:**
-HR & People · Projects & Work · Finance · CRM & Sales · Marketing · Operations · Analytics · IT & Security · Legal · E-commerce · Communications · Learning & Development
+HR & People · Projects & Work · Finance · CRM & Sales · Marketing · Operations · Analytics · IT & Security · Legal · E-commerce · Communications · Learning & Development · **AI & Automation** · **Community & Social**
 
-**Bottom CTA:** "See all 99+ modules →" linking to `/features`
+**AI callout card** (stands out in the grid):
+- Cyan `#06B6D4` accent
+- "AI & Automation — The intelligence layer. Workflow automation, AI assistant, smart agents, 200+ integrations."
+
+**Bottom CTA:** "See all 160+ modules →" linking to `/features`
+
+---
+
+### 5b. AI Section (NEW 2026)
+
+**Layout:** Full-width, dark gradient background (slate-900 → cyan-950), white text
+
+**Overline:** "Built for 2026"
+**Headline:** "AI doesn't cost extra. It's already inside."
+
+**4 AI capability cards** (2×2 grid):
+1. **Ask your data anything** — "Type 'why did revenue drop last month?' and get a chart with an explanation. No SQL, no BI team."
+2. **Automate without code** — "Build workflows that react to events across all your modules. If new lead → qualify with AI → create task → alert sales rep."
+3. **Draft before you type** — "AI writes emails, replies, proposals, and reports in your brand voice. Review and send."
+4. **Agents that work overnight** — "Set up AI agents that monitor your pipeline, flag at-risk deals, and reorder stock — while you sleep."
+
+**CTA:** "Explore AI & Automation →"
 
 ---
 
@@ -141,10 +169,10 @@ HR & People · Projects & Work · Finance · CRM & Sales · Marketing · Operati
 - Quotes managed in Admin Panel CMS
 
 **Zone C — Numbers:**
-- Stat 1: `99+` modules
-- Stat 2: `13` business domains
-- Stat 3: `300+` individual features
-- Stat 4: `1` data layer
+- Stat 1: `160+` modules
+- Stat 2: `16` business domains
+- Stat 3: `500+` individual features
+- Stat 4: `1` data layer — no sync, no duplicates
 - (Replace with real customer numbers as soon as available: customers, countries, etc.)
 
 ---
@@ -155,14 +183,16 @@ HR & People · Projects & Work · Finance · CRM & Sales · Marketing · Operati
 
 **Headline:** "FlowFlex vs the stack you're replacing"
 
-| Feature | FlowFlex | Legacy Stack |
-|---|---|---|
-| One login | ✅ | ❌ (5+ logins) |
-| Unified data | ✅ | ❌ (manual sync) |
-| Pay only for what you use | ✅ | ❌ (bundle pricing) |
-| Works across all business functions | ✅ | ❌ (multiple vendors) |
-| Single audit trail | ✅ | ❌ |
-| Module-level permissions | ✅ | ❌ |
+| Feature | FlowFlex | Legacy Stack | Single-purpose SaaS |
+|---|---|---|---|
+| One login | ✅ | ❌ (5+ logins) | ❌ |
+| Unified data | ✅ | ❌ (manual sync) | ❌ |
+| AI across every module | ✅ | ❌ | partial (own AI only) |
+| Self-serve setup (15 min) | ✅ | ❌ (consultant needed) | ✅ |
+| Pay only for what you use | ✅ | ❌ (bundle pricing) | ✅ |
+| EU data residency + GDPR | ✅ | varies | varies |
+| Single audit trail | ✅ | ❌ | ❌ |
+| Module-level permissions | ✅ | ❌ | ❌ |
 
 **CTA below table:** `See detailed comparisons →` linking to `/compare/vs-bamboohr` (and others)
 

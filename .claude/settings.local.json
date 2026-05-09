@@ -74,7 +74,11 @@
       "Bash(XDEBUG_MODE=off php -d memory_limit=768M vendor/bin/pest tests/Feature/Phase1_5/MarketingRoutesTest.php --no-coverage)",
       "Bash(XDEBUG_MODE=off php -d memory_limit=768M vendor/bin/pest --no-coverage)",
       "Bash(grep *)",
-      "Bash(awk '{print $4}')"
+      "Bash(awk '{print $4}')",
+      "Bash(mkdir -p \"/Users/maxnijenkamp/Documents/FlowFlex/obsidian/15 - AI & Automation\")",
+      "Bash(mkdir -p \"/Users/maxnijenkamp/Documents/FlowFlex/obsidian/16 - Community & Social\")",
+      "Bash(xargs -I{} sh -c 'echo \"=== {} ===\" && grep -A2 \"| Module\" {} | head -30')",
+      "Bash(awk -F'/' '{print $1, $2}')"
     ]
   },
   "enabledMcpjsonServers": [

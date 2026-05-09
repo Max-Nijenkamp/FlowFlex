@@ -1,0 +1,13 @@
+{
+  "theme": "obsidian",
+  "cssTheme": "Minimal",
+  "interfaceFontFamily": "",
+  "textFontFamily": "",
+  "monospaceFontFamily": "JetBrains Mono, Fira Code, Menlo, monospace",
+  "baseFontSize": 15,
+  "enabledCssSnippets": [
+    "domain-colors",
+    "reading-mode"
+  ],
+  "accentColor": "#4F46E5"
+}

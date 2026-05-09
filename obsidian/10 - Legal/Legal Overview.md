@@ -9,12 +9,12 @@ last_updated: 2026-05-07
 
 # Legal Overview
 
-Contract lifecycle, policy management, risk register, data privacy, and insurance/licence tracking. All 5 modules built in Phase 7.
+Contract lifecycle, policy management, risk register, data privacy, insurance/licence tracking, AI contract intelligence, and native e-signature. All 7 modules built in Phase 4–7.
 
 **Filament Panel:** `legal`
 **Domain Colour:** Red `#DC2626` / Light: `#FEE2E2`
 **Domain Icon:** `heroicon-o-scale`
-**Phase:** 7 — complete domain, all modules
+**Phase:** 4–7 — complete domain, all modules
 
 ## Modules
 
@@ -25,6 +25,8 @@ Contract lifecycle, policy management, risk register, data privacy, and insuranc
 | [[Risk Register]] | Risk identification, likelihood/consequence scoring, mitigations, periodic reviews |
 | [[Data Privacy]] | GDPR/CCPA DSRs, processing activities, consent records, DPIAs |
 | [[Insurance & Licence Tracking]] | Business insurance and regulatory licence register with expiry reminders |
+| [[AI Contract Intelligence]] | AI clause extraction, risk scoring, obligation tracking, template comparison |
+| [[E-Signature Native]] | Native e-signatures (eIDAS/ESIGN), multi-party, audit trail, auto-send triggers |
 
 ## Filament Panel Structure
 

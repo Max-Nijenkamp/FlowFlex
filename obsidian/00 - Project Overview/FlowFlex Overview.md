@@ -11,7 +11,7 @@ FlowFlex is a modular, multi-tenant SaaS platform that replaces the fragmented m
 
 ## What It Is
 
-FlowFlex is the **operating system for modern businesses**. Not a startup tool, not an enterprise monolith — something in between. Calm, capable, and quietly powerful.
+FlowFlex is the **AI-native operating system for modern businesses**. Not a startup tool, not an enterprise monolith — something in between. Calm, capable, and quietly powerful. Every domain has AI woven through it — not as a bolt-on, but as the default way to get things done faster.
 
 **Name meaning:**
 - **Flow** — like the flow of the sea. Smooth, continuous, everything moves together naturally.
@@ -62,23 +62,26 @@ Direct, calm, confident. Not startup-hype, not enterprise-stiff.
 
 ## Module Count
 
-**13 domains · 99+ modules · 300+ individual features**
+**16 domains · 130+ modules · 400+ individual features**
 
-| # | Domain | Modules |
-|---|---|---|
-| 0 | Core Platform | 6 (always active) |
-| 1 | HR & People | 11 |
-| 2 | Projects & Work | 9 |
-| 3 | Finance & Accounting | 10 |
-| 4 | CRM & Sales | 8 |
-| 5 | Marketing & Content | 8 |
-| 6 | Operations & Field Service | 9 |
-| 7 | Analytics, BI & Reporting | 6 |
-| 8 | IT & Security Management | 6 |
-| 9 | Legal & Compliance | 5 |
-| 10 | E-commerce & Sales Channels | 6 |
-| 11 | Communications & Internal Comms | 5 |
-| 12 | Learning & Development (LMS) | 5 |
+| # | Domain | Modules | Phase |
+|---|---|---|---|
+| 0 | Core Platform | 7 (always active) | 1 |
+| 1 | HR & People | 14 | 2 + 8 |
+| 2 | Projects & Work | 11 | 2 + 8 |
+| 3 | Finance & Accounting | 13 | 3 |
+| 4 | CRM & Sales | 11 | 3 |
+| 5 | Marketing & Content | 10 | 4 |
+| 6 | Operations & Field Service | 11 | 4 |
+| 7 | Analytics, BI & Reporting | 8 | 5 |
+| 8 | IT & Security Management | 8 | 5 |
+| 9 | Legal & Compliance | 7 | 5 |
+| 10 | E-commerce & Sales Channels | 9 | 5 |
+| 11 | Communications & Internal Comms | 7 | 5 |
+| 12 | Learning & Development (LMS) | 8 | 5 |
+| 13 | Marketing Site | 14 pages | all |
+| **14** | **AI & Automation** | **6** | **6** |
+| **15** | **Community & Social** | **6** | **7** |
 
 ## Related
 

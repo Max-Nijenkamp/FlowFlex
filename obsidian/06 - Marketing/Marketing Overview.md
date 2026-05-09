@@ -9,7 +9,7 @@ last_updated: 2026-05-07
 
 # Marketing Overview
 
-CMS, email campaigns, forms, social media, SEO, ads, events, and affiliate management. All 8 modules built in Phase 5 as a complete panel.
+CMS, email campaigns, forms, social media, SEO, ads, events, affiliate management, AI content generation, SMS/WhatsApp, and push notifications. All 11 modules built in Phase 5 as a complete panel.
 
 **Filament Panel:** `marketing`
 **Domain Colour:** Pink `#DB2777` / Light: `#FCE7F3`
@@ -28,6 +28,10 @@ CMS, email campaigns, forms, social media, SEO, ads, events, and affiliate manag
 | [[Ad Campaign Management]] | Google/Meta/LinkedIn/TikTok ad accounts, campaign tracking, ROAS |
 | [[Events & Webinars]] | Event management, registrations, sessions, waitlist, QR check-in |
 | [[Affiliate & Partner Management]] | Affiliates, referral tracking, commissions, payouts |
+| [[AI Content Studio]] | AI blog posts, email copy, social captions, ad copy with brand voice training |
+| [[SMS & WhatsApp Marketing]] | Broadcast + flow SMS/WhatsApp campaigns, two-way conversations, GDPR opt-in |
+| [[Push Notifications]] | Web push + mobile push campaigns, triggered sends, personalised product nudges |
+| [[Influencer & UGC Management]] | Influencer campaigns, content approval, UGC rights, payment workflow, ROI tracking |
 
 ## Filament Panel Structure
 

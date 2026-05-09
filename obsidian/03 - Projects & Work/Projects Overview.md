@@ -29,6 +29,8 @@ The work management domain. Everything teams do day-to-day — tasks, planning, 
 | [[Team Collaboration]] | 8 | planned | Comments, @mentions, activity feeds |
 | [[Resource & Capacity Planning]] | 8 | planned | Workload heatmap, availability |
 | [[Agile & Sprint Management]] | 8 | planned | Scrum, backlog, burndown |
+| [[OKR & Goal Management]] | 8 | planned | Company→Individual cascade, auto-update from data, grading |
+| [[Portfolio Management]] | 8 | planned | Cross-project view, budget rollup, health scores, risk register |
 
 ## Key Events from This Domain
 

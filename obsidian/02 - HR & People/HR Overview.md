@@ -31,6 +31,10 @@ The HR & People domain is the people layer of FlowFlex. It manages every stage o
 | [[Benefits & Perks]] | 8 | planned | Benefits catalogue, enrolment, flex benefits |
 | [[Employee Feedback]] | 8 | planned | Pulse surveys, eNPS, burnout signals |
 | [[HR Compliance]] | 8 | planned | Certifications, mandatory training deadlines |
+| [[Org Chart & Workforce Planning]] | 8 | planned | Visual org chart, headcount planning, position management |
+| [[AI Recruiting Assistant]] | 8 | planned | JD generation, CV scoring, bias detection, screening questions |
+| [[DEI & Workforce Analytics]] | 8 | planned | Pay equity, EU Pay Transparency, aggregate diversity metrics |
+| [[Compensation Management]] | 8 | planned | Salary bands, comp review cycles, market benchmarking |
 
 ## Key Events from This Domain
 

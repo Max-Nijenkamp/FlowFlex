@@ -28,6 +28,11 @@ The customer relationship layer. Contacts, deals, support tickets, and the full 
 | [[Customer Data Platform]] | 8 | Unified customer profile, cross-touchpoint data |
 | [[Client Portal]] | 8 | White-labelled self-service portal for clients |
 | [[Loyalty & Retention]] | 8 | Points system, churn scoring, win-back campaigns |
+| [[AI Sales Coach]] | 3 | Deal health scores, next best action, win/loss AI analysis |
+| [[Revenue Intelligence & Forecasting]] | 3 | 4-model forecast, quota management, rep accuracy tracking |
+| [[Deal Room]] | 3 | Branded buyer collaboration portal, mutual action plan |
+| [[Sales Sequences & Cadences]] | 3 | Multi-step email + call + LinkedIn outreach automation |
+| [[Customer Success Platform]] | 3 | Health scores, success plans, playbooks, QBR builder, renewals |
 
 ## Key Events from This Domain
 

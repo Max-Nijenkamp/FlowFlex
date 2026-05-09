@@ -9,12 +9,12 @@ last_updated: 2026-05-07
 
 # IT Overview
 
-IT asset lifecycle, internal helpdesk, SaaS spend discovery, access auditing, security compliance, and uptime monitoring. All 6 modules built in Phase 6.
+IT asset lifecycle, internal helpdesk, SaaS spend discovery, access auditing, security compliance, uptime monitoring, SSO/identity provider, and MDM device management. All 8 modules built in Phase 4–6.
 
 **Filament Panel:** `it`
 **Domain Colour:** Slate `#475569` / Light: `#F1F5F9`
 **Domain Icon:** `heroicon-o-shield-check`
-**Phase:** 6 — complete domain, all modules
+**Phase:** 4–6 — complete domain, all modules
 
 ## Modules
 
@@ -26,6 +26,8 @@ IT asset lifecycle, internal helpdesk, SaaS spend discovery, access auditing, se
 | [[Access & Permissions Audit]] | Cross-system access snapshots, overprovision alerts |
 | [[Security & Compliance]] | Compliance frameworks (GDPR/ISO27001/SOC2), controls, evidence tracking |
 | [[Uptime & Status Monitoring]] | Service monitoring, status checks, incidents, public status page |
+| [[SSO & Identity Provider]] | SAML 2.0 + OIDC SSO, SCIM provisioning, MFA, FlowFlex as IdP |
+| [[MDM & Device Management]] | macOS/iOS/Android/Windows device enrolment, policies, remote wipe, BYOD |
 
 ## Filament Panel Structure
 

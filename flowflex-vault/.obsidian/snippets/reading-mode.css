@@ -1,0 +1,81 @@
+/* FlowFlex Reading Mode Polish
+   Makes reading mode feel more like a product doc */
+
+/* ── Typography ─────────────────────────────────────────────────── */
+.markdown-preview-view {
+  font-size: 15px;
+  line-height: 1.7;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* ── Headings ───────────────────────────────────────────────────── */
+.markdown-rendered h2 {
+  margin-top: 2.5em;
+  padding-bottom: 0.3em;
+  /* border-bottom tint comes from domain-colors.css via --domain-rgb */
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.markdown-rendered h3 {
+  /* color set per-domain in domain-colors.css via --color-accent */
+  font-size: 1em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 2em;
+}
+
+/* ── Internal link styling ──────────────────────────────────────── */
+.markdown-rendered a.internal-link {
+  text-decoration: none;
+  border-bottom: 1px dashed var(--link-color);
+  padding-bottom: 1px;
+}
+
+.markdown-rendered a.internal-link:hover {
+  border-bottom-style: solid;
+}
+
+/* Unresolved (future module) links — grey, not red ─────────────── */
+.markdown-rendered a.internal-link.is-unresolved {
+  color: var(--text-muted);
+  border-bottom-color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* ── Code inline ────────────────────────────────────────────────── */
+.markdown-rendered code {
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  background: var(--background-secondary);
+}
+
+/* ── Horizontal rule ────────────────────────────────────────────── */
+.markdown-rendered hr {
+  border: none;
+  border-top: 2px solid var(--background-modifier-border);
+  margin: 2.5em 0;
+}
+
+/* ── Blockquote (used for notes/warnings) ───────────────────────── */
+/* border-left color and background tint handled by domain-colors.css */
+.markdown-rendered blockquote {
+  padding: 0.8em 1em;
+  border-radius: 0 4px 4px 0;
+  border-left-width: 4px;
+  border-left-style: solid;
+}
+
+/* ── ERD / Mermaid diagrams ─────────────────────────────────────── */
+.mermaid {
+  text-align: center;
+}
+
+/* ── Wide tables — horizontal scroll on overflow ────────────────── */
+.markdown-rendered table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
