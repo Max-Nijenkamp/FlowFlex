@@ -3,8 +3,9 @@ type: module
 domain: Foundation
 panel: app
 phase: 0
-status: planned
+status: complete
 last_updated: 2026-05-09
+right_brain_log: "[[builder-log-workspace-panel]]"
 ---
 
 # Workspace Panel — Tenant App Shell

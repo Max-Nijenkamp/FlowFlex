@@ -80,7 +80,19 @@
       "Bash(xargs -I{} sh -c 'echo \"=== {} ===\" && grep -A2 \"| Module\" {} | head -30')",
       "Bash(awk -F'/' '{print $1, $2}')",
       "PowerShell(composer *)",
-      "Bash(bc)"
+      "Bash(bc)",
+      "Bash(composer --version)",
+      "Bash(npm --version)",
+      "Bash(composer create-project *)",
+      "Bash(docker --version)",
+      "Bash(docker compose *)",
+      "Bash(docker container *)",
+      "Bash(sudo lsof -nP -iTCP:8025)",
+      "Bash(sudo lsof -nP -iTCP:6379)",
+      "Bash(curl *)",
+      "Bash(composer install *)",
+      "Bash(docker exec flowflex_app *)",
+      "Bash(git add *)"
     ]
   },
   "enabledMcpjsonServers": [

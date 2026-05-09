@@ -15,7 +15,8 @@ Major decisions made during the build. When the spec changes from the original L
 
 | Date | Decision | Impact | File |
 |---|---|---|---|
-| _none yet_ | | | |
+| 2026-05-09 | Filament 5 upgrade (v5.6.2) | Upgraded from Filament 4 to Filament 5 before Phase 1 begins. No code changes required — Filament 5 retained `Schema` API. Both panels boot clean. | [[decision-2026-05-09-filament-5-upgrade]] |
+| 2026-05-09 | Phase 0 used Filament 4 (superseded) | Initial Phase 0 build used Filament 4 because Filament 5 appeared unavailable. Superseded by upgrade above. | [[decision-2026-05-09-filament-4-instead-of-5]] |
 
 ---
 

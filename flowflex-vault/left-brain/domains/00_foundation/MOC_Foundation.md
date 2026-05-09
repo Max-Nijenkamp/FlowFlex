@@ -42,9 +42,11 @@ FlowFlex runs two Filament panels and a public Vue + Inertia layer.
 
 | Module | Phase | Status | Description |
 |---|---|---|---|
-| [[project-scaffolding]] | 0 | planned | Laravel 13 + Filament 5 + Vue 3 + Inertia project setup, package installs, base config |
-| [[admin-panel-flowflex]] | 0 | planned | Internal FlowFlex staff panel at /admin — company creation, tenant management, billing, health monitoring, impersonation |
-| [[workspace-panel]] | 0 | planned | Tenant app shell at /app — dynamic nav from active modules, company settings, user RBAC management |
+| [[project-scaffolding]] | 0 | complete | Laravel 13 + Filament 5 + Vue 3 + Inertia project setup, package installs, base config |
+| [[admin-panel-flowflex]] | 0 | complete | Internal FlowFlex staff panel at /admin — company creation, tenant management, billing, health monitoring, impersonation |
+| [[workspace-panel]] | 0 | complete | Tenant app shell at /app — dynamic nav from active modules, company settings, user RBAC management |
+| [[docker-local-environment]] | 0 | complete | Docker Compose local stack (Nginx, PostgreSQL 17, Redis 8, Mailpit), Horizon/Pulse/Telescope admin panel links, local seeders |
+| [[testing-standards]] | 0 | complete | Pest test suite standards, phase quality gate, known Filament/Livewire testing patterns, 74 passing tests |
 
 > **Dependency note**: All Phase 1+ modules depend on this domain being complete. The workspace panel shell, multi-tenancy layer, and admin panel must exist before any business domain module can be loaded or tested.
 

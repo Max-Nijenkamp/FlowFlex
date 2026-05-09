@@ -5,7 +5,7 @@
   "showAttachments": false,
   "hideUnresolved": true,
   "showOrphans": false,
-  "collapse-color-groups": false,
+  "collapse-color-groups": true,
   "colorGroups": [
     {
       "query": "path:left-brain/domains/01_core-platform",
@@ -39,7 +39,7 @@
       "query": "path:left-brain/domains/05_crm",
       "color": {
         "a": 1,
-        "rgb": 9850703
+        "rgb": 16758968
       }
     },
     {
@@ -249,20 +249,20 @@
       "query": "path:right-brain",
       "color": {
         "a": 1,
-        "rgb": 16711680
+        "rgb": 16715535
       }
     }
   ],
-  "collapse-display": false,
+  "collapse-display": true,
   "showArrow": false,
-  "textFadeMultiplier": -2.4,
-  "nodeSizeMultiplier": 1.37604166666667,
-  "lineSizeMultiplier": 0.840104166666667,
+  "textFadeMultiplier": -2,
+  "nodeSizeMultiplier": 1.54809461805556,
+  "lineSizeMultiplier": 1.03512586805556,
   "collapse-forces": true,
-  "centerStrength": 0.518713248970312,
-  "repelStrength": 14,
-  "linkStrength": 0.8,
-  "linkDistance": 200,
-  "scale": 0.3239676258897393,
+  "centerStrength": 0.505078125,
+  "repelStrength": 13.9713541666667,
+  "linkStrength": 0.755078125,
+  "linkDistance": 500,
+  "scale": 0.287833714786558,
   "close": true
 }

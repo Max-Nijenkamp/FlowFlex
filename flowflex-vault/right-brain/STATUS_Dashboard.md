@@ -29,7 +29,7 @@ pie title Module Distribution by Phase Group (311 total)
 
 | Domain | Phase | Built | Total | Progress |
 |---|---|---|---|---|
-| Foundation | 0 | 0 | 3 | 📅 0% |
+| Foundation | 0 | 5 | 5 | ✅ 100% |
 | Core Platform | 1 | 0 | 12 | 📅 0% |
 | HR & People | 2–8 | 0 | 21 | 📅 0% |
 | Projects & Work | 2/8 | 0 | 13 | 📅 0% |
@@ -62,7 +62,7 @@ pie title Module Distribution by Phase Group (311 total)
 | Pricing Management | 4 | 0 | 5 | 📅 0% |
 | Enterprise Risk Management | 5 | 0 | 6 | 📅 0% |
 
-**Total: 0 / 311 modules planned (0%) — build not yet started** (includes 3 Foundation scaffold modules)
+**Total: 5 / 313 modules planned (2%) — Phase 0 Foundation complete** (Foundation: 5/5 ✅)
 
 ---
 
@@ -89,6 +89,9 @@ pie title Module Distribution by Phase Group (311 total)
 
 ## Active Builder Logs
 
+- [[builder-log-project-scaffolding]] — Phase 0 Foundation built 2026-05-09. Laravel 13 + Filament 5 v5.6.2, both panels registered, all migrations run, seeders pass.
+- [[builder-log-docker-local-environment]] — Phase 0 Docker + monitoring built 2026-05-09. docker-compose (postgres:17, redis:8, mailpit, horizon, reverb), Horizon/Pulse/Telescope gates, local seeders.
+- [[testing-standards]] — Phase 0 test suite complete 2026-05-09. 74 tests, 113 assertions, 0 failures. Critical bugs fixed: company scope data leak, last_login_at Carbon parse error.
 - [[vault-audit-2026-05-09]] — Vault audit complete; vault is pre-build-ready. See [[ACTIVATION_GUIDE]] to start Phase 0.
 
 ---
@@ -97,6 +100,9 @@ pie title Module Distribution by Phase Group (311 total)
 
 | Date | Module | Outcome |
 |---|---|---|
+| 2026-05-09 | Phase 0 — Testing Standards + Bug Fixes | Built: 74 Pest tests (auth, guard isolation, multi-tenancy, Filament panels, seeders). Fixed: company scope data leak in Filament (SetCompanyContext not in authMiddleware), last_login_at Carbon parse error, Inertia::share unconditional call. Phase 0 complete. |
+| 2026-05-09 | Phase 0 — Docker + Monitoring + Local Seeders | Built: Dockerfile (PHP 8.4 FPM), docker-compose.yml (nginx, postgres:17, redis:8, mailpit, horizon, reverb), Horizon/Pulse/Telescope admin panel nav links + access gates, LocalAdminSeeder (test@test.nl/test1234), LocalCompanySeeder (FlowFlex Demo + test@test.nl/test1234). All seeders pass. |
+| 2026-05-09 | Phase 0 Foundation + Filament 5 upgrade | Built: Laravel 13 + Filament 5 v5.6.2, 7 migrations, 6 models, 2 panels, multi-tenancy layer, 5 Admin resources, 2 App resources, 3 App pages, CompanyCreationService, DTOs, Events, Contracts. All migrations pass. 92 modules seeded. Upgraded from Filament 4 → 5, no code changes needed. |
 | 2026-05-09 | Vault Audit (Session 2) | Fixed: Core Platform migration range, E-commerce count (10→15), 8 plan refs, admin role conflict (readonly→developer) |
 | 2026-05-09 | Vault Audit (Session 1) | 28 fixes: billing model, Laravel 13, entity-admin, entity-module-catalog, event bus DLQ, MOC_Domains colors, broken links |
 

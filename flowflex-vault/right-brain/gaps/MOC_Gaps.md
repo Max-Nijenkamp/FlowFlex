@@ -15,7 +15,7 @@ Discovered during the build. Links the real work back to the spec.
 
 | ID | Gap | Severity | Category | Module | Discovered | File |
 |---|---|---|---|---|---|---|
-| _none_ | | | | | | |
+| GAP-002 (fixed) | Company scope not applied in Filament panel — data leak | critical | architecture | testing-standards | 2026-05-09 | [[gap_company-scope-filament-middleware]] |
 
 ---
 
