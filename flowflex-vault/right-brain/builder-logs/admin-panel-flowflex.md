@@ -74,7 +74,40 @@ Auth config in `config/auth.php` has `admins` provider pointing to `Admin::class
 
 ---
 
+## Session — 2026-05-09 (Panel Styling + Layout Fixes)
+
+### Changes Made
+
+**AdminPanelProvider.php**
+- Added `->maxContentWidth(Width::Full)` — fixes "half page used" layout issue
+- Added `->sidebarCollapsibleOnDesktop()` — sidebar can collapse for more working space
+- Replaced `'Support'` nav group with `'Team'` — `AdminUserResource` uses `'Team'` group; nothing used `'Support'`
+- Imported `Filament\Support\Enums\Width`
+
+**WorkspacePanelProvider.php**
+- Added `->maxContentWidth(Width::Full)` — same full-width fix
+- Added `->sidebarCollapsibleOnDesktop()`
+- Added `->navigationGroups([NavigationGroup::make('Settings')])` — Users, Roles, CompanySettings, ModuleMarketplace all declare `'Settings'` group but panel had none defined
+- Imported `Filament\Navigation\NavigationGroup` and `Filament\Support\Enums\Width`
+
+**phpunit.xml**
+- Added `force="true"` on `DB_CONNECTION`, `DB_DATABASE`, `DB_URL` env vars
+- Required because Docker container sets `DB_CONNECTION=pgsql` as process-level env vars which normally override phpunit.xml `<env>` without `force`
+
+### Problem Found and Fixed — config:cache Breaks Test Isolation
+
+Running `php artisan config:cache` bakes PostgreSQL connection settings into a static file. Even with `force="true"`, phpunit env overrides have no effect on cached config. When tests ran after a `config:cache` call, they used the live PostgreSQL database — 4 Livewire authenticate tests failed with `SQLSTATE[25P02]` (transaction aborted by prior INSERT failure in wrong DB context).
+
+**Fix**: `php artisan config:clear` before running tests. Never run `config:cache` on the dev Docker instance; it must be cleared before test runs.
+
+### All 74 Tests Pass
+
+After clearing config cache: `74 passed (113 assertions)` — all Feature and Unit tests green.
+
+---
+
 ## Related
 - [[admin-panel-flowflex]]
+- [[workspace-panel]]
 - [[project-scaffolding]]
 - [[entity-admin]]
