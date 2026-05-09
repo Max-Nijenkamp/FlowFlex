@@ -74,6 +74,45 @@ Auth config in `config/auth.php` has `admins` provider pointing to `Admin::class
 
 ---
 
+## Session — 2026-05-09 (Filament Tailwind Theme — Custom Classes Now Compile)
+
+### Root Cause
+
+Filament panels load their own CSS pipeline, completely separate from `resources/css/app.css`. Filament's built-in CSS only includes its own component utilities. All custom Tailwind classes in our blade views (`module-marketplace.blade.php`, resource form pages) were silently dropped — the classes existed in HTML but no corresponding CSS rule was ever compiled.
+
+### Changes Made
+
+**`resources/css/filament/app/theme.css`** (new)
+- `@import 'tailwindcss' source(none)` — Filament's required pattern (no auto-discovery)
+- `@import '../../../../vendor/filament/filament/resources/css/index.css'` — all Filament component CSS
+- `@source` for all 9 Filament vendor packages' blade views
+- `@source` for `resources/views/filament/app/**/*.blade.php` (our custom views)
+- `@source` for `app/Filament/App/**/*.php` and `app/Filament/Admin/**/*.php` (PHP class inline classes)
+
+**`resources/css/filament/admin/theme.css`** (new)
+- Same structure as app theme but sources `resources/views/filament/admin/**`
+
+**`vite.config.js`**
+- Added both theme files to `input` array so Vite compiles them as separate CSS bundles
+
+**`WorkspacePanelProvider.php`**
+- `->viteTheme('resources/css/filament/app/theme.css')` — panel now injects compiled theme on every page
+
+**`AdminPanelProvider.php`**
+- `->viteTheme('resources/css/filament/admin/theme.css')`
+
+### Build Output
+
+`npm run build` compiles cleanly:
+- `app/theme.css` → 610 KB (gzip: 63 KB)
+- `admin/theme.css` → 618 KB (gzip: 64 KB)
+
+### 89 Tests Pass
+
+`89 passed (156 assertions)` — all green, no regressions.
+
+---
+
 ## Session — 2026-05-09 (TypeError Fix, CRUD Full-Width, Marketplace Redesign, GAP-006 Closed)
 
 ### Changes Made
