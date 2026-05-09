@@ -19,7 +19,7 @@ Discovered during the build. Links the real work back to the spec.
 | GAP-003 | CompanyContext singleton leaks across Horizon worker jobs | high | architecture | admin-panel-flowflex | 2026-05-09 | [[gap_company-context-queue-singleton]] |
 | GAP-004 | Invite tokens stored only in Redis cache — cache flush = permanent lockout | medium | architecture | admin-panel-flowflex | 2026-05-09 | [[gap_invite-token-cache-only]] |
 | GAP-005 | PlatformAnnouncement "Send" action is a stub — dispatches nothing | medium | feature | admin-panel-flowflex | 2026-05-09 | [[gap_announcement-send-stub]] |
-| GAP-006 | Missing tests for CompanyCreationService, ModuleMarketplace, CompanySettings | medium | spec | admin-panel-flowflex | 2026-05-09 | [[gap_missing-critical-path-tests]] |
+| GAP-006 (fixed) | Missing tests for CompanyCreationService, ModuleMarketplace, CompanySettings | medium | spec | admin-panel-flowflex | 2026-05-09 | [[gap_missing-critical-path-tests]] |
 
 ---
 

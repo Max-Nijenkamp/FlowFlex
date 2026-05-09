@@ -100,6 +100,7 @@ pie title Module Distribution by Phase Group (311 total)
 
 | Date | Module | Outcome |
 |---|---|---|
+| 2026-05-09 | TypeError fix, CRUD full-width, Marketplace redesign, GAP-006 closed | Fixed: PlatformAnnouncement TypeError (Filament 5 Get import), all CRUD forms half-width (columnSpanFull on sections). ModuleMarketplace redesigned: summary bar, domain sections, color-coded cards, core modules marked included. 15 new tests (89 total). GAP-006 resolved. |
 | 2026-05-09 | Phase 0 Audit — Bugs + Security + Indexes | Fixed 6 issues: UserResource deactivate double-fire (update+delete), country field not persisted (new migration), AdminFactory invalid role, email uniqueness not company-scoped, CompanySettings slug missing unique validation, bcrypt redundancy. Added 4 missing DB indexes. 4 gaps logged (GAP-003–006). 74/74 pass. |
 | 2026-05-09 | Test DB Isolation (root fix) | Fixed: Tests wiping live DB. Root cause: PHPUnit force=true sets $_ENV but not $_SERVER; Docker $_SERVER['DB_DATABASE']=flowflex persisted; Laravel Dotenv reads $_SERVER first. Fix: override createApplication() to sync $_ENV→$_SERVER before bootstrap. 74/74 pass, live DB preserved. |
 | 2026-05-09 | Panel Styling + Test DB Isolation | Fixed: Filament layout (maxContentWidth Full, sidebarCollapsibleOnDesktop), nav groups (Team group added, Settings group in app panel), phpunit.xml force=true for SQLite override of Docker pgsql env. Root cause of test failures: config:cache bakes pgsql into static file, blocking phpunit env overrides — fix: config:clear before tests. 74/74 pass. |
@@ -120,7 +121,7 @@ pie title Module Distribution by Phase Group (311 total)
 | GAP-003 | CompanyContext singleton queue worker leak | high |
 | GAP-004 | Invite token cache-only (Redis flush = lockout) | medium |
 | GAP-005 | PlatformAnnouncement Send is a stub | medium |
-| GAP-006 | Missing tests: CompanyCreationService, ModuleMarketplace, CompanySettings | medium |
+| GAP-006 ✅ | Missing tests: CompanyCreationService, ModuleMarketplace, CompanySettings | **resolved** |
 
 ---
 

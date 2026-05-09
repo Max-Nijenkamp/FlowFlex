@@ -74,6 +74,39 @@ Auth config in `config/auth.php` has `admins` provider pointing to `Admin::class
 
 ---
 
+## Session — 2026-05-09 (TypeError Fix, CRUD Full-Width, Marketplace Redesign, GAP-006 Closed)
+
+### Changes Made
+
+**PlatformAnnouncementResource TypeError**
+- `app/Filament/Admin/Resources/PlatformAnnouncementResource.php` — `use Filament\Forms\Get` → `use Filament\Schemas\Components\Utilities\Get`. Filament 5 renamed the `Get` closure type from `Filament\Forms\Get` to `Filament\Schemas\Components\Utilities\Get`. All `->visible()` and `->required()` callbacks receiving `Get $get` crashed with TypeError on the create form.
+
+**All resource forms now full-width**
+- Added `->columnSpanFull()` to all `Section::make(...)` components across all admin and app panel resource forms. In Filament 5 `Schema->components([])` wraps content in a 2-column grid; a single Section without `columnSpanFull` occupies only the left half. Fixed in: `CompanyResource`, `AdminUserResource`, `CompanyFeatureFlagResource`, `ModuleCatalogResource`, `PlatformAnnouncementResource`, `UserResource`, `UsersRelationManager`.
+
+**ModuleMarketplace redesign**
+- `app/Filament/App/Pages/ModuleMarketplace.php` — added `getActiveCount()` (excludes core.*), `getMonthlyEstimate()` (price × user count), and reordered SQL to show core domain first.
+- `resources/views/filament/app/pages/module-marketplace.blade.php` — full redesign:
+  - Summary bar: active module count, estimated monthly cost, core platform info card
+  - Domain sections with formatted display names, module count badge, active count badge
+  - Cards color-coded: green border = active, blue border = core, gray = inactive
+  - Status dot (green/blue/gray) in top-right of each card
+  - Module key shown in monospace as subtitle
+  - Core modules show "Included" with check icon — no enable/disable
+  - `wire:loading.attr="disabled"` on buttons for loading state
+  - Empty state with puzzle-piece icon
+
+**GAP-006 closed — 15 new tests (74 → 89)**
+- `tests/Feature/Foundation/CompanyCreationServiceTest.php` — 6 tests: company fields, owner user, role assignment, foundation modules, invite token, transaction rollback
+- `tests/Feature/Filament/ModuleMarketplaceTest.php` — 5 tests: render, enable, disable, cross-tenant isolation, invalid module key
+- `tests/Feature/Filament/CompanySettingsTest.php` — 4 tests: load values, save, slug uniqueness rejection, own-slug allowed
+
+### 89 Tests Pass
+
+`89 passed (156 assertions)` — all Feature and Unit tests green.
+
+---
+
 ## Session — 2026-05-09 (Phase 0 Audit — Bugs, Security, Indexes)
 
 ### Audit Scope
