@@ -60,8 +60,7 @@ class AdminUserResource extends Resource
                     ->revealable()
                     ->required(fn (string $context) => $context === 'create')
                     ->minLength(12)
-                    ->dehydrated(fn (?string $state): bool => filled($state))
-                    ->dehydrateStateUsing(fn (string $state): string => bcrypt($state)),
+                    ->dehydrated(fn (?string $state): bool => filled($state)),
                 Select::make('role')
                     ->options([
                         'super_admin' => 'Super Admin',

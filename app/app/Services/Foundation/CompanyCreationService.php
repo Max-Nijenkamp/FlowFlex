@@ -37,6 +37,7 @@ class CompanyCreationService
                 'name'          => $data->name,
                 'slug'          => $data->slug,
                 'email'         => $data->email,
+                'country'       => $data->country,
                 'status'        => 'trial',
                 'timezone'      => $data->timezone,
                 'locale'        => $data->locale,

@@ -20,6 +20,7 @@ class Company extends Model
         'name',
         'slug',
         'email',
+        'country',
         'status',
         'timezone',
         'locale',

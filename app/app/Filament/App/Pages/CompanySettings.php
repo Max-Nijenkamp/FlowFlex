@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\App\Pages;
 
 use App\Data\Foundation\UpdateCompanyData;
+use App\Models\Company;
 use App\Services\Foundation\CompanyService;
 use App\Support\Services\CompanyContext;
 use Filament\Forms\Components\Select;
@@ -68,7 +69,12 @@ class CompanySettings extends Page
                     TextInput::make('slug')
                         ->required()
                         ->maxLength(100)
-                        ->label('Slug'),
+                        ->label('Slug')
+                        ->unique(
+                            table: Company::class,
+                            column: 'slug',
+                            ignorable: fn () => app(CompanyContext::class)->current(),
+                        ),
                     TextInput::make('email')
                         ->email()
                         ->required()

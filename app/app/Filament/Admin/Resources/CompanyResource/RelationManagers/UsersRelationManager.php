@@ -15,6 +15,7 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Validation\Rules\Unique;
 
 class UsersRelationManager extends RelationManager
 {
@@ -36,14 +37,21 @@ class UsersRelationManager extends RelationManager
                     ->email()
                     ->required()
                     ->maxLength(255)
-                    ->unique(User::class, 'email', ignoreRecord: true),
+                    ->unique(
+                        table: User::class,
+                        column: 'email',
+                        ignoreRecord: true,
+                        modifyRuleUsing: fn (Unique $rule) => $rule->where(
+                            'company_id',
+                            $this->getOwnerRecord()->id,
+                        ),
+                    ),
                 TextInput::make('password')
                     ->password()
                     ->revealable()
                     ->required(fn (string $context) => $context === 'create')
                     ->minLength(8)
-                    ->dehydrated(fn (?string $state): bool => filled($state))
-                    ->dehydrateStateUsing(fn (string $state): string => bcrypt($state)),
+                    ->dehydrated(fn (?string $state): bool => filled($state)),
                 Select::make('status')
                     ->options([
                         'active'      => 'Active',

@@ -8,6 +8,7 @@ use App\Filament\App\Resources\UserResource\Pages\CreateUser;
 use App\Filament\App\Resources\UserResource\Pages\EditUser;
 use App\Filament\App\Resources\UserResource\Pages\ListUsers;
 use App\Models\User;
+use App\Support\Services\CompanyContext;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -19,6 +20,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Validation\Rules\Unique;
 
 class UserResource extends Resource
 {
@@ -60,7 +62,15 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255)
-                    ->unique(User::class, 'email', ignoreRecord: true),
+                    ->unique(
+                        table: User::class,
+                        column: 'email',
+                        ignoreRecord: true,
+                        modifyRuleUsing: fn (Unique $rule) => $rule->where(
+                            'company_id',
+                            app(CompanyContext::class)->current()->id,
+                        ),
+                    ),
                 Select::make('locale')
                     ->options([
                         'en'    => 'English',
@@ -128,7 +138,6 @@ class UserResource extends Resource
                     ->visible(fn (User $record) => $record->status === 'active')
                     ->action(function (User $record): void {
                         $record->update(['status' => 'deactivated']);
-                        $record->delete();
                         Notification::make()
                             ->title('User deactivated')
                             ->success()
