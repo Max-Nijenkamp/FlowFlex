@@ -37,6 +37,7 @@ class WorkspacePanelProvider extends PanelProvider
             ])
             ->maxContentWidth(Width::Full)
             ->sidebarCollapsibleOnDesktop()
+            ->viteTheme('resources/css/filament/app/theme.css')
             ->navigationGroups([
                 NavigationGroup::make('Settings'),
             ])

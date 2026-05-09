@@ -6,7 +6,12 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/js/app.js', 'resources/css/app.css'],
+            input: [
+                'resources/js/app.js',
+                'resources/css/app.css',
+                'resources/css/filament/app/theme.css',
+                'resources/css/filament/admin/theme.css',
+            ],
             refresh: true,
         }),
         vue({
