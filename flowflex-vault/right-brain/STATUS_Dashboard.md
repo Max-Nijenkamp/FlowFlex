@@ -100,6 +100,7 @@ pie title Module Distribution by Phase Group (311 total)
 
 | Date | Module | Outcome |
 |---|---|---|
+| 2026-05-09 | Test DB Isolation (root fix) | Fixed: Tests wiping live DB. Root cause: PHPUnit force=true sets $_ENV but not $_SERVER; Docker $_SERVER['DB_DATABASE']=flowflex persisted; Laravel Dotenv reads $_SERVER first. Fix: override createApplication() to sync $_ENV→$_SERVER before bootstrap. 74/74 pass, live DB preserved. |
 | 2026-05-09 | Panel Styling + Test DB Isolation | Fixed: Filament layout (maxContentWidth Full, sidebarCollapsibleOnDesktop), nav groups (Team group added, Settings group in app panel), phpunit.xml force=true for SQLite override of Docker pgsql env. Root cause of test failures: config:cache bakes pgsql into static file, blocking phpunit env overrides — fix: config:clear before tests. 74/74 pass. |
 | 2026-05-09 | Phase 0 — Testing Standards + Bug Fixes | Built: 74 Pest tests (auth, guard isolation, multi-tenancy, Filament panels, seeders). Fixed: company scope data leak in Filament (SetCompanyContext not in authMiddleware), last_login_at Carbon parse error, Inertia::share unconditional call. Phase 0 complete. |
 | 2026-05-09 | Phase 0 — Docker + Monitoring + Local Seeders | Built: Dockerfile (PHP 8.4 FPM), docker-compose.yml (nginx, postgres:17, redis:8, mailpit, horizon, reverb), Horizon/Pulse/Telescope admin panel nav links + access gates, LocalAdminSeeder (test@test.nl/test1234), LocalCompanySeeder (FlowFlex Demo + test@test.nl/test1234). All seeders pass. |

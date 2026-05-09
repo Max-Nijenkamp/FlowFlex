@@ -74,6 +74,38 @@ Auth config in `config/auth.php` has `admins` provider pointing to `Admin::class
 
 ---
 
+## Session — 2026-05-09 (Test DB Isolation — Root Cause Fixed)
+
+### Changes Made
+
+**tests/TestCase.php**
+- Overrode `createApplication()` to sync `$_ENV → $_SERVER` before calling `bootstrap()`
+- Root cause: PHPUnit `<env force="true">` sets `$_ENV` and calls `putenv()` but does NOT update `$_SERVER`. Laravel's Dotenv repository uses `$_SERVER` as the primary reader. Docker process-level env `$_SERVER['DB_DATABASE'] = 'flowflex'` persisted even after PHPUnit forced `$_ENV['DB_DATABASE'] = 'flowflex_testing'`, causing `RefreshDatabase` to run `migrate:fresh` against the live database.
+- Fix: loop `$_ENV` and set each key in `$_SERVER` before bootstrapping — this ensures `flowflex_testing` wins in the repository reader chain
+- After fix: 74/74 tests pass, live `flowflex` DB is untouched (2 admins + 1 user preserved)
+
+**phpunit.xml**
+- `DB_DATABASE=flowflex_testing force="true"` retained
+- `DB_URL` cleared with `force="true"` to prevent any URL-based connection override
+
+**.env.testing**
+- Points to `flowflex_testing` PostgreSQL database (separate from live `flowflex`)
+- All monitoring disabled (`PULSE_ENABLED=false`, `TELESCOPE_ENABLED=false`, `NIGHTWATCH_ENABLED=false`)
+
+### Investigation Path
+
+1. Confirmed `flowflex_testing` database exists and `phpunit.xml` has `force="true"`
+2. Manual PHP test: `putenv` + `$_ENV` set correctly — but `env('DB_DATABASE')` still returned `flowflex`
+3. Added `$_SERVER` to the test → `env('DB_DATABASE')` returned `flowflex_testing` ✅
+4. Root cause confirmed: Laravel Dotenv repository reads `$_SERVER` first; Docker process env lives there
+
+### Verified
+
+- `74 passed (113 assertions)` — all tests green
+- Live DB after test run: 2 admins, 1 user, companies intact
+
+---
+
 ## Session — 2026-05-09 (Panel Styling + Layout Fixes)
 
 ### Changes Made
