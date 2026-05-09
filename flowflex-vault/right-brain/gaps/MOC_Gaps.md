@@ -16,6 +16,10 @@ Discovered during the build. Links the real work back to the spec.
 | ID | Gap | Severity | Category | Module | Discovered | File |
 |---|---|---|---|---|---|---|
 | GAP-002 (fixed) | Company scope not applied in Filament panel — data leak | critical | architecture | testing-standards | 2026-05-09 | [[gap_company-scope-filament-middleware]] |
+| GAP-003 | CompanyContext singleton leaks across Horizon worker jobs | high | architecture | admin-panel-flowflex | 2026-05-09 | [[gap_company-context-queue-singleton]] |
+| GAP-004 | Invite tokens stored only in Redis cache — cache flush = permanent lockout | medium | architecture | admin-panel-flowflex | 2026-05-09 | [[gap_invite-token-cache-only]] |
+| GAP-005 | PlatformAnnouncement "Send" action is a stub — dispatches nothing | medium | feature | admin-panel-flowflex | 2026-05-09 | [[gap_announcement-send-stub]] |
+| GAP-006 | Missing tests for CompanyCreationService, ModuleMarketplace, CompanySettings | medium | spec | admin-panel-flowflex | 2026-05-09 | [[gap_missing-critical-path-tests]] |
 
 ---
 

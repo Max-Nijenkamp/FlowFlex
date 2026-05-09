@@ -74,6 +74,54 @@ Auth config in `config/auth.php` has `admins` provider pointing to `Admin::class
 
 ---
 
+## Session — 2026-05-09 (Phase 0 Audit — Bugs, Security, Indexes)
+
+### Audit Scope
+
+Full Phase 0 audit run by `analyst` subagent — checked all 5 modules for completeness, security, bugs, and scalability.
+
+### Bugs Fixed
+
+**UserResource deactivate double-fire (HIGH)**
+- `app/Filament/App/Resources/UserResource.php` — action called `$record->update(['status' => 'deactivated'])` AND `$record->delete()` simultaneously. Deactivated users became invisible in the UI (soft-deleted AND status-changed). Removed `$record->delete()` — status-only deactivation is the correct behaviour.
+
+**country field silently dropped (MEDIUM)**
+- `app/Filament/Admin/Resources/CompanyResource.php` — form had `TextInput::make('country')` and `CreateCompanyData` had `$country` DTO field, but no `country` column existed in the `companies` table and the model had no `country` in `$fillable`. CompanyCreationService also didn't write it. Fix: new migration `000008_add_country_to_companies_table.php` adds `country` nullable string column, model `$fillable` updated, `CompanyCreationService` now writes `$data->country`.
+
+**AdminFactory default role invalid (MEDIUM)**
+- `database/factories/AdminFactory.php` — default role was `'admin'` which is not a valid enum value (valid: `super_admin`, `support`, `billing`, `developer`). Factory-created admins without `->superAdmin()` state had a non-existent role. Changed default to `'support'`.
+
+### Security Fixes
+
+**Email uniqueness not company-scoped (MEDIUM)**
+- `app/Filament/App/Resources/UserResource.php:63` and `UsersRelationManager.php:39` — both used `->unique(User::class, 'email', ignoreRecord: true)` which checked email uniqueness globally across all companies. The DB unique constraint is `(company_id, email)` — same email can legitimately exist in different companies. Fixed with `modifyRuleUsing: fn (Unique $rule) => $rule->where('company_id', ...)` scoped to the current company.
+
+**CompanySettings slug missing uniqueness validation (MEDIUM)**
+- `app/Filament/App/Pages/CompanySettings.php:68` — tenants could set their slug to match another company's, causing routing ambiguity. Added `->unique(Company::class, 'slug', ignorable: fn () => app(CompanyContext::class)->current())`.
+
+**bcrypt redundancy removed (LOW)**
+- `AdminUserResource.php` and `UsersRelationManager.php` — `dehydrateStateUsing(fn ($s) => bcrypt($s))` was pre-hashing passwords before the `'password' => 'hashed'` model cast. The `hashed` cast uses `Hash::isHashed()` and skips re-hashing already-hashed values, so no double-hash occurred, but `bcrypt()` was bypassing the app-configured round count. Removed `dehydrateStateUsing` — the model cast now handles hashing exclusively.
+
+### Performance Indexes Added (migration 000009)
+
+- `companies.status` — used in `SetCompanyContext` middleware and admin table filter
+- `company_module_subscriptions.status` — used in `activeModuleKeys()` called on every app page load
+- `module_catalog.domain` — used in `ModuleMarketplace::getModules()` orderBy
+- `module_catalog.is_active` — used in WHERE clause of `ModuleMarketplace::getModules()`
+
+### Gaps Discovered
+
+- [[gap_company-context-queue-singleton]] (severity: high) — CompanyContext singleton leaks state across Horizon worker jobs
+- [[gap_invite-token-cache-only]] (severity: medium) — Invite tokens only in Redis cache; cache flush = permanent lockout
+- [[gap_announcement-send-stub]] (severity: medium) — PlatformAnnouncement "Send" action marks sent_at but dispatches nothing
+- [[gap_missing-critical-path-tests]] (severity: medium) — No tests for CompanyCreationService, ModuleMarketplace, CompanySettings
+
+### All 74 Tests Pass
+
+After all fixes: `74 passed (113 assertions)` — all Feature and Unit tests green. Live DB untouched.
+
+---
+
 ## Session — 2026-05-09 (Test DB Isolation — Root Cause Fixed)
 
 ### Changes Made
