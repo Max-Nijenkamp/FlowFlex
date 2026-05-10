@@ -1,0 +1,14 @@
+{
+  "id": "session-1778345995241",
+  "startedAt": "2026-05-09T16:59:55.241Z",
+  "cwd": "/Users/maxnijenkamp/Documents/FlowFlex/app",
+  "context": {},
+  "metrics": {
+    "edits": 59,
+    "commands": 0,
+    "tasks": 0,
+    "errors": 0
+  },
+  "endedAt": "2026-05-10T17:07:13.889Z",
+  "duration": 86838654
+}

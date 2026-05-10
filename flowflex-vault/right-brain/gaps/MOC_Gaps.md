@@ -15,6 +15,18 @@ Discovered during the build. Links the real work back to the spec.
 
 | ID | Gap | Severity | Category | Module | Discovered | File |
 |---|---|---|---|---|---|---|
+| GAP-010 (partial) | Core Platform Phase 1 — missing Filament UI (4 of 6 resolved; DataImport + Sandbox UI still needed) | medium | feature | core-platform-phase1 | 2026-05-10 | [[gap_core-platform-missing-filament-ui]] |
+| GAP-015 | DataImportEngine — no Filament UI, no CSV parsing, no background import job | medium | feature | data-import-engine | 2026-05-10 | [[gap_data-import-no-ui]] |
+| GAP-016 | Sandbox — no provisioning logic, no clone/reset, no subdomain routing | medium | feature | sandbox-environment | 2026-05-10 | [[gap_sandbox-no-provisioning]] |
+
+## Resolved Gaps (Phase 1 audit 2026-05-10)
+
+| ID | Gap | Severity | Resolution | Date |
+|---|---|---|---|---|
+| GAP-011 ✅ | BelongsToCompany missing on BillingSubscription, Sandbox, SetupWizardProgress — data leak | high | Trait added to all 3 models; BillingService methods use withoutGlobalScopes() | 2026-05-10 |
+| GAP-012 ✅ | NotificationLog model used table `notification_logs` but migration created `notification_log` | high | `protected $table = 'notification_log'` added | 2026-05-10 |
+| GAP-013 ✅ | DataImportService row numbers reset to 1 for every chunk of 100 | medium | Running $offset counter fixed sequential numbering across chunks | 2026-05-10 |
+| GAP-014 ✅ | ActivityLogResource allowed edit/delete on immutable audit records | high | canEdit(), canDelete(), canDeleteAny() all return false | 2026-05-10 |
 | GAP-002 (fixed) | Company scope not applied in Filament panel — data leak | critical | architecture | testing-standards | 2026-05-09 | [[gap_company-scope-filament-middleware]] |
 | GAP-006 (fixed) | Missing tests for CompanyCreationService, ModuleMarketplace, CompanySettings | medium | spec | admin-panel-flowflex | 2026-05-09 | [[gap_missing-critical-path-tests]] |
 

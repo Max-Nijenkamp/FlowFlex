@@ -61,4 +61,15 @@ describe('Local Seeders', function () {
         expect(Company::where('slug', 'flowflex-demo')->count())->toBe(1);
         expect(User::withoutGlobalScopes()->where('email', 'test@test.nl')->count())->toBe(1);
     });
+
+    it('local company seeder grants owner all permissions', function () {
+        $this->seed(LocalCompanySeeder::class);
+
+        $user = User::withoutGlobalScopes()->where('email', 'test@test.nl')->first();
+        $company = Company::where('slug', 'flowflex-demo')->first();
+
+        setPermissionsTeamId($company->id);
+
+        expect($user->getAllPermissions())->toHaveCount(47);
+    });
 });

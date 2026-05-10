@@ -9,16 +9,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Company extends Model
 {
     use HasFactory;
     use HasUlids;
+    use LogsActivity;
     use SoftDeletes;
 
     protected $fillable = [
         'name',
         'slug',
+        'logo_path',
+        'favicon_path',
+        'primary_color',
         'email',
         'country',
         'status',
@@ -77,5 +83,14 @@ class Company extends Model
     public function isSuspended(): bool
     {
         return $this->status === 'suspended';
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name', 'slug', 'email', 'status', 'timezone', 'locale', 'currency'])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges()
+            ->useLogName('companies');
     }
 }

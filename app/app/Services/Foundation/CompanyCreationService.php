@@ -12,6 +12,7 @@ use App\Models\CompanyModuleSubscription;
 use App\Models\ModuleCatalog;
 use App\Models\User;
 use App\Models\UserInvitation;
+use App\Services\Core\BillingService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
@@ -30,9 +31,11 @@ class CompanyCreationService
         'core.rbac',
     ];
 
+    public function __construct(private readonly BillingService $billingService) {}
+
     public function create(CreateCompanyData $data): Company
     {
-        return DB::transaction(function () use ($data): Company {
+        $company = DB::transaction(function () use ($data): Company {
             // 1. Create the company
             $company = Company::withoutGlobalScopes()->create([
                 'name'          => $data->name,
@@ -97,6 +100,16 @@ class CompanyCreationService
 
             return $company;
         });
+
+        // 11. Create Stripe customer outside transaction to avoid holding the DB connection
+        //     during an HTTP call. Swallow RuntimeException when Stripe is not configured.
+        try {
+            $this->billingService->ensureStripeCustomer($company);
+        } catch (\RuntimeException) {
+            // Stripe not configured — silently skip
+        }
+
+        return $company;
     }
 
     private function activateFoundationModules(Company $company): void

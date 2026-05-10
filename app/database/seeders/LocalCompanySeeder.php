@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class LocalCompanySeeder extends Seeder
@@ -31,6 +32,8 @@ class LocalCompanySeeder extends Seeder
         $ownerRole = Role::firstOrCreate(
             ['name' => 'owner', 'guard_name' => 'web', 'team_id' => $company->id],
         );
+
+        $ownerRole->syncPermissions(Permission::all());
 
         $user = User::firstOrCreate(
             ['email' => 'test@test.nl'],

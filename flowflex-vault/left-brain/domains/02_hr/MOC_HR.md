@@ -5,7 +5,8 @@ panel: hr
 cssclasses: domain-hr
 phase: 2
 color: "#7C3AED"
-last_updated: 2026-05-08
+last_updated: 2026-05-10
+right_brain_log: "[[hr-panel-scaffold]]"
 ---
 
 # HR & People — Map of Content

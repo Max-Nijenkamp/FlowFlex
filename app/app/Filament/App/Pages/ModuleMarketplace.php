@@ -35,6 +35,12 @@ class ModuleMarketplace extends Page
         return 20;
     }
 
+    public static function canAccess(): bool
+    {
+        return auth()->check()
+            && auth()->user()->checkPermissionTo('core.modules.manage');
+    }
+
     public function getTitle(): string
     {
         return 'Module Marketplace';
@@ -128,9 +134,8 @@ class ModuleMarketplace extends Page
 
     public function canManageModules(): bool
     {
-        $user = auth()->user();
-
-        return $user && $user->hasRole('owner');
+        return auth()->check()
+            && auth()->user()->checkPermissionTo('core.modules.manage');
     }
 
     private function refreshActiveKeys(): void

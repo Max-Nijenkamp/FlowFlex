@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Support\Services\CompanyContext;
 use Filament\Facades\Filament;
 use Livewire\Livewire;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 describe('Company Settings', function () {
@@ -29,6 +30,11 @@ describe('Company Settings', function () {
 
         setPermissionsTeamId($this->company->id);
         $ownerRole = Role::firstOrCreate(['name' => 'owner', 'guard_name' => 'web']);
+        $permission = Permission::firstOrCreate([
+            'name'       => 'core.company.settings.manage',
+            'guard_name' => 'web',
+        ]);
+        $ownerRole->givePermissionTo($permission);
         $this->user->assignRole($ownerRole);
 
         app(CompanyContext::class)->set($this->company);

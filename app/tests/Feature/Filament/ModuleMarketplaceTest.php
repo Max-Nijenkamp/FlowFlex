@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Support\Services\CompanyContext;
 use Filament\Facades\Filament;
 use Livewire\Livewire;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 describe('Module Marketplace', function () {
@@ -22,6 +23,11 @@ describe('Module Marketplace', function () {
 
         setPermissionsTeamId($this->company->id);
         $ownerRole = Role::firstOrCreate(['name' => 'owner', 'guard_name' => 'web']);
+        $permission = Permission::firstOrCreate([
+            'name'       => 'core.modules.manage',
+            'guard_name' => 'web',
+        ]);
+        $ownerRole->givePermissionTo($permission);
         $this->user->assignRole($ownerRole);
 
         app(CompanyContext::class)->set($this->company);

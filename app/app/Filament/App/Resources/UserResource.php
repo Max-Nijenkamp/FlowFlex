@@ -130,6 +130,28 @@ class UserResource extends Resource
             ])
             ->actions([
                 EditAction::make(),
+                Action::make('resend_invite')
+                    ->label('Resend invite')
+                    ->icon('heroicon-o-envelope')
+                    ->visible(fn (User $record) => $record->status === 'invited')
+                    ->requiresConfirmation()
+                    ->action(function (User $record): void {
+                        $token = \Illuminate\Support\Str::random(64);
+                        \App\Models\UserInvitation::updateOrCreate(
+                            ['user_id' => $record->id],
+                            [
+                                'company_id'  => $record->company_id,
+                                'token'       => $token,
+                                'expires_at'  => now()->addDays(7),
+                                'accepted_at' => null,
+                            ]
+                        );
+                        event(new \App\Events\Foundation\UserInvited($record, $record->company, $token));
+                        Notification::make()
+                            ->title('Invite resent')
+                            ->success()
+                            ->send();
+                    }),
                 Action::make('deactivate')
                     ->label('Deactivate')
                     ->icon('heroicon-o-no-symbol')

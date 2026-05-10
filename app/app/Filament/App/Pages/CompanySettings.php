@@ -8,6 +8,8 @@ use App\Data\Foundation\UpdateCompanyData;
 use App\Models\Company;
 use App\Services\Foundation\CompanyService;
 use App\Support\Services\CompanyContext;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
@@ -40,9 +42,8 @@ class CompanySettings extends Page
 
     public static function canAccess(): bool
     {
-        $user = auth()->user();
-
-        return $user && $user->hasRole('owner');
+        return auth()->check()
+            && auth()->user()->checkPermissionTo('core.company.settings.manage');
     }
 
     public function getView(): string
@@ -55,12 +56,15 @@ class CompanySettings extends Page
         $company = app(CompanyContext::class)->current();
 
         $this->form->fill([
-            'name'     => $company->name,
-            'slug'     => $company->slug,
-            'email'    => $company->email,
-            'timezone' => $company->timezone,
-            'locale'   => $company->locale,
-            'currency' => $company->currency,
+            'name'          => $company->name,
+            'slug'          => $company->slug,
+            'email'         => $company->email,
+            'timezone'      => $company->timezone,
+            'locale'        => $company->locale,
+            'currency'      => $company->currency,
+            'logo_path'     => $company->logo_path ?? null,
+            'favicon_path'  => $company->favicon_path ?? null,
+            'primary_color' => $company->primary_color ?? null,
         ]);
     }
 
@@ -116,6 +120,20 @@ class CompanySettings extends Page
                         ])
                         ->required(),
                 ])->columns(3),
+                \Filament\Schemas\Components\Section::make('Branding')->components([
+                    FileUpload::make('logo_path')
+                        ->label('Logo')
+                        ->image()
+                        ->directory('company-assets')
+                        ->visibility('public'),
+                    FileUpload::make('favicon_path')
+                        ->label('Favicon')
+                        ->image()
+                        ->directory('company-assets')
+                        ->visibility('public'),
+                    ColorPicker::make('primary_color')
+                        ->label('Primary colour'),
+                ])->columns(3),
             ])
             ->statePath('data');
     }
@@ -135,6 +153,15 @@ class CompanySettings extends Page
             locale:   $data['locale'],
             currency: $data['currency'],
         );
+
+        // Persist branding fields directly (logo_path, favicon_path, primary_color
+        // require migration 010011_add_branding_to_companies.php)
+        $company = app(CompanyContext::class)->current();
+        $company->fill([
+            'logo_path'     => $data['logo_path'] ?? null,
+            'favicon_path'  => $data['favicon_path'] ?? null,
+            'primary_color' => $data['primary_color'] ?? null,
+        ])->save();
 
         app(CompanyService::class)->update($company->id, $updateData);
 

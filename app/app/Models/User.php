@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -19,6 +21,7 @@ class User extends Authenticatable
     use HasFactory;
     use HasRoles;
     use HasUlids;
+    use LogsActivity;
     use Notifiable;
     use SoftDeletes;
 
@@ -76,5 +79,14 @@ class User extends Authenticatable
     public function isDeactivated(): bool
     {
         return $this->status === 'deactivated';
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['first_name', 'last_name', 'email', 'status', 'locale', 'timezone'])
+            ->logOnlyDirty()
+            ->dontLogEmptyChanges()
+            ->useLogName('users');
     }
 }

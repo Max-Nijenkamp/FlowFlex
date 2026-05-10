@@ -2,7 +2,7 @@
 type: right-brain
 section: status
 color: "#F97316"
-last_updated: 2026-05-09
+last_updated: 2026-05-10
 ---
 
 # STATUS Dashboard
@@ -30,8 +30,8 @@ pie title Module Distribution by Phase Group (311 total)
 | Domain | Phase | Built | Total | Progress |
 |---|---|---|---|---|
 | Foundation | 0 | 5 | 5 | ✅ 100% |
-| Core Platform | 1 | 0 | 12 | 📅 0% |
-| HR & People | 2–8 | 0 | 21 | 📅 0% |
+| Core Platform | 1 | ✅ 12 | 12 | ✅ 100% |
+| HR & People | 2–8 | 🔄 0 | 21 | 🔄 Panel ready |
 | Projects & Work | 2/8 | 0 | 13 | 📅 0% |
 | Finance & Accounting | 3/6 | 0 | 23 | 📅 0% |
 | CRM & Sales | 3/8 | 0 | 22 | 📅 0% |
@@ -62,7 +62,7 @@ pie title Module Distribution by Phase Group (311 total)
 | Pricing Management | 4 | 0 | 5 | 📅 0% |
 | Enterprise Risk Management | 5 | 0 | 6 | 📅 0% |
 
-**Total: 5 / 313 modules planned (2%) — Phase 0 Foundation complete** (Foundation: 5/5 ✅)
+**Total: 17 / 313 modules planned (5%) — Phase 0 + Phase 1 complete** (Foundation: 5/5 ✅ · Core Platform: 12/12 ✅ · 2 backlog items: DataImport Filament UI + Sandbox provisioning — deferred to Phase 2 implementation tasks)
 
 ---
 
@@ -89,6 +89,7 @@ pie title Module Distribution by Phase Group (311 total)
 
 ## Active Builder Logs
 
+- [[core-platform-phase1]] — Phase 1 Core Platform in progress 2026-05-10. 8/12 modules: data layer complete (migrations, models, services for audit log, notifications, setup wizard, data import, API clients, sandboxes, billing, i18n). Missing: full Filament UI for most modules.
 - [[builder-log-project-scaffolding]] — Phase 0 Foundation built 2026-05-09. Laravel 13 + Filament 5 v5.6.2, both panels registered, all migrations run, seeders pass.
 - [[builder-log-docker-local-environment]] — Phase 0 Docker + monitoring built 2026-05-09. docker-compose (postgres:17, redis:8, mailpit, horizon, reverb), Horizon/Pulse/Telescope gates, local seeders.
 - [[testing-standards]] — Phase 0 test suite complete 2026-05-09. 74 tests, 113 assertions, 0 failures. Critical bugs fixed: company scope data leak, last_login_at Carbon parse error.
@@ -100,6 +101,12 @@ pie title Module Distribution by Phase Group (311 total)
 
 | Date | Module | Outcome |
 |---|---|---|
+| 2026-05-10 | HR panel scaffold | HrPanelProvider at `/hr`, Violet theme built, 17 HR permissions added (total 47), HrPanelTest. 175 tests pass. Phase 2 module development ready. |
+| 2026-05-10 | Phase 1 final fix + test coverage pass | 3 bugs fixed (NotificationQuietHours null crash, EnforceModuleAccess not aborting, PermissionSeeder only syncing first owner role). 27 new tests added. 171 tests pass, 0 failures. Brain sync complete. Phase 0+1 ✅. |
+| 2026-05-10 | Phase 1 completion sprint — all 12 modules built | 3 parallel agents: (1) PermissionSeeder, Stripe webhook, events wiring, EnforceModuleAccess, 5 bug fixes, 4 migrations, SoftDeletes on 7 models; (2) SetLocale in panels, CompanySettings branding, ApiClientResource, BillingResource, NotificationPreferencesPage, AdminStatsWidget, ResendInvite action; (3) 8 left-brain spec files. 144 tests pass. Phase 2 ready. |
+| 2026-05-10 | Phase 0+1 full audit — 10 bugs fixed, 16 factories created | Fixed: BelongsToCompany missing on 3 models (data leak), NotificationLog wrong table name (runtime crash), DataImportService row numbering bug, ActivityLogResource editable audit records (security). Added 16 factories, 10 new tests. 144 tests pass. |
+| 2026-05-10 | Setup Wizard UI redesign | Redesigned setup-wizard.blade.php: step progress bar with rings + connectors, gradient icon header, shortcut cards, done state. Added `getStepConfig()` to page class. Vite rebuild required to pick up new Tailwind classes. 134 tests still pass. |
+| 2026-05-10 | Phase 1 Core Platform — data layer | 8/12 modules built: migrations 010001–010006 + activitylog + medialibrary. Models, services, middleware, i18n for audit log, notifications, setup wizard, data import, API clients, sandboxes, billing, locale. Invite flow wired. 134 tests pass. Missing: Filament UI for most modules. |
 | 2026-05-09 | GAP-007/008/009 resolved — Phase 0 fully clean, 0 open gaps | GAP-007: `CompanySettings::canAccess()` + `abort_unless(canManageModules(), 403)` in ModuleMarketplace; blade hides Enable/Disable for non-owners; 2 auth tests added. GAP-008: `RoleResource` has `DeleteAction` — hidden for `owner` role; blocks delete if users still assigned. GAP-009: migration 000013 indexes `sent_at`, `target`, `created_by` on `platform_announcements`. 91 tests pass (161 assertions). |
 | 2026-05-09 | Phase 0 audit #2 — 4 bugs fixed, 3 gaps logged | Fixed: (1) PlatformAnnouncementResource `created_by` FK null violation — added `mutateFormDataBeforeCreate`. (2) Missing `notifications` table (migration 000011) — needed by `DispatchAnnouncementJob` database channel. (3) `company_feature_flags` NULL uniqueness bug in PostgreSQL — partial unique index on `(flag) WHERE company_id IS NULL` (migration 000012). (4) `DispatchAnnouncementJob` OOM — replaced `->get()` with `->chunk(200)`. Logged: GAP-007 (module/settings auth), GAP-008 (role delete), GAP-009 (announcement indexes). 89 tests pass. |
 | 2026-05-09 | GAP-003/004/005 resolved — all Phase 0 gaps closed | GAP-003: `WithCompanyContext` job middleware (sets+clears CompanyContext + setPermissionsTeamId in finally). GAP-004: `user_invitations` table (migration 000010, ULID PK, token unique indexed, expires_at); `CompanyCreationService` now persists to DB instead of Redis cache; test updated to assert DB row. GAP-005: `PlatformAnnouncementSent` event, `DispatchAnnouncementJob` (ShouldQueue, 3 tries), `PlatformAnnouncementNotification` (database channel), resource send action now dispatches job + fires event. 89 tests pass (159 assertions). |

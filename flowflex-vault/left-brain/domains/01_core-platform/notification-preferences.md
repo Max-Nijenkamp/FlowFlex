@@ -1,12 +1,13 @@
 ---
 type: module
 domain: Core Platform
-panel: core
+panel: app
 cssclasses: domain-core
 phase: 1
-status: planned
-migration_range: 000000–099999
-last_updated: 2026-05-09
+status: in-progress
+migration_range: 010001–019999
+last_updated: 2026-05-10
+right_brain_log: "[[builder-log-core-platform-phase1]]"
 ---
 
 # Notification Preferences
