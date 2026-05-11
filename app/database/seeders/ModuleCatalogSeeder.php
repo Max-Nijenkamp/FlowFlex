@@ -43,6 +43,7 @@ class ModuleCatalogSeeder extends Seeder
             ['module_key' => 'hr.expenses',         'domain' => 'hr',      'name' => 'Employee Expenses',          'per_user_monthly_price' => 1.00, 'is_active' => false],
             ['module_key' => 'hr.documents',        'domain' => 'hr',      'name' => 'HR Documents',               'per_user_monthly_price' => 0.75, 'is_active' => false],
             ['module_key' => 'hr.benefits',         'domain' => 'hr',      'name' => 'Benefits Administration',    'per_user_monthly_price' => 1.00, 'is_active' => false],
+            ['module_key' => 'hr.analytics',        'domain' => 'hr',      'name' => 'HR Analytics',                'per_user_monthly_price' => 1.50, 'is_active' => false],
 
             // ── Projects & Work ───────────────────────────────────────────
             ['module_key' => 'projects.tasks',      'domain' => 'projects', 'name' => 'Tasks & To-Dos',            'per_user_monthly_price' => 1.00, 'is_active' => false],
@@ -51,6 +52,7 @@ class ModuleCatalogSeeder extends Seeder
             ['module_key' => 'projects.sprints',    'domain' => 'projects', 'name' => 'Sprints & Agile',           'per_user_monthly_price' => 1.50, 'is_active' => false],
             ['module_key' => 'projects.resources',  'domain' => 'projects', 'name' => 'Resource Planning',         'per_user_monthly_price' => 1.50, 'is_active' => false],
             ['module_key' => 'projects.milestones', 'domain' => 'projects', 'name' => 'Milestones & Goals',        'per_user_monthly_price' => 1.00, 'is_active' => false],
+            ['module_key' => 'projects.time',       'domain' => 'projects', 'name' => 'Time Tracking',              'per_user_monthly_price' => 1.00, 'is_active' => false],
 
             // ── Finance & Accounting ──────────────────────────────────────
             ['module_key' => 'finance.invoicing',   'domain' => 'finance',  'name' => 'Invoicing',                 'per_user_monthly_price' => 2.00, 'is_active' => false],

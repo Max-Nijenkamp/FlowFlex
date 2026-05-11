@@ -2,7 +2,7 @@
 type: moc
 section: right-brain/gaps
 color: "#F97316"
-last_updated: 2026-05-09
+last_updated: 2026-05-10
 ---
 
 # Gaps — Missing Features & Tech Debt
@@ -18,6 +18,24 @@ Discovered during the build. Links the real work back to the spec.
 | GAP-010 (partial) | Core Platform Phase 1 — missing Filament UI (4 of 6 resolved; DataImport + Sandbox UI still needed) | medium | feature | core-platform-phase1 | 2026-05-10 | [[gap_core-platform-missing-filament-ui]] |
 | GAP-015 | DataImportEngine — no Filament UI, no CSV parsing, no background import job | medium | feature | data-import-engine | 2026-05-10 | [[gap_data-import-no-ui]] |
 | GAP-016 | Sandbox — no provisioning logic, no clone/reset, no subdomain routing | medium | feature | sandbox-environment | 2026-05-10 | [[gap_sandbox-no-provisioning]] |
+
+## Resolved Gaps (Phase 0–2 security audit 2026-05-11)
+
+| ID | Gap | Severity | Resolution | Date |
+|---|---|---|---|---|
+| GAP-019 ✅ | Projects resources + EmployeeResource: 10 unscoped dropdown queries leak cross-tenant data | high | All 10 `Model::query()->pluck()` calls replaced with `withoutGlobalScopes()->where('company_id',...)` pattern. 7 files fixed. | 2026-05-11 |
+
+## Resolved Gaps (Phase 2 Projects build 2026-05-10)
+
+| ID | Gap | Severity | Resolution | Date |
+|---|---|---|---|---|
+| GAP-018 ✅ | BelongsToMany pivot table with ULID id column fails on insert — Eloquent never populates it | medium | Removed id column from sprint_tasks; composite PK ['sprint_id','task_id'] used. ADR logged. | 2026-05-10 |
+
+## Resolved Gaps (Phase 2 HR build 2026-05-10)
+
+| ID | Gap | Severity | Resolution | Date |
+|---|---|---|---|---|
+| GAP-017 ✅ | PostgreSQL self-referential FK fails inside Schema::create — no unique constraint error | medium | Moved FK to separate Schema::table block after create; pattern documented as ADR | 2026-05-10 |
 
 ## Resolved Gaps (Phase 1 audit 2026-05-10)
 

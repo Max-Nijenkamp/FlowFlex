@@ -15,6 +15,9 @@ Major decisions made during the build. When the spec changes from the original L
 
 | Date | Decision | Impact | File |
 |---|---|---|---|
+| 2026-05-10 | Domain migrations use YYYY-MM-DD_NNNNNN_ prefix to sort after permission tables | Phase 2+ domain migrations date-prefixed (e.g. 2026_05_10_100001_*) so they run after spatie permissions table. Foundation/Phase 1 (000xxx/010xxx) exempt. | [[decision-2026-05-10-migration-naming-convention]] |
+| 2026-05-10 | Eloquent BelongsToMany pivot tables must use composite PK — no ULID id column | Pivot inserts bypass Eloquent model lifecycle; ULID id stays NULL, causing NOT NULL violation. Composite PK is the standard pattern. | [[decision-2026-05-10-pivot-composite-pk]] |
+| 2026-05-10 | PostgreSQL self-referential FK must use separate Schema::table block after Schema::create | All future migrations with self-referential FKs must follow this two-step pattern to avoid "no unique constraint" error. | [[decision-2026-05-10-postgresql-self-referential-fk]] |
 | 2026-05-10 | PermissionSeeder uses idempotent firstOrCreate, owner role synced in 3 places | Deploy-time seeder + CompanyCreated listener + LocalCompanySeeder ensures all owner roles always have full permissions. | [[decision-2026-05-10-permission-seeder-pattern]] |
 | 2026-05-10 | Stripe webhook verifies signature only when STRIPE_WEBHOOK_SECRET is configured | Graceful local dev (no secret needed), strict in production. Risk mitigated by env validation on deploy. | [[decision-2026-05-10-stripe-webhook-pattern]] |
 | 2026-05-10 | Phase 2 module access enforced via `canAccess()` + `module.access` middleware alias | Each Phase 2 Filament resource declares its module key in `canAccess()`. No NavigationRegistry needed. | [[decision-2026-05-10-module-access-middleware-pattern]] |

@@ -70,6 +70,6 @@ describe('Local Seeders', function () {
 
         setPermissionsTeamId($company->id);
 
-        expect($user->getAllPermissions())->toHaveCount(47);
+        expect($user->getAllPermissions())->toHaveCount(69);
     });
 });

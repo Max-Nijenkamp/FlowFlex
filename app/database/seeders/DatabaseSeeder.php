@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             $this->call([
                 LocalAdminSeeder::class,
                 LocalCompanySeeder::class,
+                LocalDemoDataSeeder::class,
             ]);
         }
     }

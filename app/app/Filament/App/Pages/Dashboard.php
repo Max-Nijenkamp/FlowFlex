@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Pages;
 
+use App\Filament\App\Widgets\CompanyOverviewWidget;
 use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
@@ -32,6 +33,13 @@ class Dashboard extends BaseDashboard
 
     public function getWidgets(): array
     {
-        return [];
+        return [
+            CompanyOverviewWidget::class,
+        ];
+    }
+
+    public function getColumns(): array|int
+    {
+        return 3;
     }
 }

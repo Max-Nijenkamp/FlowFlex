@@ -39,6 +39,7 @@ class WorkspacePanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->viteTheme('resources/css/filament/app/theme.css')
             ->navigationGroups([
+                NavigationGroup::make('Tools'),
                 NavigationGroup::make('Settings'),
             ])
             ->discoverResources(

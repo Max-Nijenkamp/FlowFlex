@@ -97,7 +97,12 @@
       "Bash(docker exec flowflex_postgres *)",
       "Bash(docker cp *)",
       "Bash(./vendor/bin/pest --stop-on-failure)",
-      "Bash(./vendor/bin/pest *)"
+      "Bash(./vendor/bin/pest *)",
+      "Bash(TELESCOPE_ENABLED=false php artisan test tests/Feature/Filament/ProjectsResourcesTest.php --no-coverage)",
+      "Bash(DB_CONNECTION=sqlite DB_DATABASE=\":memory:\" php artisan test tests/Feature/Filament/ProjectsResourcesTest.php --no-coverage)",
+      "Bash(sed -n '20,60p' /Users/maxnijenkamp/Documents/FlowFlex/app/app/Models/HR/OnboardingChecklist.php)",
+      "Bash(sed -n '20,60p' /Users/maxnijenkamp/Documents/FlowFlex/app/app/Models/HR/LeaveBalance.php)",
+      "Bash(sed -n '20,50p' /Users/maxnijenkamp/Documents/FlowFlex/app/app/Models/Projects/TimeEntry.php)"
     ]
   },
   "enabledMcpjsonServers": [

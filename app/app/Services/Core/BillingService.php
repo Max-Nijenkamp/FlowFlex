@@ -82,20 +82,43 @@ class BillingService
 
     public function enforceModuleAccess(Company $company, string $moduleKey): bool
     {
-        // Free foundation modules are always accessible
         $freeModules = ['core.auth', 'core.notifications', 'core.audit-log', 'core.file-storage', 'core.rbac'];
         if (in_array($moduleKey, $freeModules, true)) {
             return true;
         }
 
-        if (! CompanyModuleSubscription::withoutGlobalScopes()
-            ->where('company_id', $company->id)
-            ->where('module_key', $moduleKey)
-            ->where('status', 'active')
-            ->exists()) {
-            return false;
+        return \Illuminate\Support\Facades\Cache::remember(
+            "module_access.{$company->id}.{$moduleKey}",
+            60,
+            function () use ($company, $moduleKey): bool {
+                if (! CompanyModuleSubscription::withoutGlobalScopes()
+                    ->where('company_id', $company->id)
+                    ->where('module_key', $moduleKey)
+                    ->where('status', 'active')
+                    ->exists()) {
+                    return false;
+                }
+
+                return $this->isBillingActive($company);
+            }
+        );
+    }
+
+    public function clearModuleAccessCache(Company $company, ?string $moduleKey = null): void
+    {
+        if ($moduleKey !== null) {
+            \Illuminate\Support\Facades\Cache::forget("module_access.{$company->id}.{$moduleKey}");
+
+            return;
         }
 
-        return $this->isBillingActive($company);
+        // Clear all known module keys for the company
+        $moduleKeys = CompanyModuleSubscription::withoutGlobalScopes()
+            ->where('company_id', $company->id)
+            ->pluck('module_key');
+
+        foreach ($moduleKeys as $key) {
+            \Illuminate\Support\Facades\Cache::forget("module_access.{$company->id}.{$key}");
+        }
     }
 }

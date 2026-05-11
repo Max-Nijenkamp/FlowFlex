@@ -2,7 +2,7 @@
 type: right-brain
 section: status
 color: "#F97316"
-last_updated: 2026-05-10
+last_updated: 2026-05-11 (phase1+2 gap closure)
 ---
 
 # STATUS Dashboard
@@ -31,8 +31,8 @@ pie title Module Distribution by Phase Group (311 total)
 |---|---|---|---|---|
 | Foundation | 0 | 5 | 5 | ✅ 100% |
 | Core Platform | 1 | ✅ 12 | 12 | ✅ 100% |
-| HR & People | 2–8 | 🔄 0 | 21 | 🔄 Panel ready |
-| Projects & Work | 2/8 | 0 | 13 | 📅 0% |
+| HR & People | 2–8 | 🔄 5 | 21 | 🔄 24% |
+| Projects & Work | 2/8 | 🔄 8 | 13 | 🔄 62% |
 | Finance & Accounting | 3/6 | 0 | 23 | 📅 0% |
 | CRM & Sales | 3/8 | 0 | 22 | 📅 0% |
 | Marketing & Content | 5 | 0 | 19 | 📅 0% |
@@ -62,7 +62,7 @@ pie title Module Distribution by Phase Group (311 total)
 | Pricing Management | 4 | 0 | 5 | 📅 0% |
 | Enterprise Risk Management | 5 | 0 | 6 | 📅 0% |
 
-**Total: 17 / 313 modules planned (5%) — Phase 0 + Phase 1 complete** (Foundation: 5/5 ✅ · Core Platform: 12/12 ✅ · 2 backlog items: DataImport Filament UI + Sandbox provisioning — deferred to Phase 2 implementation tasks)
+**Total: 30 / 313 modules planned (10%) — Phase 0 + Phase 1 complete, Phase 2 HR + Projects in-progress** (Foundation: 5/5 ✅ · Core Platform: 12/12 ✅ · HR: 5/21 🔄 · Projects: 8/13 🔄)
 
 ---
 
@@ -75,6 +75,7 @@ pie title Module Distribution by Phase Group (311 total)
 | Portal Architecture | ✅ Documented — unified PortalKernel, 6 separate guards, shared Inertia kernel |
 | Multi-Currency Data Model | ✅ Documented — Phase 1 schema pattern defined |
 | Billing Model | ✅ Documented — per-user per-module pricing, module_catalog table, no fixed plans |
+| LocalDemoDataSeeder Convention | ✅ Established — every new domain phase MUST add a section to `LocalDemoDataSeeder.php` seeding realistic data for the FlowFlex Demo company. Seeder is idempotent (skips if data exists). Run via `php artisan migrate:fresh --seed` in local. |
 
 ---
 
@@ -89,7 +90,9 @@ pie title Module Distribution by Phase Group (311 total)
 
 ## Active Builder Logs
 
+- [[builder-log-projects-phase2]] — Phase 2 Projects & Work in progress 2026-05-11. 6/13 modules built + dashboards, kanban view, module key fixes. 11 migrations, 10 models, 4 service pairs, 6 Filament resources, 3 dashboard widgets, ViewSprint kanban page. 272 tests pass.
 - [[core-platform-phase1]] — Phase 1 Core Platform in progress 2026-05-10. 8/12 modules: data layer complete (migrations, models, services for audit log, notifications, setup wizard, data import, API clients, sandboxes, billing, i18n). Missing: full Filament UI for most modules.
+- [[builder-log-hr-phase2]] — Phase 2 HR & People in progress 2026-05-10. 5/21 modules: employee-profiles, leave-management, onboarding, payroll, hr-analytics. 10 migrations, 9 models, 4 services, 6 Filament resources, 40 tests pass.
 - [[builder-log-project-scaffolding]] — Phase 0 Foundation built 2026-05-09. Laravel 13 + Filament 5 v5.6.2, both panels registered, all migrations run, seeders pass.
 - [[builder-log-docker-local-environment]] — Phase 0 Docker + monitoring built 2026-05-09. docker-compose (postgres:17, redis:8, mailpit, horizon, reverb), Horizon/Pulse/Telescope gates, local seeders.
 - [[testing-standards]] — Phase 0 test suite complete 2026-05-09. 74 tests, 113 assertions, 0 failures. Critical bugs fixed: company scope data leak, last_login_at Carbon parse error.
@@ -101,6 +104,11 @@ pie title Module Distribution by Phase Group (311 total)
 
 | Date | Module | Outcome |
 |---|---|---|
+| 2026-05-11 | Phase 1+2 gap closure — REST API, webhooks, email, DataImport UI, Sandbox UI, Documents, Gantt | 3 parallel agents. Phase 1: `routes/api.php` V1 REST API with Sanctum + rate limiting; AuthController, ProjectController, TaskController, EmployeeController; WebhookDeliveryService + DeliverWebhookJob (HMAC-SHA256, 3-retry exponential backoff); WebhookEndpointResource in App panel; HasResolvedChannels trait + NotificationRouter patched to pass mail channel through. Phase 2 Projects: Document model + migration + DocumentResource (projects.tasks key); GanttView standalone page (Alpine.js CSS-grid, 90-day window, status-colored bars). App panel: DataImportPage (CSV upload → parse → import) + SandboxPage (provision/reset). Core Platform Phase 1 all gaps resolved. Projects Phase 2 at 8/13. |
+| 2026-05-11 | Phase 0–2 security & quality audit — data leaks, model traits, service wiring | Code Analyzer agent. Found 9 unscoped dropdown queries leaking cross-tenant data in Projects resources (ProjectResource, TaskResource, SprintResource, KanbanBoardResource, ProjectMilestoneResource, TimeEntryResource) + 1 in EmployeeResource department filter. All 10 fixed with `withoutGlobalScopes()->where('company_id',...)` pattern. Found GAP-019 (security). All HR/Projects resources have canAccess() with correct module keys. All HR/Projects models have BelongsToCompany + HasUlids; pivot/child models correctly omit SoftDeletes. All factories present. HrAnalyticsPage has correct canAccess() using hr.analytics. All service interfaces bound in providers. Admin panel protected by dedicated `admin` guard — no per-resource canAccess() needed. |
+| 2026-05-11 | Phase 0–2 production-viability audit — module keys, dashboards, sprint kanban | 3 parallel agents. Fixed: 3 Projects resource module key mismatches (projects.projects→tasks, projects.boards→kanban, same for milestones); added projects.time + hr.analytics to ModuleCatalogSeeder; added projects.milestones + hr.analytics to LocalCompanySeeder; fixed ProjectsResourcesTest stale keys. Built: ActiveSprintsWidget, MyTasksWidget, ProjectsOverviewWidget (Projects panel); CompanyOverviewWidget (App panel); wired HeadcountWidget + LeaveStatsWidget + DepartmentBreakdownWidget on HR panel. Built ViewSprint kanban page (4-column status board, progress bar, sprint actions). All syntax checks pass. |
+| 2026-05-10 | Phase 0–2 scalability + test coverage pass | 3 parallel agents. Core: BillingService cache, LocalCompanySeeder module activation, compound index migration, scheduled cleanup (activity log + expired invites), 3 new test files. HR: PayrollService SQL aggregates, LeaveService race condition + balance-on-reject, EmployeeService null-override, OnboardingService batch insert, 3 new factories, HR index migration, 6 new tests. Projects: TaskService bulk reorder, ProjectService archive status fix, 'archived' enum migration, 3 new factories, Projects index migration, ProjectsResourcesTest, 4 new tests. 272 tests, 655 assertions, 0 failures. |
+| 2026-05-10 | HR Phase 2 — 5 modules built | Employee Profiles, Leave Management, Onboarding, Payroll, HR Analytics. 10 migrations, 9 models, 4 service pairs, 6 Filament resources, 3 widgets, 40 tests pass (0 failed). GAP-017: PostgreSQL self-referential FK pattern. |
 | 2026-05-10 | HR panel scaffold | HrPanelProvider at `/hr`, Violet theme built, 17 HR permissions added (total 47), HrPanelTest. 175 tests pass. Phase 2 module development ready. |
 | 2026-05-10 | Phase 1 final fix + test coverage pass | 3 bugs fixed (NotificationQuietHours null crash, EnforceModuleAccess not aborting, PermissionSeeder only syncing first owner role). 27 new tests added. 171 tests pass, 0 failures. Brain sync complete. Phase 0+1 ✅. |
 | 2026-05-10 | Phase 1 completion sprint — all 12 modules built | 3 parallel agents: (1) PermissionSeeder, Stripe webhook, events wiring, EnforceModuleAccess, 5 bug fixes, 4 migrations, SoftDeletes on 7 models; (2) SetLocale in panels, CompanySettings branding, ApiClientResource, BillingResource, NotificationPreferencesPage, AdminStatsWidget, ResendInvite action; (3) 8 left-brain spec files. 144 tests pass. Phase 2 ready. |

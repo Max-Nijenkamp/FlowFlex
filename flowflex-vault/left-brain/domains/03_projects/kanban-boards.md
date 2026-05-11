@@ -3,10 +3,11 @@ type: module
 domain: Projects & Work
 panel: projects
 phase: 2
-status: planned
+status: in-progress
 cssclasses: domain-projects
 migration_range: 200500–200999
-last_updated: 2026-05-09
+last_updated: 2026-05-10
+right_brain_log: "[[builder-log-projects-phase2]]"
 ---
 
 # Kanban Boards

@@ -73,4 +73,30 @@ describe('Billing Service', function () {
 
         expect($this->service->enforceModuleAccess($this->company, 'hr.leave'))->toBeTrue();
     });
+
+    it('caches module access result for 60 seconds', function () {
+        BillingSubscription::create([
+            'company_id' => $this->company->id,
+            'status'     => 'active',
+        ]);
+
+        CompanyModuleSubscription::withoutGlobalScopes()->create([
+            'company_id'   => $this->company->id,
+            'module_key'   => 'hr.leave',
+            'status'       => 'active',
+            'activated_at' => now(),
+        ]);
+
+        // First call populates the cache
+        $resultFirst  = $this->service->enforceModuleAccess($this->company, 'hr.leave');
+        // Second call should return same result (from cache)
+        $resultSecond = $this->service->enforceModuleAccess($this->company, 'hr.leave');
+
+        expect($resultFirst)->toBeTrue();
+        expect($resultSecond)->toBe($resultFirst);
+
+        // Verify cache key is actually set
+        $cacheKey = "module_access.{$this->company->id}.hr.leave";
+        expect(\Illuminate\Support\Facades\Cache::has($cacheKey))->toBeTrue();
+    });
 });

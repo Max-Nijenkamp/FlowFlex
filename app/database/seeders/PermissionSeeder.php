@@ -63,6 +63,30 @@ class PermissionSeeder extends Seeder
         'hr.payroll.export',
         'hr.analytics.view',
         'hr.analytics.export',
+
+        // Projects & Work (Phase 2)
+        'projects.projects.view-any',
+        'projects.projects.view',
+        'projects.projects.create',
+        'projects.projects.edit',
+        'projects.projects.delete',
+        'projects.tasks.view-any',
+        'projects.tasks.view',
+        'projects.tasks.create',
+        'projects.tasks.edit',
+        'projects.tasks.delete',
+        'projects.boards.view',
+        'projects.boards.manage',
+        'projects.gantt.view',
+        'projects.gantt.manage',
+        'projects.sprints.view',
+        'projects.sprints.manage',
+        'projects.time.view-own',
+        'projects.time.view-any',
+        'projects.time.log',
+        'projects.time.approve',
+        'projects.templates.view',
+        'projects.templates.manage',
     ];
 
     public function run(): void

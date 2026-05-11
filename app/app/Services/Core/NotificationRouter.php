@@ -59,6 +59,10 @@ class NotificationRouter
     {
         $notification = $event->toNotification($user);
 
+        if (method_exists($notification, 'setChannels')) {
+            $notification->setChannels($channels);
+        }
+
         $user->notify($notification);
 
         $company = $this->companyContext->hasCompany() ? $this->companyContext->current() : null;

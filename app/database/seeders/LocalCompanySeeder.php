@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Company;
+use App\Models\CompanyModuleSubscription;
+use App\Models\Core\BillingSubscription;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
@@ -51,5 +53,41 @@ class LocalCompanySeeder extends Seeder
         );
 
         $user->assignRole($ownerRole);
+
+        // Create active billing subscription for demo company
+        BillingSubscription::withoutGlobalScopes()->updateOrCreate(
+            ['company_id' => $company->id],
+            [
+                'status'   => 'active',
+                'currency' => 'EUR',
+            ],
+        );
+
+        // Activate demo modules for the company
+        $moduleKeys = [
+            'hr.profiles',
+            'hr.leave',
+            'hr.onboarding',
+            'hr.payroll',
+            'hr.analytics',
+            'projects.tasks',
+            'projects.kanban',
+            'projects.sprints',
+            'projects.time',
+            'projects.milestones',
+        ];
+
+        foreach ($moduleKeys as $moduleKey) {
+            CompanyModuleSubscription::withoutGlobalScopes()->firstOrCreate(
+                [
+                    'company_id' => $company->id,
+                    'module_key' => $moduleKey,
+                ],
+                [
+                    'status'       => 'active',
+                    'activated_at' => now(),
+                ],
+            );
+        }
     }
 }

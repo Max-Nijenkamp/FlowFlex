@@ -5,20 +5,17 @@ declare(strict_types=1);
 namespace App\Notifications\Foundation;
 
 use App\Models\PlatformAnnouncement;
+use App\Notifications\Concerns\HasResolvedChannels;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class PlatformAnnouncementNotification extends Notification
 {
+    use HasResolvedChannels;
     use Queueable;
 
     public function __construct(private readonly PlatformAnnouncement $announcement) {}
-
-    public function via(object $notifiable): array
-    {
-        return ['database'];
-    }
 
     public function toDatabase(object $notifiable): array
     {

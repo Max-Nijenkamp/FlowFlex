@@ -12,6 +12,7 @@ export default defineConfig({
                 'resources/css/filament/app/theme.css',
                 'resources/css/filament/admin/theme.css',
                 'resources/css/filament/hr/theme.css',
+                'resources/css/filament/projects/theme.css',
             ],
             refresh: true,
         }),
