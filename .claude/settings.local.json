@@ -123,7 +123,12 @@
       "Bash(awk '{print $2}')",
       "Bash(find /Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/Field/Resources /Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/Workplace/Resources /Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/Travel/Resources /Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/Events/Resources /Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/Pricing/Resources -maxdepth 1 -name *.php)",
       "Bash(xargs perl -pi -e 's/protected static \\\\?string \\\\$navigationGroup/protected static string|\\\\\\\\\\\\UnitEnum|null \\\\$navigationGroup/g')",
-      "Bash(find /Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/Psa/Resources /Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/Esg/Resources /Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/Ethics/Resources /Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/Dms/Resources -maxdepth 1 -name *.php)"
+      "Bash(find /Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/Psa/Resources /Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/Esg/Resources /Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/Ethics/Resources /Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/Dms/Resources -maxdepth 1 -name *.php)",
+      "Bash(xargs perl -i -pe 's/^status:\\\\s+\\(complete|in-progress|research\\)\\\\s*$/status: planned\\\\n/')",
+      "Bash(xargs perl -i -ne 'print unless /^right_brain_log:/')",
+      "Bash(rm /Users/maxnijenkamp/Documents/FlowFlex/flowflex-vault/right-brain/builder-logs/*.md)",
+      "Bash(rm /Users/maxnijenkamp/Documents/FlowFlex/flowflex-vault/right-brain/gaps/*.md)",
+      "Bash(rm /Users/maxnijenkamp/Documents/FlowFlex/flowflex-vault/right-brain/evolution/*.md)"
     ]
   },
   "enabledMcpjsonServers": [

@@ -1,0 +1,211 @@
+{
+  "main": {
+    "id": "4cdc58ba561e5aef",
+    "type": "split",
+    "children": [
+      {
+        "id": "c4285fdf74655a5e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2a376acf2ec8d755",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "dc60e2972dafe4bd",
+    "type": "split",
+    "children": [
+      {
+        "id": "1f410a0f61f603a7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8132c64e64479a58",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "e69ffc51491f16e0",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "e98c13df30713d4f",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "387fdeb81473ffbb",
+    "type": "split",
+    "children": [
+      {
+        "id": "13d858d72e38fbf7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "aef6dec19844b9f0",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "ea794b16d8390307",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "95611b34a146f248",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "6e3736c3fd0ce2ae",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "4c5718e9c5f14a10",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "2a376acf2ec8d755",
+  "lastOpenFiles": [
+    "build/ROADMAP.md",
+    "domains/partners/affiliate-management.md",
+    "domains/partners/co-marketing.md",
+    "domains/partners/partner-onboarding.md",
+    "domains/marketing/review-management.md",
+    "domains/partners/partner-commissions.md",
+    "domains/core/survey-builder.md",
+    "domains/partners/deal-registration.md",
+    "domains/partners/partner-portal.md",
+    "domains/core/data-privacy.md",
+    "domains/partners/INDEX.md",
+    "domains/inbox/inbox-analytics.md",
+    "domains/analytics/product-analytics.md",
+    "domains/inbox/inbox-automations.md",
+    "domains/communications/live-chat-widget.md",
+    "domains/inbox/social-inbox.md",
+    "domains/inbox/sms-channel.md",
+    "domains/communications/ai-voice.md",
+    "domains/inbox/email-channel.md",
+    "domains/customer-success/knowledge-base-analytics.md",
+    "domains/inbox/whatsapp-channel.md",
+    "domains/customer-success/support-tickets.md",
+    "domains/inbox/shared-inbox.md",
+    "domains/crm/referral-program.md",
+    "domains/inbox/INDEX.md",
+    "domains/crm/appointment-scheduling.md",
+    "domains/partners",
+    "domains/inbox",
+    "domains/support"
+  ]
+}
