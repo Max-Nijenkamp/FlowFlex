@@ -14,8 +14,8 @@ Architectural Decision Records (ADRs) capture significant technical choices made
 
 | Date | Decision | Impact |
 |---|---|---|
-
-*No decisions recorded yet.*
+| 2026-05-13 | Use Filament 5 (not v3) | All panels use Filament 5.6.3 API — `authModel()` removed, providers in `app/Providers/Filament/` | [[adr-2026-05-13-filament-v5]] |
+| 2026-05-13 | `string(26)` for permission morph/team keys | ULID-keyed models work with spatie/laravel-permission v7 | [[adr-2026-05-13-permission-ulid]] |
 
 ---
 

@@ -1,0 +1,46 @@
+<?php
+
+return [
+    App\Providers\AppServiceProvider::class,
+    App\Providers\HorizonServiceProvider::class,
+    App\Providers\TelescopeServiceProvider::class,
+
+    // Filament Panels
+    App\Providers\Filament\AdminPanelProvider::class,
+    App\Providers\Filament\AppPanelProvider::class,
+
+    // Domain Panels
+    App\Providers\Filament\HrPanelProvider::class,
+    App\Providers\Filament\ProjectsPanelProvider::class,
+    App\Providers\Filament\FinancePanelProvider::class,
+    App\Providers\Filament\CrmPanelProvider::class,
+    App\Providers\Filament\MarketingPanelProvider::class,
+    App\Providers\Filament\OperationsPanelProvider::class,
+    App\Providers\Filament\AnalyticsPanelProvider::class,
+    App\Providers\Filament\ItPanelProvider::class,
+    App\Providers\Filament\LegalPanelProvider::class,
+    App\Providers\Filament\EcommercePanelProvider::class,
+    App\Providers\Filament\CommsPanelProvider::class,
+    App\Providers\Filament\LmsPanelProvider::class,
+    App\Providers\Filament\AiPanelProvider::class,
+    App\Providers\Filament\CommunityPanelProvider::class,
+    App\Providers\Filament\WorkplacePanelProvider::class,
+    App\Providers\Filament\PsaPanelProvider::class,
+    App\Providers\Filament\PlgPanelProvider::class,
+    App\Providers\Filament\TravelPanelProvider::class,
+    App\Providers\Filament\EsgPanelProvider::class,
+    App\Providers\Filament\RealEstatePanelProvider::class,
+    App\Providers\Filament\CsPanelProvider::class,
+    App\Providers\Filament\BillingPanelProvider::class,
+    App\Providers\Filament\ProcurementPanelProvider::class,
+    App\Providers\Filament\FpaPanelProvider::class,
+    App\Providers\Filament\EventsPanelProvider::class,
+    App\Providers\Filament\DmsPanelProvider::class,
+    App\Providers\Filament\EthicsPanelProvider::class,
+    App\Providers\Filament\FieldPanelProvider::class,
+    App\Providers\Filament\PricingPanelProvider::class,
+    App\Providers\Filament\RiskPanelProvider::class,
+    App\Providers\Filament\SupportPanelProvider::class,
+    App\Providers\Filament\InboxPanelProvider::class,
+    App\Providers\Filament\PartnersPanelProvider::class,
+];

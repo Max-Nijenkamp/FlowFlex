@@ -128,7 +128,11 @@
       "Bash(xargs perl -i -ne 'print unless /^right_brain_log:/')",
       "Bash(rm /Users/maxnijenkamp/Documents/FlowFlex/flowflex-vault/right-brain/builder-logs/*.md)",
       "Bash(rm /Users/maxnijenkamp/Documents/FlowFlex/flowflex-vault/right-brain/gaps/*.md)",
-      "Bash(rm /Users/maxnijenkamp/Documents/FlowFlex/flowflex-vault/right-brain/evolution/*.md)"
+      "Bash(rm /Users/maxnijenkamp/Documents/FlowFlex/flowflex-vault/right-brain/evolution/*.md)",
+      "Bash(ps -p 85757 -o pid,comm)",
+      "Bash(xargs ps -p)",
+      "Bash(docker network *)",
+      "Bash(brew services *)"
     ]
   },
   "enabledMcpjsonServers": [

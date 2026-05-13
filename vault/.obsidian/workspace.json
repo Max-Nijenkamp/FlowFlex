@@ -178,6 +178,10 @@
   },
   "active": "2a376acf2ec8d755",
   "lastOpenFiles": [
+    "product/ux-principles.md",
+    "build/decisions/adr-2026-05-13-permission-ulid.md",
+    "build/decisions/adr-2026-05-13-filament-v5.md",
+    "build/logs/builder-log-phase-0-foundation.md",
     "build/ROADMAP.md",
     "domains/partners/affiliate-management.md",
     "domains/partners/co-marketing.md",
@@ -200,10 +204,6 @@
     "domains/customer-success/knowledge-base-analytics.md",
     "domains/inbox/whatsapp-channel.md",
     "domains/customer-success/support-tickets.md",
-    "domains/inbox/shared-inbox.md",
-    "domains/crm/referral-program.md",
-    "domains/inbox/INDEX.md",
-    "domains/crm/appointment-scheduling.md",
     "domains/partners",
     "domains/inbox",
     "domains/support"
