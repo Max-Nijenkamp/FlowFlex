@@ -4,9 +4,9 @@ domain: Product-Led Growth
 panel: plg
 cssclasses: domain-plg
 phase: 7
-status: planned
+status: complete
 migration_range: 895000–896999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Product Usage Analytics

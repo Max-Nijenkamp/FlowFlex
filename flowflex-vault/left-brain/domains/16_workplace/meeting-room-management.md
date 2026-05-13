@@ -4,9 +4,9 @@ domain: Workplace & Facility Management
 panel: workplace
 cssclasses: domain-workplace
 phase: 6
-status: planned
+status: complete
 migration_range: 855000–859999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Meeting Room Management

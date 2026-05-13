@@ -4,10 +4,10 @@ domain: Field Service Management
 panel: fsm
 module: Parts & Inventory (Field)
 phase: 5
-status: planned
+status: complete
 cssclasses: domain-fsm
 migration_range: 1052500–1052999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Parts & Inventory (Field)

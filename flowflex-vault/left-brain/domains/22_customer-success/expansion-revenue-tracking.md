@@ -3,10 +3,10 @@ type: module
 domain: Customer Success
 panel: cs
 phase: 6
-status: planned
+status: complete
 cssclasses: domain-cs
 migration_range: 970850–970999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Expansion Revenue Tracking

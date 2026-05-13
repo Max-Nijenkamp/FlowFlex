@@ -4,10 +4,10 @@ domain: Enterprise Risk Management
 panel: risk
 module: Risk Assessments & RCSA
 phase: 5
-status: planned
+status: complete
 cssclasses: domain-risk
 migration_range: 1150500–1150999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Risk Assessments & RCSA

@@ -4,10 +4,11 @@ domain: AI & Automation
 panel: ai
 module: EU AI Act Compliance
 phase: 4
-status: planned
+status: complete
 cssclasses: domain-ai
-migration_range: 751000–751499
-last_updated: 2026-05-09
+migration_range: 460010
+last_updated: 2026-05-12
+right_brain_log: "[[builder-log-ai-phase6]]"
 ---
 
 # EU AI Act Compliance

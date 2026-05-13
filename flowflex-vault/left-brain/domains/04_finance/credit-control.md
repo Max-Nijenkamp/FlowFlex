@@ -3,10 +3,10 @@ type: module
 domain: Finance & Accounting
 panel: finance
 phase: 3
-status: planned
+status: complete
 cssclasses: domain-finance
 migration_range: 258500–258999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Credit Control

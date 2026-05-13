@@ -4,9 +4,10 @@ domain: Learning & Development
 panel: lms
 cssclasses: domain-lms
 phase: 7
-status: planned
-migration_range: 700000–749999
-last_updated: 2026-05-09
+status: complete
+migration_range: 480013
+last_updated: 2026-05-12
+right_brain_log: "[[builder-log-lms-phase7]]"
 ---
 
 # SCORM / xAPI / AICC Support

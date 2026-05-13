@@ -3,10 +3,10 @@ type: module
 domain: Customer Success
 panel: cs
 phase: 5
-status: planned
+status: complete
 cssclasses: domain-cs
 migration_range: 970500–970699
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Renewal Forecasting

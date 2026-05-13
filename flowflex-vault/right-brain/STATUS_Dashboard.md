@@ -2,12 +2,12 @@
 type: right-brain
 section: status
 color: "#F97316"
-last_updated: 2026-05-11 (phase1+2 gap closure)
+last_updated: 2026-05-13 (reset — app deleted, starting fresh)
 ---
 
 # STATUS Dashboard
 
-Current build state across all 32 domains · 311 modules (including Foundation scaffold). Updated per session.
+Current build state across all 32+ domains · 313+ modules (including Foundation scaffold). Updated per session.
 
 ---
 
@@ -29,40 +29,64 @@ pie title Module Distribution by Phase Group (311 total)
 
 | Domain | Phase | Built | Total | Progress |
 |---|---|---|---|---|
-| Foundation | 0 | 5 | 5 | ✅ 100% |
-| Core Platform | 1 | ✅ 12 | 12 | ✅ 100% |
-| HR & People | 2–8 | 🔄 5 | 21 | 🔄 24% |
-| Projects & Work | 2/8 | 🔄 8 | 13 | 🔄 62% |
-| Finance & Accounting | 3/6 | 0 | 23 | 📅 0% |
+| Foundation | 0 | 0 | 5 | 📅 0% |
+| Core Platform | 1 | 0 | 12 | 📅 0% |
+| HR & People | 2–8 | 0 | 21 | 📅 0% |
+| Projects & Work | 2/8 | 0 | 15 | 📅 0% |
+| Finance & Accounting | 3/8 | 0 | 23 | 📅 0% |
 | CRM & Sales | 3/8 | 0 | 22 | 📅 0% |
-| Marketing & Content | 5 | 0 | 19 | 📅 0% |
-| Operations | 4/5 | 0 | 18 | 📅 0% |
+| Marketing & Content | 5/8 | 0 | 19 | 📅 0% |
+| Operations | 4/8 | 0 | 18 | 📅 0% |
 | Analytics & BI | 6 | 0 | 10 | 📅 0% |
-| IT & Security | 4/6 | 0 | 12 | 📅 0% |
-| Legal & Compliance | 4/7 | 0 | 8 | 📅 0% |
-| E-commerce | 4/5 | 0 | 15 | 📅 0% |
-| Communications | 5 | 0 | 11 | 📅 0% |
+| IT & Security | 4/8 | 0 | 12 | 📅 0% |
+| Legal & Compliance | 4/8 | 0 | 8 | 📅 0% |
+| E-commerce | 4/8 | 0 | 15 | 📅 0% |
+| Communications | 5/8 | 0 | 11 | 📅 0% |
 | Learning & Dev | 7 | 0 | 10 | 📅 0% |
 | AI & Automation | 6 | 0 | 10 | 📅 0% |
 | Community & Social | 7 | 0 | 7 | 📅 0% |
-| Workplace & Facility | 4/6 | 0 | 6 | 📅 0% |
-| Professional Services (PSA) | 5/7 | 0 | 6 | 📅 0% |
-| Product-Led Growth | 6/7 | 0 | 6 | 📅 0% |
-| Business Travel | 5/7 | 0 | 6 | 📅 0% |
-| ESG & Sustainability | 5/6 | 0 | 6 | 📅 0% |
-| Real Estate & Property | 6 | 0 | 6 | 📅 0% |
-| Customer Success | 5 | 0 | 6 | 📅 0% |
-| Subscription Billing & RevOps | 3 | 0 | 6 | 📅 0% |
-| Procurement & Spend Management | 3 | 0 | 6 | 📅 0% |
-| Financial Planning & Analysis | 4 | 0 | 6 | 📅 0% |
-| Events Management | 5 | 0 | 6 | 📅 0% |
-| Document Management | 4 | 0 | 6 | 📅 0% |
-| Whistleblowing & Ethics | 4 | 0 | 6 | 📅 0% |
-| Field Service Management | 5 | 0 | 8 | 📅 0% |
-| Pricing Management | 4 | 0 | 5 | 📅 0% |
-| Enterprise Risk Management | 5 | 0 | 6 | 📅 0% |
+| Workplace & Facility | 8 | 0 | 6 | 📅 0% |
+| Professional Services (PSA) | 8 | 0 | 6 | 📅 0% |
+| Product-Led Growth | 8 | 0 | 6 | 📅 0% |
+| Business Travel | 8 | 0 | 6 | 📅 0% |
+| ESG & Sustainability | 8 | 0 | 6 | 📅 0% |
+| Real Estate & Property | 8 | 0 | 6 | 📅 0% |
+| Customer Success | 8 | 0 | 6 | 📅 0% |
+| Subscription Billing & RevOps | 8 | 0 | 6 | 📅 0% |
+| Procurement & Spend Management | 8 | 0 | 6 | 📅 0% |
+| Financial Planning & Analysis | 8 | 0 | 6 | 📅 0% |
+| Events Management | 8 | 0 | 6 | 📅 0% |
+| Document Management | 8 | 0 | 6 | 📅 0% |
+| Whistleblowing & Ethics | 8 | 0 | 6 | 📅 0% |
+| Field Service Management | 8 | 0 | 8 | 📅 0% |
+| Pricing Management | 8 | 0 | 5 | 📅 0% |
+| Enterprise Risk Management | 8 | 0 | 6 | 📅 0% |
 
-**Total: 30 / 313 modules planned (10%) — Phase 0 + Phase 1 complete, Phase 2 HR + Projects in-progress** (Foundation: 5/5 ✅ · Core Platform: 12/12 ✅ · HR: 5/21 🔄 · Projects: 8/13 🔄)
+**Total: 0 / 313 modules (0%) — fresh start 2026-05-13**
+
+> **Phase 0-8 audit + UI completion (2026-05-13):** Full audit found 6 broken stub pages (Analytics/Community) deleted. 5 CRUD resources refactored → custom pages (OrgChart, Copilot, WorkflowBuilder, TeamChat, RevenueIntelligence). Ecommerce: 11 new resources → 15/15 ✅. Operations: 5 new resources → 17/18. CRM: 3 new resources → 19/22. HR: EmployeeFeedbackResource → 20/21. Finance: FinancialReportingPage added → 21/23. PanelHub shipped: floating button on all 29 panels shows active/inactive modules. Tests: +11 files (Legal×4, IT×4, Filament×3). See [[builder-log-phase0-8-audit-and-ui-completion]].
+
+> **Phase 6-8 test stabilization complete (2026-05-12):** 821 tests pass, 0 failed, 1 skipped. All Phase 6-8 modules fully tested. 5 bug classes fixed: fake()->ulid() (77 occurrences), bulk insert() bypasses HasUlids (3 models), getOriginal() returns cast array, boolean model defaults missing (3 models), withoutGlobalScopes() removes SoftDeletes scope. See [[builder-log-phase6-7-8-test-stabilization]].
+>
+> **Phase 7 LMS ✅ (2026-05-12):** 10/10 modules complete. 15 migrations (480001–480015), 15 models, 15 factories, 10 service pairs, LmsServiceProvider, LmsPanelProvider (/lms, Green theme), 11 Filament resources (33 pages), 10 test files (~48 tests).
+>
+> **Phase 8 CRM Extensions ✅ (2026-05-12):** 12/22 CRM modules built. 10 migrations (830001–830010), 10 new models, 7 service pairs, CrmExtensionsServiceProvider, 7 Filament resources (19 pages, RevenueIntelligence read-only), 10 factories, 7 test files.
+>
+> **Phase 6 AI & Automation ✅ (2026-05-12):** 10/10 modules. AiPanelProvider at `/ai`, Indigo theme, 10 resources, 11 models, 9 services, 10 migrations (460001–460010). Integration.credentials uses `encrypted:array`.
+>
+> **Phase 6 Analytics & BI ✅ (2026-05-12):** 10/10 modules. 10 services, 10 test files, AnalyticsPanelProvider at `/analytics`, Sky theme.
+>
+> **Phase 7 Community & Social ✅ (2026-05-12):** 7/7 modules. 7 services, 7 test files.
+>
+> **Phase 8 HR Extensions (2026-05-12):** 8 new HR modules added (shift scheduling, compensation, org chart, wellbeing, DEI metrics, performance reviews, recruitment/ATS, employee benefits). HR total 13/21.
+>
+> **Phase 8 Projects Extensions (2026-05-12):** 4 new modules (wiki, approvals, OKR, portfolio). Projects total 14/15.
+>
+> **Phase 8 Finance Extensions (2026-05-12):** 2 new (multi-currency, cash flow). Finance total 10/23.
+>
+> **Phase 8 Legal Extensions (2026-05-12):** 1 new (e-signature). Legal total 5/8.
+>
+> **Phase 0-5 status (2026-05-12):** All gaps resolved. 309 permissions. All 12 Filament panel CSS entries in Vite manifest.
 
 ---
 
@@ -90,13 +114,7 @@ pie title Module Distribution by Phase Group (311 total)
 
 ## Active Builder Logs
 
-- [[builder-log-projects-phase2]] — Phase 2 Projects & Work in progress 2026-05-11. 6/13 modules built + dashboards, kanban view, module key fixes. 11 migrations, 10 models, 4 service pairs, 6 Filament resources, 3 dashboard widgets, ViewSprint kanban page. 272 tests pass.
-- [[core-platform-phase1]] — Phase 1 Core Platform in progress 2026-05-10. 8/12 modules: data layer complete (migrations, models, services for audit log, notifications, setup wizard, data import, API clients, sandboxes, billing, i18n). Missing: full Filament UI for most modules.
-- [[builder-log-hr-phase2]] — Phase 2 HR & People in progress 2026-05-10. 5/21 modules: employee-profiles, leave-management, onboarding, payroll, hr-analytics. 10 migrations, 9 models, 4 services, 6 Filament resources, 40 tests pass.
-- [[builder-log-project-scaffolding]] — Phase 0 Foundation built 2026-05-09. Laravel 13 + Filament 5 v5.6.2, both panels registered, all migrations run, seeders pass.
-- [[builder-log-docker-local-environment]] — Phase 0 Docker + monitoring built 2026-05-09. docker-compose (postgres:17, redis:8, mailpit, horizon, reverb), Horizon/Pulse/Telescope gates, local seeders.
-- [[testing-standards]] — Phase 0 test suite complete 2026-05-09. 74 tests, 113 assertions, 0 failures. Critical bugs fixed: company scope data leak, last_login_at Carbon parse error.
-- [[vault-audit-2026-05-09]] — Vault audit complete; vault is pre-build-ready. See [[ACTIVATION_GUIDE]] to start Phase 0.
+_(none — fresh start)_
 
 ---
 
@@ -104,6 +122,18 @@ pie title Module Distribution by Phase Group (311 total)
 
 | Date | Module | Outcome |
 |---|---|---|
+| 2026-05-13 | UI Theme Overhaul — dark sidebar + FlowFlex brand | All 28 panels: dark sidebar (`#111827`), Inter font, branded FlowFlex logo. Panel hub moved from floating FAB → topbar integrated dropdown. `resources/css/filament/shared/flowflex-theme.css` created. All 28 `theme.css` + panel providers updated. 0 test regressions. |
+| 2026-05-13 | Phase 0-8 audit + UI completion + PanelHub | Full audit: 6 broken pages deleted (Analytics/Community stubs). 5 CRUD→custom page refactors (OrgChart, Copilot, WorkflowBuilder, TeamChat, RevenueIntelligence). Ecommerce +11 resources → 15/15 ✅. Operations +5 → 17/18. CRM +3 → 19/22. HR +1 → 20/21. Finance +FinancialReportingPage → 21/23. PanelHub: floating workspace switcher on all 29 panels. +11 test files ~117 new tests (Legal×4, IT×4, Filament×3). |
+| 2026-05-13 | Service type fixes + model defaults — all tests passing | Bulk fix: 55+ service files `Support\Collection` → `Eloquent\Collection` (PHP FatalError). Fixed `$attributes` defaults on ProductReview, Shipment, AbandonedCart models. Fixed ProductRecommendationService (invalid status 'published', company_id on order_items). All Ecommerce 61/61 pass. ~1200+ total, 0 fail. |
+| 2026-05-12 | Test coverage expansion — 32 new test files, 159 new tests | Added tests for IT (5 files), Comms (4 files), Ecommerce (5 files), Operations (5 files), Marketing (4 files), CRM (5 files), Finance (3 files), Risk (1 file). Fixed model bugs: IamAccessRequest.justification NOT NULL, ReturnRequest.items NOT NULL, EcommerceOrder.status enum, FixedAsset.depreciation_method enum, WarehouseZone.putaway_rules constraint, SupplierAssessment.type/result enums. 1137 tests pass, 0 fail. |
+| 2026-05-12 | Phase 0-8 audit + service gap fill | Full audit revealed 5 domains overstated in dashboard. Built missing services: Finance/BudgetService, FixedAssetService, GeneralLedgerService (models existed but no services). Built Risk/RiskReportingService (contract existed, no service). Created 10 IT service interfaces + wired ItServiceProvider. Created RiskServiceProvider (Risk was completely unregistered). Corrected STATUS_Dashboard counts. Fixed RiskRecord model column mismatch (risk_rating→risk_score, etc). max_locks_per_transaction=256 activated. Background agents writing 60+ new tests for IT/Comms/Ecommerce/Operations/Marketing/CRM. |
+| 2026-05-12 | Phase 6-8 test stabilization | 86 failures → 0. Fixed: fake()->ulid() (77x, 20 files), bulk insert id missing (3 models), getOriginal cast array, boolean defaults (3 models), SoftDeletes+withoutGlobalScopes assertions, AuditService ordering, permission count 311→309. 821 passed, 1 skipped. Analytics/LMS/Community ✅. |
+| 2026-05-12 | Phase 7 LMS — all 10 modules data layer | 15 migrations (480001–480015), 15 models (app/Models/Lms/), 15 factories, 10 service interface+impl pairs, LmsServiceProvider, LmsPanelProvider (/lms, Green theme), theme.css, 11 Filament resources (33 pages; LearnerPortalConfig in Settings group), 10 test files (~48 tests). user_id FK corrected to ULID during build. No gaps. LMS 🔄 in-progress. |
+| 2026-05-12 | Phase 8 CRM Extensions — 7 modules | 10 migrations (830001–830010), 10 new models (CustomerDataProfile, ClientPortalConfig, LoyaltyProgram, LoyaltyTransaction, DealRoom, SalesSequence, SalesSequenceStep, SalesSequenceEnrollment, RevenueIntelligence, SalesCoachingInsight), 7 service interface+impl pairs, CrmExtensionsServiceProvider (separate from CrmServiceProvider), 7 Filament resources (19 pages; RevenueIntelligence is read-only, no create), 10 factories, 7 test files (~36 tests). No gaps. CRM 12/22 (55%) 🔄. |
+| 2026-05-12 | Phase 6 AI & Automation — all 10 modules | 10 migrations (460001–460010), 11 models (incl. WorkflowExecution), 9 service interfaces + implementations, AiServiceProvider, AiPanelProvider (`/ai`, Indigo), theme.css, 10 Filament resources with List/Create/Edit pages, 10 factories, 9 test files (~35 tests). Integration.credentials encrypted. No gaps. AI & Automation ✅ 10/10. |
+| 2026-05-12 | Phase 0-5 final gap closure | Fixed: Vite config missing 8 panel CSS entries (HTTP 500 on Phase 3-5 panels). Added projects.documents.* permissions (171→176). Added projects.gantt/documents/templates to LocalCompanySeeder. Fixed TimeEntryService PHP 8.4 implicit nullable. Built DocumentService + HrAnalyticsService + contracts + tests + factories. All 12 Vite panel themes in manifest. 553 tests pass. Phase 6 ready. |
+| 2026-05-11 | Phase 0-5 full audit + gap fixes | STATUS_Dashboard corrected (Phase 3-5 was showing 0% but is ~20-50% built). Module key mismatches fixed (ops.* → operations.*). Phase 3-5 permissions added to PermissionSeeder (~80 new permissions). Missing service providers created (IT, Legal, Ecommerce, Marketing). Domain services built for IT, Legal, Ecommerce, Marketing. LocalDemoDataSeeder Phase 3-5 sections added. LocalCompanySeeder now activates all Phase 3-5 modules for demo company. |
+| 2026-05-11 | Security hardening + Sanctum + test expansion | 16 security findings fixed (3 Critical, 5 High, 6 Medium, 2 Low). Installed Laravel Sanctum — API was completely broken (auth:sanctum guard existed but package absent). Fixed ulidMorphs for personal_access_tokens. Added HasApiTokens to User model. Fixed LeaveRequestFactory (policy_id). Fixed EmployeeController auto-generate employee_number. Added 9 new test files (46 tests): Finance/InvoiceService, Finance/ExpenseService, Crm/CrmDealService, Operations/InventoryService, Comms/AnnouncementService, Core/WebhookDeliveryService, Api/ApiAuth, Api/ProjectApi, Api/EmployeeApi. Final: 520 passed, 0 failed. |
 | 2026-05-11 | Phase 1+2 gap closure — REST API, webhooks, email, DataImport UI, Sandbox UI, Documents, Gantt | 3 parallel agents. Phase 1: `routes/api.php` V1 REST API with Sanctum + rate limiting; AuthController, ProjectController, TaskController, EmployeeController; WebhookDeliveryService + DeliverWebhookJob (HMAC-SHA256, 3-retry exponential backoff); WebhookEndpointResource in App panel; HasResolvedChannels trait + NotificationRouter patched to pass mail channel through. Phase 2 Projects: Document model + migration + DocumentResource (projects.tasks key); GanttView standalone page (Alpine.js CSS-grid, 90-day window, status-colored bars). App panel: DataImportPage (CSV upload → parse → import) + SandboxPage (provision/reset). Core Platform Phase 1 all gaps resolved. Projects Phase 2 at 8/13. |
 | 2026-05-11 | Phase 0–2 security & quality audit — data leaks, model traits, service wiring | Code Analyzer agent. Found 9 unscoped dropdown queries leaking cross-tenant data in Projects resources (ProjectResource, TaskResource, SprintResource, KanbanBoardResource, ProjectMilestoneResource, TimeEntryResource) + 1 in EmployeeResource department filter. All 10 fixed with `withoutGlobalScopes()->where('company_id',...)` pattern. Found GAP-019 (security). All HR/Projects resources have canAccess() with correct module keys. All HR/Projects models have BelongsToCompany + HasUlids; pivot/child models correctly omit SoftDeletes. All factories present. HrAnalyticsPage has correct canAccess() using hr.analytics. All service interfaces bound in providers. Admin panel protected by dedicated `admin` guard — no per-resource canAccess() needed. |
 | 2026-05-11 | Phase 0–2 production-viability audit — module keys, dashboards, sprint kanban | 3 parallel agents. Fixed: 3 Projects resource module key mismatches (projects.projects→tasks, projects.boards→kanban, same for milestones); added projects.time + hr.analytics to ModuleCatalogSeeder; added projects.milestones + hr.analytics to LocalCompanySeeder; fixed ProjectsResourcesTest stale keys. Built: ActiveSprintsWidget, MyTasksWidget, ProjectsOverviewWidget (Projects panel); CompanyOverviewWidget (App panel); wired HeadcountWidget + LeaveStatsWidget + DepartmentBreakdownWidget on HR panel. Built ViewSprint kanban page (4-column status board, progress bar, sprint actions). All syntax checks pass. |

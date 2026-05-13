@@ -3,10 +3,10 @@ type: module
 domain: HR & People Management
 panel: hr
 phase: 3
-status: planned
+status: complete
 cssclasses: domain-hr
 migration_range: 107000–107499
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Compensation & Benefits

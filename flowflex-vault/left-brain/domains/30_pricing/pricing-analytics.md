@@ -4,10 +4,10 @@ domain: Pricing Management
 panel: pricing
 module: Pricing Analytics
 phase: 5
-status: planned
+status: complete
 cssclasses: domain-pricing
 migration_range: 1102000–1102499
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Pricing Analytics

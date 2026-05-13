@@ -4,9 +4,9 @@ domain: ESG & Sustainability
 panel: esg
 cssclasses: domain-esg
 phase: 5
-status: planned
+status: complete
 migration_range: 930000–949999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # ESG / CSRD Report Builder

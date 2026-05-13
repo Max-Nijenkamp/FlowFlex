@@ -4,9 +4,9 @@ domain: Legal & Compliance
 panel: legal
 cssclasses: domain-legal
 phase: 7
-status: planned
+status: complete
 migration_range: 565000–569999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Insurance & Licence Tracking

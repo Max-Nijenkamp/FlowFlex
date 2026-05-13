@@ -3,10 +3,10 @@ type: module
 domain: Financial Planning & Analysis
 panel: fpa
 phase: 4
-status: planned
+status: complete
 cssclasses: domain-fpa
 migration_range: 985000–985499
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Annual Budget Builder

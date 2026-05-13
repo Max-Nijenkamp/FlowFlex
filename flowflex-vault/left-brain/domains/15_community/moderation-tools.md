@@ -3,10 +3,11 @@ type: module
 domain: Community & Social
 panel: community
 phase: 7
-status: planned
+status: complete
 cssclasses: domain-community
 migration_range: 801500–801999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
+right_brain_log: "[[builder-log-community-phase7]]"
 ---
 
 # Moderation Tools

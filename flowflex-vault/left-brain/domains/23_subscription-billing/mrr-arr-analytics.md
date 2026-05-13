@@ -3,10 +3,10 @@ type: module
 domain: Subscription Billing & RevOps
 panel: subscriptions
 phase: 3
-status: planned
+status: complete
 cssclasses: domain-subscriptions
 migration_range: 975700–975849
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # MRR / ARR Analytics

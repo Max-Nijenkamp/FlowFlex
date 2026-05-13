@@ -4,10 +4,10 @@ domain: Whistleblowing & Ethics Hotline
 panel: whistleblowing
 module: Case Management & Investigation
 phase: 4
-status: planned
+status: complete
 cssclasses: domain-whistleblowing
 migration_range: 1000500–1000999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Case Management & Investigation

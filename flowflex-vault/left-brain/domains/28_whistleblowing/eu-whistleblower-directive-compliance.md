@@ -4,10 +4,10 @@ domain: Whistleblowing & Ethics Hotline
 panel: whistleblowing
 module: EU Directive Compliance
 phase: 4
-status: planned
+status: complete
 cssclasses: domain-whistleblowing
 migration_range: 1001000–1001499
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # EU Whistleblower Directive Compliance

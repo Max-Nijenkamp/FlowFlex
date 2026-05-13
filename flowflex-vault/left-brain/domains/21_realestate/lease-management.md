@@ -4,9 +4,9 @@ domain: Real Estate & Property Management
 panel: realestate
 cssclasses: domain-realestate
 phase: 6
-status: planned
+status: complete
 migration_range: 954000–956999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Lease Management

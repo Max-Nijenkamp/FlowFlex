@@ -3,10 +3,10 @@ type: module
 domain: Subscription Billing & RevOps
 panel: subscriptions
 phase: 3
-status: planned
+status: complete
 cssclasses: domain-subscriptions
 migration_range: 975500–975699
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Dunning Management

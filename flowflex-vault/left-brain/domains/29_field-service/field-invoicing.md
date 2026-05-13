@@ -4,10 +4,10 @@ domain: Field Service Management
 panel: fsm
 module: Field Invoicing & Payment
 phase: 5
-status: planned
+status: complete
 cssclasses: domain-fsm
 migration_range: 1052000–1052499
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Field Invoicing & Payment

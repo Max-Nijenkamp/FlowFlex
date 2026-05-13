@@ -4,9 +4,9 @@ domain: Finance & Accounting
 panel: finance
 cssclasses: domain-finance
 phase: 6
-status: planned
+status: complete
 migration_range: 200000–249999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Intercompany Billing

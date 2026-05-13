@@ -4,9 +4,10 @@ domain: Learning & Development
 panel: lms
 cssclasses: domain-lms
 phase: 7
-status: planned
-migration_range: 725000–729999
-last_updated: 2026-05-09
+status: complete
+migration_range: 480007–480008
+last_updated: 2026-05-12
+right_brain_log: "[[builder-log-lms-phase7]]"
 ---
 
 # Mentoring & Coaching

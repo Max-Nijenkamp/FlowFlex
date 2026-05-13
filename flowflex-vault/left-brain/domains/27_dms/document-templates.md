@@ -3,10 +3,10 @@ type: module
 domain: Document Management
 panel: dms
 phase: 4
-status: planned
+status: complete
 cssclasses: domain-dms
 migration_range: 995000–995499
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Document Templates

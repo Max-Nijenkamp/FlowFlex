@@ -4,10 +4,10 @@ domain: Enterprise Risk Management
 panel: risk
 module: Business Continuity Planning
 phase: 6
-status: planned
+status: complete
 cssclasses: domain-risk
 migration_range: 1152500–1152999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Business Continuity Planning

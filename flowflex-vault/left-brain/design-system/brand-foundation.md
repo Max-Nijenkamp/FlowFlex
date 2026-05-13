@@ -1,7 +1,9 @@
 ---
 type: design
 section: design-system
-last_updated: 2026-05-09
+last_updated: 2026-05-13
+status: in-progress
+right_brain_log: "[[builder-log-ui-theme-overhaul]]"
 ---
 
 # Brand Foundation

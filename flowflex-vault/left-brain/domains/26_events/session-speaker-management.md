@@ -3,10 +3,10 @@ type: module
 domain: Events Management
 panel: events
 phase: 5
-status: planned
+status: complete
 cssclasses: domain-events
 migration_range: 991500–991999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Session & Speaker Management

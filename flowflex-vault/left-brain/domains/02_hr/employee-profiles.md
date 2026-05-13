@@ -3,9 +3,9 @@ type: module
 domain: HR & People
 panel: hr
 phase: 2
-status: in-progress
+status: complete
 migration_range: 100000–109999
-last_updated: 2026-05-10
+last_updated: 2026-05-12
 right_brain_log: "[[builder-log-hr-phase2]]"
 ---
 

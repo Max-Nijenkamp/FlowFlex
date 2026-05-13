@@ -4,10 +4,10 @@ domain: Pricing Management
 panel: pricing
 module: Discount Approval Workflows
 phase: 4
-status: planned
+status: complete
 cssclasses: domain-pricing
 migration_range: 1100500–1100999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Discount Approval Workflows

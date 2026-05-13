@@ -3,10 +3,10 @@ type: module
 domain: Projects & Work
 panel: projects
 phase: 2
-status: planned
+status: complete
 cssclasses: domain-projects
 migration_range: 203000–203499
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Project Budget & Costs

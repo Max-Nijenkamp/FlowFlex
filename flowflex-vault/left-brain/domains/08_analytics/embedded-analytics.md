@@ -4,9 +4,10 @@ domain: Analytics & BI
 panel: analytics
 cssclasses: domain-analytics
 phase: 6
-status: planned
+status: complete
 migration_range: 450000–499999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
+right_brain_log: "[[builder-log-analytics-phase6]]"
 ---
 
 # Embedded Analytics

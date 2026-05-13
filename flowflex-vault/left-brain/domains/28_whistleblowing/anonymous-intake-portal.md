@@ -4,10 +4,10 @@ domain: Whistleblowing & Ethics Hotline
 panel: whistleblowing
 module: Anonymous Intake Portal
 phase: 4
-status: planned
+status: complete
 cssclasses: domain-whistleblowing
 migration_range: 1000000–1000499
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Anonymous Intake Portal

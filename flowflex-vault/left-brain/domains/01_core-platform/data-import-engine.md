@@ -4,9 +4,9 @@ domain: Core Platform
 panel: admin
 cssclasses: domain-admin
 phase: 1
-status: in-progress
+status: complete
 migration_range: 010001–019999
-last_updated: 2026-05-10
+last_updated: 2026-05-12
 right_brain_log: "[[builder-log-core-platform-phase1]]"
 ---
 

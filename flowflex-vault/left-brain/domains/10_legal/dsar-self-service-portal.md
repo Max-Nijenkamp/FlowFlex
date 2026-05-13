@@ -4,9 +4,9 @@ domain: Legal & Compliance
 panel: legal
 cssclasses: domain-legal
 phase: 4
-status: planned
+status: complete
 migration_range: 500000–549999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # DSAR Self-Service Portal

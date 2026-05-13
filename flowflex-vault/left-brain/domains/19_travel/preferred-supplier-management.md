@@ -4,9 +4,9 @@ domain: Business Travel
 panel: travel
 cssclasses: domain-travel
 phase: 7
-status: planned
+status: complete
 migration_range: 921000–923999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Preferred Supplier Management

@@ -4,9 +4,9 @@ domain: ESG & Sustainability
 panel: esg
 cssclasses: domain-esg
 phase: 6
-status: planned
+status: complete
 migration_range: 938000–941999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Net Zero Roadmap

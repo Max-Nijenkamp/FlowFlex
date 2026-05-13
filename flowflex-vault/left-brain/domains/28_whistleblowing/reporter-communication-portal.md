@@ -4,10 +4,10 @@ domain: Whistleblowing & Ethics Hotline
 panel: whistleblowing
 module: Reporter Communication Portal
 phase: 4
-status: planned
+status: complete
 cssclasses: domain-whistleblowing
 migration_range: 1001500–1001999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Reporter Communication Portal

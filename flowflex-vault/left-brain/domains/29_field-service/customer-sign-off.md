@@ -4,10 +4,10 @@ domain: Field Service Management
 panel: fsm
 module: Customer Sign-Off & POD
 phase: 5
-status: planned
+status: complete
 cssclasses: domain-fsm
 migration_range: 1051500–1051999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Customer Sign-Off & Proof of Delivery

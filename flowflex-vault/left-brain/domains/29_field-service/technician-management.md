@@ -4,10 +4,10 @@ domain: Field Service Management
 panel: fsm
 module: Technician & Team Management
 phase: 5
-status: planned
+status: complete
 cssclasses: domain-fsm
 migration_range: 1051000–1051499
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Technician & Team Management

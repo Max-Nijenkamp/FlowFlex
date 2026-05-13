@@ -4,10 +4,10 @@ domain: Pricing Management
 panel: pricing
 module: Price Book Management
 phase: 4
-status: planned
+status: complete
 cssclasses: domain-pricing
 migration_range: 1100000–1100499
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Price Book Management

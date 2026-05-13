@@ -4,10 +4,10 @@ domain: Pricing Management
 panel: pricing
 module: AI Price Optimisation
 phase: 5
-status: planned
+status: complete
 cssclasses: domain-pricing
 migration_range: 1101000–1101499
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # AI Price Optimisation

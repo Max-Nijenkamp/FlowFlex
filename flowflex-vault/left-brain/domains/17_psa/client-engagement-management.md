@@ -4,9 +4,9 @@ domain: Professional Services Automation
 panel: psa
 cssclasses: domain-psa
 phase: 7
-status: planned
+status: complete
 migration_range: 870000–873999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Client Engagement Management

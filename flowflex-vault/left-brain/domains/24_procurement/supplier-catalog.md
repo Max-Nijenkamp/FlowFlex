@@ -3,10 +3,10 @@ type: module
 domain: Procurement & Spend Management
 panel: procurement
 phase: 3
-status: planned
+status: complete
 cssclasses: domain-procurement
 migration_range: 982000–982499
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Supplier Catalog

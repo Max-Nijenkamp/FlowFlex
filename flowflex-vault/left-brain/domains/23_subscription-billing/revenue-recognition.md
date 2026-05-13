@@ -3,10 +3,10 @@ type: module
 domain: Subscription Billing & RevOps
 panel: subscriptions
 phase: 4
-status: planned
+status: complete
 cssclasses: domain-subscriptions
 migration_range: 975925–979999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Revenue Recognition (IFRS 15 / ASC 606)

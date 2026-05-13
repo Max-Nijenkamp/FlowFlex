@@ -4,9 +4,9 @@ domain: Real Estate & Property Management
 panel: realestate
 cssclasses: domain-realestate
 phase: 6
-status: planned
+status: complete
 migration_range: 963000–964999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # IFRS 16 Lease Accounting

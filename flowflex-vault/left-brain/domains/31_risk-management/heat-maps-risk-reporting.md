@@ -4,10 +4,10 @@ domain: Enterprise Risk Management
 panel: risk
 module: Heat Maps & Risk Reporting
 phase: 5
-status: planned
+status: complete
 cssclasses: domain-risk
 migration_range: 1151500–1151999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Heat Maps & Risk Reporting

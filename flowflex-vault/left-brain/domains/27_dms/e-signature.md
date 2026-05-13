@@ -3,10 +3,10 @@ type: module
 domain: Document Management
 panel: dms
 phase: 4
-status: planned
+status: complete
 cssclasses: domain-dms
 migration_range: 996000–996499
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # E-Signature

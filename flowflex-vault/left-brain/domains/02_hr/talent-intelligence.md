@@ -4,10 +4,10 @@ domain: HR & People
 panel: hr
 module: Talent Intelligence
 phase: 5
-status: planned
+status: complete
 cssclasses: domain-hr
 migration_range: 108500–108999
-last_updated: 2026-05-09
+last_updated: 2026-05-12
 ---
 
 # Talent Intelligence

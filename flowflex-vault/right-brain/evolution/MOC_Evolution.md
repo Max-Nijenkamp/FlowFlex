@@ -2,7 +2,7 @@
 type: moc
 section: right-brain/evolution
 color: "#F97316"
-last_updated: 2026-05-10
+last_updated: 2026-05-13 (UI Theme Overhaul — panel hub topbar migration)
 ---
 
 # Evolution — Architectural Decisions & Pivots
@@ -13,8 +13,18 @@ Major decisions made during the build. When the spec changes from the original L
 
 ## Decision Log
 
+| 2026-05-13 | Panel hub moved from `BODY_END` floating FAB → `TOPBAR_END` inline dropdown | Always visible, never covers content, matches modern SaaS topbar patterns | [[decision-2026-05-13-panel-hub-topbar]] |
+| 2026-05-13 | PanelHub: global `FilamentView::registerRenderHook(BODY_END)` covers all 29 panels from one ServiceProvider | New panels get hub for free; auth+company guard in closure prevents render on login pages | [[decision-2026-05-13-panel-hub-renderhook]] |
+| 2026-05-13 | CRUD→custom Page pattern established: interactive UX (chat/tree/canvas) must never be a Filament Resource | OrgChart/Copilot replaced; WorkflowBuilder/TeamChat/RI get companion Pages; Resource kept for data management | [[decision-2026-05-13-crud-to-custom-page-pattern]] |
+| 2026-05-12 | Use `orderByDesc('id')` not `orderByDesc('created_at')` for ULID-keyed models; never use `withoutGlobalScopes()->find()` in soft-delete assertions | ULID ms-precision avoids same-second ordering ambiguity; withoutGlobalScopes removes SoftDeletes scope | [[decision-2026-05-12-ulid-ordering-and-softdeletes-scope]] |
+| 2026-05-12 | CRM Phase 8 extensions use a separate `CrmExtensionsServiceProvider` — do not modify `CrmServiceProvider` | Establishes pattern for all future phase extensions to existing domains: new provider per phase, zero touch on existing | [[decision-2026-05-12-crm-extensions-separate-provider]] |
+
 | Date | Decision | Impact | File |
 |---|---|---|---|
+| 2026-05-12 | LMS migrations use date-based range (480001–480015), not spec range (700000–749999) | Spec ranges are planning placeholders only; sequential date-based naming is the actual convention for all Phase 4+ domains | [[decision-2026-05-12-lms-migration-range-actual-vs-spec]] |
+| 2026-05-12 | Integration credentials stored with `encrypted:array` cast — not plain `json` | DB dumps + backups cannot expose OAuth tokens / API keys without APP_KEY. Future integration domains should adopt same pattern. | [[decision-2026-05-12-integration-credentials-encryption]] |
+| 2026-05-11 | Stripe webhook now hard-fails (500) when STRIPE_WEBHOOK_SECRET not configured | Supersedes prior graceful-degradation approach; unverified webhooks can spoof billing events | [[decision-2026-05-11-stripe-webhook-hard-fail]] |
+| 2026-05-11 | ulidMorphs() rule extended: Sanctum personal_access_tokens migration must be patched | `vendor:publish --tag=sanctum-migrations` outputs bigint morphs; patch to `ulidMorphs()` before migrate | [[decision-2026-05-10-ulid-morph-pattern]] |
 | 2026-05-10 | Domain migrations use YYYY-MM-DD_NNNNNN_ prefix to sort after permission tables | Phase 2+ domain migrations date-prefixed (e.g. 2026_05_10_100001_*) so they run after spatie permissions table. Foundation/Phase 1 (000xxx/010xxx) exempt. | [[decision-2026-05-10-migration-naming-convention]] |
 | 2026-05-10 | Eloquent BelongsToMany pivot tables must use composite PK — no ULID id column | Pivot inserts bypass Eloquent model lifecycle; ULID id stays NULL, causing NOT NULL violation. Composite PK is the standard pattern. | [[decision-2026-05-10-pivot-composite-pk]] |
 | 2026-05-10 | PostgreSQL self-referential FK must use separate Schema::table block after Schema::create | All future migrations with self-referential FKs must follow this two-step pattern to avoid "no unique constraint" error. | [[decision-2026-05-10-postgresql-self-referential-fk]] |

@@ -29,7 +29,16 @@ The existing `activity_log` table had to be dropped and recreated in both `flowf
 - Any third-party package migration that publishes with bigint morphs (e.g. spatie/laravel-activitylog) must be patched before running
 - Test DB and prod DB must be kept in sync when fixing migration column types — use psql directly if needed
 
+## Update: 2026-05-11 — Sanctum personal_access_tokens
+
+Same issue hit Sanctum installation. `php artisan vendor:publish --tag=sanctum-migrations` produces `morphs('tokenable')` → bigint `tokenable_id`. All model PKs are ULIDs (strings) → `SQLSTATE[22P02]: invalid input syntax for type bigint` on first `createToken()` call.
+
+Fix: edit published migration before running, change `morphs('tokenable')` → `ulidMorphs('tokenable')`.
+
+**Rule:** Any time a package publishes migrations, check for `morphs()` / `nullableMorphs()` calls and change to `ulidMorphs()` / `nullableUlidMorphs()` before running.
+
 ## Related Left Brain
 
 - [[concept-multi-tenancy]] — ULID pattern is project-wide
 - [[audit-log]] — first place this bit us
+- [[api-integrations]] — Sanctum installation 2026-05-11
