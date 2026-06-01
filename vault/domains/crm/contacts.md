@@ -9,38 +9,36 @@ color: "#4ADE80"
 
 # Contacts
 
-> Contact and company records, relationship mapping, activity timeline, and communication history — the central people database for all CRM activity.
+Contact and company (account) records with communication history, relationship mapping, and activity timeline. The foundation of all CRM activity.
 
-**Panel:** `crm`
-**Module key:** `crm.contacts`
+---
 
-## What It Does
+## Core Features
 
-Contacts is the foundational module of the CRM domain. It maintains a unified database of individual contacts (people) and the companies they work for. Every other CRM module — deals, activities, quotes, sequences — links back to a contact or company record. Each contact has a full activity timeline showing all interactions: emails, calls, meetings, deals, quotes, and notes in chronological order. Duplicate detection warns when a contact with the same email is added. The module feeds into Email Integration (auto-link emails), Customer Segments (filter cohorts), and Marketing (form submissions → auto-create contact).
+- Contact records: first name, last name, email, phone, job title, company, address
+- Company (account) records: name, industry, size, website, address — contacts linked to companies
+- Relationship mapping: a contact can belong to multiple companies
+- Communication history: all activities (calls, emails, meetings) appear on contact timeline
+- Tags: polymorphic tagging via `spatie/laravel-tags`
+- Custom fields: company-specific attributes via `spatie/laravel-schemaless-attributes` (when active)
+- Duplicate detection on import and create (same email)
+- Import via Core Data Import: CSV contact upload with column mapping
+- Export via `pxlrbt/filament-excel`
+- Contact source tracking (website, referral, LinkedIn, manual)
+- **Lead status field**: `crm_contacts.lifecycle_stage` enum (`lead | marketing_qualified | sales_qualified | opportunity | customer | churned`) — FlowFlex does NOT have a separate Lead model. A "lead" is a contact with `lifecycle_stage = lead`. This eliminates the HubSpot Lead-to-Contact conversion complexity. Reps move contacts through lifecycle stages as they qualify.
 
-## Features
-
-### Core
-- Contact record: first name, last name, email, phone, mobile, job title, source, status, owner, linked company, notes, custom fields, last contacted date
-- Company record: name, domain, industry, company size, website, phone, address, notes, owner
-- Contact-company relationship: many-to-many with role (e.g. CEO, Decision Maker, Champion)
-- Status tracking: lead / prospect / customer / lost / churned
-- Source tracking: website / referral / cold-outreach / social / event / partner / other
-
-### Advanced
-- Activity timeline: all interactions (emails, calls, meetings, deals, quotes, notes) shown chronologically on contact profile
-- Duplicate detection: warn on create if a contact with the same email exists — merge tool for duplicates
-- CSV import: bulk import contacts with duplicate handling (skip/overwrite/create-new configurable)
-- Tags and custom fields: per-company taxonomy and extensible JSON custom fields
-- Company aggregated stats: total deal value, open opportunities count, invoice history, support tickets
-
-### AI-Powered
-- Contact enrichment: AI enriches contact records with publicly available information (LinkedIn title, company size, industry) to fill blank fields
-- Relationship scoring: AI scores the strength of the relationship with a contact based on interaction frequency, recency, and sentiment of email communications
+---
 
 ## Data Model
 
-```erDiagram
+| Table | Key Columns |
+|---|---|
+| `crm_contacts` | company_id, first_name, last_name, email, phone, job_title, account_id, source, owner_id, deleted_at |
+| `crm_accounts` | company_id, name, industry, employee_count, website, phone, owner_id, deleted_at |
+| `crm_contact_accounts` | contact_id, account_id, company_id, title, is_primary |
+
+```mermaid
+erDiagram
     crm_contacts {
         ulid id PK
         ulid company_id FK
@@ -48,73 +46,38 @@ Contacts is the foundational module of the CRM domain. It maintains a unified da
         string last_name
         string email
         string phone
-        string mobile
         string job_title
+        ulid account_id FK
         string source
-        string status
         ulid owner_id FK
-        ulid crm_company_id FK
-        text notes
-        json custom_fields
-        timestamp last_contacted_at
-        timestamps created_at/updated_at
     }
-
-    crm_companies {
+    crm_accounts {
         ulid id PK
         ulid company_id FK
         string name
-        string domain
         string industry
-        string size
+        int employee_count
         string website
-        ulid owner_id FK
-        text notes
-        timestamps created_at/updated_at
     }
-
-    crm_contact_company {
-        ulid crm_contact_id FK
-        ulid crm_company_id FK
-        string role
-    }
+    crm_contacts }o--|| crm_accounts : "primary account"
+    crm_contacts }o--o{ crm_accounts : "also linked"
 ```
 
-| Column | Notes |
-|---|---|
-| `status` | lead / prospect / customer / lost / churned |
-| `source` | website / referral / cold-outreach / social / event / partner / other |
-| `crm_company_id` | FK to `crm_companies` — separate from tenant `companies` table |
-
-## Permissions
-
-- `crm.contacts.view`
-- `crm.contacts.create`
-- `crm.contacts.edit`
-- `crm.contacts.delete`
-- `crm.contacts.import`
+---
 
 ## Filament
 
-- **Resource:** `ContactResource`, `CrmCompanyResource`
-- **Pages:** `ListContacts`, `CreateContact`, `EditContact`, `ViewContact` (with activity timeline tab), `ListCrmCompanies`, `ViewCrmCompany`
-- **Custom pages:** None
-- **Widgets:** `NewContactsThisMonthWidget` — new contact count on CRM dashboard
-- **Nav group:** Contacts (crm panel)
+**Nav group:** Contacts
 
-## Displaces
+- `ContactResource` — list (search, filter by owner/account/tag), create, edit, view
+- View page: contact card + tabs (Overview, Activities, Deals, Files)
+- `AccountResource` — list, create, edit companies; view shows contacts and deals
+- Import from [[domains/core/data-import]]
 
-| Competitor | Feature Displaced |
-|---|---|
-| HubSpot CRM | Contact and company management |
-| Salesforce | Account and contact records |
-| Pipedrive | Contact database |
-| Close | Contact management |
+---
 
 ## Related
 
-- [[deals]]
-- [[activities]]
-- [[email-integration]]
-- [[customer-segments]]
-- [[sales-sequences]]
+- [[domains/crm/deals]]
+- [[domains/crm/activities]]
+- [[architecture/packages]] (`spatie/laravel-tags`)

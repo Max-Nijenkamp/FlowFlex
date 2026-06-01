@@ -12,47 +12,37 @@ color: "#A78BFA"
 
 ```mermaid
 graph TD
-    subgraph Frontend
+    subgraph "Public Frontend"
         Vue3["Vue 3.5 + TypeScript 5"]
         Inertia["Inertia.js v2"]
-        Vite["Vite 6"]
-        Tailwind["Tailwind CSS v4"]
+        Vite["Vite 6 + Tailwind CSS v4"]
     end
 
-    subgraph AdminUI
+    subgraph "Filament Panels (21 domains)"
         Filament5["Filament 5"]
-        Livewire["Livewire v4"]
-        Alpine["Alpine.js 3"]
+        Livewire["Livewire v4 + Alpine.js 3"]
     end
 
-    subgraph Backend
+    subgraph "Backend"
         Laravel["Laravel 13 / PHP 8.4"]
-        SpatieData["spatie/laravel-data 4.x"]
-        SpatiePermission["spatie/laravel-permission 6.x"]
-        SpatieActivity["spatie/laravel-activitylog 5.x"]
-        Stripe["stripe/stripe-php 14.x"]
     end
 
-    subgraph Infra
-        Horizon["Laravel Horizon 5.x"]
-        Pulse["Laravel Pulse 1.x"]
-        Reverb["Laravel Reverb 1.x"]
-        Telescope["Laravel Telescope (dev only)"]
-    end
-
-    subgraph Data
+    subgraph "Data"
         PG["PostgreSQL 17"]
         Redis["Redis 8"]
         Meili["Meilisearch 1.x"]
         S3["S3 / Cloudflare R2"]
     end
 
+    subgraph "Infra"
+        Horizon["Laravel Horizon 5.x"]
+        Reverb["Laravel Reverb 1.x"]
+        Pulse["Laravel Pulse 1.x"]
+    end
+
     Vue3 --> Inertia --> Laravel
     Filament5 --> Livewire --> Laravel
-    Laravel --> PG
-    Laravel --> Redis
-    Laravel --> Meili
-    Laravel --> S3
+    Laravel --> PG & Redis & Meili & S3
     Horizon --> Redis
 ```
 
@@ -62,19 +52,36 @@ graph TD
 
 | Package | Version | Purpose |
 |---|---|---|
-| `php` | 8.4 | Language — named arguments, typed properties, readonly, enums, first-class callables |
-| `laravel/framework` | 13.x | Core application framework |
+| `php` | 8.4 | Named args, typed props, readonly, enums, first-class callables |
+| `laravel/framework` | 13.x | Core framework |
 | `laravel/sanctum` | 4.x | SPA session auth + API token issuance |
-| `laravel/horizon` | 5.x | Queue monitoring dashboard + worker management |
-| `laravel/pulse` | 1.x | Application health metrics (slow queries, exceptions, queue) |
-| `laravel/reverb` | 1.x | First-party WebSocket server for real-time features |
-| `laravel/telescope` | latest | Debug and introspection tool — dev environment only |
+| `laravel/horizon` | 5.x | Queue monitoring + worker management |
+| `laravel/pulse` | 1.x | App health metrics (slow queries, exceptions, queue) |
+| `laravel/reverb` | 1.x | First-party WebSocket server |
+| `laravel/telescope` | latest | Dev-only debug tool |
 | `spatie/laravel-data` | 4.x | DTOs for all input validation and output serialisation |
-| `spatie/laravel-permission` | 6.x | Role/permission RBAC with team support (teams = company_id) |
+| `spatie/laravel-permission` | 6.x | RBAC with team support (teams = company_id) |
 | `spatie/laravel-activitylog` | 5.x | Audit trail on all models |
 | `spatie/laravel-media-library` | 11.x | File attachments on any model |
 | `spatie/laravel-typescript-transformer` | 2.x | Auto-generates TypeScript interfaces from PHP Data classes |
-| `stripe/stripe-php` | 14.x | Stripe payment processing and webhook handling |
+| `stripe/stripe-php` | 14.x | Stripe payment processing + webhooks |
+| `laravel/scout` | latest | Full-text search driver layer for Meilisearch |
+| `spatie/laravel-model-states` | latest | State machines for status fields |
+| `spatie/laravel-settings` | latest | Type-safe per-company settings |
+| `spatie/laravel-sluggable` | latest | Auto-slug generation on models |
+| `spatie/laravel-health` | latest | Health check endpoints |
+| `spatie/laravel-pdf` | latest | Chromium-based PDF generation |
+| `spatie/laravel-backup` | latest | Automated DB + file backups |
+| `lorisleiva/laravel-actions` | latest | Single-class actions for simple operations |
+| `maatwebsite/laravel-excel` | latest | Chunked Excel import/export jobs |
+| `brick/money` | latest | Type-safe monetary arithmetic |
+| `propaganistas/laravel-phone` | latest | Phone validation → E.164 storage |
+| `ezyang/htmlpurifier` | latest | XSS-safe rich text storage |
+| `calebporzio/sushi` | latest | Static array-backed Eloquent models (module catalog) |
+| `sentry/sentry-laravel` | latest | Production error tracking |
+| Dev only: `nunomaduro/larastan`, `laravel/pint`, `pestphp/pest-plugin-livewire` | — | Static analysis, code style, Filament testing |
+
+See [[architecture/packages]] for full evaluation notes on all packages.
 
 ---
 
@@ -83,27 +90,29 @@ graph TD
 | Package | Purpose |
 |---|---|
 | `filament/filament` | Panel framework — resources, pages, widgets, actions |
-| `filament/spatie-laravel-media-library-plugin` | File upload and media fields in Filament forms |
-| `filament/spatie-laravel-translatable-plugin` | Translatable field support in Filament |
-| `bezhansalleh/filament-shield` | Permission management UI for Spatie/permission inside Filament |
+| `filament/spatie-laravel-media-library-plugin` | File upload fields in Filament forms |
+| `bezhansalleh/filament-shield` | Permission management UI inside Filament |
 | `livewire/livewire` | 4.x — Filament's component runtime |
-| `alpinejs` | 3.x — JavaScript sprinkles in Filament components |
+| `alpinejs` | 3.x — JavaScript sprinkles |
 
 ---
 
 ## Frontend (Vue 3 + Inertia)
 
+Used for: marketing site, client portal, learner portal, checkout flows.
+
 | Package | Version | Purpose |
 |---|---|---|
-| `vue` | 3.5.x | UI component framework for public-facing pages |
-| `@inertiajs/vue3` | 2.x | Server-driven SPA — no API layer needed for standard page data |
-| `typescript` | 5.x | Type safety across all Vue components and composables |
-| `vite` | 6.x | Build tool — handles both Vue+Inertia pages and Filament panel themes |
-| `tailwindcss` | 4.x | Utility CSS — used in both Vue pages and Filament custom components |
-| `@vueuse/core` | latest | Composables for reactivity, browser APIs, and utilities |
-| `zod` | 3.x | Client-side validation for forms not managed by Inertia |
-| `chart.js` | 4.x | Data visualisation in analytics widgets and dashboards |
-| `@tiptap/vue-3` | 2.x | Rich text editor for documents, wiki pages, and email templates |
+| `vue` | 3.5.x | UI components for public pages |
+| `@inertiajs/vue3` | 2.x | Server-driven SPA — no separate API layer, no Vue Router |
+| `typescript` | 5.x | Type safety across Vue components |
+| `vite` | 6.x | Build tool (handles Vue pages + Filament themes) |
+| `tailwindcss` | 4.x | Utility CSS |
+| `@vueuse/core` | latest | Composables for reactivity and browser APIs |
+| `tightenco/ziggy` | latest | Named Laravel route generation in Vue (`route('hr.employees.create')`) |
+| `pinia` | latest | Client-side state (only for wizard flows + pure UI state — not server data) |
+| `zod` | 3.x | Client-side validation for non-Inertia forms |
+| Dev only: `vitest`, `@playwright/test` | — | Unit and E2E testing |
 
 ---
 
@@ -111,50 +120,56 @@ graph TD
 
 | Technology | Version | Purpose |
 |---|---|---|
-| PostgreSQL | 17 | Primary relational database — all application data |
-| Redis | 8 | Cache store, queue backend, session store, WebSocket broadcast channel |
-| Meilisearch | 1.x | Full-text search across employees, contacts, documents, and products |
-| S3 / Cloudflare R2 | — | Object storage for uploaded files, media, and exports |
+| PostgreSQL | 17 | Primary relational database |
+| Redis | 8 | Cache, queue backend, sessions, WebSocket channels |
+| Meilisearch | 1.x | Full-text search (employees, contacts, documents, products) |
+| S3 / Cloudflare R2 | — | Object storage for uploads, media, exports |
 
 ---
 
-## Type Flow: PHP to TypeScript
+## Frontend vs Admin Decision
+
+| Context | Tech | Reason |
+|---|---|---|
+| Business domain panels | Filament 5 | CRUD-first, fastest to build, Livewire handles state |
+| `/admin` panel (staff) | Filament 5 | Same pattern as domain panels |
+| Public marketing site | Vue 3 + Inertia | Custom design, SEO, no auth |
+| Client portal | Vue 3 + Inertia | External users, branded UX |
+| Learner portal | Vue 3 + Inertia | External learners, custom completion flow |
+| Custom domain views (Kanban, Gantt, Calendar) | Custom Filament pages | Still inside Filament panel, not Inertia |
+
+---
+
+## Dev Environment
+
+**Docker Compose** — commands use `docker exec flowflex_app`.
+
+```bash
+docker exec flowflex_app php artisan migrate
+docker exec flowflex_app php artisan test
+docker exec flowflex_app php artisan typescript:transform
+```
+
+---
+
+## Key Constraints (Non-Negotiable)
+
+- **PHP 8.4+ features**: named arguments, typed properties, readonly, backed enums — standard, not optional
+- **PostgreSQL only**: no MySQL compatibility; use JSONB, generated columns, advisory locks freely
+- **ULID PKs everywhere**: no integers, no UUID4 — see [[architecture/patterns/belongs-to-company]]
+- **Soft deletes on all models**: hard delete only via scheduled purge and GDPR erasure
+- **`BelongsToCompany` on every tenant model** — see [[architecture/multi-tenancy]]
+- **No N+1 queries**: always use `with()`, verify with Telescope
+- **All mutations through DTOs**: no `$request->all()` into services — see [[architecture/patterns/dto-pattern]]
+
+---
+
+## Type Flow: PHP → TypeScript
 
 ```mermaid
 graph LR
-    DTO["PHP Data class\n(spatie/laravel-data)"]
-    -->|"spatie/typescript-transformer\nphp artisan typescript:transform"| TS["TypeScript Interface\n(resources/js/types/generated.d.ts)"]
-    --> Vue["Vue Component\n(typed defineProps)"]
-    --> Inertia["Inertia Page\n(type-safe server data)"]
+    DTO["PHP Data class"] -->|"php artisan typescript:transform"| TS["TypeScript Interface\n(generated.d.ts)"]
+    TS --> Vue["Vue Component\n(typed defineProps)"]
 ```
 
-All server-to-client data is typed end-to-end. The TypeScript types are never written by hand — they are generated from the PHP DTOs. Running `php artisan typescript:transform` regenerates the file.
-
----
-
-## Frontend vs Admin Decision Table
-
-| Context | Technology | Reason |
-|---|---|---|
-| Business domain panels (HR, Finance, CRM, etc.) | Filament 5 | CRUD-first; fastest to build; Livewire handles state |
-| FlowFlex admin panel (staff only) | Filament 5 | Same pattern as domain panels; tight access control |
-| Public marketing site | Vue 3 + Inertia | Custom design, SEO, no auth requirement |
-| Client portal | Vue 3 + Inertia | External users, branded UX, custom flow |
-| Learner portal (LMS) | Vue 3 + Inertia | External learners, custom completion flow |
-| Community pages | Vue 3 + Inertia | Social UX, public and authenticated views |
-| Checkout and booking flows | Vue 3 + Inertia | Conversion-optimised, custom step flow |
-| Mobile app | React Native / Capacitor (TBD) | Native app APIs; cross-platform |
-
----
-
-## Key Constraints
-
-Every builder must follow these unconditionally:
-
-- **PHP 8.4+ features**: use named arguments, typed properties, readonly classes/properties, backed enums, and first-class callables — they are standard, not optional
-- **PostgreSQL only**: no MySQL compatibility layer; use PostgreSQL-specific features freely (JSONB, generated columns, advisory locks)
-- **ULID primary keys on all tables**: no integer PKs, no UUID4 — see [[data-model]] for rationale
-- **Soft deletes on all models**: hard delete is only performed by scheduled purge jobs and GDPR erasure flows
-- **BelongsToCompany on every tenant model**: any model with `company_id` must use the trait — global scope is not applied via migration constraint; it is applied via trait
-- **No N+1 queries**: always use `with()` for relationships; verify with Laravel Telescope in development; no exceptions
-- **All mutations through DTOs**: never pass `$request->all()` or raw arrays into a service or model; always go through a Data class
+Never write TypeScript types by hand for server-to-client data. Run `typescript:transform` after changing any Data class.

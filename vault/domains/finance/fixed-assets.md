@@ -9,102 +9,62 @@ color: "#4ADE80"
 
 # Fixed Assets
 
-> Fixed asset register, depreciation schedules, depreciation journal posting, and disposal tracking — the full lifecycle of company-owned assets.
+Fixed asset register, depreciation schedules, and disposal tracking. Capitalised assets accounted over their useful life.
 
-**Panel:** `finance`
-**Module key:** `finance.assets`
+## Core Features
 
-## What It Does
-
-Fixed Assets manages the company's long-term physical and intangible assets — computers, furniture, vehicles, software licences, patents. Each asset is registered with its purchase cost, asset category, useful life, and depreciation method. The module auto-calculates and posts monthly depreciation journal entries to the General Ledger (debit Depreciation Expense, credit Accumulated Depreciation) based on the configured schedule. Disposals record the sale or write-off of an asset and post the gain/loss journal. The asset register provides the net book value of all assets at any point in time.
-
-## Features
-
-### Core
-- Asset record: name, category, serial number, purchase date, purchase cost, supplier, useful life (years), residual value, depreciation method (straight-line, declining balance)
-- Depreciation schedule: auto-calculated monthly depreciation amount per asset based on method and useful life
-- Depreciation posting: monthly scheduled job posts depreciation journals to GL — debit Depreciation Expense, credit Accumulated Depreciation
-- Net book value: purchase cost − accumulated depreciation — computed and shown on asset detail
-- Asset register list: all assets with status, net book value, and depreciation progress bar
-
-### Advanced
-- Asset categories: user-defined categories (Computers & Electronics, Furniture, Vehicles, Intangibles) — each links to a GL asset account and depreciation expense account
-- Bulk depreciation run: Finance triggers the monthly depreciation run manually or via scheduled job — previews all journal entries before posting
-- Disposal workflow: record asset sold/scrapped — capture disposal proceeds, compute gain/loss, post disposal journal (credit Asset, debit Accumulated Depreciation + Bank/Gain or Loss)
-- Asset revaluation: upward or downward revaluation with journal entry posted to Revaluation Reserve (equity)
-- Fully depreciated assets: flagged in the register — Finance reviews and either continues to carry them (at residual value) or disposes
-
-### AI-Powered
-- Maintenance reminder: based on asset age and category, AI suggests when assets are likely to need maintenance or replacement — surfaced as reminders to the IT/operations team
-- Impairment indicator: if an asset's market value (manually entered) drops significantly below net book value, AI flags it as a potential impairment test trigger
+- Asset record: name, category, cost, purchase date, useful life, depreciation method, salvage value
+- Depreciation methods: straight-line, declining balance, units of production
+- Monthly depreciation calculation + auto-post journal entry to GL
+- Net book value: cost − accumulated depreciation
+- Asset disposal: sale/scrap with gain/loss calculation
+- Asset categories with default depreciation settings
+- Depreciation schedule view (full life projection)
+- Links to IT Asset Inventory (physical asset ↔ financial asset)
 
 ## Data Model
 
-```erDiagram
-    fixed_assets {
+| Table | Key Columns |
+|---|---|
+| `fin_fixed_assets` | company_id, name, category, cost_cents, purchase_date, useful_life_months, method, salvage_cents, accumulated_depreciation_cents, status, disposed_at |
+| `fin_depreciation_entries` | asset_id, company_id, period, depreciation_cents, journal_entry_id |
+
+```mermaid
+erDiagram
+    fin_fixed_assets {
         ulid id PK
         ulid company_id FK
         string name
-        string category
-        string serial_number
+        int cost_cents
         date purchase_date
-        decimal purchase_cost
-        decimal residual_value
-        integer useful_life_years
-        string depreciation_method
-        decimal accumulated_depreciation
+        int useful_life_months
+        string method
+        int accumulated_depreciation_cents
         string status
-        date disposal_date
-        decimal disposal_proceeds
-        ulid asset_gl_account_id FK
-        ulid depreciation_gl_account_id FK
-        timestamps created_at/updated_at
     }
-
-    asset_depreciation_entries {
+    fin_depreciation_entries {
         ulid id PK
         ulid asset_id FK
-        ulid company_id FK
-        date period_date
-        decimal amount
+        string period
+        int depreciation_cents
         ulid journal_entry_id FK
-        timestamps created_at/updated_at
     }
+    fin_fixed_assets ||--o{ fin_depreciation_entries : "depreciates"
 ```
-
-| Column | Notes |
-|---|---|
-| `depreciation_method` | straight_line / declining_balance |
-| `status` | active / fully_depreciated / disposed |
-| `asset_depreciation_entries` | One row per month per asset per posted depreciation |
-
-## Permissions
-
-- `finance.assets.view`
-- `finance.assets.create`
-- `finance.assets.post-depreciation`
-- `finance.assets.dispose`
-- `finance.assets.revalue`
 
 ## Filament
 
-- **Resource:** `FixedAssetResource`
-- **Pages:** `ListFixedAssets`, `CreateFixedAsset`, `ViewFixedAsset` (with depreciation schedule table)
-- **Custom pages:** `DepreciationRunPage` — preview and post the monthly depreciation batch
-- **Widgets:** `AssetNetBookValueWidget` — total net book value of all active assets on finance dashboard
-- **Nav group:** Ledger (finance panel)
+**Nav group:** Ledger
 
-## Displaces
+- `FixedAssetResource` — register, view schedule, dispose action
+- `DepreciationRunPage` (custom page) — run monthly depreciation, post to GL
 
-| Competitor | Feature Displaced |
-|---|---|
-| Xero Fixed Assets | Asset register and depreciation |
-| QuickBooks Fixed Assets | Fixed asset tracking |
-| Sage Fixed Assets | Asset lifecycle management |
-| Asset Panda | Fixed asset management |
+## Cross-Domain / Jobs
+
+- Monthly depreciation via scheduled job → posts journal entries to GL
+- Links to [[domains/it/asset-inventory]] physical assets
 
 ## Related
 
-- [[general-ledger]]
-- [[financial-reporting]]
-- [[budgets]]
+- [[domains/finance/general-ledger]]
+- [[domains/it/asset-inventory]]

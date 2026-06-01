@@ -6,39 +6,28 @@ color: "#A78BFA"
 
 # DTO Pattern (spatie/laravel-data)
 
-FlowFlex uses `spatie/laravel-data` Data classes for all input validation and output serialisation. A DTO replaces both Laravel's `FormRequest` and Laravel's `JsonResource` in a single class.
+`spatie/laravel-data` Data classes replace both `FormRequest` (input validation) and `JsonResource` (output serialisation) in a single class.
 
 ---
 
-## Location
+## File Location
 
 ```
 app/Data/{Domain}/{Model}Data.php
 ```
 
-Examples:
-- `app/Data/HR/EmployeeData.php`
-- `app/Data/HR/CreateEmployeeData.php`
-- `app/Data/Finance/InvoiceData.php`
-- `app/Data/Projects/TaskData.php`
+Examples: `app/Data/HR/EmployeeData.php`, `app/Data/Finance/InvoiceData.php`
 
-One DTO per concern. A shared `EmployeeData` for output, and a specific `CreateEmployeeData` for create-only input where the fields differ significantly.
+One DTO per concern. Separate input and output DTOs when fields differ significantly.
 
 ---
 
 ## Input DTO
 
-Used for validating request data before passing to the service layer. Constructor attributes carry validation attributes from `spatie/laravel-data`:
-
 ```php
 namespace App\Data\HR;
 
-use Carbon\CarbonImmutable;
-use Spatie\LaravelData\Attributes\Validation\Date;
-use Spatie\LaravelData\Attributes\Validation\Email;
-use Spatie\LaravelData\Attributes\Validation\Max;
-use Spatie\LaravelData\Attributes\Validation\Required;
-use Spatie\LaravelData\Attributes\Validation\StringType;
+use Spatie\LaravelData\Attributes\Validation\{Date, Email, Max, Required, StringType};
 use Spatie\LaravelData\Data;
 
 class CreateEmployeeData extends Data
@@ -62,20 +51,14 @@ class CreateEmployeeData extends Data
 }
 ```
 
-Laravel resolves and validates the DTO from the request automatically when it is type-hinted in a controller method or Livewire action. Invalid input returns `422 Unprocessable Entity` before the controller body runs.
+Laravel resolves and validates the DTO from the request when type-hinted in a controller method. Invalid input returns `422` before the controller body runs.
 
 ---
 
 ## Output DTO
 
-Used for serialising model data for Inertia pages or API responses:
-
 ```php
 namespace App\Data\HR;
-
-use App\Models\HR\Employee;
-use Carbon\CarbonImmutable;
-use Spatie\LaravelData\Data;
 
 class EmployeeData extends Data
 {
@@ -106,19 +89,17 @@ class EmployeeData extends Data
 }
 ```
 
-Services call `EmployeeData::fromModel($employee)` and return the DTO to the controller. The controller passes the DTO to Inertia or returns it as JSON. No model is ever passed directly to a view or response.
+Services call `EmployeeData::fromModel($employee)` and return the DTO. No model is ever passed directly to a view or response.
 
 ---
 
 ## TypeScript Auto-Generation
 
-`spatie/laravel-typescript-transformer` reads Data classes and generates TypeScript interfaces automatically:
-
 ```bash
-php artisan typescript:transform
+docker exec flowflex_app php artisan typescript:transform
 ```
 
-Output goes to `resources/js/types/generated.d.ts`:
+Output: `resources/js/types/generated.d.ts`
 
 ```typescript
 // Auto-generated — do not edit manually
@@ -132,36 +113,22 @@ export interface EmployeeData {
     job_title: string | null;
     status: string;
 }
-
-export interface CreateEmployeeData {
-    first_name: string;
-    last_name: string;
-    email: string;
-    start_date: string;
-    job_title: string | null;
-    department_id: string | null;
-}
 ```
 
-Use these types in Vue components:
-
+Use in Vue components:
 ```typescript
 import type { EmployeeData } from '@/types/generated'
-
-const props = defineProps<{
-    employee: EmployeeData
-}>()
+const props = defineProps<{ employee: EmployeeData }>()
 ```
 
-Never write TypeScript types by hand for any data that flows from PHP. Run `php artisan typescript:transform` after changing any Data class.
+Never write TypeScript types by hand for server-to-client data.
 
 ---
 
 ## Rules
 
-1. Every controller method that accepts input uses a Data class as the parameter type — never `Request $request`
-2. Every service method that returns data for a view or API uses a Data class or paginator of Data classes
-3. No `$request->all()`, `$request->validated()`, or raw arrays are passed to services
-4. No Eloquent model is passed directly to Inertia `render()` or `response()->json()` — always go through a DTO
-5. `fromModel()` static constructor is the standard way to build output DTOs from Eloquent models
-6. TypeScript types are always generated, never hand-written
+1. Controller input: always use a Data class — never `Request $request` or `$request->all()`
+2. Controller output: always return a Data class or paginator of Data classes to Inertia / JSON
+3. No Eloquent model passed directly to `inertia()` or `response()->json()`
+4. `fromModel()` is the standard static constructor for output DTOs
+5. Run `typescript:transform` after changing any Data class

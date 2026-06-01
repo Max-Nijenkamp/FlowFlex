@@ -1,116 +1,125 @@
 ---
 type: module
 domain: Foundation
-panel: (scaffold — no panel)
+panel: (scaffold)
 module-key: foundation.scaffold
-status: complete
+status: planned
 color: "#4ADE80"
-last_updated: 2026-05-13
-right_brain_log: "[[builder-log-phase-0-foundation]]"
 ---
 
 # Laravel Scaffold
 
-> The Laravel 13 project skeleton — packages, configuration, ULID primary keys, queue setup, and broadcasting — on which every FlowFlex domain is built.
+Laravel 13 project skeleton with all core packages installed and configured. Establishes the conventions every other module must follow: ULID PKs, strict types, soft deletes, PostgreSQL-only, Redis for cache/queues/sessions, directory structure organised by domain.
 
-**Domain:** Foundation
-**Module key:** `foundation.scaffold`
+---
 
-## What It Does
+## Core Features
 
-The Laravel Scaffold module is the initialized Laravel 13 project with all core packages installed and configured. It establishes the conventions every other module must follow: ULID primary keys, strict types, soft deletes, PostgreSQL as the only database engine, Redis for cache/queues/sessions, and the directory structure that organises Contracts, Services, Providers, Data, Models, and Filament resources by domain.
-
-## Features
-
-### Core
-- Laravel 13 project initialized with PHP 8.4 — strict types, readonly properties, native enums, named arguments
-- Packages installed: `spatie/laravel-data` (DTOs), `spatie/laravel-permission` (RBAC teams=true), `spatie/laravel-activitylog` (audit trail)
-- Laravel Horizon (queue monitoring), Laravel Reverb (WebSocket server), Laravel Pulse (health metrics), Laravel Telescope (dev only)
-- PostgreSQL 17 configured as the primary database; Redis 8 for cache, queues, and sessions
-- ULID primary keys on every table — `$incrementing = false`, `$keyType = 'string'`, auto-generated in model `boot()`
-- Soft deletes (`SoftDeletes` trait) on all models — no hard deletes in production paths
-- `spatie/laravel-permission` configured with `teams = true` in `config/permission.php` — roles scoped to `company_id`
-
-### Advanced
-- Directory skeleton: `app/Contracts/{Domain}/`, `app/Services/{Domain}/`, `app/Providers/{Domain}/`, `app/Data/{Domain}/`, `app/Models/`, `app/Events/`, `app/Filament/Admin/`, `app/Filament/App/`, `app/Support/Traits/`, `app/Support/Scopes/`, `app/Support/Services/`
-- API route prefix `/api/v1/`, response format JSON with ISO 8601 timestamps
+- Laravel 13 + PHP 8.4: strict types, readonly properties, backed enums, named arguments
+- Packages: `spatie/laravel-data`, `spatie/laravel-permission` (teams=true), `spatie/laravel-activitylog`, `spatie/laravel-media-library`
+- Laravel Horizon (queue monitoring), Reverb (WebSocket), Pulse (health metrics), Telescope (dev only)
+- PostgreSQL 17 primary database; Redis 8 for cache, queues, sessions
+- ULID PKs everywhere via `HasUlids` — no integer IDs
+- `spatie/laravel-permission` with `teams = true` — roles scoped to `company_id`
+- Directory structure: `app/Contracts/{Domain}/`, `app/Services/{Domain}/`, `app/Providers/{Domain}/`, `app/Data/{Domain}/`, `app/Actions/{Domain}/`, `app/Filament/Admin/`, `app/Filament/App/`
 - Queue configuration: separate queues per domain (`hr`, `finance`, `crm`, `default`)
-- Broadcasting configured via Reverb; channel authorization in `routes/channels.php`
-- No Laravel Breeze, Jetstream, or Fortify — Filament handles all authentication
+- API route prefix `/api/v1/`, JSON responses with ISO 8601 timestamps
+- No Breeze, Jetstream, or Fortify — Filament handles all authentication
 
-### AI-Powered
-- Laravel Pulse installed for real-time application health metrics — slow queries, exception rates, queue depth, cache hit ratio surfaced in admin panel
-- Telescope request inspection in development for debugging slow routes and N+1 queries
+---
+
+## Install Manifest (build step 1)
+
+The exact dependency install for a fresh project. Run after `composer create-project laravel/laravel`.
+
+```bash
+# Core backend
+composer require filament/filament:"^5.0"
+composer require laravel/horizon laravel/pulse laravel/reverb laravel/sanctum
+composer require spatie/laravel-data spatie/laravel-permission spatie/laravel-activitylog
+composer require spatie/laravel-medialibrary spatie/laravel-typescript-transformer
+composer require spatie/laravel-model-states spatie/laravel-settings spatie/laravel-sluggable
+composer require spatie/laravel-health spatie/laravel-backup
+composer require spatie/laravel-tags spatie/laravel-schemaless-attributes
+composer require lorisleiva/laravel-actions calebporzio/sushi
+composer require brick/money propaganistas/laravel-phone ezyang/htmlpurifier
+composer require stripe/stripe-php sentry/sentry-laravel
+composer require maatwebsite/excel spatie/laravel-pdf
+composer require simplesoftwareio/simple-qrcode spatie/icalendar-generator
+composer require dedoc/scramble
+
+# Filament plugins
+composer require bezhansalleh/filament-shield
+composer require pxlrbt/filament-excel awcodes/filament-tiptap-editor
+composer require saade/filament-fullcalendar leandrocfe/filament-apex-charts
+composer require rmsramos/activitylog codewithdennis/filament-select-tree
+composer require filament/spatie-laravel-media-library-plugin
+
+# Dev
+composer require --dev pestphp/pest pestphp/pest-plugin-laravel pestphp/pest-plugin-livewire
+composer require --dev nunomaduro/larastan laravel/pint laravel/telescope brianium/paratest
+
+# Frontend
+npm install vue@^3.5 @inertiajs/vue3 @vueuse/core typescript
+npm install -D vite @vitejs/plugin-vue tailwindcss@^4 ziggy-js pinia
+npm install -D vitest @playwright/test eslint prettier
+```
+
+After install: see [[domains/foundation/permissions-seed]] for seeding and [[build/BUILD-ORDER]] for the build sequence.
+
+---
 
 ## Data Model
 
-```erDiagram
+| Table | Key Columns |
+|---|---|
+| `companies` | id (ULID), name, slug (unique), subscription_status, timezone, locale, currency, trial_ends_at, deleted_at |
+| `users` | id (ULID), company_id FK, first_name, last_name, email, password, two_factor_enabled, email_verified_at, last_login_at, deleted_at |
+| `admins` | id (ULID), name, email, password, role enum(super_admin, support, billing, developer), deleted_at |
+
+```mermaid
+erDiagram
     companies {
         ulid id PK
         string name
-        string slug "unique"
-        string email
-        string timezone "default: UTC"
-        string locale "default: en"
-        string currency "default: EUR"
-        string logo_path
-        string favicon_path
-        string primary_color
-        string status
+        string slug
+        string subscription_status
+        string timezone
+        string locale
+        string currency
+        timestamp trial_ends_at
         timestamp deleted_at
-        timestamps created_at/updated_at
     }
-
     users {
         ulid id PK
         ulid company_id FK
-        string name
-        string email "unique per company"
+        string first_name
+        string last_name
+        string email
         string password
-        string status
-        timestamp email_verified_at
         timestamp last_login_at
         timestamp deleted_at
-        timestamps created_at/updated_at
     }
-
     admins {
         ulid id PK
         string name
-        string email "unique"
-        string password
+        string email
         string role
-        timestamp last_login_at
-        timestamp deleted_at
-        timestamps created_at/updated_at
     }
+    companies ||--o{ users : "has many"
 ```
 
-| Table | Key Columns |
-|---|---|
-| `companies` | id (ULID), name, slug (unique), status, timezone, locale, currency |
-| `users` | id (ULID), company_id FK, name, email, status, last_login_at |
-| `admins` | id (ULID), name, email, role enum (super_admin, support, billing, developer) |
-
-## Permissions
-
-- `foundation.scaffold.view`
-- `foundation.scaffold.manage`
-- `foundation.scaffold.configure`
-- `foundation.scaffold.deploy`
-- `foundation.scaffold.debug`
+---
 
 ## Filament
 
-- **Resource:** No Filament resource (scaffold only)
-- **Pages:** No custom pages
-- **Custom pages:** None
-- **Widgets:** None
-- **Nav group:** N/A — Foundation has no user-facing panel
+No Filament resource — scaffold only. Company and user management surfaces in the Core Platform and the `/admin` panel.
+
+---
 
 ## Related
 
-- [[filament-panels]]
-- [[multi-tenancy-layer]]
-- [[docker-environment]]
-- [[test-suite]]
+- [[domains/foundation/filament-panels]]
+- [[domains/foundation/multi-tenancy-layer]]
+- [[architecture/tech-stack]]
+- [[architecture/data-model]]

@@ -9,111 +9,88 @@ color: "#4ADE80"
 
 # Billing Engine
 
-> Stripe-backed subscription system that controls which FlowFlex modules a company can access — per-module per-seat pricing, trial management, and webhook-driven status sync.
+Manages company subscriptions to FlowFlex modules: activation/deactivation, monthly invoice calculation, Stripe payment processing, dunning for failed payments, and MRR/churn metrics. The central gating service for all optional domain modules.
 
-**Panel:** `app` (owner read-only plan view) + `admin` (full subscription management)
-**Module key:** `core.billing`
+---
 
-## What It Does
+## Core Features
 
-The Billing Engine manages every company's subscription to FlowFlex. One `billing_subscriptions` row per company links to a Stripe customer and subscription. Access to every optional domain module is gated by an `EnforceModuleAccess` middleware that checks `company_module_subscriptions` before allowing any domain route. Stripe webhooks keep the local subscription status in sync with actual payment events. The admin panel shows MRR across all companies; the company owner sees their own plan and invoice history.
+- `BillingService::hasModule(string $key)` — the single method all `canAccess()` checks call
+- Module activation: one-click from marketplace, recorded in `company_module_subscriptions`
+- Module deactivation: gates access, retains data, reactivation restores same state
+- Monthly invoice calculation: `sum(module_price_per_user) × active_user_count`
+- Stripe integration: customer creation, subscription items, invoice generation, webhook handling
+- Dunning: payment retry schedule, suspension after N failed attempts
+- Subscription status: `trial → active → suspended → cancelled` on `companies.subscription_status`
+- MRR tracking, churn metrics, module adoption rates (surfaced in `/admin` for FlowFlex staff)
+- Recurring invoice PDF generation and email delivery
 
-## Features
-
-### Core
-- One `billing_subscriptions` row per company with `status`: trialing / active / past_due / canceled / incomplete
-- `company_module_subscriptions` table: one row per company per activated module, with `price_per_seat` and `seat_count`
-- `EnforceModuleAccess` middleware: `middleware('module.access:hr')` — calls `BillingService::enforceModuleAccess()`, throws `ModuleAccessDeniedException` (renders 402 upgrade page) if module inactive
-- Foundation modules whitelisted and always pass enforcement: `['company', 'users', 'audit', 'notifications', 'setup']`
-- `BillingService::ensureStripeCustomer()` — creates Stripe customer on first billing action, persists `stripe_customer_id`
-
-### Advanced
-- Stripe webhook handler for: `invoice.payment_succeeded` (mark active), `invoice.payment_failed` (mark past_due, notify owner), `customer.subscription.updated` (sync status and period dates), `customer.subscription.deleted` (mark canceled)
-- `billing_invoices` table stores local copy of each Stripe invoice for display without Stripe API calls
-- `BillingService::calculateMonthlyAmount()` — sums `price_per_seat × seat_count` across all active modules
-- Trial support: `trial_ends_at` on billing subscription; trialing companies pass enforcement until trial expires
-- Stripe client lazy-initialized with `STRIPE_SECRET` guard — throws `RuntimeException` if not configured (prevents CI failures)
-
-### AI-Powered
-- Churn prediction: companies approaching trial expiry with low usage scores flagged in admin panel for proactive outreach
-- Upgrade recommendations: usage patterns (near module limits, high user count) surfaced as upgrade prompts to company owner
+---
 
 ## Data Model
 
-```erDiagram
-    billing_subscriptions {
-        ulid id PK
-        ulid company_id FK "unique"
-        string plan
-        string status
-        decimal monthly_amount
-        string stripe_customer_id
-        string stripe_subscription_id
-        timestamp trial_ends_at
-        timestamp current_period_start
-        timestamp current_period_end
-        timestamp ends_at
-        timestamps created_at/updated_at
-    }
+| Table | Key Columns |
+|---|---|
+| `module_catalog` | module_key (unique), domain, name, per_user_monthly_price, is_active — backed by Sushi (static data) |
+| `company_module_subscriptions` | company_id, module_key, activated_at, deactivated_at, activated_by |
+| `billing_invoices` | company_id, period_start, period_end, total_amount, stripe_invoice_id, status, paid_at |
+| `billing_invoice_lines` | invoice_id, module_key, module_name, user_count, unit_price, line_total |
 
+```mermaid
+erDiagram
+    companies {
+        ulid id PK
+        string subscription_status
+        timestamp trial_ends_at
+    }
+    module_catalog {
+        ulid id PK
+        string module_key
+        string domain
+        string name
+        decimal per_user_monthly_price
+        boolean is_active
+    }
     company_module_subscriptions {
         ulid id PK
         ulid company_id FK
         string module_key
-        boolean is_active
-        decimal price_per_seat
-        integer seat_count
         timestamp activated_at
-        timestamps created_at/updated_at
+        timestamp deactivated_at
+        ulid activated_by FK
     }
-
     billing_invoices {
         ulid id PK
         ulid company_id FK
-        string stripe_invoice_id "unique"
-        decimal amount
-        string currency
+        date period_start
+        date period_end
+        decimal total_amount
+        string stripe_invoice_id
         string status
         timestamp paid_at
-        string invoice_url
-        timestamps created_at/updated_at
     }
+    companies ||--o{ company_module_subscriptions : "activates"
+    companies ||--o{ billing_invoices : "billed"
+    module_catalog ||--o{ company_module_subscriptions : "referenced by"
 ```
 
-| Table | Purpose |
-|---|---|
-| `billing_subscriptions` | One per company — Stripe link + status |
-| `company_module_subscriptions` | Per-module access records |
-| `billing_invoices` | Local copy of Stripe invoices |
-
-## Permissions
-
-- `core.billing.view`
-- `core.billing.manage`
-- `core.billing.view-invoices`
-- `core.billing.activate-module`
-- `core.billing.deactivate-module`
+---
 
 ## Filament
 
-- **Resource:** `BillingResource` (admin panel — read-only list of all company subscriptions + MRR widget)
-- **Pages:** `BillingOverviewPage` (app panel — current plan, active modules, invoice history)
-- **Custom pages:** `BillingOverviewPage`
-- **Widgets:** `MrrWidget` (admin panel), `PlanSummaryWidget` (app panel)
-- **Nav group:** Billing (app panel); Billing (admin panel)
+**`/app` panel:**
+- `BillingResource` — view current subscription, active modules, invoices
+- `ModuleMarketplacePage` (custom page) — activate/deactivate modules, see pricing
+- `BillingWidget` — current MRR, next invoice date, payment status banner
 
-## Displaces
+**`/admin` panel (FlowFlex staff):**
+- `BillingOverviewResource` — all companies: MRR, churn, trial conversions
+- `ModulePricingResource` — set per-module prices globally
 
-| Competitor | Feature Displaced |
-|---|---|
-| Chargebee | Subscription billing management |
-| Recurly | Per-module SaaS billing |
-| Paddle | Stripe-based SaaS billing |
-| Zuora | Enterprise subscription management |
+---
 
 ## Related
 
-- [[module-marketplace]]
-- [[setup-wizard]]
-- [[notifications]]
-- [[audit-log]]
+- [[domains/core/module-marketplace]]
+- [[product/pricing-model]]
+- [[architecture/packages]] (`calebporzio/sushi` for module catalog)

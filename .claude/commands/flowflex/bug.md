@@ -1,76 +1,74 @@
 # /flowflex:bug
 
-Quickly log a bug, gap, or missing spec as a gap note in the right brain. Links it to the relevant module automatically.
+Log a bug, spec gap, or missing implementation detail to the vault.
 
 ## Usage
 
 ```
-/flowflex:bug
-/flowflex:bug "JWT refresh token not invalidated on logout"
-/flowflex:bug "Missing soft delete on company_users table" module=core-platform severity=high
+/flowflex:bug "Leave overlap detection missing for multi-type requests" module=hr.leave severity=medium
+/flowflex:bug "VAT reverse charge not in tax-management spec" module=finance.tax severity=low category=spec
+/flowflex:bug "Invoice PDF missing company logo" module=finance.invoicing severity=high
 ```
 
-## Arguments (all optional)
+## Arguments
 
-- First string arg → bug description
-- `module=` → which left-brain module this came from
-- `severity=` → high | medium | low (default: medium)
-- `category=` → bug | spec | architecture | data-model | feature (default: bug)
+- First string → bug description (required)
+- `module=` → module key (e.g. `hr.leave`)
+- `severity=` → `high` | `medium` | `low` (default: `medium`)
+- `category=` → `bug` | `spec` | `architecture` | `data-model` | `feature` (default: `bug`)
 
-## What this does
+If description not provided, ask: "What is the issue? Which module? Severity?"
 
-1. **Determines details** — from args or asks: "What's the bug? Which module? Severity?"
+## What This Does
 
-2. **Generates slug** — kebab-case short name from description (e.g. `jwt-refresh-not-invalidated`)
+### Step 1 — Generate slug
 
-3. **Creates gap file** at `flowflex-vault/right-brain/gaps/gap_{slug}.md`:
+Kebab-case from description. Max 5 words. Example:
+- "Leave overlap detection missing" → `hr-leave-overlap-detection`
+
+### Step 2 — Create gap file
+
+Create `vault/build/gaps/gap-{slug}.md`:
 
 ```yaml
 ---
 type: gap
-severity: {high|medium|low}
-category: {bug|spec|architecture|data-model|feature}
+severity: {high | medium | low}
+category: {bug | spec | architecture | data-model | feature}
 status: open
-discovered: {today}
-discovered_in: {module}
-last_updated: {today}
+color: "#F97316"
+discovered: {YYYY-MM-DD}
+discovered-in: {module-key}
 ---
 
 # Gap: {Description}
 
-> {one-line summary}
-
 ## Problem
-
-{detailed description}
+{what is wrong, missing, or inconsistent}
 
 ## Impact
+{what breaks or cannot be built correctly without this being resolved}
 
-- Module(s) affected: [[module-name]]
-- What breaks:
-
-## Options
-
-### Option A — (recommended)
-...
+## Proposed Solution
+{how to fix — options if multiple exist}
 
 ## Related
-
-- [[MOC_Gaps]]
-- [[{module-name}]]
+- [[domains/{domain}/{module}]]
+- [[build/gaps/INDEX]]
 ```
 
-4. **Updates MOC_Gaps** — reads `flowflex-vault/right-brain/gaps/MOC_Gaps.md`, adds row to the open gaps table:
-```
-| gap_{slug} | {severity} | {module} | {today} | open |
-```
+### Step 3 — Update INDEX.md
 
-5. **Links from builder log** — if an active builder log exists for this module, appends to its `## Gaps Discovered` section
-
-6. **Output:**
+Read `vault/build/gaps/INDEX.md`. Add row to Open Gaps table:
 ```
-🐛 Gap logged: gap_{slug}.md
-Severity: {level} | Module: {module}
-→ right-brain/gaps/gap_{slug}.md
-→ MOC_Gaps updated
+| gap-{slug} | {severity} | {module-key} | {one-line description} | {date} |
+```
+Write back.
+
+### Step 4 — Output
+
+```
+Gap logged: vault/build/gaps/gap-{slug}.md
+Severity: {level} | Module: {module-key} | Category: {category}
+INDEX.md updated.
 ```

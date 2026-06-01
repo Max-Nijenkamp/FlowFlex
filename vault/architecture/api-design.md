@@ -6,49 +6,26 @@ color: "#A78BFA"
 
 # API Design
 
----
-
-## Overview
-
-FlowFlex exposes a REST API at `/api/v1/`. It is a Sanctum-authenticated, thin-controller API that proxies to the same domain services used by the Filament panels. The API is not a separate application — it shares the same Laravel codebase, service layer, and data access patterns.
+REST API at `/api/v1/`. Sanctum-authenticated, thin-controller. Shares the same domain services as Filament panels — not a separate application.
 
 ---
 
 ## Authentication
 
-All endpoints (except `POST /api/v1/auth/token`) require a bearer token:
-
 ```
 POST /api/v1/auth/token
-Content-Type: application/json
+Body: { email, password, device_name }
+Response: { token: "1|abc...", expires_at: null }
 
-{
-  "email": "max@example.com",
-  "password": "...",
-  "device_name": "Max's MacBook"
-}
-
-Response 200:
-{
-  "token": "1|abcdefgh...",
-  "expires_at": null
-}
+All other requests:
+Authorization: Bearer 1|abc...
 ```
 
-Subsequent requests use the token in the `Authorization` header:
-
-```
-GET /api/v1/employees
-Authorization: Bearer 1|abcdefgh...
-```
-
-Tokens carry abilities (scopes) that restrict what the token can do. A token created for read-only access cannot POST to mutation endpoints. Token abilities are defined at creation time and are validated by Sanctum's `tokenCan()` check in each controller.
+Tokens carry abilities (scopes). A read-only token cannot POST to mutation endpoints. Verified via `$request->user()->tokenCan('hr:write')`.
 
 ---
 
 ## Thin Controllers
-
-All API controllers are thin. Each action is under 10 lines. No business logic, no model access, no validation — all delegated to the service layer via an injected interface:
 
 ```php
 class EmployeeController extends Controller
@@ -59,133 +36,138 @@ class EmployeeController extends Controller
 
     public function index(ListEmployeesData $data): JsonResponse
     {
-        return response()->json(
-            $this->employees->list($data)
-        );
+        return response()->json($this->employees->list($data));
     }
 
     public function store(CreateEmployeeData $data): JsonResponse
     {
-        $employee = $this->employees->create($data);
-        return response()->json($employee, 201);
+        return response()->json($this->employees->create($data), 201);
     }
 }
 ```
 
-The `$data` parameter is a `spatie/laravel-data` Data class. Laravel's service container resolves and validates it automatically before the controller method is called. Invalid input returns a `422 Unprocessable Entity` with structured validation errors before the controller is reached.
+Under 10 lines per method. No business logic, no model access, no validation — all in the service and DTO.
 
 ---
 
 ## Response Format
 
-All responses follow a consistent JSON structure:
-
 ```json
-// Success — list
+// List
 {
   "data": [...],
-  "meta": {
-    "current_page": 1,
-    "last_page": 5,
-    "per_page": 25,
-    "total": 112
-  }
+  "meta": { "current_page": 1, "last_page": 5, "per_page": 25, "total": 112 }
 }
 
-// Success — single resource
-{
-  "data": { "id": "...", "first_name": "Max", ... }
-}
+// Single resource
+{ "data": { "id": "01ARZ...", "first_name": "Max" } }
 
-// Error
+// Validation error — 422
 {
   "message": "The given data was invalid.",
-  "errors": {
-    "email": ["The email field is required."]
-  }
+  "errors": { "email": ["The email field is required."] }
 }
-```
 
-There is no wrapping envelope beyond `data` and `meta`. API consumers should expect `data` to be an array for list endpoints and an object for single-resource endpoints.
+// Unauthorized — 401
+{ "message": "Unauthenticated." }
+
+// Forbidden — 403
+{ "message": "This action is unauthorized." }
+
+// Not found — 404
+{ "message": "No query results for model [Employee]." }
+```
 
 ---
 
 ## Rate Limiting
 
-Rate limits are defined per endpoint group in `RouteServiceProvider`:
+Defined in `RouteServiceProvider`:
 
 | Endpoint Group | Limit | Window |
 |---|---|---|
-| `POST /api/v1/auth/token` | 5 requests | 1 minute per IP |
-| `GET /api/v1/*` (read) | 300 requests | 1 minute per token |
-| `POST /api/v1/*` (write) | 60 requests | 1 minute per token |
-| `DELETE /api/v1/*` | 30 requests | 1 minute per token |
+| `POST /api/v1/auth/token` | 5 requests | 1 min per IP |
+| `GET /api/v1/*` (read) | 300 requests | 1 min per token |
+| `POST /api/v1/*` (write) | 60 requests | 1 min per token |
+| `DELETE /api/v1/*` | 30 requests | 1 min per token |
+| `POST /api/v1/*/export` | 5 requests | 1 hour per token |
 
-Rate limit headers are included in every response: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`.
+Headers on every response: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`.
+
+Exceeding the limit returns `429 Too Many Requests` with `Retry-After` header.
 
 ---
 
-## Endpoints
+## Token Abilities (Scopes)
+
+| Ability | What it permits |
+|---|---|
+| `hr:read` | GET all HR endpoints |
+| `hr:write` | POST/PATCH/DELETE HR endpoints |
+| `finance:read` | GET Finance endpoints |
+| `finance:write` | POST/PATCH Finance endpoints |
+| `crm:read` | GET CRM endpoints |
+| `crm:write` | POST/PATCH CRM endpoints |
+| `*` | Full access (owner tokens only) |
+
+---
+
+## Core Endpoints
 
 ```
-# Authentication
-POST   /api/v1/auth/token           — issue token
-POST   /api/v1/auth/logout          — revoke current token
-POST   /api/v1/auth/refresh         — refresh token (not yet implemented)
+# Auth
+POST   /api/v1/auth/token
+POST   /api/v1/auth/logout
+DELETE /api/v1/auth/tokens/{id}     — revoke specific token
 
 # Company
-GET    /api/v1/company              — current company details
-PATCH  /api/v1/company              — update company settings
+GET    /api/v1/company
+PATCH  /api/v1/company/settings
 
-# Employees
-GET    /api/v1/employees            — list employees (paginated)
-POST   /api/v1/employees            — create employee
-GET    /api/v1/employees/{id}       — get employee
-PATCH  /api/v1/employees/{id}       — update employee
-DELETE /api/v1/employees/{id}       — soft-delete employee
+# HR
+GET    /api/v1/employees            — paginated, filterable
+POST   /api/v1/employees
+GET    /api/v1/employees/{id}
+PATCH  /api/v1/employees/{id}
+DELETE /api/v1/employees/{id}
+GET    /api/v1/leave-requests
+POST   /api/v1/leave-requests
+PATCH  /api/v1/leave-requests/{id}/approve
+PATCH  /api/v1/leave-requests/{id}/reject
 
-# Projects
-GET    /api/v1/projects             — list projects
-POST   /api/v1/projects             — create project
-GET    /api/v1/projects/{id}        — get project
-PATCH  /api/v1/projects/{id}        — update project
+# Finance
+GET    /api/v1/invoices
+POST   /api/v1/invoices
+GET    /api/v1/invoices/{id}
+POST   /api/v1/invoices/{id}/send
+POST   /api/v1/invoices/{id}/payments
+GET    /api/v1/expenses
+POST   /api/v1/expenses
 
-# Tasks
-GET    /api/v1/tasks                — list tasks (filterable by project)
-POST   /api/v1/tasks                — create task
-GET    /api/v1/tasks/{id}           — get task
-PATCH  /api/v1/tasks/{id}           — update task
-DELETE /api/v1/tasks/{id}           — soft-delete task
+# CRM
+GET    /api/v1/contacts
+POST   /api/v1/contacts
+GET    /api/v1/contacts/{id}
+PATCH  /api/v1/contacts/{id}
+GET    /api/v1/deals
+POST   /api/v1/deals
+PATCH  /api/v1/deals/{id}
 
 # Webhooks
-GET    /api/v1/webhooks             — list webhook endpoints
-POST   /api/v1/webhooks             — register endpoint
-DELETE /api/v1/webhooks/{id}        — remove endpoint
+GET    /api/v1/webhooks
+POST   /api/v1/webhooks
+DELETE /api/v1/webhooks/{id}
 ```
 
 ---
 
-## Webhook Delivery
-
-Outbound webhooks deliver domain events to registered external URLs.
-
-**Signature**: every webhook request includes an `X-FlowFlex-Signature` header — a HMAC-SHA256 hex digest of the raw request body signed with the company's webhook secret:
-
-```
-X-FlowFlex-Signature: sha256=abc123...
-```
-
-Recipients verify the signature by computing their own HMAC and comparing with `hash_equals()`.
-
-**Delivery**: the `DeliverWebhookJob` queued job sends the HTTP POST. On failure it retries with exponential backoff — 30 seconds, then 5 minutes, then 30 minutes (3 total attempts). After 3 failures the delivery is marked `failed` in `webhook_deliveries` and an alert fires to the company's notification inbox.
-
-**Payload format**: all webhook payloads follow a common envelope:
+## Webhook Payload Format
 
 ```json
 {
-  "event": "employee.created",
+  "event": "employee.hired",
   "company_id": "01ARZ...",
-  "occurred_at": "2026-05-13T14:00:00Z",
+  "occurred_at": "2026-06-01T14:00:00Z",
   "data": {
     "id": "01ARZ...",
     "first_name": "Max",
@@ -193,3 +175,17 @@ Recipients verify the signature by computing their own HMAC and comparing with `
   }
 }
 ```
+
+Signed with `X-FlowFlex-Signature: sha256={hmac}`. Recipients verify with `hash_equals()`.
+
+---
+
+## Pagination
+
+All list endpoints are paginated. Default: 25 per page. Maximum: 100. Controlled by `?per_page=` query param. Use `spatie/laravel-query-builder` when the external API layer is built (deferred — see [[architecture/packages]]).
+
+---
+
+## Versioning
+
+API version in the URL path: `/api/v1/`. When breaking changes are needed, `/api/v2/` runs alongside `v1` for a minimum 6-month deprecation period. No header-based versioning.

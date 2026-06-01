@@ -1,12 +1,20 @@
 ---
 type: architecture
-category: pattern
+category: modules
 color: "#A78BFA"
 ---
 
 # Module System
 
-The module system controls which features a company has access to. It is the enforcement layer between the pricing model and the application's resource access.
+Controls which features a company has access to. The enforcement layer between pricing and application resource access.
+
+---
+
+## Module Key Format
+
+`panel.module` — e.g. `hr.payroll`, `finance.invoicing`, `crm.pipeline`
+
+The `panel` segment matches the Filament panel's path slug. The `module` segment identifies the specific module within that domain.
 
 ---
 
@@ -14,130 +22,154 @@ The module system controls which features a company has access to. It is the enf
 
 ### `module_catalog`
 
-Platform-level table — not scoped to any company. Defines all available modules and their pricing.
+Platform-level — not company-scoped. Backed by `calebporzio/sushi` static array (no migration needed for catalog entries — defined in PHP code, not the database).
 
 | Column | Type | Description |
 |---|---|---|
-| `id` | ULID | Primary key |
-| `module_key` | string | Unique identifier, format: `panel.module` (e.g. `hr.payroll`, `crm.pipeline`) |
-| `domain` | string | Domain slug (e.g. `hr`, `finance`, `crm`) |
-| `name` | string | Human-readable display name (e.g. "HR Payroll") |
-| `per_user_monthly_price` | decimal(8,2) | Price in EUR per active user per month. `0.00` for core/free modules |
-| `is_active` | boolean | Whether available for new activations. `false` hides from marketplace but does not deactivate existing subscribers |
+| `module_key` | string (unique) | e.g. `hr.payroll` |
+| `domain` | string | e.g. `hr` |
+| `name` | string | Display name in marketplace |
+| `per_user_monthly_price` | decimal | EUR, `0.00` for free core modules |
+| `is_active` | boolean | `false` hides from marketplace but does not deactivate existing subscribers |
 
 ### `company_module_subscriptions`
 
-Per-company activation records. One row per module per company.
+Per-company activation records. One row per activation event.
 
 | Column | Type | Description |
 |---|---|---|
-| `id` | ULID | Primary key |
-| `company_id` | ULID FK | The company this activation belongs to |
+| `company_id` | ulid FK | Tenant |
 | `module_key` | string | Matches `module_catalog.module_key` |
-| `activated_at` | timestamp | When the module was turned on |
-| `deactivated_at` | timestamp | When the module was turned off (null if still active) |
-| `activated_by` | ULID FK | User who performed the activation |
+| `activated_at` | timestamp | When activated |
+| `deactivated_at` | timestamp | null = still active |
+| `activated_by` | ulid FK | User who activated |
 
----
-
-## Module Key Format
-
-Module keys follow the format `panel.module`:
-
-```
-hr.profiles           — HR employee profiles module
-hr.payroll            — HR payroll module
-hr.leave              — HR leave management module
-projects.kanban       — Projects kanban board module
-projects.time-tracking — Projects time tracking module
-finance.invoicing     — Finance invoicing module
-crm.pipeline          — CRM sales pipeline module
-core.audit-log        — Core audit log (always free)
-```
-
-The `panel` segment matches the Filament panel's path slug. The `module` segment matches the specific module within that domain. This naming convention is enforced in `BillingService::hasModule()` calls and in the `canAccess()` check on each resource.
+Deactivation sets `deactivated_at = now()` — data is retained. Reactivation creates a new row — previous row stays as history.
 
 ---
 
 ## BillingService::hasModule()
 
-The central access check used by every gated Filament resource:
+The single gating method called by every `canAccess()`:
 
 ```php
 class BillingService
 {
-    public static function hasModule(string $moduleKey): bool
+    public function hasModule(string $moduleKey): bool
     {
-        $company = app(CompanyContext::class)->current();
+        $companyId = app(CompanyContext::class)->currentId();
 
-        return CompanyModuleSubscription::where('company_id', $company->id)
-            ->where('module_key', $moduleKey)
-            ->whereNull('deactivated_at')
-            ->exists();
+        // Result is cached — see architecture/caching
+        $activeModules = Cache::remember(
+            "company:{$companyId}:modules",
+            now()->addMinutes(5),
+            fn () => CompanyModuleSubscription::query()
+                ->where('company_id', $companyId)
+                ->whereNull('deactivated_at')
+                ->pluck('module_key')
+                ->toArray()
+        );
+
+        return in_array($moduleKey, $activeModules);
     }
 }
 ```
 
-This is called inside `canAccess()` on every Filament resource and page within a domain panel:
+Cached at 5 minutes — activation takes effect within 5 minutes for all panel users.
+
+Cache invalidated immediately on activation/deactivation:
+
+```php
+Cache::forget("company:{$companyId}:modules");
+```
+
+---
+
+## canAccess() Pattern
+
+Both conditions must pass:
 
 ```php
 public static function canAccess(): bool
 {
     return Auth::check()
-        && Auth::user()->can('hr.payroll.view-any')
-        && BillingService::hasModule('hr.payroll');
+        && Auth::user()->can('hr.payroll.view-any')     // Spatie permission
+        && BillingService::hasModule('hr.payroll');      // module subscription
 }
 ```
 
-Both conditions must pass. A user with the correct permission but no module subscription is denied. A user with an active module subscription but no permission is also denied.
-
 ---
 
-## Module Marketplace
+## API Middleware
 
-The Module Marketplace is a custom Filament page in the `/app` panel, accessible to users with the `owner` or `admin` role. It shows all modules in `module_catalog` where `is_active = true`, grouped by domain.
-
-Each module card displays:
-- Module name and domain
-- Feature description
-- Per-user monthly price (or "Included" for free modules)
-- Activation toggle (on/off)
-
-Activation creates a `company_module_subscriptions` record with `activated_at = now()` and `deactivated_at = null`.
-
-Deactivation sets `deactivated_at = now()` on the existing record. Data is retained. Reactivation creates a new subscription record — the previous record remains as a history entry.
-
----
-
-## EnforceModuleAccess Middleware
-
-For non-Filament routes (API and any web routes outside the panel), `EnforceModuleAccess` middleware checks the module key registered for that route:
+For non-Filament routes, use `EnforceModuleAccess` middleware:
 
 ```php
 Route::middleware(['auth:sanctum', 'module:hr.payroll'])
     ->get('/api/v1/payroll', [PayrollController::class, 'index']);
 ```
 
-The middleware resolves the module key from the route parameter and calls `BillingService::hasModule()`. Returns `403 Forbidden` if the module is not active.
+Returns `403 Forbidden` if module not active.
 
 ---
 
-## Free / Core Modules
+## Always-Free Core Modules
 
-Core platform modules are always active and never appear in the marketplace activation flow. They have `per_user_monthly_price = 0.00` in `module_catalog` and are seeded as active subscriptions for every company at creation:
+Seeded as active for every new company. Cannot be deactivated:
 
 | Module Key | Name |
 |---|---|
 | `core.auth` | Authentication & Identity |
-| `core.notifications` | Notifications & Alerts |
-| `core.audit-log` | Audit Log |
-| `core.file-storage` | File Storage |
+| `core.notifications` | Notifications |
+| `core.audit` | Audit Log |
+| `core.files` | File Storage |
 | `core.rbac` | Roles & Permissions |
 | `core.settings` | Company Settings |
 | `core.marketplace` | Module Marketplace |
 
 ---
 
-## Module Pricing Admin
+## Company Seeding on Creation
 
-Module prices are managed from the `/admin` panel by FlowFlex staff. Price changes apply globally to all companies at the start of the next billing month. No per-company pricing overrides exist in the current data model (a `price_lock_until` column on `company_module_subscriptions` is noted as a future addition for enterprise agreements at scale).
+When FlowFlex staff create a new company in `/admin`:
+
+```php
+class CompanyCreationService
+{
+    public function create(CreateCompanyData $data): Company
+    {
+        $company = Company::create($data->toArray());
+
+        // Seed free core modules
+        foreach (ModuleCatalog::freeCoreModules() as $key) {
+            CompanyModuleSubscription::create([
+                'company_id' => $company->id,
+                'module_key' => $key,
+                'activated_at' => now(),
+            ]);
+        }
+
+        // Create owner role
+        $role = Role::create(['name' => 'owner', 'team_id' => $company->id]);
+        $role->syncPermissions(Permission::all());
+        $owner->assignRole($role);
+
+        return $company;
+    }
+}
+```
+
+---
+
+## Module Pricing Administration
+
+Managed in `/admin` by FlowFlex staff. Price changes apply globally at the start of the next billing month. No per-company price overrides in v1 data model.
+
+---
+
+## Related
+
+- [[product/pricing-model]]
+- [[domains/core/billing-engine]]
+- [[domains/core/module-marketplace]]
+- [[architecture/caching]] — module list caching

@@ -1,51 +1,31 @@
 ---
-type: build
-category: adr-index
+type: decision-index
 color: "#F97316"
 ---
 
-# Architectural Decisions
+# Decision Log
 
-Architectural Decision Records (ADRs) capture significant technical choices made during the build. Every non-trivial decision that affects multiple modules or future work gets its own ADR file using [[_meta/templates/tpl_adr]].
+Architectural decisions made during the build. One file per decision.
 
 ---
 
 ## Decision Log
 
-| Date | Decision | Impact |
-|---|---|---|
-| 2026-05-13 | Use Filament 5 (not v3) | All panels use Filament 5.6.3 API — `authModel()` removed, providers in `app/Providers/Filament/` | [[adr-2026-05-13-filament-v5]] |
-| 2026-05-13 | `string(26)` for permission morph/team keys | ULID-keyed models work with spatie/laravel-permission v7 | [[adr-2026-05-13-permission-ulid]] |
-
----
-
-## What Qualifies as an ADR
-
-Record a decision when you:
-
-- Choose between two valid implementation approaches and the choice has lasting consequences
-- Deviate from the pattern established in [[architecture/filament-patterns]] or [[architecture/tech-stack]]
-- Make a data-model choice that affects multiple domains (e.g. shared polymorphic relationship)
-- Decide on a third-party library or integration strategy
-- Resolve a cross-domain dependency in a non-obvious way
-
-Routine implementation choices (field names, UI layout, label wording) do not need an ADR.
+| Date | Decision | Status | Domain |
+|---|---|---|---|
+| 2026-06-01 | [[build/decisions/decision-2026-06-01-hybrid-service-pattern\|Hybrid service pattern: Actions + Interface→Service]] | decided | All |
+| 2026-06-01 | [[build/decisions/decision-2026-06-01-domain-merges\|Domain merges: FPA→Finance, Billing→Core, Pricing→CRM, Inbox+Comms]] | decided | All |
+| 2026-06-01 | [[build/decisions/decision-2026-06-01-domain-defers\|Domain defers: 10 domains moved to deferred status]] | decided | All |
+| 2026-06-01 | [[build/decisions/decision-2026-06-01-stripe-cashier-vs-sdk\|Raw Stripe SDK vs Laravel Cashier — skip Cashier]] | decided | Core/Billing |
+| 2026-06-01 | [[build/decisions/decision-2026-06-01-salary-history\|Salary history table — track compensation changes with audit trail]] | decided | HR |
+| 2026-06-01 | [[build/decisions/decision-2026-06-01-currency-precision\|Currency precision — store as ISO 4217 minor unit, use brick/money]] | decided | Finance |
+| 2026-06-01 | [[build/decisions/decision-2026-06-01-full-phase-3-spec\|Fully spec all Phase 1/2/3 modules up front]] | decided | All |
+| 2026-06-01 | [[build/decisions/decision-2026-06-01-panel-consolidation\|Panel consolidation: Procurement→Operations, CS→CRM (21→19 panels)]] | decided | Operations, CRM |
 
 ---
 
 ## How to Add a Decision
 
-1. Create `build/decisions/adr-{YYYY-MM-DD}-{slug}.md` using [[_meta/templates/tpl_adr]]
-2. Set `status`: `decided` (in effect) or `proposed` (under discussion)
-3. Document context, options considered, the decision, and consequences
-4. Add a row to the Decision Log table above
-5. Update any left-brain spec files affected by the decision (add a note or update a section)
+Run `/flowflex:decision ["title"] [status=decided|proposed]` to create a new ADR file and add it here.
 
----
-
-## Related
-
-- [[build/ACTIVATION]] — build session workflow
-- [[build/gaps/INDEX]] — open gaps (sometimes gaps trigger decisions)
-- [[_meta/templates/tpl_adr]] — ADR file template
-- [[architecture/filament-patterns]] — canonical patterns decisions should align with
+Or create manually: `vault/build/decisions/decision-{YYYY-MM-DD}-{slug}.md` with frontmatter `type: adr`, `color: "#F97316"`, `status: decided|proposed`.

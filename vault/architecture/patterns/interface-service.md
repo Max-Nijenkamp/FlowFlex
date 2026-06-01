@@ -6,42 +6,41 @@ color: "#A78BFA"
 
 # Interface / Service Pattern
 
-Every domain module follows the same structural pattern: a contract interface, a service provider that binds the concrete implementation, a concrete service class, and a thin controller that only touches the interface.
+Use this pattern for: complex domain operations, services with multiple methods, operations that need testable swappable implementations, or cross-domain dependencies.
+
+For simple single-step operations, use [[architecture/patterns/actions-pattern]] instead.
 
 ---
 
-## Why This Pattern
+## When to Use This vs Actions
 
-The interface is the boundary. Tests mock the interface, not the service. Controllers depend on the interface, not the concrete class. If the implementation changes — or is swapped for a different strategy — the controller and tests are unaffected.
-
-It also makes the service provider the single location where the concrete class name appears in a non-service file. Searching for `EmployeeService::class` (not the interface) anywhere outside `EmployeeServiceProvider` is a signal of a pattern violation.
+| Use Interface→Service when | Use Actions when |
+|---|---|
+| Service has 3+ methods | Single operation, single method |
+| Multiple implementations may exist | One implementation, no swap needed |
+| Used by multiple callers | Called from one or two places |
+| Cross-domain dependency injection | Simple internal operation |
+| e.g. `EmployeeService` (CRUD + reporting) | e.g. `SendWelcomeEmail`, `DeactivateModule` |
 
 ---
 
-## File Structure Per Domain
+## File Structure
 
 ```
 app/
-├── Contracts/
-│   └── HR/
-│       └── EmployeeServiceInterface.php
-├── Services/
-│   └── HR/
-│       └── EmployeeService.php
-├── Providers/
-│   └── HR/
-│       └── HrServiceProvider.php          ← one provider per domain
-├── Http/
-│   └── Controllers/
-│       └── Hr/
-│           └── EmployeeController.php
-├── Data/
-│   └── HR/
-│       ├── EmployeeData.php
-│       └── CreateEmployeeData.php
-└── Models/
-    └── HR/
-        └── Employee.php
+├── Contracts/HR/
+│   └── EmployeeServiceInterface.php
+├── Services/HR/
+│   └── EmployeeService.php
+├── Providers/HR/
+│   └── HrServiceProvider.php       ← one provider per domain
+├── Http/Controllers/Hr/
+│   └── EmployeeController.php
+├── Data/HR/
+│   ├── EmployeeData.php
+│   └── CreateEmployeeData.php
+└── Models/HR/
+    └── Employee.php
 ```
 
 ---
@@ -50,12 +49,6 @@ app/
 
 ```php
 namespace App\Contracts\HR;
-
-use App\Data\HR\CreateEmployeeData;
-use App\Data\HR\EmployeeData;
-use App\Data\HR\ListEmployeesData;
-use App\Models\HR\Employee;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 interface EmployeeServiceInterface
 {
@@ -67,19 +60,12 @@ interface EmployeeServiceInterface
 }
 ```
 
-The return types use Eloquent models where returning a typed model reference is appropriate, and DTOs or paginators where the output needs to be serialisable.
-
 ---
 
 ## Service
 
 ```php
 namespace App\Services\HR;
-
-use App\Contracts\HR\EmployeeServiceInterface;
-use App\Data\HR\CreateEmployeeData;
-use App\Events\HR\EmployeeHired;
-use App\Models\HR\Employee;
 
 class EmployeeService implements EmployeeServiceInterface
 {
@@ -98,22 +84,16 @@ class EmployeeService implements EmployeeServiceInterface
 }
 ```
 
-Events are fired from the service, never from the controller. The controller does not know events exist.
+Events are fired from the service, never from the controller.
 
 ---
 
 ## ServiceProvider
 
-One `ServiceProvider` per domain binds all of that domain's interfaces:
+One provider per domain binds all of that domain's interfaces:
 
 ```php
 namespace App\Providers\HR;
-
-use App\Contracts\HR\EmployeeServiceInterface;
-use App\Contracts\HR\LeaveServiceInterface;
-use App\Services\HR\EmployeeService;
-use App\Services\HR\LeaveService;
-use Illuminate\Support\ServiceProvider;
 
 class HrServiceProvider extends ServiceProvider
 {
@@ -125,21 +105,13 @@ class HrServiceProvider extends ServiceProvider
 }
 ```
 
-Registered in `bootstrap/providers.php`. The concrete class names appear only here.
+Registered in `bootstrap/providers.php`. Concrete class names appear **only here**.
 
 ---
 
 ## Controller
 
 ```php
-namespace App\Http\Controllers\Hr;
-
-use App\Contracts\HR\EmployeeServiceInterface;
-use App\Data\HR\CreateEmployeeData;
-use App\Data\HR\ListEmployeesData;
-use Illuminate\Http\RedirectResponse;
-use Inertia\Response;
-
 class EmployeeController extends Controller
 {
     public function __construct(
@@ -161,15 +133,15 @@ class EmployeeController extends Controller
 }
 ```
 
-The controller injects the interface. It never imports `EmployeeService` directly. Total method line count stays under 10.
+Controller injects the interface. Never imports the concrete service. Under 10 lines per method.
 
 ---
 
 ## Rules
 
-1. Controllers never touch Eloquent models directly
+1. Controllers never touch Eloquent directly
 2. Services never return raw Eloquent collections to controllers — use DTOs or paginators
-3. Events are fired from services, never from controllers
-4. DTOs are used for all input (no `$request->all()`)
-5. The ServiceProvider is the only place where the concrete service class name appears outside the service itself
-6. Tests mock the interface with a fake or mock, never the concrete service
+3. Events fired from services, never from controllers
+4. DTOs for all input — no `$request->all()`
+5. ServiceProvider is the only file where the concrete service class name appears outside the service
+6. Tests mock the interface, never the concrete service

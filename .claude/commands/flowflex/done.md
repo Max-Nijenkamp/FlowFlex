@@ -1,46 +1,61 @@
 # /flowflex:done
 
-Mark a module as fully complete. Fast path — runs `/flowflex:sync` with status=complete and prompts for any final notes.
+Mark a module fully built and tested. Runs a completion checklist, then marks the spec complete and updates progress.
 
 ## Usage
 
 ```
-/flowflex:done
-/flowflex:done module=leave-management
-/flowflex:done module=leave-management domain=hr
+/flowflex:done hr.leave
+/flowflex:done finance.invoicing
 ```
 
-## What this does
+## What This Does
 
-1. Identifies the module from args or conversation context
-2. Runs the full `/flowflex:sync` flow with `status: complete`
-3. Additionally runs the post-build checklist from `flowflex-vault/right-brain/validation/build-checklist.md` — ask the user to confirm each section passed before marking complete
-4. Sets left-brain spec `status: complete`
-5. Updates STATUS_Dashboard: increments Built count, recalculates %
-6. Moves builder log status to `complete`
-7. Archives the builder log reference in `right-brain/builder-logs/archive/` (by updating the log's `status: complete` frontmatter — do NOT move the file, just update status)
+### Step 1 — Run completion checklist
 
-## Post-build checklist prompt
-
-Before marking complete, ask:
-> "Quick checklist before marking complete — did you verify:
-> - [ ] Migrations run cleanly?
-> - [ ] All tests pass?
-> - [ ] Filament resource renders correctly?
-> - [ ] Events fire correctly?
-> - [ ] Permissions registered?
->
-> Type 'yes' to confirm all pass, or describe any failures."
-
-If failures described → create gap files for each, mark module `in-progress` not `complete`.
-
-## Output
+Before marking complete, verify with the user:
 
 ```
-## ✅ Module Complete: {module-name}
+Completion checklist for {module-key}:
 
-Domain: {domain}
-Left-brain status: complete
-Builder log: right-brain/builder-logs/{module-name}.md (status: complete)
-STATUS_Dashboard: {domain} Built = {n}/{total} ({%}%)
+- [ ] Migrations run cleanly (php artisan migrate)?
+- [ ] All feature tests pass (php artisan test)?
+- [ ] Filament resource renders correctly (panel visited manually)?
+- [ ] canAccess() returns correctly (permission + module check)?
+- [ ] Events fire correctly where applicable?
+- [ ] Emails queue correctly where applicable?
+- [ ] Tenant isolation test passes (company A can't see company B data)?
+
+Type 'yes' to confirm all pass, or describe any failures.
+```
+
+If failures described → create gap files for each via `/flowflex:bug`, keep status `in-progress`.
+
+### Step 2 — Mark spec complete
+
+Find `vault/domains/{domain}/{module}.md`. Update frontmatter:
+```yaml
+status: complete
+```
+
+### Step 3 — Update STATUS.md
+
+Read `vault/build/STATUS.md`.
+- Increment Built count for the domain row
+- Recalculate Progress %
+- Update emoji (✅ if 100%)
+- Add row to Recent Sessions: `| {date} | {domain} | {module-key} | ✅ | Complete |`
+
+Write STATUS.md back.
+
+### Step 4 — Output
+
+```
+## ✅ Module Complete: {module-key}
+
+Domain: {domain} | Panel: /{panel}
+Status: complete
+STATUS.md: {domain} Built = {n}/{total} ({%}%)
+
+Next module in {domain}: {next planned module or "domain complete"}
 ```

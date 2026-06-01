@@ -2,85 +2,232 @@
 
 ## Project
 
-FlowFlex is an all-in-one SaaS platform. This repo contains:
-- `vault/` — Obsidian knowledge vault (specs, architecture, domain docs, build tracking)
-- `app/` — Laravel 13 + Filament 5 PHP application (when built)
+FlowFlex is an all-in-one SaaS for SMEs (50–500 employees). This repo:
+- `vault/` — Obsidian knowledge vault (specs, patterns, build tracking)
+- `app/` — Laravel 13 + Filament 5 PHP application
+
+---
+
+## Mandatory Workflow Rules
+
+**These are hard rules. Never skip them.**
+
+### Before writing any code for a module:
+1. Run `/flowflex:start {module-key}` — reads spec, loads patterns, outputs build plan
+2. If you need a quick spec lookup mid-build: `/flowflex:spec {module-key}`
+3. If you need a specific pattern: `/flowflex:patterns {concern}`
+
+### After every code session:
+1. Run `/flowflex:sync {module-key} status=in-progress|complete`
+2. If bugs found during session: `/flowflex:bug "description" module={key} severity={level}`
+3. If decisions made: `/flowflex:decision "title" status=decided`
+4. If module fully done + tested: `/flowflex:done {module-key}`
+
+### Never:
+- Write code for a module without reading its spec first (`/flowflex:start`)
+- End a session without syncing the vault (`/flowflex:sync`)
+- Skip `canAccess()` on any Filament resource or page
+- Use `$request->all()` — always use a Data class
+- Create Eloquent models without `HasUlids`, `BelongsToCompany`, `SoftDeletes` traits
+- Call a service from another domain directly — always use Events
+
+---
+
+## Agent Selection Rules
+
+Use the right agent for the right task:
+
+| Task | Agent |
+|---|---|
+| Building a module from scratch | `coder` (default) |
+| Planning architecture for a new domain | `architecture` or `sparc:architect` |
+| Writing Pest tests | `tester` or `sparc:tdd` |
+| Code review before marking module done | `reviewer` or `code-review` skill |
+| Security review (canAccess, rate limiting) | `security-auditor` |
+| Debugging a failing test or bug | `sparc:debugger` |
+| Writing a migration or data model | `coder` with `patterns/belongs-to-company` |
+| Performance issue (N+1, slow query) | `analyst` or `performance-optimizer` |
+| CI/CD pipeline work | `cicd-engineer` |
+
+For complex multi-step builds (full domain), use `sparc:orchestrator` to coordinate.
+
+---
 
 ## Vault Structure
 
 ```
 vault/
-├── _meta/                   # Entry points and templates (gray #6B7280)
-│   ├── HOME.md              # Single entry point — start here
-│   ├── graph-config.md      # Obsidian graph color setup
-│   └── templates/           # tpl_module, tpl_domain-index, tpl_build-log, tpl_gap, tpl_adr
-├── product/                 # Brand, positioning, UX, pricing (sky blue #38BDF8)
-├── architecture/            # Tech stack, patterns, data model (purple #A78BFA)
-│   └── patterns/            # Detailed code patterns (interface-service, dto, tenancy, testing)
-├── frontend/                # Public Vue+Inertia pages (amber #FBBF24)
-├── domains/                 # 32 domain specs — source of truth for what to build (green #4ADE80)
-│   ├── INDEX.md             # All 32 domains table
-│   └── {domain}/            # One folder per domain, e.g. hr/, projects/, finance/
-│       ├── INDEX.md         # Domain overview and module list
-│       └── {module}.md      # One file per module spec
-└── build/                   # Build tracking — progress, logs, gaps, decisions (orange #F97316)
-    ├── STATUS.md            # Per-domain progress dashboard (0/243 at start)
-    ├── ACTIVATION.md        # How to run a build session
-    ├── logs/                # Per-session build logs (one file per session)
-    ├── gaps/                # Bugs and missing specs discovered during build
-    │   └── INDEX.md         # Gap index table
-    └── decisions/           # Architectural decision records (ADRs)
-        └── INDEX.md         # Decision log table
+├── _index.md                # Entry point — start here
+├── _meta/graph-config.md    # Obsidian graph setup
+├── product/                 # Brand, positioning, pricing (sky blue #38BDF8)
+├── architecture/            # Stack, patterns, packages (purple #A78BFA)
+│   └── patterns/            # One file per pattern concern
+├── frontend/                # Vue+Inertia public site (amber #FBBF24)
+├── domains/                 # Domain specs (green #4ADE80)
+│   ├── _overview.md         # All domains with phase/priority
+│   └── {domain}/
+│       ├── _index.md        # Domain overview + module list
+│       └── {module}.md      # Module spec
+└── build/                   # Build tracking (orange #F97316)
+    ├── STATUS.md            # Progress dashboard
+    ├── gaps/INDEX.md        # Open bugs + spec gaps
+    └── decisions/INDEX.md   # ADR log
 ```
 
-## Graph Colors
+**Color rules**: every `build/` file needs `color: "#F97316"`. Every `domains/` file needs `color: "#4ADE80"`.
 
-Each section has its own Obsidian graph color driven by the `color:` frontmatter field:
+---
 
-| Section | Color | Hex |
-|---|---|---|
-| `product/` | Sky blue | `#38BDF8` |
-| `architecture/` | Purple | `#A78BFA` |
-| `domains/` | Green | `#4ADE80` |
-| `build/` | Orange | `#F97316` |
-| `frontend/` | Amber | `#FBBF24` |
-| `_meta/` | Gray | `#6B7280` |
+## FlowFlex Commands
 
-**Every file in `build/` MUST include `color: "#F97316"` in frontmatter.**  
-**Every file in `domains/` MUST include `color: "#4ADE80"` in frontmatter.**
+Seven commands. Four fetch from vault, three write to vault.
 
-## FlowFlex Slash Commands
+---
 
-These commands keep specs and build tracking in sync.
+### `/flowflex:start [module-key]`
 
-### `/flowflex:sync`
-**Use after every build session or when modifying a domain spec.**
+**Pre-build briefing. Run before writing any code for a module.**
+
+Example: `/flowflex:start hr.leave`
 
 Steps:
-1. Identify: module name, domain, panel, status (in-progress/complete), bugs found, decisions made
-2. **Update domain spec frontmatter** — set `status:` to `in-progress` or `complete`
-3. **Create or update build log** at `vault/build/logs/{domain}-{YYYY-MM-DD}.md`:
-   - Use template from `vault/_meta/templates/tpl_build-log.md`
-   - Frontmatter MUST include `color: "#F97316"`, `type: build-log`
-   - Session entry: what was built (file paths), decisions, problems, gaps discovered
-4. **Update `vault/build/STATUS.md`** — update Built count, emoji, recalculate %, add row to Recent Sessions
-5. **Create gap files** for any bugs/spec issues — `vault/build/gaps/gap-{slug}.md` with `color: "#F97316"` + update `vault/build/gaps/INDEX.md`
-6. **Create ADR files** for architectural decisions — `vault/build/decisions/decision-{YYYY-MM-DD}-{slug}.md` with `color: "#F97316"` + update `vault/build/decisions/INDEX.md`
+1. **Read the module spec** — `vault/domains/{domain}/{module}.md`
+2. **Read the domain index** — `vault/domains/{domain}/_index.md` (for context: nav groups, related modules, what else exists)
+3. **Read relevant architecture patterns** — determined by what the module needs:
 
-### `/flowflex:done [module=name]`
-**Use when a module is fully built and tested.**
+   | Module has… | Read this |
+   |---|---|
+   | Always | `architecture/filament-patterns.md`, `architecture/multi-tenancy.md`, `architecture/patterns/belongs-to-company.md`, `architecture/patterns/dto-pattern.md`, `architecture/patterns/testing-pattern.md`, `architecture/module-system.md` |
+   | Status field with transitions | `architecture/patterns/states.md` |
+   | Custom Filament page (Kanban, Calendar, etc.) | `architecture/patterns/custom-pages.md` |
+   | Complex multi-method service | `architecture/patterns/interface-service.md` |
+   | Simple single-step operation | `architecture/patterns/actions-pattern.md` |
+   | Cross-domain triggers (fires events another domain consumes) | `architecture/event-bus.md` |
+   | File uploads | Security section of `architecture/security.md` |
+   | Sensitive data (national ID, salary, IBAN) | `architecture/patterns/encryption.md` |
+   | Full-text search | `architecture/search.md` |
+   | Real-time updates (live notifications, live board) | `architecture/websockets.md` |
+   | PDF generation | `architecture/packages.md` (spatie/laravel-pdf section) |
+   | Background jobs | `architecture/queue-jobs.md` |
+   | Money arithmetic | `architecture/packages.md` (brick/money section) |
+   | Outbound emails | `architecture/email.md` |
+
+4. **Check open gaps** — scan `vault/build/gaps/INDEX.md` for any gaps with `discovered-in` matching this domain or module
+5. **Set status** — update module spec frontmatter to `status: in-progress`
+6. **Output a build briefing** covering:
+   - What this module does (from spec)
+   - Files to create (models, migrations, services/actions, states, resources, pages, tests)
+   - Patterns to follow
+   - Open gaps or known issues
+   - Any cross-domain events this module fires or consumes
+   - Permissions to seed (from domain-panels.md)
+
+---
+
+### `/flowflex:status [domain=name] [full]`
+
+**Check current build state. Read-only.**
 
 Steps:
-1. Run all sync steps above with `status: complete`
-2. Increment domain Built count in `vault/build/STATUS.md`
-3. Update domain spec `status: complete`
-4. Link any validation notes from the build log
+1. **Read `vault/build/STATUS.md`** — show the progress table as-is
+2. **If `domain=name`**: read `vault/domains/{domain}/_index.md` and list each module with its current `status:` frontmatter value:
+   ```
+   HR & People — 4/15 modules complete
+   ✅ employee-profiles    (complete)
+   🔄 leave-management     (in-progress)
+   📅 onboarding           (planned)
+   📅 payroll              (planned)
+   ...
+   ```
+3. **If `full`**: additionally show:
+   - Open gaps from `vault/build/gaps/INDEX.md` (open ones only)
+   - Recent decisions from `vault/build/decisions/INDEX.md` (last 5)
+4. **If no args**: show the full STATUS.md progress table only
 
-### `/flowflex:bug ["description"] [module=name] [severity=high|medium|low]`
-**Use when you find a bug or spec gap.**
+---
+
+### `/flowflex:spec [module-key]`
+
+**Fetch and display a module spec. Read-only.**
+
+Example: `/flowflex:spec finance.invoicing`
 
 Steps:
-1. Create `vault/build/gaps/gap-{slug}.md` with frontmatter:
+1. Parse domain from module key (e.g. `finance.invoicing` → domain `finance`, file `invoicing.md`)
+2. Read `vault/domains/{domain}/{module-name}.md`
+3. Display the full spec — What It Does, Core Features, Data Model, Filament section, Related links
+
+Use when you need a quick reference mid-build without starting a full `/flowflex:start` briefing.
+
+---
+
+### `/flowflex:patterns [concern]`
+
+**Fetch the architecture pattern for a specific concern. Read-only.**
+
+Examples:
+- `/flowflex:patterns states` → read `architecture/patterns/states.md`
+- `/flowflex:patterns encryption` → read `architecture/patterns/encryption.md`
+- `/flowflex:patterns testing` → read `architecture/patterns/testing-pattern.md`
+- `/flowflex:patterns caching` → read `architecture/caching.md`
+- `/flowflex:patterns events` → read `architecture/event-bus.md`
+- `/flowflex:patterns security` → read `architecture/security.md`
+- `/flowflex:patterns pdf` → read packages.md spatie/laravel-pdf section
+- `/flowflex:patterns search` → read `architecture/search.md`
+- `/flowflex:patterns queues` → read `architecture/queue-jobs.md`
+- `/flowflex:patterns email` → read `architecture/email.md`
+- `/flowflex:patterns performance` → read `architecture/performance.md`
+- `/flowflex:patterns websockets` → read `architecture/websockets.md`
+- `/flowflex:patterns api` → read `architecture/api-design.md`
+
+---
+
+### `/flowflex:sync [module-key] [status=in-progress|complete]`
+
+**Sync vault after any build work. Run at end of every session.**
+
+Example: `/flowflex:sync hr.leave status=in-progress`
+
+Steps:
+1. **Update module spec frontmatter** at `vault/domains/{domain}/{module}.md`:
+   - Set `status:` to the provided value (`in-progress` or `complete`)
+2. **Update `vault/build/STATUS.md`**:
+   - If `complete`: increment the Built count for that domain row
+   - Add a row to Recent Sessions table: `| {date} | {domain} | {module} | {brief note} |`
+3. **Create gap files** if any bugs or spec issues were found during this session:
+   - File: `vault/build/gaps/gap-{slug}.md`
+   - Required frontmatter: `type: gap`, `severity: high|medium|low`, `category: spec|architecture|feature|bug|data-model`, `status: open`, `color: "#F97316"`, `discovered: YYYY-MM-DD`, `discovered-in: {module-key}`
+   - Add row to `vault/build/gaps/INDEX.md`
+4. **Create ADR files** if architectural decisions were made during this session:
+   - File: `vault/build/decisions/decision-{YYYY-MM-DD}-{slug}.md`
+   - Required frontmatter: `type: adr`, `date: YYYY-MM-DD`, `status: decided|proposed`, `color: "#F97316"`
+   - Add row to `vault/build/decisions/INDEX.md`
+
+---
+
+### `/flowflex:done [module-key]`
+
+**Mark a module fully built and tested.**
+
+Example: `/flowflex:done hr.leave`
+
+Steps:
+1. Set `status: complete` in `vault/domains/{domain}/{module}.md` frontmatter
+2. Read `vault/build/STATUS.md`, increment Built count for the domain row
+3. Update the `% progress` for the domain: `Built / Total × 100`
+4. Add row to Recent Sessions: `| {date} | {domain} | {module} | ✅ Complete |`
+5. If any gaps were found, run `/flowflex:bug` first, then mark done
+
+---
+
+### `/flowflex:bug ["description"] [module=module-key] [severity=high|medium|low]`
+
+**Log a bug, spec gap, or missing implementation detail.**
+
+Example: `/flowflex:bug "Leave overlap detection missing when employee has two leave types in same week" module=hr.leave severity=medium`
+
+Steps:
+1. Create `vault/build/gaps/gap-{slug}.md`:
    ```yaml
    ---
    type: gap
@@ -89,19 +236,23 @@ Steps:
    status: open
    color: "#F97316"
    discovered: YYYY-MM-DD
-   discovered-in: {module-name}
-   last-updated: YYYY-MM-DD
+   discovered-in: {module-key}
    ---
    ```
-2. Document: context, the problem, impact, proposed solution, links
-3. Add row to `vault/build/gaps/INDEX.md` Open Gaps table
-4. If in a build session, link the gap from the active build log under `## Gaps Discovered`
+   Body: Context, Problem, Impact, Proposed Solution
+2. Add row to `vault/build/gaps/INDEX.md` Open Gaps table:
+   `| gap-{slug} | {severity} | {module-key} | {one-line description} | {date} |`
+
+---
 
 ### `/flowflex:decision ["title"] [status=decided|proposed]`
-**Use when an architectural decision is made.**
+
+**Log an architectural decision.**
+
+Example: `/flowflex:decision "Use Actions not Service for simple leave approval" status=decided`
 
 Steps:
-1. Create `vault/build/decisions/decision-{YYYY-MM-DD}-{slug}.md` with frontmatter:
+1. Create `vault/build/decisions/decision-{YYYY-MM-DD}-{slug}.md`:
    ```yaml
    ---
    type: adr
@@ -110,113 +261,164 @@ Steps:
    color: "#F97316"
    ---
    ```
-2. Document: context, options considered, decision, consequences, related domain specs
-3. Update related domain specs to reflect the decision
-4. Add row to `vault/build/decisions/INDEX.md` Decision Log table
+   Body: Context, Options Considered, Decision, Consequences, Related links
+2. Add row to `vault/build/decisions/INDEX.md`:
+   `| {date} | [[path\|Title]] | decided | {domain} |`
 
-### `/flowflex:status [domain=name] [full]`
-**Use to check current build state.**
-
-Steps:
-1. Read `vault/build/STATUS.md` — show domain progress table
-2. If `domain=name`: show that domain's module list with status from `vault/domains/{domain}/INDEX.md`
-3. If `full`: also show open gaps (`vault/build/gaps/INDEX.md`) and recent decisions (`vault/build/decisions/INDEX.md`)
-
-## Key Conventions
-
-### Domain Specs (`vault/domains/`)
-- `status:` values: `planned` | `in-progress` | `complete`
-- Module spec frontmatter (exact format — no phase, no migration_range, no last_updated):
-  ```yaml
-  ---
-  type: module
-  domain: HR & People
-  panel: hr
-  module-key: hr.profiles
-  status: planned
-  color: "#4ADE80"
-  ---
-  ```
-- When starting a build, update `status: in-progress` in the spec
-- When complete, update `status: complete`
-- No other frontmatter fields needed
-
-### Build Logs (`vault/build/logs/`)
-- One file per build session, named `{domain}-{YYYY-MM-DD}.md`
-- Use template: `vault/_meta/templates/tpl_build-log.md`
-- Required frontmatter:
-  ```yaml
-  ---
-  type: build-log
-  domain: HR & People
-  panel: hr
-  session-date: YYYY-MM-DD
-  status: in-progress
-  color: "#F97316"
-  ---
-  ```
-
-### Gaps (`vault/build/gaps/`)
-- Named `gap-{slug}.md`, e.g. `gap-hr-leave-overlap.md`
-- Index at `vault/build/gaps/INDEX.md`
-
-### Decisions (`vault/build/decisions/`)
-- Named `decision-{YYYY-MM-DD}-{slug}.md`
-- Index at `vault/build/decisions/INDEX.md`
+---
 
 ## Auto-Trigger Rules
 
-After any domain spec edit, run `/flowflex:sync` at the end of the task.
+| Situation | Command |
+|---|---|
+| Starting to build any module | `/flowflex:start {module-key}` |
+| End of any build session | `/flowflex:sync {module-key} status=in-progress` |
+| Module fully built and tested | `/flowflex:done {module-key}` |
+| Bug or spec gap discovered | `/flowflex:bug "description" module={key} severity={level}` |
+| Architectural decision made | `/flowflex:decision "title" status=decided` |
+| Need to check a spec | `/flowflex:spec {module-key}` |
+| Need an architecture pattern | `/flowflex:patterns {concern}` |
+| Checking build progress | `/flowflex:status [domain=name] [full]` |
+
+---
+
+## Key Conventions
+
+### Module Spec Frontmatter (exact format)
+```yaml
+---
+type: module
+domain: HR & People
+panel: hr
+module-key: hr.profiles
+status: planned
+color: "#4ADE80"
+---
+```
+`status` values: `planned` | `in-progress` | `complete`
+
+### File Naming
+- Module specs: `{module-name}.md` (kebab-case, matches module key suffix)
+- Gap files: `gap-{slug}.md`
+- ADR files: `decision-{YYYY-MM-DD}-{slug}.md`
+- Domain indexes: `_index.md` (not `INDEX.md`)
+
+### Code Conventions
+- Monetary amounts: integers (minor currency unit) — use `brick/money` for arithmetic, never raw float math
+- Phone numbers: E.164 format via `propaganistas/laravel-phone`
+- Sensitive fields (national ID, DOB, IBAN, salary): `encrypted` cast — `text` column type
+- Events: always carry `company_id` as a typed scalar, never a model reference
+- Listeners: always `implements ShouldQueue` + `WithCompanyContext` middleware
+
+---
 
 ## Tech Stack
 
-- **PHP 8.4** + **Laravel 13**
-- **Filament 5** (32 panels: one per domain at `/app/{domain}`, plus `/admin` for FlowFlex staff)
-- **PostgreSQL 17** + **Redis 8** + **Meilisearch 1.x**
-- **Vue 3.5** + **TypeScript 5** + **Inertia.js v2** (public frontend)
-- **Livewire v4** + **Alpine.js 3** (Filament components)
-- **Vite 6** + **Tailwind CSS v4**
-- **Laravel Horizon 5.x** (queues) + **Laravel Reverb 1.x** (WebSockets)
-- **Laravel Pulse 1.x** (metrics) + **Laravel Telescope** (dev only)
-- **Laravel Sanctum 4.x** (API auth)
-- **spatie/laravel-data 4.x** (DTOs — `app/Data/{Domain}/`)
-- **spatie/laravel-permission 6.x** (RBAC with teams = company_id)
-- **spatie/laravel-activitylog 5.x** (audit trail)
-- **spatie/laravel-media-library 11.x** (file storage)
-- **spatie/laravel-typescript-transformer 2.x** (DTO → TypeScript)
-- **stripe/stripe-php 14.x** (billing)
-- **bezhansalleh/filament-shield** (Filament permission UI)
-- **chart.js 4.x** + **@tiptap/vue-3 2.x** + **zod 3.x**
-- ULID primary keys everywhere
-- Global CompanyScope for multi-tenancy (`company_id` on all tables)
+**Backend:**
+- PHP 8.4 + Laravel 13
+- Filament 5 (19 domain panels + `/admin` + `/app` = 21 panels; Procurement hosted in `/operations`, Customer Success in `/crm`)
+- PostgreSQL 17 + Redis 8 + Meilisearch 1.x
+- Laravel Horizon + Reverb + Pulse + Sanctum
+- spatie/laravel-data (DTOs), spatie/laravel-permission (RBAC teams=company_id)
+- spatie/laravel-activitylog, spatie/laravel-media-library, spatie/laravel-typescript-transformer
+- stripe/stripe-php (raw SDK — not Cashier; see ADR)
+
+**Additional confirmed packages:**
+- spatie/laravel-model-states (state machines)
+- spatie/laravel-settings (company settings)
+- spatie/laravel-health (health checks)
+- spatie/laravel-pdf (PDF generation)
+- spatie/laravel-backup (automated backups)
+- spatie/laravel-sluggable (auto-slugs)
+- lorisleiva/laravel-actions (simple ops)
+- maatwebsite/laravel-excel (bulk import/export)
+- brick/money (monetary arithmetic)
+- propaganistas/laravel-phone (phone validation → E.164)
+- ezyang/htmlpurifier (rich text XSS prevention)
+- calebporzio/sushi (static Eloquent models)
+- sentry/sentry-laravel (error tracking)
+- laravel/scout (Meilisearch driver)
+- tightenco/ziggy (named routes in Vue)
+- pxlrbt/filament-excel, awcodes/filament-tiptap-editor
+- saade/filament-fullcalendar, leandrocfe/filament-apex-charts
+- rmsramos/activitylog, bezhansalleh/filament-shield
+- dedoc/scramble (auto API docs)
+- spatie/laravel-tags (polymorphic tagging — CRM, Support, Projects, Comms, DMS)
+- spatie/laravel-schemaless-attributes (custom per-company fields — CRM)
+- simplesoftwareio/simple-qrcode (event tickets, check-in QR)
+- spatie/icalendar-generator (.ics invites — Events, CRM scheduling, Workplace)
+- codewithdennis/filament-select-tree (tree-select — HR org, E-commerce categories)
+- laravel/socialite (deferred — Google/Microsoft SSO, Phase 2)
+
+**Frontend (Vue 3 + Inertia — public site only):**
+- Vue 3.5 + TypeScript 5 + Inertia.js v2
+- Vite 6 + Tailwind CSS v4
+- tightenco/ziggy + pinia (only for wizard/UI state) + @vueuse/core + zod
+
+**Dev only:** laravel/pint + nunomaduro/larastan + pestphp/pest-plugin-livewire + vitest + playwright
+
+---
 
 ## Key App Directory Structure
 
 ```
 app/
-├── Contracts/{Domain}/     # Service interfaces
-├── Services/{Domain}/      # Concrete implementations
-├── Providers/{Domain}/     # ServiceProviders binding Interface → Service
-├── Http/Controllers/       # Thin Inertia controllers (<10 lines each)
+├── Contracts/{Domain}/     # Service interfaces (multi-method complex services)
+├── Services/{Domain}/      # Concrete service implementations
+├── Providers/{Domain}/     # ServiceProviders: Interface → Service binding
+├── Actions/{Domain}/       # Single-class actions (simple ops, lorisleiva/laravel-actions)
+├── States/{Domain}/{Model}/# State machine classes (spatie/laravel-model-states)
+├── Exceptions/{Domain}/    # Custom exception classes
+├── Http/Controllers/       # Thin Inertia controllers (<10 lines per method)
+├── Mail/{Domain}/          # Mailable classes (extend FlowFlexMailable, always ShouldQueue)
 ├── Data/{Domain}/          # spatie/laravel-data DTOs (input + output)
-├── Models/                 # Eloquent models (HasUlids, BelongsToCompany, SoftDeletes)
-├── Events/                 # Domain events (always carry company_id)
+├── Models/{Domain}/        # Eloquent models — table: {domain}_{model} e.g. hr_employees
+├── Events/{Domain}/        # Domain events (carry company_id as scalar, readonly props)
+├── Listeners/{Domain}/     # Queued event listeners (ShouldQueue + WithCompanyContext)
+├── Jobs/{Domain}/          # Background jobs (non-event async work)
 ├── Filament/
-│   ├── Admin/              # /admin panel resources (FlowFlex staff)
-│   └── App/                # /app panel resources (tenant users, 32 panels)
+│   ├── Admin/              # /admin panel (FlowFlex staff)
+│   └── {Domain}/           # One folder per domain panel
+│       ├── Resources/      # Standard CRUD resources
+│       ├── Pages/          # Custom pages (Kanban, Calendar, Dashboard, Wizard)
+│       └── Widgets/        # Stats and chart widgets
 └── Support/
     ├── Traits/BelongsToCompany.php
-    ├── Traits/HasUlid.php
     ├── Scopes/CompanyScope.php
-    └── Services/CompanyContext.php
+    ├── Services/CompanyContext.php
+    └── Mail/FlowFlexMailable.php
 ```
 
-## Architecture Patterns (read before building)
+---
 
-Before building any module, read:
-1. `vault/architecture/filament-patterns.md` — 10 critical Filament 5 patterns (canAccess, getSlug, theme, etc.)
-2. `vault/architecture/patterns/interface-service.md` — Interface → ServiceProvider → thin controller
-3. `vault/architecture/patterns/dto-pattern.md` — spatie/laravel-data input/output DTOs
-4. `vault/architecture/patterns/belongs-to-company.md` — HasUlids, BelongsToCompany, SoftDeletes traits
-5. `vault/architecture/patterns/testing-pattern.md` — Pest, SQLite in-memory, CompanyContext setup
-6. `vault/architecture/multi-tenancy.md` — CompanyScope, queue context, Spatie Permission teams
+## Architecture Files Quick Reference
+
+| Concern | File |
+|---|---|
+| Filament patterns (critical, read first) | `architecture/filament-patterns.md` |
+| Per-domain: colors, custom pages, permissions | `architecture/domain-panels.md` |
+| Multi-tenancy, CompanyScope, queue context | `architecture/multi-tenancy.md` |
+| Module activation and BillingService | `architecture/module-system.md` |
+| Interface→Service pattern | `architecture/patterns/interface-service.md` |
+| Actions pattern (lorisleiva) | `architecture/patterns/actions-pattern.md` |
+| State machines (spatie/model-states) | `architecture/patterns/states.md` |
+| Custom Filament pages | `architecture/patterns/custom-pages.md` |
+| DTOs (spatie/laravel-data) | `architecture/patterns/dto-pattern.md` |
+| Model traits (HasUlids, BelongsToCompany) | `architecture/patterns/belongs-to-company.md` |
+| Testing (Pest, SQLite, Livewire, arch tests) | `architecture/patterns/testing-pattern.md` |
+| Encrypted columns | `architecture/patterns/encryption.md` |
+| Authorization (Spatie, not Policies) | `architecture/patterns/policy.md` |
+| Seeders (permissions, module catalog, dev) | `architecture/patterns/seeders.md` |
+| Security (rate limiting, CORS, headers, CSRF) | `architecture/security.md` |
+| Redis caching strategy | `architecture/caching.md` |
+| Cross-domain events | `architecture/event-bus.md` |
+| Queue jobs and Horizon config | `architecture/queue-jobs.md` |
+| Meilisearch / full-text search | `architecture/search.md` |
+| WebSockets (Reverb, real-time) | `architecture/websockets.md` |
+| Performance (N+1, pagination, indexes) | `architecture/performance.md` |
+| Error handling and exception classes | `architecture/error-handling.md` |
+| Transactional email | `architecture/email.md` |
+| REST API design and rate limits | `architecture/api-design.md` |
+| Deployment and env vars | `architecture/deployment.md` |
+| CI/CD pipeline (GitHub Actions, Pint, Larastan) | `architecture/ci-cd.md` |
+| All packages evaluated | `architecture/packages.md` |

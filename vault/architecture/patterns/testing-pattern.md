@@ -6,40 +6,31 @@ color: "#A78BFA"
 
 # Testing Pattern
 
-FlowFlex uses Pest PHP for all tests. Tests are integration tests by default — they run against a real SQLite in-memory database (overriding the Docker PostgreSQL environment) and test the full stack from controller/service down to the database.
+Pest PHP. Integration tests by default — real SQLite in-memory database, full stack from controller/service to database.
 
 ---
 
-## Test Runner
+## Setup
 
-**Pest PHP** — configured in `phpunit.xml` / `pest.config.php`. All tests are in `tests/Feature/` (integration) and `tests/Unit/` (pure logic, no database). There are no mock-heavy unit tests for services — if the service touches the database, write a Feature test.
-
----
-
-## Database Setup
-
-`phpunit.xml` overrides the database connection to SQLite in-memory:
+`phpunit.xml` overrides database connection:
 
 ```xml
 <env name="DB_CONNECTION" value="sqlite"/>
 <env name="DB_DATABASE" value=":memory:"/>
 ```
 
-Each test class that touches the database uses `RefreshDatabase` to rebuild the schema from migrations:
-
 ```php
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
+// tests/Pest.php
 uses(RefreshDatabase::class)->in('Feature');
 ```
 
-This means every test starts with a clean database, runs against real migrations, and tears down after. No test database server required, no state leakage between tests.
+Every test starts clean. No test database server required.
 
 ---
 
 ## CompanyContext Setup
 
-Every test that touches a model with `BelongsToCompany` must set `CompanyContext` before accessing the model. Without it, `MissingCompanyContextException` is thrown (or in edge cases, queries return empty due to missing scope):
+Required in every test touching a model with `BelongsToCompany`:
 
 ```php
 it('lists employees for the current company', function () {
@@ -57,23 +48,19 @@ it('lists employees for the current company', function () {
 });
 ```
 
-**Always set CompanyContext before creating any model with BelongsToCompany** — not just before the assertion. The factory's `creating` hook in `BelongsToCompany` reads the context when creating the model.
+**Set `CompanyContext` before creating any model** — the factory's `creating` hook reads it.
 
 ---
 
 ## Factory Pattern
 
-Every model has a factory. Factories must set `company_id`:
-
 ```php
 class EmployeeFactory extends Factory
 {
-    protected $model = Employee::class;
-
     public function definition(): array
     {
         return [
-            'company_id' => Company::factory(),   // creates a company if none given
+            'company_id' => Company::factory(),
             'first_name' => $this->faker->firstName(),
             'last_name'  => $this->faker->lastName(),
             'email'      => $this->faker->safeEmail(),
@@ -84,13 +71,9 @@ class EmployeeFactory extends Factory
 }
 ```
 
-In tests, always pass an explicit company to the factory to avoid creating orphaned companies:
-
+Always pass an explicit company in tests:
 ```php
-$company = Company::factory()->create();
-app(CompanyContext::class)->set($company);
-
-// Correct — all employees belong to the same company
+// Correct
 Employee::factory()->count(5)->for($company)->create();
 
 // Wrong — creates a new company per employee
@@ -101,21 +84,7 @@ Employee::factory()->count(5)->create();
 
 ## Filament Panel Tests
 
-Test Filament resources by hitting their panel URLs as authenticated users:
-
 ```php
-it('can view the employee list page', function () {
-    $company = Company::factory()->create();
-    app(CompanyContext::class)->set($company);
-    setPermissionsTeamId($company->id);
-
-    $user = User::factory()->for($company)->withRole('owner')->create();
-
-    actingAs($user)
-        ->get('/hr/employees')
-        ->assertOk();
-});
-
 it('can create an employee', function () {
     $company = Company::factory()->create();
     app(CompanyContext::class)->set($company);
@@ -142,20 +111,16 @@ it('can create an employee', function () {
 
 ## Module Gating Tests
 
-When testing a gated resource or page, activate the module before the test. Without an active `CompanyModuleSubscription`, `canAccess()` returns false and the request returns 403:
-
 ```php
-it('returns 403 when payroll module is not active', function () {
+it('returns 403 when module is not active', function () {
     $company = Company::factory()->create();
     app(CompanyContext::class)->set($company);
     $user = User::factory()->for($company)->withRole('owner')->create();
 
-    actingAs($user)
-        ->get('/hr/payroll')
-        ->assertForbidden();
+    actingAs($user)->get('/hr/payroll')->assertForbidden();
 });
 
-it('returns 200 when payroll module is active', function () {
+it('returns 200 when module is active', function () {
     $company = Company::factory()->create();
     app(CompanyContext::class)->set($company);
 
@@ -166,17 +131,13 @@ it('returns 200 when payroll module is active', function () {
 
     $user = User::factory()->for($company)->withRole('owner')->create();
 
-    actingAs($user)
-        ->get('/hr/payroll')
-        ->assertOk();
+    actingAs($user)->get('/hr/payroll')->assertOk();
 });
 ```
 
 ---
 
 ## Rate Limiter Isolation
-
-API tests that hit rate-limited endpoints must clear the rate limiter between tests or they will fail after the first few runs:
 
 ```php
 beforeEach(function () {
@@ -185,16 +146,183 @@ beforeEach(function () {
 });
 ```
 
-Call `RateLimiter::clear($key)` with the limiter key used in `RouteServiceProvider`. Without this, the test suite will intermittently fail after the fifth run of auth endpoint tests.
+Without this, auth endpoint tests fail intermittently after the fifth run.
 
 ---
 
 ## No Database Mocking
 
-FlowFlex does not mock the database. All persistence tests use the real SQLite in-memory database. The reasons:
+FlowFlex does not mock the database. Real SQLite in-memory only.
 
-1. Mocking Eloquent queries produces tests that test the mock, not the code
-2. SQLite in-memory is fast enough — a full test suite run should be under 60 seconds
+Reasons:
+1. Mocking Eloquent produces tests that test the mock, not the code
+2. SQLite in-memory is fast — full suite under 60 seconds
 3. Real queries catch scope issues, index problems, and constraint violations that mocks cannot
 
-The one exception: external HTTP services (Stripe, email providers, third-party APIs) are always mocked via Laravel's `Http::fake()` or dedicated fake classes. Never make real HTTP calls in tests.
+**Exception**: external HTTP services (Stripe, email providers, third-party APIs) are always mocked via `Http::fake()` or dedicated fake classes. Never make real HTTP calls in tests.
+
+---
+
+## Factory States
+
+Every model factory should define states for common status variations:
+
+```php
+class LeaveRequestFactory extends Factory
+{
+    public function pending(): static
+    {
+        return $this->state(['status' => 'submitted']);
+    }
+
+    public function approved(): static
+    {
+        return $this->state([
+            'status' => 'approved',
+            'approved_at' => now(),
+            'approved_by' => User::factory(),
+        ]);
+    }
+
+    public function rejected(): static
+    {
+        return $this->state(['status' => 'rejected']);
+    }
+}
+
+// Usage in tests
+$approvedRequest = LeaveRequest::factory()->approved()->for($company)->create();
+$pending = LeaveRequest::factory()->pending()->for($company)->count(3)->create();
+```
+
+---
+
+## Livewire / Filament Tests (pest-plugin-livewire)
+
+```php
+use function Pest\Livewire\livewire;
+
+it('validates required fields on employee create form', function () {
+    $company = Company::factory()->create();
+    app(CompanyContext::class)->set($company);
+    setPermissionsTeamId($company->id);
+
+    $user = User::factory()->for($company)->withRole('admin')->create();
+
+    livewire(CreateEmployee::class)
+        ->actingAs($user)
+        ->fillForm(['first_name' => '', 'email' => 'not-an-email'])
+        ->call('create')
+        ->assertHasFormErrors([
+            'first_name' => 'required',
+            'email' => 'email',
+        ]);
+});
+
+it('creates an employee successfully', function () {
+    $company = Company::factory()->create();
+    app(CompanyContext::class)->set($company);
+
+    $user = User::factory()->for($company)->withRole('admin')->create();
+
+    livewire(CreateEmployee::class)
+        ->actingAs($user)
+        ->fillForm([
+            'first_name' => 'Max',
+            'last_name'  => 'Nijenkamp',
+            'email'      => 'max@example.com',
+            'start_date' => '2026-01-01',
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors()
+        ->assertRedirect('/hr/employees');
+
+    expect(Employee::where('email', 'max@example.com')->exists())->toBeTrue();
+});
+```
+
+---
+
+## Architecture Tests
+
+Pest architecture tests enforce structural rules — run as fast as unit tests, catch violations before code review:
+
+```php
+// tests/Architecture/LayersTest.php
+
+arch('controllers do not import service implementations')
+    ->expect('App\Http\Controllers')
+    ->not->toUse('App\Services');
+
+arch('services implement their interface')
+    ->expect('App\Services')
+    ->toImplement('App\Contracts');
+
+arch('models use required traits')
+    ->expect('App\Models\HR')
+    ->toUseTrait('App\Support\Traits\BelongsToCompany');
+
+arch('no debug functions in production code')
+    ->expect('App')
+    ->not->toUse(['dd', 'dump', 'ray', 'var_dump', 'print_r']);
+
+arch('actions use the AsAction trait')
+    ->expect('App\Actions')
+    ->toUseTrait('Lorisleiva\Actions\Concerns\AsAction');
+
+arch('events carry company_id')
+    ->expect('App\Events')
+    ->toHaveProperty('company_id');
+```
+
+---
+
+## Email Testing
+
+```php
+use Illuminate\Support\Facades\Mail;
+
+it('queues leave approved email', function () {
+    Mail::fake();
+
+    $request = LeaveRequest::factory()->for($company)->create();
+
+    ApproveLeaveRequest::run($request, approvedBy: $manager);
+
+    Mail::assertQueued(LeaveApprovedMail::class, function ($mail) use ($request) {
+        return $mail->hasTo($request->employee->email);
+    });
+
+    // Confirm not sent synchronously
+    Mail::assertNothingSent();
+});
+```
+
+---
+
+## Tenant Isolation Test
+
+Every domain should include a cross-tenant isolation test:
+
+```php
+it('does not leak data between companies', function () {
+    $companyA = Company::factory()->create();
+    $companyB = Company::factory()->create();
+
+    app(CompanyContext::class)->set($companyA);
+    $employeeA = Employee::factory()->for($companyA)->create();
+
+    app(CompanyContext::class)->set($companyB);
+    $employeeB = Employee::factory()->for($companyB)->create();
+
+    $userA = User::factory()->for($companyA)->withRole('owner')->create();
+
+    // CompanyA user cannot see CompanyB employees
+    app(CompanyContext::class)->set($companyA);
+    actingAs($userA)
+        ->get('/api/v1/employees')
+        ->assertOk()
+        ->assertJsonMissing(['id' => $employeeB->id]);
+
+    expect(Employee::all())->toHaveCount(1); // CompanyScope filters to CompanyA
+});

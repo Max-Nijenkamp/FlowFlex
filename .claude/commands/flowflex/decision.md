@@ -1,80 +1,100 @@
 # /flowflex:decision
 
-Log an architectural decision record (ADR) to the right brain evolution log.
+Log an architectural decision record (ADR) to the vault.
 
 ## Usage
 
 ```
-/flowflex:decision
-/flowflex:decision "Use ULID over UUID for all primary keys"
-/flowflex:decision "Switch from Sanctum to Passport for API auth" status=proposed
+/flowflex:decision "Use Actions not Service for leave approval" status=decided
+/flowflex:decision "Evaluate cursor pagination for activity feeds" status=proposed
+/flowflex:decision "WhatsApp provider: 360dialog over Twilio" status=decided
 ```
 
 ## Arguments
 
-- First string arg → decision title
-- `status=` → proposed | decided | superseded (default: decided)
+- First string → decision title (required)
+- `status=` → `decided` | `proposed` (default: `decided`)
 
-## What this does
+If title not provided, ask: "What was decided? What options were considered?"
 
-1. **Determines details** — from args or asks:
-   - "What was decided?"
-   - "What options were considered?"
-   - "What was rejected and why?"
-   - "What Left Brain notes need updating?"
+## What This Does
 
-2. **Generates slug** — `decision-{YYYY-MM-DD}-{kebab-title}`
+### Step 1 — Gather decision details
 
-3. **Creates ADR file** at `flowflex-vault/right-brain/evolution/decision-{YYYY-MM-DD}-{slug}.md`:
+From conversation context, extract or ask for:
+- Context: what forced this decision?
+- Options considered (minimum 2): pros and cons of each
+- The chosen option and rationale
+- Consequences: what becomes easier, harder, or changed?
+- Related domain or module files
+
+### Step 2 — Generate slug
+
+Kebab-case from title. Max 6 words. Example:
+- "Use Actions not Service for leave approval" → `actions-not-service-leave-approval`
+
+### Step 3 — Create ADR file
+
+Create `vault/build/decisions/decision-{YYYY-MM-DD}-{slug}.md`:
 
 ```yaml
 ---
 type: adr
-date: {today}
-status: {decided|proposed|superseded}
-last_updated: {today}
+date: {YYYY-MM-DD}
+status: decided | proposed
+color: "#F97316"
 ---
 
 # Decision: {Title}
 
-> {one-sentence summary}
-
 ## Context
-{what forced this decision}
+{what situation or constraint forced this decision}
 
 ## Options Considered
 
 ### Option A — {Name}
-Pros: / Cons:
+**Pros:** {list}
+**Cons:** {list}
 
 ### Option B — {Name}
-Pros: / Cons:
+**Pros:** {list}
+**Cons:** {list}
 
 ## Decision
-Chosen: Option X
-Rationale: {why}
+Chosen: Option {X}
+
+{rationale — why this option over the alternatives}
 
 ## Consequences
-Easier: / Harder: / Changed:
-
-## Related Left Brain
-- [[note-updated]]
+- Easier: {what becomes simpler}
+- Harder: {what becomes more complex}
+- Changed: {what needs updating in the codebase or vault}
 
 ## Related
-- [[MOC_Evolution]]
+- [[domains/{domain}/{module}]]
+- [[architecture/{relevant-pattern}]]
 ```
 
-4. **Updates MOC_Evolution** — reads `right-brain/evolution/MOC_Evolution.md`, adds row to decision log:
-```
-| {today} | {title} | {impact summary} | [[decision-{slug}]] |
-```
+### Step 4 — Update INDEX.md
 
-5. **Updates left-brain notes** — if related left-brain notes need changing (spec diverged from decision), propose edits
-
-6. **Output:**
+Read `vault/build/decisions/INDEX.md`. Add row to Decision Log table:
 ```
-📋 Decision logged: decision-{date}-{slug}.md
-Status: {decided|proposed}
-→ right-brain/evolution/decision-{slug}.md
-→ MOC_Evolution updated
+| {YYYY-MM-DD} | [[build/decisions/decision-{slug}\|{Title}]] | {status} | {domain or "All"} |
+```
+Write back.
+
+### Step 5 — Update affected specs (if needed)
+
+If the decision changes how a domain spec should be built, note which spec file(s) need updating and propose the change.
+
+### Step 6 — Output
+
+```
+Decision logged: vault/build/decisions/decision-{date}-{slug}.md
+Status: {decided | proposed}
+INDEX.md updated.
+
+{if spec updates needed:}
+Suggested spec updates:
+- vault/domains/{domain}/{module}.md — {what to update}
 ```

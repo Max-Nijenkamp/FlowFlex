@@ -4,19 +4,17 @@ category: data-model
 color: "#A78BFA"
 ---
 
-# Data Model
+# Core Data Model
 
 ---
 
-## Core Principles
+## Principles
 
-**ULID primary keys on all tables.** Every table uses a ULID (`ulid('id')->primary()`) as its primary key. ULIDs are sortable by timestamp prefix, URL-safe, 26 characters long, and avoid sequential enumeration attacks. The `HasUlids` trait from Laravel's core applies this automatically.
-
-**company_id on all tenant tables.** Every table that stores data belonging to a specific company carries a non-nullable `company_id` ULID foreign key referencing `companies.id`. The `BelongsToCompany` trait and `CompanyScope` global scope enforce per-company filtering automatically on every Eloquent query.
-
-**Soft deletes on all models.** No record is ever hard-deleted through normal application flow. The `SoftDeletes` trait adds `deleted_at` to every model. Hard deletes only occur via scheduled purge jobs (90 days post-soft-delete) or GDPR erasure flows.
-
-**Enum columns as PHP-backed string enums.** Status columns and other constrained string fields use PHP 8.1+ backed string enums. The enum is cast in the model via `$casts` and stored as a string in the database.
+- **ULID PKs everywhere** — `ulid('id')->primary()` on all tables. Sortable, URL-safe, 26 chars, no enumeration attacks.
+- **`company_id` on all tenant tables** — non-nullable ULID FK to `companies.id`. Global scope via `BelongsToCompany` trait.
+- **Soft deletes on all models** — `deleted_at` on every model. Hard delete only via purge jobs or GDPR erasure.
+- **Backed string enums** — status columns use PHP 8.1+ backed string enums, cast in the model.
+- **Unique constraints scoped to company** — `UNIQUE (company_id, email)` not `UNIQUE (email)`.
 
 ---
 
@@ -33,17 +31,15 @@ Schema::create('hr_employees', function (Blueprint $table) {
     $table->string('email')->nullable();
     $table->string('status')->default('active');
 
-    // audit columns
+    // audit columns (optional but standard)
     $table->foreignUlid('created_by')->nullable()->references('id')->on('users');
     $table->foreignUlid('updated_by')->nullable()->references('id')->on('users');
 
-    // standard timestamps
     $table->timestamps();
     $table->softDeletes();
 
-    // indices
-    $table->index('company_id');
-    $table->unique(['company_id', 'email']); // uniqueness always scoped to company
+    $table->index('company_id');                      // mandatory
+    $table->unique(['company_id', 'email']);           // uniqueness scoped to company
 });
 ```
 
@@ -53,21 +49,20 @@ Schema::create('hr_employees', function (Blueprint $table) {
 
 | Table | Tenant Scoped | Description |
 |---|---|---|
-| `companies` | No (is the tenant anchor) | Tenant record. Every other table's `company_id` points here. |
+| `companies` | No (anchor) | Tenant record. Every other table's `company_id` points here. |
 | `users` | Yes | Platform users — people who log in to Filament panels |
-| `admins` | No | FlowFlex staff — separate model and guard for the `/admin` panel |
-| `user_invitations` | Yes | Pending invitations to join a company workspace |
-| `company_module_subscriptions` | Yes | Which modules a company has activated and when |
-| `module_catalog` | No (platform-level) | All available modules with keys, domain, and per-user price |
-| `billing_subscriptions` | Yes | Overall company subscription state (trial, active, suspended) |
-| `activity_log` | Yes | Spatie activitylog records — full audit trail per company |
-| `notifications` | Yes | Laravel notification table — in-app notification inbox |
-| `media` | Yes | Spatie media-library — file attachments linked to any model |
-| `personal_access_tokens` | Yes | Sanctum API tokens — scoped to company users |
+| `admins` | No | FlowFlex staff — separate model and guard for `/admin` |
+| `user_invitations` | Yes | Pending invitations to join a workspace |
+| `company_module_subscriptions` | Yes | Which modules a company has activated |
+| `module_catalog` | No (platform-level) | All available modules — keys, domain, price |
+| `activity_log` | Yes | Spatie activitylog — full audit trail |
+| `notifications` | Yes | Laravel notification table — in-app inbox |
+| `media` | Yes | Spatie media-library — file attachments |
+| `personal_access_tokens` | Yes | Sanctum API tokens |
 
 ---
 
-## Entity Relationship Diagram
+## Core ERD
 
 ```mermaid
 erDiagram
@@ -76,11 +71,10 @@ erDiagram
         string name
         string slug
         string email
-        string status
+        string subscription_status
         string timezone
         string locale
         string currency
-        json branding
         timestamp trial_ends_at
         timestamp deleted_at
     }
@@ -134,70 +128,25 @@ erDiagram
         ulid activated_by FK
     }
 
-    personal_access_tokens {
-        ulid id PK
-        ulid tokenable_id FK
-        string name
-        string token
-        json abilities
-        timestamp last_used_at
-        timestamp expires_at
-    }
-
     companies ||--o{ users : "has many"
     companies ||--o{ user_invitations : "has many"
     companies ||--o{ company_module_subscriptions : "subscribes to"
     module_catalog ||--o{ company_module_subscriptions : "referenced by"
-    users ||--o{ personal_access_tokens : "owns"
     users ||--o{ company_module_subscriptions : "activated_by"
 ```
 
 ---
 
-## Multi-Tenancy Schema Pattern
+## Non-Tenant Models
 
-Every tenant table follows this pattern — `company_id` is always non-nullable and always indexed:
-
-```sql
--- correct: company_id not null, indexed
-ALTER TABLE hr_employees ADD COLUMN company_id ulid NOT NULL REFERENCES companies(id);
-CREATE INDEX idx_hr_employees_company_id ON hr_employees(company_id);
-
--- wrong: nullable company_id breaks BelongsToCompany creating logic
-ALTER TABLE hr_employees ADD COLUMN company_id ulid REFERENCES companies(id);
-```
-
-Unique constraints that apply within a company scope the uniqueness to `company_id`:
-
-```sql
--- correct: email unique per company (same email allowed in different companies)
-ALTER TABLE users ADD CONSTRAINT users_company_email_unique UNIQUE (company_id, email);
-
--- wrong: global uniqueness blocks same email across companies
-ALTER TABLE users ADD CONSTRAINT users_email_unique UNIQUE (email);
-```
-
----
-
-## Required Model Traits
-
-Every tenant model (any model with `company_id`) must use exactly these three traits:
+Platform-level models (no `company_id`) use `HasUlids` only — no `BelongsToCompany`, no `SoftDeletes` unless explicitly needed:
 
 ```php
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
-use App\Support\Traits\BelongsToCompany;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-class Employee extends Model
+// Module catalog — static data backed by Sushi
+class ModuleCatalog extends Model
 {
     use HasUlids;
-    use BelongsToCompany;
-    use SoftDeletes;
+    // No BelongsToCompany — not tenant-scoped
+    // No SoftDeletes — platform data, not deleted
 }
 ```
-
-- `HasUlids` — ULID primary key generation and casting
-- `BelongsToCompany` — boots `CompanyScope` global scope; auto-sets `company_id` on create; adds `company()` relation
-- `SoftDeletes` — adds `deleted_at`, scopes queries to non-deleted records by default
-
-Non-tenant models (platform-level tables like `admins` and `module_catalog`) use `HasUlids` only.

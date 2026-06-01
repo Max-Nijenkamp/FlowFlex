@@ -132,7 +132,13 @@
       "Bash(ps -p 85757 -o pid,comm)",
       "Bash(xargs ps -p)",
       "Bash(docker network *)",
-      "Bash(brew services *)"
+      "Bash(brew services *)",
+      "Bash(Get-ChildItem \"C:\\\\Users\\\\maxni\\\\Documents\\\\projects\\\\FlowFlex\\\\vault\\\\build\\\\logs\")",
+      "Bash(Select-Object Name)",
+      "Bash(Remove-Item *)",
+      "Bash(mkdir -p C:/Users/maxni/Documents/projects/FlowFlex/vault/domains/__TRACKED_VAR__)",
+      "Read(//c/Users/maxni/.claude/plugins/**)",
+      "Read(//c/Users/maxni/.claude/**)"
     ]
   },
   "enabledMcpjsonServers": [

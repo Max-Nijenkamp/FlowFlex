@@ -9,107 +9,81 @@ color: "#4ADE80"
 
 # Employee Profiles
 
-> Core employee record management — every person from first day to last, with employment type, department, manager hierarchy, and status tracking.
+Core employee record covering the full employment lifecycle: hire details, personal info, job position, department, manager, employment status, and termination. The anchor record that all other HR modules reference.
 
-**Panel:** `hr`
-**Module key:** `hr.profiles`
+---
 
-## What It Does
+## Core Features
 
-Employee Profiles is the foundation of the entire HR domain. Every other HR module (leave, payroll, performance, scheduling) references the employee record created here. The module covers the full employee lifecycle: creating a record when someone is hired, updating it as their role evolves, and marking it terminated when they leave. Employment types, departments, job titles, manager hierarchy (self-referential), and emergency contacts are all managed here. Custom fields (JSON) allow companies to add their own attributes without schema changes.
+- Employee record: personal info, contact details, emergency contacts, national ID, work email
+- Employment details: hire date, job title, department, manager (self-referential), employment type (full-time/part-time/contractor)
+- Employment status machine: `active → on_leave | terminated | suspended` (via `spatie/laravel-model-states`)
+- Document storage: employment contract, ID documents, certifications (via Media Library)
+- Employee number: auto-generated per company, unique and sequential within company
+- Profile photo upload
+- Manager hierarchy: recursive `manager_id` FK on `hr_employees`
+- Offboarding: termination date, reason, exit survey link, equipment checklist
+- Direct reports list on employee profile
+- Phone validation via `propaganistas/laravel-phone` — stored in E.164 format
+- **Encrypted at rest**: `national_id`, `date_of_birth`, `personal_email` — see [[architecture/patterns/encryption]]
 
-## Features
-
-### Core
-- Employee CRUD: create on hire, edit on change, soft-terminate on exit (data retained)
-- Employment types: `full_time`, `part_time`, `contractor`, `intern`
-- Status: `active`, `inactive`, `on_leave`, `terminated`
-- Department and job title fields — departments are a separate managed list
-- Manager field: self-referential FK — forms the hierarchy used by the Org Chart module
-- Emergency contact: name, relationship, phone — stored on employee record
-
-### Advanced
-- Hire date, probation end date, contract end date (for contractors)
-- Document attachments: employment contract, ID copy, certifications — via file-storage module
-- Custom fields: JSON column for company-specific attributes without migration
-- Bulk actions: bulk department change, bulk status update from employee list
-- Termination workflow: record reason, handover tasks, access revocation checklist — termination triggers `EmployeeTerminated` event consumed by payroll, leave, and IT modules
-
-### AI-Powered
-- Profile completeness score: nudge HR when mandatory fields are missing (e.g. emergency contact, contract, start date)
-- Retention risk flag: AI scoring based on tenure, performance trends, and role changes — surfaced on employee detail page
+---
 
 ## Data Model
 
-```erDiagram
-    employees {
+| Table | Key Columns |
+|---|---|
+| `hr_employees` | company_id, user_id (nullable FK to users), employee_number, first_name, last_name, email, phone, personal_email, date_of_birth, national_id, hire_date, termination_date, job_title, department_id, manager_id, employment_type, status, deleted_at |
+| `hr_departments` | company_id, name, parent_department_id, head_employee_id |
+| `hr_emergency_contacts` | employee_id, company_id, name, relationship, phone, email |
+
+```mermaid
+erDiagram
+    hr_employees {
         ulid id PK
         ulid company_id FK
         ulid user_id FK
+        string employee_number
         string first_name
         string last_name
         string email
-        string phone
-        string employment_type
-        string status
         string job_title
         ulid department_id FK
         ulid manager_id FK
+        string employment_type
+        string status
         date hire_date
-        date probation_end_date
-        date contract_end_date
         date termination_date
-        string termination_reason
-        json emergency_contact
-        json custom_fields
         timestamp deleted_at
-        timestamps created_at/updated_at
     }
-
-    departments {
+    hr_departments {
         ulid id PK
         ulid company_id FK
         string name
-        ulid manager_id FK
-        timestamps created_at/updated_at
+        ulid parent_department_id FK
+        ulid head_employee_id FK
     }
+    hr_employees ||--o{ hr_employees : "manager"
+    hr_employees }o--|| hr_departments : "belongs to"
+    hr_departments }o--o| hr_departments : "parent"
 ```
 
-| Column | Notes |
-|---|---|
-| `user_id` | FK to `users` — links HR record to login account |
-| `manager_id` | Self-referential FK to `employees.id` |
-| `custom_fields` | JSON — company-specific attributes |
-
-## Permissions
-
-- `hr.profiles.view`
-- `hr.profiles.create`
-- `hr.profiles.edit`
-- `hr.profiles.terminate`
-- `hr.profiles.view-sensitive`
+---
 
 ## Filament
 
-- **Resource:** `EmployeeResource` — table with search, filter by status/department, detail view with tabbed sections
-- **Pages:** `ListEmployees`, `CreateEmployee`, `EditEmployee`, `ViewEmployee`
-- **Custom pages:** None
-- **Widgets:** `HeadcountWidget` (active employee count by department)
-- **Nav group:** Employees (hr panel)
+**Nav group:** Employees
 
-## Displaces
+- `EmployeeResource` — list (searchable, filterable by dept/status/type), create, edit, view
+- View page: profile card + tabs (Personal, Employment, Documents, History)
+- `EmployeeProfileWidget` — stat widgets on list page (headcount, new hires this month, turnover rate)
+- Export via `pxlrbt/filament-excel`
 
-| Competitor | Feature Displaced |
-|---|---|
-| BambooHR | Employee records and lifecycle management |
-| Workday HCM | Core HR employee master data |
-| HiBob | People management and profiles |
-| Personio | Employee data and HR administration |
+---
 
 ## Related
 
-- [[leave-management]]
-- [[org-chart]]
-- [[onboarding]]
-- [[payroll]]
-- [[performance-reviews]]
+- [[domains/hr/org-chart]]
+- [[domains/hr/leave-management]]
+- [[domains/hr/payroll]]
+- [[domains/hr/onboarding]]

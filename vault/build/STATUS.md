@@ -1,83 +1,90 @@
 ---
-type: build
-category: status
+type: build-status
 color: "#F97316"
-last-updated: 2026-05-13
 ---
 
 # Build Status
 
-Single source of truth for what has been built. Update this file every time a module reaches `complete` status.
+Per-domain progress. Update `status` frontmatter in module specs — this table is the manual view (Dataview query below auto-populates if Dataview plugin is installed).
+
+**Last updated:** 2026-06-01 (vault rebuilt)
 
 ---
 
 ## Progress by Domain
 
-| Domain | Built | Total | Progress |
-|---|---|---|---|
-| Foundation | 5 | 5 | ✅ 100% |
-| Core Platform | 0 | 14 | 📅 0% |
-| HR & People | 0 | 23 | 📅 0% |
-| Projects & Work | 0 | 11 | 📅 0% |
-| Finance & Accounting | 0 | 12 | 📅 0% |
-| CRM & Sales | 0 | 16 | 📅 0% |
-| Marketing | 0 | 10 | 📅 0% |
-| Operations | 0 | 8 | 📅 0% |
-| Analytics & BI | 0 | 7 | 📅 0% |
-| IT & Security | 0 | 10 | 📅 0% |
-| Legal & Compliance | 0 | 8 | 📅 0% |
-| E-commerce | 0 | 15 | 📅 0% |
-| Communications | 0 | 8 | 📅 0% |
-| Learning & Dev | 0 | 10 | 📅 0% |
-| AI & Automation | 0 | 9 | 📅 0% |
-| Community & Social | 0 | 7 | 📅 0% |
-| Workplace & Facility | 0 | 5 | 📅 0% |
-| Professional Services | 0 | 6 | 📅 0% |
-| Product-Led Growth | 0 | 6 | 📅 0% |
-| Business Travel | 0 | 5 | 📅 0% |
-| ESG & Sustainability | 0 | 6 | 📅 0% |
-| Real Estate | 0 | 6 | 📅 0% |
-| Customer Success | 0 | 7 | 📅 0% |
-| Subscription Billing | 0 | 5 | 📅 0% |
-| Procurement | 0 | 5 | 📅 0% |
-| Financial Planning | 0 | 5 | 📅 0% |
-| Events Management | 0 | 6 | 📅 0% |
-| Document Management | 0 | 5 | 📅 0% |
-| Whistleblowing & Ethics | 0 | 6 | 📅 0% |
-| Field Service | 0 | 6 | 📅 0% |
-| Pricing Management | 0 | 4 | 📅 0% |
-| Risk Management | 0 | 5 | 📅 0% |
-| Support & Help Desk | 0 | 7 | 📅 0% |
-| Omnichannel Inbox | 0 | 7 | 📅 0% |
-| Partner & Channel | 0 | 6 | 📅 0% |
+| Phase | Domain | Built | Total | Progress |
+|---|---|---|---|---|
+| MVP | Foundation | 0 | 8 | 🔴 0% |
+| MVP | Core Platform | 0 | 15 | 🔴 0% |
+| MVP | HR & People | 0 | 15 | 🔴 0% |
+| MVP | Finance & Accounting | 0 | 13 | 🔴 0% |
+| MVP | CRM & Sales | 0 | 15 | 🔴 0% |
+| Phase 2 | Projects & Work | 0 | 11 | 🔴 0% |
+| Phase 2 | Support & Help Desk | 0 | 7 | 🔴 0% |
+| Phase 2 | Communications | 0 | 8 | 🔴 0% |
+| Phase 2 | Document Management | 0 | 6 | 🔴 0% |
+| Phase 3 | Marketing | 0 | 7 | 🔴 0% |
+| Phase 3 | Operations | 0 | 7 | 🔴 0% |
+| Phase 3 | Analytics & BI | 0 | 5 | 🔴 0% |
+| Phase 3 | IT & Security | 0 | 6 | 🔴 0% |
+| Phase 3 | Legal & Compliance | 0 | 6 | 🔴 0% |
+| Phase 3 | E-commerce | 0 | 8 | 🔴 0% |
+| Phase 3 | Learning & Development | 0 | 8 | 🔴 0% |
+| Phase 3 | AI & Automation | 0 | 4 | 🔴 0% |
+| Phase 3 | Customer Success | 0 | 6 | 🔴 0% |
+| Phase 3 | Procurement | 0 | 6 | 🔴 0% |
+| Phase 3 | Workplace & Facility | 0 | 5 | 🔴 0% |
+| Phase 3 | Events Management | 0 | 7 | 🔴 0% |
+| Deferred | (10 domains) | — | — | stub only |
 
-**Total: 5 / 281 modules — Phase 0 complete**
+**MVP Total: 0 / 66 modules built**
+**Phase 2 Total: 0 / 32 modules built**
+**Phase 3 Total: 0 / 75 modules built**
+**All active: 0 / 173 modules — every Phase 1/2/3 module is fully specced**
 
 ---
 
-## How to Update
+## Dataview Auto-Board
 
-When a module build is complete:
+> Install the Dataview plugin in Obsidian to enable the auto-updating board below.
 
-1. Increment the Built number for that domain row
-2. Recalculate the percentage: `(Built / Total) × 100`, round to nearest whole number
-3. Update the emoji: 📅 = 0%, 🔄 = 1–99%, ✅ = 100%
-4. Update `last-updated` in the frontmatter to today's date
-5. Add a row to the Recent Sessions table below
+```dataview
+TABLE
+  domain AS "Domain",
+  status AS "Status",
+  module-key AS "Key"
+FROM "domains"
+WHERE type = "module"
+SORT domain ASC, status ASC
+```
+
+Active modules only (in-progress + complete):
+
+```dataview
+TABLE
+  domain AS "Domain",
+  status AS "Status",
+  module-key AS "Key"
+FROM "domains"
+WHERE type = "module" AND (status = "in-progress" OR status = "complete")
+SORT status DESC, domain ASC
+```
 
 ---
 
 ## Recent Sessions
 
-| Date | Domain | Module | Outcome |
+| Date | Domain | Modules | Notes |
 |---|---|---|---|
-| 2026-05-13 | Foundation | Phase 0 — all 5 modules | ✅ complete — Laravel 13 + Filament 5.6.3 + 35 panels + 15 tests passing |
+| — | — | — | No sessions yet |
 
 ---
 
-## Related
+## How to Update
 
-- [[build/ACTIVATION]] — how to run a build session
-- [[build/gaps/INDEX]] — open gaps and spec issues
-- [[build/decisions/INDEX]] — architectural decisions
-- [[domains/INDEX]] — full domain and module list
+1. Start a module: set `status: in-progress` in the module spec frontmatter
+2. Complete a module: set `status: complete` in the module spec frontmatter
+3. Update the Built count in the table above
+4. Add a row to Recent Sessions
+5. Run `/flowflex:sync` to create a gap file or ADR if needed

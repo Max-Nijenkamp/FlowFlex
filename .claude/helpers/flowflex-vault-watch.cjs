@@ -1,33 +1,29 @@
 #!/usr/bin/env node
 /**
  * FlowFlex Vault Watch — PostToolUse hook
- * Fires after Write/Edit/MultiEdit. If a left-brain spec was modified,
- * outputs a reminder to sync the right brain.
+ * Fires after Write/Edit/MultiEdit.
+ * If a file in app/ was modified → remind to sync vault.
+ * If a vault spec was modified → remind to update STATUS.md.
  */
 
 'use strict';
 
 const path = require('path');
+const fs = require('fs');
 
 let toolInput = {};
-
-// Read tool input from stdin (Claude Code passes tool call JSON here)
 let rawInput = '';
+
 try {
-  const fs = require('fs');
   rawInput = fs.readFileSync('/dev/stdin', 'utf8');
-  if (rawInput.trim()) {
-    toolInput = JSON.parse(rawInput);
-  }
+  if (rawInput.trim()) toolInput = JSON.parse(rawInput);
 } catch {
-  // stdin not available or not JSON — try env vars
   try {
     const envInput = process.env.CLAUDE_TOOL_INPUT;
     if (envInput) toolInput = JSON.parse(envInput);
   } catch { /* ignore */ }
 }
 
-// Get file path from various possible locations
 const filePath = (
   toolInput?.tool_input?.file_path ||
   toolInput?.file_path ||
@@ -38,22 +34,42 @@ const filePath = (
 
 if (!filePath) process.exit(0);
 
-// Only care about left-brain spec files (not MOCs or meta files)
-if (!filePath.includes('flowflex-vault/left-brain/')) process.exit(0);
-
 const basename = path.basename(filePath, '.md');
-const isMOC  = basename.startsWith('MOC_') || basename.startsWith('00_') || basename.startsWith('_');
-const isMeta = ['obsidian-setup', 'dataview-queries', '_conventions', '_index'].includes(basename);
 
-if (isMOC || isMeta) process.exit(0);
+// --- Case 1: Code file in app/ was modified → vault sync reminder ---
+if (filePath.includes('/app/') && !filePath.includes('/vendor/')) {
+  // Try to infer domain from path (e.g. app/Models/HR/Employee.php → hr)
+  const domainMatch = filePath.match(/\/app\/(Models|Services|Actions|Filament|States|Listeners|Jobs|Mail|Controllers)\/([A-Z][^/]+)\//i);
+  const domain = domainMatch ? domainMatch[2].toLowerCase() : null;
 
-// Determine which domain this is in
-const domainMatch = filePath.match(/left-brain\/domains\/(\d+_[^/]+)\//);
-const domain = domainMatch ? domainMatch[1].replace(/^\d+_/, '') : 'unknown';
+  console.log('');
+  console.log('[FlowFlex] Code file modified: ' + path.basename(filePath));
+  if (domain) {
+    console.log('→ When session is complete: /flowflex:sync ' + domain + '.{module} status=in-progress');
+  } else {
+    console.log('→ When session is complete: /flowflex:sync {module-key} status=in-progress|complete');
+  }
+  console.log('→ If bugs found: /flowflex:bug "description" module={key} severity=high|medium|low');
+  console.log('→ If module done: /flowflex:done {module-key}');
+  process.exit(0);
+}
 
-// Output reminder — Claude Code injects this as context
-console.log('');
-console.log(`[FlowFlex Vault] Left-brain spec modified: ${basename} (${domain})`);
-console.log('→ Run /flowflex:sync to update STATUS_Dashboard, builder log, and right-brain relations.');
-console.log('→ Run /flowflex:bug "description" to log a bug found during this change.');
-console.log('→ Run /flowflex:done once the module is fully built and tested.');
+// --- Case 2: Vault domain spec was modified → check STATUS.md ---
+if (filePath.includes('/vault/domains/') && filePath.endsWith('.md')) {
+  const isIndex = basename === '_index' || basename === '_overview';
+  if (isIndex) process.exit(0);
+
+  const domainMatch = filePath.match(/\/vault\/domains\/([^/]+)\//);
+  const domain = domainMatch ? domainMatch[1] : 'unknown';
+
+  console.log('');
+  console.log('[FlowFlex Vault] Spec modified: ' + basename + ' (' + domain + ')');
+  console.log('→ /flowflex:sync ' + domain + '.' + basename + ' status=in-progress');
+  console.log('→ Check vault/build/STATUS.md is up to date');
+  process.exit(0);
+}
+
+// --- Case 3: Build tracking file modified → no reminder needed ---
+if (filePath.includes('/vault/build/')) process.exit(0);
+
+process.exit(0);

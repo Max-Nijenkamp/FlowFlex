@@ -9,117 +9,73 @@ color: "#4ADE80"
 
 # General Ledger
 
-> Chart of accounts, double-entry journal entries, trial balance, and period close — the accounting foundation that all other Finance modules post into.
+Chart of accounts, double-entry journal entries, and trial balance. All financial transactions from other modules post journal entries here. The source of truth for all financial reporting.
 
-**Panel:** `finance`
-**Module key:** `finance.ledger`
+---
 
-## What It Does
+## Core Features
 
-The General Ledger is the bedrock of FlowFlex Finance. Without it, FlowFlex Finance is a billing tool; with it, it is an accounting system. Every financial transaction from any module (invoice posted, expense approved, payroll run approved, asset depreciated) ultimately posts a double-entry journal to the GL. The chart of accounts defines the account structure. The GL view shows every transaction affecting each account over a period. Period close locks historical periods against backdated entries. Trial balance confirms that debits equal credits.
+- Chart of accounts: hierarchical account structure (assets, liabilities, equity, revenue, expenses)
+- Account types: Asset, Liability, Equity, Revenue, Expense
+- Journal entries: debit/credit pairs, mandatory balance (debits = credits), reference, description
+- Auto-posting: invoices, payments, expenses, payroll runs create journal entries automatically
+- Trial balance report: by date range
+- Account balance drill-down: click account → see all journal lines for that account
+- Fiscal year close: lock previous periods to prevent retroactive edits
 
-## Features
-
-### Core
-- Chart of accounts: account types (Asset, Liability, Equity, Revenue, Expense, COGS), hierarchy (Group → Account → Sub-account, 3 levels), numeric codes (4-digit default), lock accounts, tax mapping per account
-- Journal entries: manual entries with date, description, and two or more lines (debit and credit); each line references an account, amount, and currency
-- Auto-posted journals: other modules fire events that trigger journal lines automatically — invoice posted, payment received, expense approved, payroll approved, asset depreciated
-- Trial balance: all accounts with debit/credit totals for a period — confirms debits = credits; export to Excel
-- Standard COA templates: Netherlands (RGS), UK (FRS 102), US GAAP, Germany (SKR03/SKR04) — importable at setup
-
-### Advanced
-- Recurring journals: scheduled monthly or quarterly journals (accruals, prepayments, depreciation) — auto-post on configured date
-- Journal approval workflow: entries above a threshold amount require second approval before posting
-- Journal reversal: one-click reverse entry for corrections — original and reversal linked in the GL view
-- GL drill-down: click any GL line to navigate to the source document (invoice, expense claim, payroll run)
-- Period close: month-end close checklist → lock period → prevent backdated posting; year-end close zeros income/expense accounts to retained earnings
-
-### AI-Powered
-- Posting anomaly detection: AI flags journal entries with unusual account combinations or amounts significantly different from historical averages — surfaced for review before the entry is approved
-- Accrual suggestions: at month-end, AI analyses open purchase orders and uninvoiced time entries and suggests which accrual journals to create
+---
 
 ## Data Model
 
-```erDiagram
-    chart_of_accounts {
+| Table | Key Columns |
+|---|---|
+| `fin_accounts` | company_id, code, name, type (asset/liability/equity/revenue/expense), parent_account_id, is_active |
+| `fin_journal_entries` | company_id, reference, description, entry_date, status (draft/posted), created_by |
+| `fin_journal_lines` | journal_entry_id, company_id, account_id, debit_cents, credit_cents, description |
+
+```mermaid
+erDiagram
+    fin_accounts {
         ulid id PK
         ulid company_id FK
-        ulid parent_id FK
         string code
         string name
         string type
-        string currency
-        boolean is_active
-        boolean is_locked
-        json tax_mapping
-        timestamps created_at/updated_at
+        ulid parent_account_id FK
     }
-
-    journal_entries {
+    fin_journal_entries {
         ulid id PK
         ulid company_id FK
         string reference
-        string description
         date entry_date
         string status
-        string source_type
-        ulid source_id FK
-        ulid created_by FK
-        ulid approved_by FK
-        timestamp approved_at
-        timestamps created_at/updated_at
     }
-
-    journal_lines {
+    fin_journal_lines {
         ulid id PK
         ulid journal_entry_id FK
         ulid account_id FK
-        decimal debit
-        decimal credit
-        string currency
-        decimal debit_base
-        decimal credit_base
-        decimal fx_rate
-        string description
-        timestamps created_at/updated_at
+        int debit_cents
+        int credit_cents
     }
+    fin_journal_entries ||--o{ fin_journal_lines : "has"
+    fin_accounts ||--o{ fin_journal_lines : "posted to"
+    fin_accounts }o--o| fin_accounts : "parent"
 ```
 
-| Column | Notes |
-|---|---|
-| `type` | Asset / Liability / Equity / Revenue / Expense / COGS |
-| `source_type` / `source_id` | Polymorphic link to originating document |
-| `debit_base` / `credit_base` | Amounts converted to company base currency |
-
-## Permissions
-
-- `finance.ledger.view-ledger`
-- `finance.ledger.post-journal`
-- `finance.ledger.approve-journal`
-- `finance.ledger.manage-coa`
-- `finance.ledger.close-period`
+---
 
 ## Filament
 
-- **Resource:** `ChartOfAccountsResource`, `JournalEntryResource`
-- **Pages:** `ListChartOfAccounts`, `ListJournalEntries`, `CreateJournalEntry`, `ViewJournalEntry`
-- **Custom pages:** `TrialBalancePage`, `GeneralLedgerViewPage`
-- **Widgets:** `TrialBalanceStatusWidget` — balance check (debits = credits) on finance dashboard
-- **Nav group:** Ledger (finance panel)
+**Nav group:** Ledger
 
-## Displaces
+- `ChartOfAccountsResource` — hierarchical account tree, create/edit accounts
+- `JournalEntryResource` — list, create manual entries, view lines; auto-posted entries read-only
+- `TrialBalancePage` (custom page) — date range selector, account balance table
 
-| Competitor | Feature Displaced |
-|---|---|
-| Xero | Chart of accounts and general ledger |
-| QuickBooks | Double-entry bookkeeping |
-| Sage 50 | General ledger and journal entries |
-| Exact Online | GL and financial accounting |
+---
 
 ## Related
 
-- [[invoicing]]
-- [[expenses]]
-- [[payroll]]
-- [[fixed-assets]]
-- [[financial-reporting]]
+- [[domains/finance/invoicing]]
+- [[domains/finance/expenses]]
+- [[domains/finance/financial-reporting]]

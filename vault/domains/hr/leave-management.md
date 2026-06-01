@@ -9,115 +9,83 @@ color: "#4ADE80"
 
 # Leave Management
 
-> Leave requests, approval workflows, leave balances, and leave type configuration — from annual holiday to sick leave, parental leave, and unpaid time off.
+Leave requests, multi-level approval workflows, leave balances, accrual rules, and a team calendar view. Employees submit requests via Self-Service; managers approve in `/hr`.
 
-**Panel:** `hr`
-**Module key:** `hr.leave`
+---
 
-## What It Does
+## Core Features
 
-Leave Management handles the complete leave lifecycle for every employee. HR defines leave policies (types, accrual rules, carry-over limits). Each employee has a balance per policy per year. Employees submit leave requests; managers approve or reject them via a simple approval workflow. Balances update automatically when a request is approved. The calendar view shows team availability so managers can spot conflicts before approving. Leave data feeds into payroll (to deduct unpaid leave days) and time & attendance (to explain absences).
+- Leave types: annual, sick, parental, unpaid, custom — configurable per company
+- Leave request lifecycle: `draft → submitted → approved | rejected | cancelled` (spatie/laravel-model-states)
+- Multi-level approval: configurable chain (employee → manager → HR)
+- Leave balances: accrual by day/month/year, carry-over rules, balance cap
+- Team calendar: monthly/weekly view of approved leaves across team (via `saade/filament-fullcalendar`)
+- Overlap detection: warns when request overlaps with existing approved leave or public holiday
+- Public holiday calendar imported from locale settings
+- Leave balance report: days taken, remaining, pending per employee per type
+- Notifications: approval/rejection via email and in-app (Core Notifications)
 
-## Features
-
-### Core
-- Leave types: annual, sick, maternity, paternity, unpaid, compassionate, study — configurable per company
-- Leave balances: allocated days, used days, pending days, remaining days — tracked per employee per policy per year
-- Request lifecycle: `pending` → `approved` / `rejected` / `cancelled`
-- Approval workflow: request notifies the employee's direct manager; manager approves/rejects with optional comment
-- Balance auto-update: on approval, `used_days` incremented; on cancellation, days returned to balance
-
-### Advanced
-- Carry-over rules per leave type: max carry-over days, expiry date for carried-over days
-- Accrual: monthly or annual accrual with pro-rata calculation for partial year hires
-- Calendar view: team leave calendar showing all approved and pending requests — filterable by department
-- Multi-level approval: configurable second approval for leave exceeding a threshold (e.g. >10 days requires HR manager sign-off)
-- Leave conflict detection: warn manager when approving leave that overlaps with another team member's approved leave
-- Public holiday calendar: company-defined public holidays excluded from leave day counts
-
-### AI-Powered
-- Leave pattern analysis: flag employees with unusually high sick leave frequency — surfaced to HR manager as a wellbeing concern
-- Coverage prediction: before approving, show AI estimate of team coverage impact based on current project workload
+---
 
 ## Data Model
 
-```erDiagram
-    leave_policies {
+| Table | Key Columns |
+|---|---|
+| `hr_leave_types` | company_id, name, color, accrual_days_per_year, carry_over_days, requires_approval |
+| `hr_leave_balances` | company_id, employee_id, leave_type_id, year, allocated_days, taken_days, pending_days |
+| `hr_leave_requests` | company_id, employee_id, leave_type_id, start_date, end_date, days_requested, status, note, approved_by, approved_at |
+
+```mermaid
+erDiagram
+    hr_leave_types {
         ulid id PK
         ulid company_id FK
         string name
-        string type
-        integer days_per_year
-        integer max_carry_over
+        string color
+        decimal accrual_days_per_year
+        int carry_over_days
         boolean requires_approval
-        timestamps created_at/updated_at
     }
-
-    leave_balances {
+    hr_leave_balances {
         ulid id PK
         ulid company_id FK
         ulid employee_id FK
-        ulid leave_policy_id FK
-        integer year
+        ulid leave_type_id FK
+        int year
         decimal allocated_days
-        decimal used_days
+        decimal taken_days
         decimal pending_days
-        decimal carried_over_days
-        timestamps created_at/updated_at
     }
-
-    leave_requests {
+    hr_leave_requests {
         ulid id PK
         ulid company_id FK
         ulid employee_id FK
-        ulid leave_policy_id FK
+        ulid leave_type_id FK
         date start_date
         date end_date
-        decimal days
+        decimal days_requested
         string status
-        string reason
-        ulid approver_id FK
         timestamp approved_at
-        string rejection_reason
-        timestamps created_at/updated_at
     }
+    hr_leave_requests }o--|| hr_leave_types : "type"
+    hr_leave_balances }o--|| hr_leave_types : "type"
 ```
 
-| Column | Notes |
-|---|---|
-| `leave_balances.pending_days` | Days in pending requests — not yet deducted |
-| `leave_requests.status` | pending / approved / rejected / cancelled |
-| `leave_requests.days` | Calculated working days between start and end |
-
-## Permissions
-
-- `hr.leave.view-own`
-- `hr.leave.view-team`
-- `hr.leave.request`
-- `hr.leave.approve`
-- `hr.leave.manage-policies`
+---
 
 ## Filament
 
-- **Resource:** `LeaveRequestResource`, `LeavePolicyResource`
-- **Pages:** `ListLeaveRequests`, `CreateLeaveRequest`, `ListLeavePolicies`
-- **Custom pages:** `LeaveCalendarPage` — team calendar with approved and pending leave blocks
-- **Widgets:** `LeaveBalanceSummaryWidget` — employee's own balances on HR dashboard
-- **Nav group:** Leave (hr panel)
+**Nav group:** Leave
 
-## Displaces
+- `LeaveRequestResource` — list (pending tab / all tab), create, view, approve/reject actions
+- `LeaveBalanceResource` — read-only balance overview per employee per type
+- `LeaveCalendarPage` (custom page) — full calendar view with leave overlays, filterable by team
+- `LeaveTypeResource` — admin configuration of leave types, accrual rules
 
-| Competitor | Feature Displaced |
-|---|---|
-| BambooHR | Time-off management and approval workflows |
-| Workday | Leave of absence management |
-| HiBob | Leave and time-off requests |
-| Personio | Absence management |
+---
 
 ## Related
 
-- [[employee-profiles]]
-- [[time-attendance]]
-- [[payroll]]
-- [[employee-self-service]]
-- [[hr-analytics]]
+- [[domains/hr/employee-profiles]]
+- [[domains/hr/employee-self-service]]
+- [[architecture/packages]] (`spatie/laravel-model-states`, `saade/filament-fullcalendar`)

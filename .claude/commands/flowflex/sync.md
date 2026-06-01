@@ -1,152 +1,94 @@
 # /flowflex:sync
 
-Sync the FlowFlex right brain after building or modifying a module. Updates STATUS_Dashboard, creates/updates builder log, links left↔right brain, and reports any bugs or decisions.
+Sync the vault after any build work. Updates module status, STATUS.md progress, and logs gaps and decisions. Run at end of every build session.
 
-## What this command does
+## Usage
 
-Run through ALL of these steps in order. Do not skip steps.
-
----
-
-## Step 1 — Determine what was built
-
-From the current conversation context, identify:
-- Module name (e.g. `leave-management`)
-- Domain (e.g. `HR & People`)
-- Domain folder (e.g. `02_hr`)
-- Panel slug (e.g. `hr`)
-- Status: `in-progress` OR `complete`
-- Any bugs/gaps found during the session
-- Any architectural decisions made
-
-If args were passed to this command, parse them:
-- `/flowflex:sync module=leave-management status=complete`
-- `/flowflex:sync module=auth-rbac status=in-progress bugs="JWT refresh broken"`
-
-If unclear, ask one question: "Which module and domain, and is it complete or in-progress?"
-
----
-
-## Step 2 — Update left-brain spec frontmatter
-
-Read the left-brain spec file: `flowflex-vault/left-brain/domains/{DD_domain}/{module-name}.md`
-
-Update the frontmatter:
-- `status:` → set to `in-progress` or `complete`
-- `last_updated:` → today's date (YYYY-MM-DD)
-- Add or update: `right_brain_log: "[[builder-log-{module-name}]]"`
-
-Example updated frontmatter:
-```yaml
----
-type: module
-domain: HR & People
-panel: hr
-phase: 2
-status: complete
-migration_range: 100000–109999
-last_updated: 2026-05-09
-right_brain_log: "[[builder-log-leave-management]]"
----
+```
+/flowflex:sync hr.leave status=in-progress
+/flowflex:sync finance.invoicing status=complete
+/flowflex:sync hr.leave status=in-progress "Added leave request model and migration"
 ```
 
----
+## Arguments
 
-## Step 3 — Create or update builder log
+- First arg: module key (e.g. `hr.leave`)
+- `status=` → `in-progress` | `complete`
+- Optional description string → summary note for Recent Sessions table
 
-Check if `flowflex-vault/right-brain/builder-logs/{module-name}.md` exists.
+If module key not provided, infer from conversation context. If unclear, ask: "Which module key and status?"
 
-**If it does NOT exist:** Create it using the template from `flowflex-vault/_core/_templates/tpl_builder-log.md`. Populate:
-- `module:` → module slug
-- `domain:` → domain name
-- `panel:` → panel slug
-- `started:` → today
-- `status:` → in-progress or complete
-- `left_brain_source:` → link to left-brain spec
+## What This Does
 
-Add a session entry under `## Sessions` for today's date with:
-- What was built (migrations, models, services, resources)
-- Decisions made during this session
-- Problems encountered and how solved
-- Any gaps discovered
+### Step 1 — Update module spec frontmatter
 
-**If it DOES exist:** Read it, then add a new session entry for today.
+Find the module file:
+- Parse domain and module from key: `hr.leave` → `vault/domains/hr/leave-management.md`
+- If filename ambiguous, scan `vault/domains/{domain}/` for file with matching `module-key:` frontmatter
 
----
+Read the file. Update only the `status:` field:
+```yaml
+status: in-progress   # or: complete
+```
 
-## Step 4 — Update STATUS_Dashboard
+Write the file back. No other frontmatter fields change.
 
-Read `flowflex-vault/right-brain/STATUS_Dashboard.md`.
+### Step 2 — Update STATUS.md
 
-Find the row for the relevant domain. Update the `Built` column:
-- If status is `in-progress`: add 🔄 emoji next to module count if not already there
-- If status is `complete`: increment the Built number by 1, recalculate Progress %
+Read `vault/build/STATUS.md`.
 
-Also update the pie chart mermaid block to reflect new completion.
+**If status = `complete`:** increment Built by 1, recalculate Progress %.
 
-Format: `| Domain | Phase | Built | Total | Progress |`
-- Progress % = (Built / Total) * 100, rounded to nearest integer
-- Emoji: 📅 = 0%, 🔄 = in-progress, ✅ = 100%
+Update emoji: 🔴 = 0%, 🟡 = 1–99%, ✅ = 100%.
 
----
+Add a row to Recent Sessions:
+```
+| {YYYY-MM-DD} | {domain} | {module-key} | {✅ or 🔄} | {description} |
+```
 
-## Step 5 — Handle bugs / gaps (if any)
+Write STATUS.md back.
 
-For each bug or gap identified during the session:
+### Step 3 — Create gap files (only if bugs/spec gaps found)
 
-1. Create `flowflex-vault/right-brain/gaps/gap_{short-name}.md` using `tpl_gap` frontmatter:
+For each gap discovered, create `vault/build/gaps/gap-{slug}.md`:
 ```yaml
 ---
 type: gap
 severity: high | medium | low
 category: spec | architecture | feature | bug | data-model
 status: open
-discovered: YYYY-MM-DD
-discovered_in: {module-name}
-last_updated: YYYY-MM-DD
+color: "#F97316"
+discovered: {YYYY-MM-DD}
+discovered-in: {module-key}
 ---
 ```
 
-2. Document: what's wrong, what breaks, options to fix
+Body: Problem, Impact, Proposed Solution, Related links.
 
-3. Link the gap from the builder log under `## Gaps Discovered`
+Read `vault/build/gaps/INDEX.md`, add row, write back.
 
-4. Update `flowflex-vault/right-brain/gaps/MOC_Gaps.md` — add row to the gap index table
+### Step 4 — Create ADR files (only if architectural decisions made)
 
+Create `vault/build/decisions/decision-{YYYY-MM-DD}-{slug}.md`:
+```yaml
 ---
-
-## Step 6 — Handle architectural decisions (if any)
-
-For each significant architectural decision made:
-
-1. Create `flowflex-vault/right-brain/evolution/decision-{YYYY-MM-DD}-{short-name}.md` using `tpl_adr` frontmatter
-
-2. Document: context, options, decision, consequences
-
-3. Update `flowflex-vault/right-brain/evolution/MOC_Evolution.md` — add row to decision log table:
-```markdown
-| 2026-05-09 | Short decision title | Impact summary | [[decision-file]] |
+type: adr
+date: {YYYY-MM-DD}
+status: decided | proposed
+color: "#F97316"
+---
 ```
 
----
+Body: Context, Options Considered, Decision, Consequences, Related links.
 
-## Step 7 — Output sync report
+Read `vault/build/decisions/INDEX.md`, add row, write back.
 
-After all steps complete, output a brief report:
+### Step 5 — Output
 
 ```
-## FlowFlex Right Brain Sync Complete
-
-**Module:** leave-management (HR & People)
-**Status:** ✅ complete
-
-**Updated:**
-- Left-brain spec: status → complete, right_brain_log linked
-- Builder log: created/updated at right-brain/builder-logs/leave-management.md
-- STATUS_Dashboard: HR Built = 1/19 (5%)
-
-**Gaps logged:** 1
-- gap_hr-leave-overlap-calculation.md (severity: medium)
-
-**Decisions logged:** 0
+## Sync: {module-key}
+Status: {in-progress | ✅ complete}
+Spec updated: vault/domains/{domain}/{module}.md
+STATUS.md: {domain} {Built}/{Total} ({%}%)
+Gaps: {n} | Decisions: {n}
 ```
