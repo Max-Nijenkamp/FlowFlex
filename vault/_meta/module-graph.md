@@ -76,7 +76,7 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | finance.expenses | v1-core | finance.ledger, core.billing, core.rbac, core.files, core.notifications | hr.profiles, hr.payroll, finance.ap | ExpenseApproved | — | fin_expenses, fin_expense_categories, fin_expense_reports |
 | finance.bank | v1-core | finance.ledger, core.billing, core.rbac, core.files | finance.invoicing, finance.expenses | — | — | fin_bank_accounts, fin_bank_transactions |
 | finance.ar | v1 | finance.invoicing, core.billing, core.rbac, core.notifications | — | — | InvoicePaid | fin_ar_dunning_rules, fin_ar_writeoffs |
-| finance.ap | v1 | finance.ledger, core.billing, core.rbac, core.files | operations.purchase-orders, procurement.goods-receipt, finance.expenses | — | — | fin_suppliers, fin_bills, fin_bill_lines, fin_payment_runs |
+| finance.ap | v1 | finance.ledger, core.billing, core.rbac, core.files | operations.purchase-orders, operations.goods-receipt, finance.expenses | — | GoodsReceived | fin_suppliers, fin_bills, fin_bill_lines, fin_payment_runs |
 | finance.budgets | v1 | finance.ledger, core.billing, core.rbac, core.notifications | finance.forecasting, procurement.requisitions, hr.workforce | — | — | fin_budgets, fin_budget_lines |
 | finance.reporting | v1 | finance.ledger, core.billing, core.rbac, core.settings | finance.budgets, analytics.exports | — | — | — |
 | finance.tax | v1 | finance.ledger, core.billing, core.rbac | finance.invoicing, finance.ap, finance.expenses | — | — | fin_tax_rates, fin_tax_classes, fin_tax_periods |
@@ -153,8 +153,28 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | dms.templates | p2 | dms.library, core.billing, core.rbac | hr.profiles, crm.contacts | — | — | dms_templates |
 | dms.approvals | p2 | dms.library, core.billing, core.rbac, core.notifications | dms.versions | — | — | dms_approval_workflows, dms_approval_requests, dms_approval_actions |
 | dms.retention | p2 | dms.library, core.billing, core.rbac, core.notifications, foundation.queues | core.privacy | — | — | dms_retention_policies, dms_legal_holds, dms_retention_log |
-## Marketing (7) — Wave 5
-## Operations (7) — Wave 5
+## Marketing (7)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| marketing.campaigns | p3 | crm.contacts, crm.segments, core.billing, core.rbac, foundation.queues, foundation.email | marketing.utm, marketing.analytics | — | — | mkt_campaigns, mkt_campaign_recipients, mkt_unsubscribes |
+| marketing.forms | p3 | core.billing, core.rbac, foundation.queues | crm.contacts, marketing.sequences, marketing.landing-pages | FormSubmissionReceived | — | mkt_forms, mkt_form_submissions |
+| marketing.sequences | p3 | crm.contacts, core.billing, core.rbac, foundation.queues, foundation.email | marketing.forms, crm.segments | — | FormSubmissionReceived | mkt_sequences, mkt_sequence_steps, mkt_sequence_enrolments |
+| marketing.landing-pages | p3 | core.billing, core.rbac, core.files | marketing.forms, marketing.utm | — | — | mkt_landing_pages |
+| marketing.cms | p3 | core.billing, core.rbac, core.files | — | — | — | mkt_posts, mkt_post_categories |
+| marketing.utm | p3 | crm.contacts, core.billing, core.rbac | marketing.forms, marketing.landing-pages, crm.deals | — | FormSubmissionReceived | mkt_utm_touches |
+| marketing.analytics | p3 | marketing.campaigns, core.billing, core.rbac | marketing.forms, marketing.landing-pages, marketing.sequences, marketing.utm | — | — | — |
+## Operations (7)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| operations.warehouses | p3 | core.billing, core.rbac | operations.inventory | — | — | ops_warehouses, ops_warehouse_transfers |
+| operations.inventory | p3 | operations.warehouses, core.billing, core.rbac | core.import, operations.purchase-orders, operations.adjustments | — | — | ops_items, ops_stock_levels, ops_stock_movements |
+| operations.suppliers | p3 | operations.inventory, core.billing, core.rbac | finance.ap | — | — | ops_suppliers, ops_supplier_items |
+| operations.purchase-orders | p3 | operations.inventory, operations.suppliers, core.billing, core.rbac, foundation.queues | operations.goods-receipt, finance.ap, procurement.requisitions | — | — | ops_purchase_orders, ops_po_lines |
+| operations.goods-receipt | p3 | operations.purchase-orders, operations.inventory, core.billing, core.rbac | finance.ap | GoodsReceived | — | ops_goods_receipts, ops_grn_lines |
+| operations.adjustments | p3 | operations.inventory, core.billing, core.rbac | finance.ledger | — | — | ops_stock_adjustments |
+| operations.reporting | p3 | operations.inventory, core.billing, core.rbac | operations.purchase-orders, operations.suppliers | — | — | — |
 ## Analytics & BI (5) — Wave 5
 ## IT & Security (6) — Wave 5
 ## Legal & Compliance (6) — Wave 5
@@ -162,7 +182,16 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 ## Learning & Development (8) — Wave 5
 ## AI & Automation (4) — Wave 5
 ## Customer Success (6) — Wave 5
-## Procurement (6) — Wave 5
+## Procurement (6)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| procurement.approvals | p3 | core.billing, core.rbac, core.notifications | procurement.requisitions, procurement.purchase-orders | — | — | proc_approval_rules, proc_approval_delegations |
+| procurement.requisitions | p3 | procurement.approvals, core.billing, core.rbac, core.notifications | finance.budgets, operations.purchase-orders, procurement.catalogue | — | — | proc_requisitions, proc_requisition_items, proc_requisition_approvals |
+| procurement.catalogue | p3 | core.billing, core.rbac | operations.suppliers, procurement.requisitions | — | — | proc_catalogue_items, proc_supplier_status |
+| procurement.purchase-orders | p3 | operations.purchase-orders, procurement.requisitions, procurement.approvals, core.billing, core.rbac | procurement.catalogue | — | — | proc_po_sourcing |
+| procurement.goods-receipt | p3 | operations.goods-receipt, finance.ap, core.billing, core.rbac | — | — | — | proc_three_way_matches |
+| procurement.spend | p3 | procurement.requisitions, operations.purchase-orders, core.billing, core.rbac | procurement.catalogue, finance.budgets | — | — | — |
 ## Workplace (5) — Wave 5
 ## Events Management (7) — Wave 5
 

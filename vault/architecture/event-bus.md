@@ -150,6 +150,7 @@ protected $listen = [
 | `CompanySubscriptionSuspended` | Core | Notifications (warn company) |
 | `DealLost` | CRM | (none in v1 — Analytics in Phase 3) |
 | `EventRegistrationReceived` | Events (P3) | CRM (create contact) |
+| `GoodsReceived` | Operations (P3) | Finance AP (bill creation + 3-way match) |
 
 ---
 
@@ -314,6 +315,19 @@ protected $listen = [
 | attendee_name | string |
 
 - CRM: find-or-create contact; confirmation email with .ics fired by Events itself (not a listener)
+
+### GoodsReceived (Operations, P3)
+| Field | Type |
+|---|---|
+| company_id | string |
+| grn_id | string |
+| po_id | string |
+| supplier_id | string |
+| accepted_total_cents | int |
+| currency | string |
+| received_at | CarbonImmutable |
+
+- Finance AP: creates draft bill from PO + accepted lines (when no manual bill exists for the PO), enables 3-way match. Stock updates are same-domain direct calls inside Operations, NOT via this event.
 
 ### DSARRequestSubmitted (Core)
 | Field | Type |

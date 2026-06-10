@@ -9,8 +9,8 @@ priority: v1
 depends-on: [finance.ledger, core.billing, core.rbac, core.files]
 soft-depends: [operations.purchase-orders, procurement.goods-receipt, finance.expenses]
 fires-events: []
-consumes-events: []
-patterns: [states, money, custom-pages]
+consumes-events: [GoodsReceived]
+patterns: [states, money, custom-pages, events]
 tables: [fin_suppliers, fin_bills, fin_bill_lines, fin_payment_runs]
 permission-prefix: finance.ap
 encrypted-fields: ["fin_suppliers.iban"]
@@ -30,7 +30,7 @@ Supplier bill management, payment scheduling, AP aging, and approval workflow. R
 |---|---|---|
 | Hard | [[domains/finance/general-ledger\|finance.ledger]] | bills + payments post to GL |
 | Hard | [[domains/core/billing-engine\|core.billing]] + [[domains/core/rbac\|core.rbac]] + [[domains/core/file-storage\|core.files]] | gating, permissions, bill attachments |
-| Soft | [[domains/operations/purchase-orders\|operations.purchase-orders]] + [[domains/procurement/goods-receipt\|procurement.goods-receipt]] | 3-way match + auto bill creation from PO/GRN events (P3 — event contracts added to event-bus when operations domain builds); manual bills until then |
+| Soft | [[domains/operations/purchase-orders\|operations.purchase-orders]] + [[domains/operations/goods-receipt\|operations.goods-receipt]] | consumes `GoodsReceived` → draft bill + 3-way match (contract in [[architecture/event-bus]]); manual bills until operations builds |
 | Soft | [[domains/finance/expenses\|finance.expenses]] | non-employee reimbursements as bills |
 
 ---
