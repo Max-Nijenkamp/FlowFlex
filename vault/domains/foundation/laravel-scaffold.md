@@ -1,15 +1,34 @@
 ---
 type: module
 domain: Foundation
+domain-key: foundation
 panel: (scaffold)
 module-key: foundation.scaffold
 status: planned
+priority: v1-core
+depends-on: []
+soft-depends: []
+fires-events: []
+consumes-events: []
+patterns: [stack, packages]
+tables: [companies, users, admins]
+permission-prefix: ""
+encrypted-fields: []
+last-reviewed: 2026-06-10
 color: "#4ADE80"
 ---
 
 # Laravel Scaffold
 
-Laravel 13 project skeleton with all core packages installed and configured. Establishes the conventions every other module must follow: ULID PKs, strict types, soft deletes, PostgreSQL-only, Redis for cache/queues/sessions, directory structure organised by domain.
+Laravel 13 project skeleton with all core packages installed and configured. Establishes the conventions every other module must follow: ULID PKs, strict types, soft deletes, PostgreSQL-only, Redis for cache/queues/sessions, directory structure organised by domain. **The very first thing built — nothing exists before this.**
+
+---
+
+## Dependencies
+
+| Type | Module | Why |
+|---|---|---|
+| — | none | first module in the build order |
 
 ---
 
@@ -71,49 +90,100 @@ After install: see [[domains/foundation/permissions-seed]] for seeding and [[bui
 
 ## Data Model
 
-| Table | Key Columns |
-|---|---|
-| `companies` | id (ULID), name, slug (unique), subscription_status, timezone, locale, currency, trial_ends_at, deleted_at |
-| `users` | id (ULID), company_id FK, first_name, last_name, email, password, two_factor_enabled, email_verified_at, last_login_at, deleted_at |
-| `admins` | id (ULID), name, email, password, role enum(super_admin, support, billing, developer), deleted_at |
+### companies
+
+| Column | Type | Constraints | Notes |
+|---|---|---|---|
+| id | ulid | PK | |
+| name | string | not null | |
+| slug | string | not null, unique | sluggable |
+| subscription_status | string | not null, default `trial` | trial / active / suspended / cancelled |
+| timezone | string | not null, default `Europe/Amsterdam` *(assumed)* | |
+| locale | string | not null, default `en` | |
+| currency | string(3) | not null, default `EUR` | ISO 4217 |
+| trial_ends_at | timestamp | nullable | |
+| setup_completed_at | timestamp | nullable | core.setup wizard flag |
+| deleted_at | timestamp | nullable | |
+
+### users
+
+| Column | Type | Constraints | Notes |
+|---|---|---|---|
+| id | ulid | PK | |
+| company_id | ulid | not null, FK companies, indexed | the ONE model where BelongsToCompany scope applies to the `web` guard |
+| first_name / last_name | string | not null | |
+| email | string | not null, unique per company `(company_id, email)` *(assumed)* | |
+| password | string | not null | bcrypt cost 12 |
+| two_factor_enabled | boolean | default false | |
+| email_verified_at | timestamp | nullable | |
+| email_deliverable | boolean | default true | foundation.email bounce flag |
+| last_login_at | timestamp | nullable | |
+| deleted_at | timestamp | nullable | |
+
+### admins
+
+| Column | Type | Constraints | Notes |
+|---|---|---|---|
+| id | ulid | PK | |
+| name | string | not null | |
+| email | string | not null, unique | |
+| password | string | not null | |
+| role | string | not null | enum: super_admin / support / billing / developer |
+| deleted_at | timestamp | nullable | |
+
+NOT company-scoped — FlowFlex staff, separate `admin` guard.
 
 ```mermaid
 erDiagram
-    companies {
-        ulid id PK
-        string name
-        string slug
-        string subscription_status
-        string timezone
-        string locale
-        string currency
-        timestamp trial_ends_at
-        timestamp deleted_at
-    }
-    users {
-        ulid id PK
-        ulid company_id FK
-        string first_name
-        string last_name
-        string email
-        string password
-        timestamp last_login_at
-        timestamp deleted_at
-    }
-    admins {
-        ulid id PK
-        string name
-        string email
-        string role
-    }
     companies ||--o{ users : "has many"
 ```
 
 ---
 
+## DTOs
+
+None at scaffold time — DTOs arrive with the first business modules. The scaffold configures `spatie/laravel-data` + `typescript-transformer` (config published, `generated.d.ts` output path set).
+
+## Services & Actions
+
+None — conventions only. Base classes created: `app/Support/` namespace reserved for tenancy primitives (built in [[domains/foundation/multi-tenancy-layer]]).
+
 ## Filament
 
-No Filament resource — scaffold only. Company and user management surfaces in the Core Platform and the `/admin` panel.
+None — panels are [[domains/foundation/filament-panels]].
+
+## Permissions
+
+None — infrastructure module, not gated, no panel surface.
+
+---
+
+## Test Checklist
+
+- [ ] `composer install` + `npm install` complete from clean checkout
+- [ ] `php artisan migrate` creates companies/users/admins with ULID PKs
+- [ ] Arch test: all models in `app/Models` use `HasUlids` + `SoftDeletes`
+- [ ] Arch test: no `dd`/`dump`/`var_dump` in `app/`
+- [ ] `php artisan pint` + `phpstan analyse` pass on the skeleton
+- [ ] Config: queue/cache/session drivers = redis; DB = pgsql
+
+---
+
+## Build Manifest
+
+```
+composer.json / package.json (install manifest above)
+config/{database,queue,cache,session,filesystems,broadcasting}.php  (drivers per architecture/local-dev)
+database/migrations/0001_create_companies_table.php
+database/migrations/0002_create_users_table.php
+database/migrations/0003_create_admins_table.php
+app/Models/{Company,User,Admin}.php
+database/factories/{CompanyFactory,UserFactory,AdminFactory}.php
+phpunit.xml (sqlite :memory: override)
+pint.json / phpstan.neon
+tests/Architecture/LayersTest.php
+.env.example (per architecture/local-dev spec)
+```
 
 ---
 
@@ -123,3 +193,4 @@ No Filament resource — scaffold only. Company and user management surfaces in 
 - [[domains/foundation/multi-tenancy-layer]]
 - [[architecture/tech-stack]]
 - [[architecture/data-model]]
+- [[architecture/local-dev]]

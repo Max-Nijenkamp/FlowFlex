@@ -14,10 +14,18 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 
 ---
 
-## Foundation (8) — rows added in Wave 2
+## Foundation (8)
 
 | module-key | priority | deps | soft | fires | consumes | tables |
 |---|---|---|---|---|---|---|
+| foundation.scaffold | v1-core | — | — | — | — | companies, users, admins |
+| foundation.docker | v1-core | foundation.scaffold | — | — | — | — |
+| foundation.tenancy | v1-core | foundation.scaffold | — | — | — | — |
+| foundation.queues | v1-core | foundation.scaffold, foundation.tenancy | — | — | — | — |
+| foundation.email | v1-core | foundation.scaffold, foundation.queues | — | — | — | — |
+| foundation.panels | v1-core | foundation.scaffold, foundation.tenancy | — | — | — | — |
+| foundation.permissions | v1-core | foundation.scaffold, foundation.tenancy, foundation.panels | — | — | — | — |
+| foundation.tests | v1-core | foundation.scaffold, foundation.tenancy | — | — | — | — |
 
 ## Core Platform (15) — rows added in Wave 2
 
