@@ -67,10 +67,23 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | hr.feedback | v1 | hr.profiles, core.billing, core.rbac, core.notifications | hr.performance | — | — | hr_feedback, hr_one_on_ones |
 | hr.dei | v1 | hr.profiles, core.billing, core.rbac, core.privacy | hr.compensation, hr.recruitment | — | — | hr_dei_attributes, hr_dei_snapshots |
 
-## Finance & Accounting (13) — rows added in Wave 3
+## Finance & Accounting (13)
 
 | module-key | priority | deps | soft | fires | consumes | tables |
 |---|---|---|---|---|---|---|
+| finance.ledger | v1-core | core.billing, core.rbac, core.settings | finance.invoicing, finance.expenses, hr.payroll | — | PayrollRunApproved | fin_accounts, fin_journal_entries, fin_journal_lines, fin_fiscal_periods |
+| finance.invoicing | v1-core | finance.ledger, core.billing, core.rbac, core.settings, foundation.queues | crm.deals, crm.contacts, finance.tax, finance.ar, finance.currency | InvoicePaid | DealWon | fin_customers, fin_invoices, fin_invoice_lines, fin_payments |
+| finance.expenses | v1-core | finance.ledger, core.billing, core.rbac, core.files, core.notifications | hr.profiles, hr.payroll, finance.ap | ExpenseApproved | — | fin_expenses, fin_expense_categories, fin_expense_reports |
+| finance.bank | v1-core | finance.ledger, core.billing, core.rbac, core.files | finance.invoicing, finance.expenses | — | — | fin_bank_accounts, fin_bank_transactions |
+| finance.ar | v1 | finance.invoicing, core.billing, core.rbac, core.notifications | — | — | InvoicePaid | fin_ar_dunning_rules, fin_ar_writeoffs |
+| finance.ap | v1 | finance.ledger, core.billing, core.rbac, core.files | operations.purchase-orders, procurement.goods-receipt, finance.expenses | — | — | fin_suppliers, fin_bills, fin_bill_lines, fin_payment_runs |
+| finance.budgets | v1 | finance.ledger, core.billing, core.rbac, core.notifications | finance.forecasting, procurement.requisitions, hr.workforce | — | — | fin_budgets, fin_budget_lines |
+| finance.reporting | v1 | finance.ledger, core.billing, core.rbac, core.settings | finance.budgets, analytics.scheduled-exports | — | — | — |
+| finance.tax | v1 | finance.ledger, core.billing, core.rbac | finance.invoicing, finance.ap, finance.expenses | — | — | fin_tax_rates, fin_tax_classes, fin_tax_periods |
+| finance.currency | v1 | finance.ledger, core.billing, core.rbac, core.settings | finance.invoicing, finance.ap, finance.expenses | — | — | fin_currencies, fin_exchange_rates |
+| finance.forecasting | v1 | finance.ledger, finance.budgets, core.billing, core.rbac | crm.forecasting, hr.workforce, finance.cashflow | — | — | fin_forecasts, fin_forecast_lines |
+| finance.cashflow | v1 | finance.invoicing, finance.bank, core.billing, core.rbac, core.notifications | finance.ap, hr.payroll, finance.forecasting | — | — | fin_cashflow_projections, fin_cashflow_items |
+| finance.assets | v1 | finance.ledger, core.billing, core.rbac | it.asset-inventory | — | — | fin_fixed_assets, fin_depreciation_entries |
 
 ## CRM & Sales (15) — rows added in Wave 3
 
