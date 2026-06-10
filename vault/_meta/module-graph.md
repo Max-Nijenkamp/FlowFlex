@@ -204,9 +204,38 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | legal.policies | p3 | hr.profiles, core.billing, core.rbac, core.notifications | legal.compliance | — | — | legal_policies, legal_policy_acknowledgements |
 | legal.compliance | p3 | core.billing, core.rbac, core.files, core.notifications | legal.policies, core.privacy | — | — | legal_frameworks, legal_controls, legal_compliance_tasks |
 | legal.dsar | p3 | core.privacy, core.billing, core.rbac | — | — | DSARRequestSubmitted | legal_dsar_actions |
-## E-commerce (8) — Wave 5
-## Learning & Development (8) — Wave 5
-## AI & Automation (4) — Wave 5
+## E-commerce (8)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| ecommerce.products | p3 | core.billing, core.rbac, core.files | operations.inventory, ecommerce.variants, core.import, finance.tax | — | — | ec_products, ec_categories |
+| ecommerce.variants | p3 | ecommerce.products, core.billing, core.rbac | — | — | — | ec_product_options, ec_variants |
+| ecommerce.orders | p3 | ecommerce.products, core.billing, core.rbac, foundation.queues | ecommerce.payments, ecommerce.variants, crm.contacts, operations.inventory, ecommerce.promotions, finance.tax | CheckoutCompleted | — | ec_orders, ec_order_lines, ec_order_events |
+| ecommerce.payments | p3 | ecommerce.orders, core.billing, core.rbac | — | — | — | ec_payments |
+| ecommerce.storefront | p3 | ecommerce.products, ecommerce.orders, core.billing, core.rbac, core.settings | ecommerce.payments, ecommerce.promotions, ecommerce.reviews, finance.tax | — | — | ec_storefront_pages |
+| ecommerce.promotions | p3 | ecommerce.products, core.billing, core.rbac | crm.segments, ecommerce.orders | — | — | ec_coupons, ec_promotions, ec_coupon_redemptions |
+| ecommerce.reviews | p3 | ecommerce.products, ecommerce.orders, core.billing, core.rbac | — | — | — | ec_reviews |
+| ecommerce.abandoned-cart | p3 | ecommerce.storefront, ecommerce.orders, core.billing, core.rbac, foundation.queues, foundation.email | ecommerce.promotions | — | — | ec_carts, ec_cart_recovery_emails |
+## Learning & Development (8)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| lms.courses | p3 | core.billing, core.rbac, core.files | lms.lessons, lms.certifications, lms.enrolments | — | — | lms_courses, lms_course_modules |
+| lms.lessons | p3 | lms.courses, core.billing, core.rbac, core.files | — | — | — | lms_lessons, lms_quizzes, lms_lesson_progress |
+| lms.enrolments | p3 | lms.courses, lms.lessons, core.billing, core.rbac, core.notifications | hr.profiles, lms.certifications, lms.skills | — | EmployeeHired | lms_enrolments, lms_learners |
+| lms.certifications | p3 | lms.enrolments, core.billing, core.rbac, core.notifications, foundation.queues | — | — | — | lms_certificate_templates, lms_certificates |
+| lms.paths | p3 | lms.courses, lms.enrolments, core.billing, core.rbac | lms.certifications | — | — | lms_paths, lms_path_courses, lms_path_enrolments |
+| lms.skills | p3 | hr.profiles, core.billing, core.rbac | lms.courses, lms.enrolments, hr.performance | — | — | lms_skills, lms_employee_skills, lms_role_skills, lms_course_skills |
+| lms.mentoring | p3 | hr.profiles, core.billing, core.rbac, core.notifications | lms.skills | — | — | lms_mentorships, lms_mentorship_sessions, lms_mentor_profiles |
+| lms.analytics | p3 | lms.enrolments, core.billing, core.rbac | lms.certifications, lms.skills, lms.paths | — | — | — |
+## AI & Automation (4)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| ai.config | p3 | core.billing, core.rbac | ai.copilot, ai.document-intelligence | — | — | ai_config, ai_usage_log |
+| ai.workflows | p3 | core.billing, core.rbac, foundation.queues | — | — | (all mapped events as triggers) | ai_workflows, ai_workflow_runs |
+| ai.copilot | p3 | ai.config, core.billing, core.rbac | — | — | — | ai_copilot_conversations, ai_copilot_messages |
+| ai.document-intelligence | p3 | ai.config, core.billing, core.rbac, core.files, foundation.queues | finance.ap, finance.expenses, hr.recruitment | — | — | ai_extractions |
 ## Customer Success (6) — Wave 5
 ## Procurement (6)
 
