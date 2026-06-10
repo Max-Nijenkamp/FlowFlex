@@ -7,7 +7,7 @@ module-key: hr.payroll
 status: planned
 priority: v1-core
 depends-on: [hr.profiles, core.billing, core.rbac, core.notifications]
-soft-depends: [finance.general-ledger, hr.leave, hr.time, hr.compensation, finance.expenses]
+soft-depends: [finance.ledger, hr.leave, hr.time, hr.compensation, finance.expenses]
 fires-events: [PayrollRunApproved]
 consumes-events: [EmployeeHired, EmployeeOffboarded, LeaveRequestApproved, TimesheetApproved, ExpenseApproved]
 patterns: [states, service, encryption, money, pdf, events]

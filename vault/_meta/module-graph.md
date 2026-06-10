@@ -78,18 +78,32 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | finance.ar | v1 | finance.invoicing, core.billing, core.rbac, core.notifications | — | — | InvoicePaid | fin_ar_dunning_rules, fin_ar_writeoffs |
 | finance.ap | v1 | finance.ledger, core.billing, core.rbac, core.files | operations.purchase-orders, procurement.goods-receipt, finance.expenses | — | — | fin_suppliers, fin_bills, fin_bill_lines, fin_payment_runs |
 | finance.budgets | v1 | finance.ledger, core.billing, core.rbac, core.notifications | finance.forecasting, procurement.requisitions, hr.workforce | — | — | fin_budgets, fin_budget_lines |
-| finance.reporting | v1 | finance.ledger, core.billing, core.rbac, core.settings | finance.budgets, analytics.scheduled-exports | — | — | — |
+| finance.reporting | v1 | finance.ledger, core.billing, core.rbac, core.settings | finance.budgets, analytics.exports | — | — | — |
 | finance.tax | v1 | finance.ledger, core.billing, core.rbac | finance.invoicing, finance.ap, finance.expenses | — | — | fin_tax_rates, fin_tax_classes, fin_tax_periods |
 | finance.currency | v1 | finance.ledger, core.billing, core.rbac, core.settings | finance.invoicing, finance.ap, finance.expenses | — | — | fin_currencies, fin_exchange_rates |
 | finance.forecasting | v1 | finance.ledger, finance.budgets, core.billing, core.rbac | crm.forecasting, hr.workforce, finance.cashflow | — | — | fin_forecasts, fin_forecast_lines |
 | finance.cashflow | v1 | finance.invoicing, finance.bank, core.billing, core.rbac, core.notifications | finance.ap, hr.payroll, finance.forecasting | — | — | fin_cashflow_projections, fin_cashflow_items |
-| finance.assets | v1 | finance.ledger, core.billing, core.rbac | it.asset-inventory | — | — | fin_fixed_assets, fin_depreciation_entries |
+| finance.assets | v1 | finance.ledger, core.billing, core.rbac | it.assets | — | — | fin_fixed_assets, fin_depreciation_entries |
 
-## CRM & Sales (15) — rows added in Wave 3
+## CRM & Sales (15)
 
 | module-key | priority | deps | soft | fires | consumes | tables |
 |---|---|---|---|---|---|---|
+| crm.contacts | v1-core | core.billing, core.rbac | core.import, crm.activities, crm.deals | — | FormSubmissionReceived, EventRegistrationReceived, InvoicePaid | crm_contacts, crm_accounts, crm_contact_accounts |
 | crm.deals | v1-core | crm.contacts, crm.pipeline, core.billing, core.rbac | finance.invoicing, crm.quotes, crm.pricing, crm.activities | DealWon, DealLost | — | crm_deals, crm_deal_contacts, crm_deal_products |
+| crm.pipeline | v1-core | crm.deals, core.billing, core.rbac | — | — | — | crm_pipeline_stages |
+| crm.activities | v1-core | crm.contacts, core.billing, core.rbac, core.notifications | crm.deals | — | — | crm_activities |
+| crm.quotes | v1-core | crm.deals, core.billing, core.rbac, foundation.queues | crm.pricing, finance.tax, finance.invoicing | — | — | crm_quotes, crm_quote_lines |
+| crm.email | v1 | crm.contacts, crm.activities, core.billing, core.rbac, foundation.queues | crm.deals | — | — | crm_email_connections, crm_emails |
+| crm.segments | v1 | crm.contacts, core.billing, core.rbac | crm.sequences, marketing.campaigns, comms.broadcast | — | — | crm_segments, crm_segment_members |
+| crm.sequences | v1 | crm.contacts, crm.activities, core.billing, core.rbac, foundation.queues | crm.email, crm.deals, crm.segments | — | DealWon, InvoicePaid | crm_sequences, crm_sequence_steps, crm_sequence_enrolments |
+| crm.forecasting | v1 | crm.deals, core.billing, core.rbac | finance.forecasting | — | — | crm_quotas, crm_forecast_snapshots |
+| crm.scheduling | v1 | crm.contacts, crm.activities, core.billing, core.rbac, foundation.email | — | — | — | crm_meeting_types, crm_bookings, crm_availability |
+| crm.pricing | v1 | crm.deals, core.billing, core.rbac | crm.quotes, crm.segments, finance.currency | — | — | crm_products, crm_price_books, crm_price_book_entries, crm_volume_discounts |
+| crm.contracts | v1 | crm.deals, core.billing, core.rbac, core.files, core.notifications | crm.quotes, legal.contracts | — | — | crm_contracts |
+| crm.deal-rooms | v1 | crm.deals, core.billing, core.rbac, core.files | crm.contacts | — | — | crm_deal_rooms, crm_deal_room_documents, crm_deal_room_action_items, crm_deal_room_stakeholders |
+| crm.revenue-intelligence | v1 | crm.deals, crm.activities, core.billing, core.rbac | ai.copilot, crm.forecasting | — | — | crm_deal_health, crm_win_loss |
+| crm.referrals | v1 | crm.contacts, core.billing, core.rbac, core.notifications | crm.deals, ecommerce.promotions | — | — | crm_referral_programs, crm_referrals |
 
 ## Projects & Work (11) — Wave 4
 ## Support & Help Desk (7) — Wave 4

@@ -7,7 +7,7 @@ module-key: finance.assets
 status: planned
 priority: v1
 depends-on: [finance.ledger, core.billing, core.rbac]
-soft-depends: [it.asset-inventory]
+soft-depends: [it.assets]
 fires-events: []
 consumes-events: []
 patterns: [money, custom-pages]

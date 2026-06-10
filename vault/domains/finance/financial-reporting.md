@@ -7,7 +7,7 @@ module-key: finance.reporting
 status: planned
 priority: v1
 depends-on: [finance.ledger, core.billing, core.rbac, core.settings]
-soft-depends: [finance.budgets, analytics.scheduled-exports]
+soft-depends: [finance.budgets, analytics.exports]
 fires-events: []
 consumes-events: []
 patterns: [custom-pages, money, pdf]
