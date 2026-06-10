@@ -1,5 +1,6 @@
 ---
 type: build-status
+last-updated: 2026-06-10
 color: "#F97316"
 ---
 
@@ -69,6 +70,18 @@ TABLE
 FROM "domains"
 WHERE type = "module" AND (status = "in-progress" OR status = "complete")
 SORT status DESC, domain ASC
+```
+
+v1 gate view (v1-core modules not yet complete):
+
+```dataview
+TABLE
+  module-key AS "Key",
+  status AS "Status",
+  depends-on AS "Blocked by"
+FROM "domains"
+WHERE type = "module" AND priority = "v1-core" AND status != "complete"
+SORT module-key ASC
 ```
 
 ---

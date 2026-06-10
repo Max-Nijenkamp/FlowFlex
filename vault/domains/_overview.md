@@ -69,19 +69,30 @@ These former standalone domains are now modules within a parent domain:
 
 ---
 
-## Module Spec Format
+## Module Spec Format (v2)
 
-Full specs (MVP domains) use this frontmatter:
+All specs use the v2 template — full schema, section skeleton, and conventions in [[_meta/spec-template]]. Summary frontmatter:
 
 ```yaml
 ---
 type: module
 domain: HR & People
+domain-key: hr
 panel: hr
 module-key: hr.profiles
-status: planned
+status: planned            # planned | in-progress | complete
+priority: v1-core          # v1-core | v1 | p2 | p3
+depends-on: []             # hard deps (module-keys)
+soft-depends: []
+fires-events: []
+consumes-events: []
+patterns: []               # /flowflex:patterns keys
+tables: []
+permission-prefix: hr.profiles
+encrypted-fields: []
+last-reviewed: YYYY-MM-DD
 color: "#4ADE80"
 ---
 ```
 
-`status` values: `planned` | `in-progress` | `complete`
+Whole-vault dependency view: [[_meta/module-graph]]. Specs not yet migrated to v2 still carry the original 6-field frontmatter — `/flowflex:start` falls back to pattern inference for those.

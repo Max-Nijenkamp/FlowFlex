@@ -42,6 +42,7 @@ Create `vault/build/decisions/decision-{YYYY-MM-DD}-{slug}.md`:
 type: adr
 date: {YYYY-MM-DD}
 status: decided | proposed
+domain: {domain display name, or "All"}
 color: "#F97316"
 ---
 

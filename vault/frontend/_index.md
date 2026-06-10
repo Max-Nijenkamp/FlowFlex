@@ -17,11 +17,12 @@ The public-facing side of FlowFlex. Separate from Filament panels — custom des
 | Page type | Tech |
 |---|---|
 | Marketing site (homepage, pricing, about) | Vue + Inertia |
-| Onboarding wizard (new company signup) | Vue + Inertia |
+| Invite-accept registration (`/register/invite/{token}`) | Vue + Inertia |
 | Client portal (external clients viewing CRM data) | Vue + Inertia |
 | Learner portal (LMS — external learners) | Vue + Inertia |
-| Login / registration | Vue + Inertia |
+| Login / password reset | Vue + Inertia |
 | Checkout / billing flows | Vue + Inertia |
+| Setup wizard (first-login company setup) | Custom Filament Page in `/app` — NOT here |
 | Custom domain views (Kanban, Gantt, Calendar) | Custom Filament Page — NOT here |
 | All business domain CRUD screens | Filament — NOT here |
 
@@ -48,17 +49,14 @@ The public-facing side of FlowFlex. Separate from Filament panels — custom des
 | Route | Component | Notes |
 |---|---|---|
 | `/login` | `Pages/Auth/Login.vue` | Login form |
-| `/register` | `Pages/Auth/Register.vue` | Company + owner registration |
+| `/register/invite/{token}` | `Pages/Auth/InviteRegister.vue` | Invite-accept registration — name + password only, email pre-filled. No open self-registration; companies are created by FlowFlex staff in `/admin` (see [[domains/core/invitation-system]]) |
 | `/forgot-password` | `Pages/Auth/ForgotPassword.vue` | Password reset request |
 | `/reset-password/{token}` | `Pages/Auth/ResetPassword.vue` | Password reset form |
 | `/verify-email` | `Pages/Auth/VerifyEmail.vue` | Email verification |
 
 ### Onboarding
 
-| Route | Component | Notes |
-|---|---|---|
-| `/onboarding` | `Pages/Onboarding/Wizard.vue` | Multi-step company setup (name, timezone, invite team) |
-| `/onboarding/modules` | `Pages/Onboarding/Modules.vue` | First module selection |
+No public onboarding pages. New company setup runs through the first-login Setup Wizard — a custom Filament page in `/app` (see [[domains/core/setup-wizard]]). New users join a workspace only via invitation (see [[domains/core/invitation-system]]).
 
 ### Portals (Phase 2+)
 
@@ -77,7 +75,6 @@ resources/
 │   ├── Pages/
 │   │   ├── Marketing/
 │   │   ├── Auth/
-│   │   ├── Onboarding/
 │   │   └── Portal/
 │   ├── Components/
 │   │   ├── Marketing/      # Homepage sections, pricing table, feature cards
@@ -255,12 +252,12 @@ export function useAuth() {
 |---|---|---|
 | **Vitest** | Unit tests for composables, utilities, formatters | Always |
 | **Vue Test Utils** | Component unit tests (form validation, conditional rendering) | For complex components |
-| **Playwright** | End-to-end tests for critical user flows | Auth flows, onboarding, checkout |
+| **Playwright** | End-to-end tests for critical user flows | Auth flows, invite acceptance, checkout |
 
 **What to test:**
 - Composables: pure logic, easy to unit test
 - Form validation: Vue Test Utils on form components
-- E2E (Playwright): login → onboarding wizard, invoice creation flow, plan upgrade
+- E2E (Playwright): login flow, invite acceptance → first login, checkout flow
 - Do NOT test Filament panels with Playwright — use Pest + `pest-plugin-livewire` instead
 
 ```bash

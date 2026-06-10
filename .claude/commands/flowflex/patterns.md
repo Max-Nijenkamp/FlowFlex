@@ -61,6 +61,12 @@ Fetch a specific architecture pattern from the vault. Read-only.
 | `filament` | `vault/architecture/filament-patterns.md` |
 | `panels` or `colors` | `vault/architecture/domain-panels.md` |
 | `tech-stack` or `stack` | `vault/architecture/tech-stack.md` |
+| `ui` or `ui-strategy` | `vault/architecture/ui-strategy.md` |
+| `dod` or `workflow` or `way-of-working` | `vault/architecture/way-of-working.md` |
+| `roadmap` or `milestones` | `vault/build/ROADMAP.md` |
+| `custom-fields` or `schemaless` | `vault/architecture/patterns/custom-fields.md` |
+| `gdpr` or `retention` or `data-lifecycle` | `vault/architecture/data-lifecycle.md` |
+| `dev` or `local-dev` or `troubleshooting` | `vault/architecture/local-dev.md` |
 
 ## What This Does
 

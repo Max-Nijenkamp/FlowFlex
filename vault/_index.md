@@ -15,6 +15,11 @@ All-in-one SaaS for SMEs (50–500 employees). 21 active domains, modular activa
 |---|---|
 | Understand the product | [[product/brand]], [[product/positioning]], [[product/pricing-model]] |
 | Understand the tech stack | [[architecture/tech-stack]], [[architecture/packages]] |
+| Know which UI tech for which screen | [[architecture/ui-strategy]] — the decision table |
+| Know how we work (DoD, gates, deviation protocol) | [[architecture/way-of-working]] |
+| See the milestone roadmap to v1 | [[build/ROADMAP]] |
+| Read/write a module spec (v2 format) | [[_meta/spec-template]] |
+| See the whole module dependency graph | [[_meta/module-graph]] |
 | Build Filament panels | [[architecture/filament-patterns]], [[architecture/domain-panels]] |
 | Multi-tenancy implementation | [[architecture/multi-tenancy]], [[architecture/module-system]] |
 | Service pattern (when to use what) | [[architecture/patterns/interface-service]], [[architecture/patterns/actions-pattern]] |
@@ -67,12 +72,14 @@ All-in-one SaaS for SMEs (50–500 employees). 21 active domains, modular activa
 
 ## Build Phase Map
 
-| Phase | Domains | Status |
-|---|---|---|
-| MVP | Foundation, Core, HR, Finance, CRM | 🔴 Not started |
-| Phase 2 | Projects, Support, Communications, DMS | 🔴 Not started |
-| Phase 3 | Marketing, Operations, Analytics, IT, Legal, E-commerce, LMS, AI, Customer Success, Procurement, Workplace, Events | 🔴 Not started |
-| Deferred | ESG, Travel, Community, PLG, Ethics, Partners, Risk, Real Estate, Field Service, PSA | — |
+Milestones with exit gates: [[build/ROADMAP]]. v1 = all 66 MVP modules.
+
+| Phase | Milestones | Domains | Status |
+|---|---|---|---|
+| MVP (v1) | M0–M5 | Foundation, Core, HR, Finance, CRM | 🔴 Not started |
+| Phase 2 | M6–M9 | Projects, Support, Communications, DMS | 🔴 Not started |
+| Phase 3 | on pull | Marketing, Operations, Analytics, IT, Legal, E-commerce, LMS, AI, Customer Success, Procurement, Workplace, Events | 🔴 Not started |
+| Deferred | — | ESG, Travel, Community, PLG, Ethics, Partners, Risk, Real Estate, Field Service, PSA | — |
 
 ---
 

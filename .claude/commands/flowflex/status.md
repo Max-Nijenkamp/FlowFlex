@@ -15,6 +15,7 @@ Check current build state. Read-only — never modifies any vault file.
 
 - No args → summary table from STATUS.md
 - `domain={slug}` → detailed view for one domain (all modules + status)
+- `priority={v1-core|v1|p2|p3}` → only modules with that `priority:` frontmatter (e.g. `priority=v1-core` = what blocks the v1 gate)
 - `full` → all domains + open gaps + recent decisions
 
 ## What This Does
@@ -48,14 +49,18 @@ MVP: 0 / 65 built (0%)
 ## HR & People — Build Status
 Panel: /hr (Violet) | 0/15 built
 
-✅ employee-profiles     complete
-🔄 leave-management     in-progress
-📅 onboarding           planned
-📅 payroll              planned
+✅ employee-profiles     complete      v1-core
+🔄 leave-management     in-progress   v1-core
+📅 onboarding           planned       v1-core
+📅 payroll              planned       v1-core
 ...
 
-Next to build: payroll (first planned after in-progress)
+Next to build: payroll (first planned after in-progress, per BUILD-ORDER)
 ```
+
+### `priority={level}` — Priority Filter
+
+Scan module specs' `priority:` frontmatter (or `_meta/module-graph.md`). Show only matching modules, grouped by domain, with status. Combine with `domain=` to narrow further.
 
 ### `full` — Full Status View
 

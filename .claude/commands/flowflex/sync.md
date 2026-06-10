@@ -31,7 +31,7 @@ Read the file. Update only the `status:` field:
 status: in-progress   # or: complete
 ```
 
-Write the file back. No other frontmatter fields change.
+Write the file back. No other frontmatter fields change — UNLESS spec content was corrected during the build session (data model, deps, events). In that case: update the affected spec sections + frontmatter, set `last-reviewed:` to today, and update the module's row in `vault/_meta/module-graph.md` to match (frontmatter is source of truth; the graph file must mirror it).
 
 ### Step 2 — Update STATUS.md
 
@@ -57,6 +57,7 @@ type: gap
 severity: high | medium | low
 category: spec | architecture | feature | bug | data-model
 status: open
+domain: {domain-key}
 color: "#F97316"
 discovered: {YYYY-MM-DD}
 discovered-in: {module-key}
@@ -75,6 +76,7 @@ Create `vault/build/decisions/decision-{YYYY-MM-DD}-{slug}.md`:
 type: adr
 date: {YYYY-MM-DD}
 status: decided | proposed
+domain: {domain display name, or "All"}
 color: "#F97316"
 ---
 ```

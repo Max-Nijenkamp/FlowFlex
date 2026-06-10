@@ -46,4 +46,4 @@ First-login onboarding wizard for new company owners. Multi-step flow covering w
 
 - [[domains/core/company-settings]]
 - [[domains/core/module-marketplace]]
-- [[frontend/_index]] — Onboarding section for the public Vue registration flow
+- [[domains/core/invitation-system]] — team invites sent from wizard step 3

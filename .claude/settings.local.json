@@ -138,7 +138,8 @@
       "Bash(Remove-Item *)",
       "Bash(mkdir -p C:/Users/maxni/Documents/projects/FlowFlex/vault/domains/__TRACKED_VAR__)",
       "Read(//c/Users/maxni/.claude/plugins/**)",
-      "Read(//c/Users/maxni/.claude/**)"
+      "Read(//c/Users/maxni/.claude/**)",
+      "PowerShell(Get-ChildItem -Recurse -File vault | Group-Object { $_.Directory.FullName.Replace\\(\\(Resolve-Path vault\\).Path, ''\\) } | Sort-Object Name | ForEach-Object { \"{0,4}  {1}\" -f $_.Count, $_.Name })"
     ]
   },
   "enabledMcpjsonServers": [

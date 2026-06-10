@@ -28,28 +28,43 @@ If filename is not obvious from the key suffix, scan `vault/domains/{domain}/` f
 
 ### Step 2 — Read and display the spec
 
-Read the full file. Display:
+Read the full file. Display (v2 specs — omit sections the spec doesn't have):
 
 ```
 ## Spec: {module-key}
-Domain: {domain} | Panel: /{panel} | Status: {planned|in-progress|complete}
+Domain: {domain} | Panel: /{panel} | Status: {status} | Priority: {priority}
+Depends on: {depends-on} | Soft: {soft-depends}
+Fires: {fires-events} | Consumes: {consumes-events}
 
 ### What It Does
-{2-sentence summary}
+{summary}
+
+### Dependencies
+{hard/soft table}
 
 ### Core Features
 {full bullet list}
 
 ### Data Model
-{tables and key columns}
-{ERD if present}
+{tables, key columns, 🔐 encrypted flags, indexes; ERD if present}
+
+### State Machine / DTOs / Services & Actions / Events
+{as present in the spec}
 
 ### Filament
-{resources, custom pages, widgets}
+{artifact table with ui-strategy row refs}
+
+### Permissions
+{full key list}
+
+### Test Checklist + Build Manifest
+{as in spec}
 
 ### Related
 {links list}
 ```
+
+Legacy (pre-v2) specs: display whatever sections exist (What It Does, Core Features, Data Model, Filament, Related).
 
 ### Step 3 — Show related open gaps (if any)
 

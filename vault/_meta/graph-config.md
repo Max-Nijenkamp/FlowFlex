@@ -60,6 +60,23 @@ In the Groups panel, use the `path:` filter. The color picker in Obsidian uses h
 
 ---
 
+## v2 Frontmatter — Dataview Queries
+
+The v2 spec frontmatter ([[_meta/spec-template]]) adds structured fields that Dataview can query directly:
+
+| Field | Example query use |
+|---|---|
+| `priority` | `WHERE priority = "v1-core"` — what blocks the v1 gate |
+| `depends-on` | `WHERE contains(depends-on, "hr.profiles")` — reverse dependency lookup |
+| `fires-events` / `consumes-events` | event producer/consumer maps |
+| `patterns` | `WHERE contains(patterns, "states")` — which modules use state machines |
+| `tables` | find the module owning a table |
+| `last-reviewed` | staleness audits |
+
+Pre-built boards: [[build/STATUS]] (status + priority) and [[_meta/module-graph]] (full dependency table — also maintained as a static table so AI agents get it without Dataview).
+
+---
+
 ## Folder Structure in Obsidian
 
 Set Obsidian vault root to `vault/` (not the repo root `FlowFlex/`). This ensures internal links resolve correctly.

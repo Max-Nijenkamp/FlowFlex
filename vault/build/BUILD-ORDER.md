@@ -1,5 +1,6 @@
 ---
 type: build-order
+last-updated: 2026-06-10
 color: "#F97316"
 ---
 
@@ -44,7 +45,7 @@ Order: `finance.ledger` (anchor — invoices/expenses post here) → `finance.in
 ### CRM & Sales (`/crm`)
 Order: `crm.contacts` (anchor) → `crm.deals` → `crm.pipeline` → `crm.activities` → `crm.quotes` → then the rest. Customer Success modules (`cs.*`) build last in this panel.
 
-**MVP gate**: a company can sign up, activate HR + Finance + CRM modules, manage employees, send invoices, run a sales pipeline. This is sellable.
+**MVP gate**: a company can be onboarded (staff-created in `/admin`, owner invited, setup wizard completed), activate HR + Finance + CRM modules, manage employees, send invoices, run a sales pipeline. This is sellable.
 
 ---
 

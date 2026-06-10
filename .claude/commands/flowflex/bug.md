@@ -36,6 +36,7 @@ type: gap
 severity: {high | medium | low}
 category: {bug | spec | architecture | data-model | feature}
 status: open
+domain: {domain-key, e.g. hr}
 color: "#F97316"
 discovered: {YYYY-MM-DD}
 discovered-in: {module-key}

@@ -319,13 +319,14 @@ add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" alway
 
 ## Sanctum SPA Authentication (Vue + Inertia Frontend)
 
-The Vue 3 + Inertia public frontend (marketing site, onboarding, login) uses Sanctum's **cookie-based SPA auth** — not bearer tokens. Tokens are for the API only.
+The Vue 3 + Inertia public frontend (marketing site, invite acceptance, login) uses Sanctum's **cookie-based SPA auth** — not bearer tokens. Tokens are for the API only.
 
 ```php
 // routes/web.php — SPA auth endpoints
+// No open /register route — users join via invitation only (see domains/core/invitation-system)
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register/invite/{token}', [AuthController::class, 'acceptInvite']);
 ```
 
 ```javascript

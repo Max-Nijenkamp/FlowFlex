@@ -22,58 +22,57 @@ The module file name is the module key suffix converted to kebab-case with `-` e
 
 ### Step 2 — Read the module spec
 
-Read `vault/domains/{domain}/{module-name}.md` in full. Extract:
-- What It Does (summary)
-- Core Features (full list)
-- Data Model (all tables + ERD if present)
-- Filament section (resources, custom pages, widgets)
-- Related links
+Read `vault/domains/{domain}/{module-name}.md` in full. v2 specs ([[_meta/spec-template]] format) carry everything you need: Dependencies, Data Model, State Machine, DTOs, Services & Actions, Events, Filament, Permissions, Test Checklist, Build Manifest.
 
-### Step 3 — Read the domain index
+### Step 3 — Check dependencies (v2 frontmatter)
 
-Read `vault/domains/{domain}/_index.md`. Extract:
-- Navigation groups for this domain's panel
-- Other modules in the domain (for context — what comes before/after this module)
-- Key patterns referenced
+Read the spec's `depends-on:` list. For each hard dependency, look up its `status:` (its spec frontmatter or `_meta/module-graph.md`).
+- Any hard dep not `complete` → **warn prominently** in the briefing: `⚠️ Hard dependency {key} is {status}` and list what's blocked.
+- `soft-depends` deps that aren't built: note the degraded behavior from the spec's `## Dependencies` table.
 
-### Step 4 — Load relevant architecture patterns
+### Step 4 — Read the domain index + load architecture patterns
 
-Read these files based on what the module needs:
+Read `vault/domains/{domain}/_index.md` (nav groups, sibling modules, intra-domain dependency graph).
 
 **Always read:**
 - `vault/architecture/filament-patterns.md`
+- `vault/architecture/ui-strategy.md`
 - `vault/architecture/multi-tenancy.md`
 - `vault/architecture/patterns/belongs-to-company.md`
 - `vault/architecture/patterns/dto-pattern.md`
 - `vault/architecture/patterns/testing-pattern.md`
 - `vault/architecture/module-system.md`
 
-**Read if the module has these features:**
+**Then read the files listed in the spec's `patterns:` frontmatter** — map each key through the lookup table in `patterns.md` (e.g. `states` → `vault/architecture/patterns/states.md`).
+
+**Legacy fallback** (spec has no `patterns:` field — not yet migrated to v2): infer from the spec body:
 
 | Module has… | Read |
 |---|---|
-| Status field with transitions (leave status, invoice status, deal stage) | `vault/architecture/patterns/states.md` |
+| Status field with transitions | `vault/architecture/patterns/states.md` |
 | Custom Filament page (board, calendar, dashboard) | `vault/architecture/patterns/custom-pages.md` |
-| Multi-method domain service (EmployeeService, InvoiceService) | `vault/architecture/patterns/interface-service.md` |
+| Multi-method domain service | `vault/architecture/patterns/interface-service.md` |
 | Single-step simple operation | `vault/architecture/patterns/actions-pattern.md` |
-| Fires events consumed by other domains | `vault/architecture/event-bus.md` |
-| File uploads or document storage | File upload section of `vault/architecture/security.md` |
-| Encrypted fields (national ID, salary, IBAN) | `vault/architecture/patterns/encryption.md` |
+| Fires/consumes cross-domain events | `vault/architecture/event-bus.md` |
+| File uploads | File upload section of `vault/architecture/security.md` |
+| Encrypted fields | `vault/architecture/patterns/encryption.md` |
 | Full-text search | `vault/architecture/search.md` |
-| Real-time notifications or live UI updates | `vault/architecture/websockets.md` |
-| PDF generation (invoices, payslips, quotes) | `vault/architecture/packages.md` (spatie/laravel-pdf section) |
-| Background jobs or scheduled tasks | `vault/architecture/queue-jobs.md` |
-| Money arithmetic | `vault/architecture/packages.md` (brick/money section) |
+| Real-time updates | `vault/architecture/websockets.md` |
+| PDF generation | `vault/architecture/packages.md` (spatie/laravel-pdf) |
+| Background jobs / scheduled tasks | `vault/architecture/queue-jobs.md` |
+| Money arithmetic | `vault/architecture/packages.md` (brick/money) |
 | Outbound emails | `vault/architecture/email.md` |
-| Sensitive data | `vault/architecture/patterns/encryption.md` |
+
+If the module fires or consumes events (`fires-events:`/`consumes-events:` non-empty), always read `vault/architecture/event-bus.md` — payloads must match its listener contracts exactly.
 
 ### Step 5 — Check open gaps
 
 Read `vault/build/gaps/INDEX.md`. Filter rows where `discovered-in` contains this domain or module key. List any open gaps that affect this build.
 
-### Step 6 — Check domain permissions
+### Step 6 — Permissions
 
-Read `vault/architecture/domain-panels.md`. Find the section for this domain. Show the relevant permissions list.
+v2 spec: copy the full key list from the spec's `## Permissions` section.
+Legacy spec: read `vault/architecture/domain-panels.md`, find this domain's section, show the permissions list.
 
 ### Step 7 — Set status to in-progress
 
@@ -92,54 +91,34 @@ Format:
 ### What to Build
 {2-sentence summary from spec}
 
+### Dependencies
+{hard deps + status; ⚠️ warnings for incomplete hard deps; soft deps + degraded behavior}
+
 ### Data Model
-{tables to create, with key columns}
+{tables to create, with key columns; 🔐 encrypted columns flagged}
 
 ### Files to Create
-**Migrations:**
-- database/migrations/{timestamp}_create_{table}_table.php
+{v2 spec: copy the spec's ## Build Manifest verbatim — do NOT regenerate it.
+Legacy spec: generate from the standard app/ layout:
+migrations → Models/{Domain}/ → States/{Domain}/{Model}/ → Data/{Domain}/ →
+Services|Actions/{Domain}/ (+Contracts+Providers if Interface→Service) →
+Events/{Domain}/ → Filament/{Domain}/{Resources|Pages|Widgets}/ →
+Mail/{Domain}/ → database/factories/{Domain}/ → tests/Feature/{Domain}/}
 
-**Models:**
-- app/Models/{Domain}/{ModelName}.php
-
-**States (if applicable):**
-- app/States/{Domain}/{Model}/{Abstract}.php
-- app/States/{Domain}/{Model}/{State}.php (one per state)
-
-**Service or Actions:**
-- app/Contracts/{Domain}/{Service}Interface.php (if Interface→Service)
-- app/Services/{Domain}/{Service}.php
-- app/Providers/{Domain}/{Domain}ServiceProvider.php
-  OR
-- app/Actions/{Domain}/{ActionName}.php (if simple action)
-
-**DTOs:**
-- app/Data/{Domain}/{Model}Data.php (output)
-- app/Data/{Domain}/Create{Model}Data.php (input)
-
-**Events (if cross-domain):**
-- app/Events/{Domain}/{EventName}.php
-
-**Filament:**
-- app/Filament/{Domain}/Resources/{Model}Resource.php (CRUD)
-  OR
-- app/Filament/{Domain}/Pages/{PageName}Page.php (custom)
-- app/Filament/{Domain}/Widgets/{Widget}Widget.php (if any)
-
-**Mail (if emails):**
-- app/Mail/{Domain}/{Name}Mail.php
-
-**Tests:**
-- tests/Feature/{Domain}/{Module}Test.php
+### UI Artifacts
+{from spec ## Filament — artifact + ui-strategy row # + realtime choice}
 
 ### Patterns to Follow
-{list only the patterns relevant to this module, from Step 4}
+{the spec's patterns: list (or legacy inference), one line each on why}
 
 ### Permissions to Register (in PermissionSeeder)
-{list from domain-panels.md}
+{v2: from spec ## Permissions; legacy: from domain-panels.md}
 
 ### Cross-Domain Events
-{fires: / consumes:}
+{fires: / consumes: with payload source = event-bus.md contracts}
+
+### Test Checklist
+{v2 spec: copy ## Test Checklist; legacy: tenant-isolation + module-gating + inferred feature cases}
 
 ### Open Gaps
 {list from Step 5, or "None open"}
