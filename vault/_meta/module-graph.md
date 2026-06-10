@@ -175,9 +175,35 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | operations.goods-receipt | p3 | operations.purchase-orders, operations.inventory, core.billing, core.rbac | finance.ap | GoodsReceived | — | ops_goods_receipts, ops_grn_lines |
 | operations.adjustments | p3 | operations.inventory, core.billing, core.rbac | finance.ledger | — | — | ops_stock_adjustments |
 | operations.reporting | p3 | operations.inventory, core.billing, core.rbac | operations.purchase-orders, operations.suppliers | — | — | — |
-## Analytics & BI (5) — Wave 5
-## IT & Security (6) — Wave 5
-## Legal & Compliance (6) — Wave 5
+## Analytics & BI (5)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| analytics.dashboards | p3 | core.billing, core.rbac | analytics.kpis, analytics.reports | — | — | bi_dashboards, bi_widgets |
+| analytics.reports | p3 | core.billing, core.rbac | analytics.exports | — | — | bi_reports |
+| analytics.kpis | p3 | analytics.dashboards, core.billing, core.rbac, core.notifications | projects.okrs | — | — | bi_kpis, bi_kpi_snapshots |
+| analytics.data-views | p3 | analytics.dashboards, core.billing, core.rbac | — | — | — | — |
+| analytics.exports | p3 | analytics.reports, core.billing, core.rbac, foundation.queues, foundation.email | analytics.dashboards, finance.reporting | — | — | bi_export_schedules, bi_export_log |
+## IT & Security (6)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| it.assets | p3 | hr.profiles, core.billing, core.rbac, core.notifications | core.import, finance.assets, it.mdm | — | EmployeeOffboarded | it_assets, it_asset_assignments |
+| it.helpdesk | p3 | hr.profiles, core.billing, core.rbac, core.notifications | it.assets | — | — | it_tickets, it_ticket_replies |
+| it.access | p3 | hr.profiles, core.billing, core.rbac, core.notifications | hr.onboarding | — | EmployeeHired, EmployeeOffboarded | it_systems, it_access_grants, it_access_templates |
+| it.licences | p3 | hr.profiles, core.billing, core.rbac, core.notifications | finance.expenses | — | EmployeeOffboarded | it_licences, it_licence_assignments |
+| it.mdm | p3 | it.assets, core.billing, core.rbac, foundation.queues | — | — | — | it_mdm_config, it_mdm_devices |
+| it.reporting | p3 | it.assets, core.billing, core.rbac | it.licences, it.helpdesk, it.mdm, it.access | — | — | — |
+## Legal & Compliance (6)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| legal.contracts | p3 | core.billing, core.rbac, core.files, core.notifications | crm.contacts, operations.suppliers, legal.matters | — | — | legal_contracts, legal_contract_obligations |
+| legal.matters | p3 | core.billing, core.rbac, core.files | legal.spend, legal.contracts, dms.library | — | — | legal_matters, legal_matter_events |
+| legal.spend | p3 | legal.matters, core.billing, core.rbac | finance.ap | — | — | legal_expenses, legal_budgets |
+| legal.policies | p3 | hr.profiles, core.billing, core.rbac, core.notifications | legal.compliance | — | — | legal_policies, legal_policy_acknowledgements |
+| legal.compliance | p3 | core.billing, core.rbac, core.files, core.notifications | legal.policies, core.privacy | — | — | legal_frameworks, legal_controls, legal_compliance_tasks |
+| legal.dsar | p3 | core.privacy, core.billing, core.rbac | — | — | DSARRequestSubmitted | legal_dsar_actions |
 ## E-commerce (8) — Wave 5
 ## Learning & Development (8) — Wave 5
 ## AI & Automation (4) — Wave 5

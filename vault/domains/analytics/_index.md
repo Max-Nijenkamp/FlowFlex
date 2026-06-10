@@ -1,7 +1,11 @@
 ---
 type: domain-index
 domain: Analytics & BI
+domain-key: analytics
 panel: analytics
+phase: 3
+module-count: 5
+status: active
 color: "#4ADE80"
 ---
 
@@ -22,13 +26,38 @@ Custom dashboards, report builder, KPI tracking, cross-domain data views, and sc
 
 ## Modules
 
-| Module | Key | Status | Priority |
-|---|---|---|---|
-| [[domains/analytics/dashboards\|Custom Dashboards]] | `analytics.dashboards` | planned | **P3 core** |
-| [[domains/analytics/report-builder\|Report Builder]] | `analytics.reports` | planned | **P3 core** |
-| [[domains/analytics/kpi-tracking\|KPI Tracking]] | `analytics.kpis` | planned | P3 |
-| [[domains/analytics/data-views\|Cross-Domain Data Views]] | `analytics.data-views` | planned | P3 |
-| [[domains/analytics/scheduled-exports\|Scheduled Exports]] | `analytics.exports` | planned | P3 |
+| Module | Key | Status | Priority | Depends on (intra-domain) |
+|---|---|---|---|---|
+| [[domains/analytics/dashboards\|Custom Dashboards]] | `analytics.dashboards` | planned | p3 | — (anchor: ships MetricRegistry) |
+| [[domains/analytics/report-builder\|Report Builder]] | `analytics.reports` | planned | p3 | — |
+| [[domains/analytics/kpi-tracking\|KPI Tracking]] | `analytics.kpis` | planned | p3 | dashboards |
+| [[domains/analytics/data-views\|Cross-Domain Data Views]] | `analytics.data-views` | planned | p3 | dashboards |
+| [[domains/analytics/scheduled-exports\|Scheduled Exports]] | `analytics.exports` | planned | p3 | reports |
+
+## Dependency Graph (intra-domain)
+
+```mermaid
+graph TD
+    dashboards --> kpis
+    dashboards --> data-views
+    reports --> exports
+    dashboards --> exports
+```
+
+## Cross-Domain Edges
+
+No events. Domains feed analytics via two registries: `MetricRegistry` (widgets/KPIs) and `ReportSourceRegistry` (report builder, whitelisted columns only — sensitive/encrypted fields never reportable). View/metric availability follows module activation.
+
+---
+
+## Status Board (Dataview)
+
+```dataview
+TABLE module-key AS "Key", status AS "Status", priority AS "Priority"
+FROM "domains/analytics"
+WHERE type = "module"
+SORT module-key ASC
+```
 
 ---
 
@@ -36,6 +65,5 @@ Custom dashboards, report builder, KPI tracking, cross-domain data views, and sc
 
 - `leandrocfe/filament-apex-charts` — all chart widgets
 - `maatwebsite/laravel-excel` + `spatie/laravel-pdf` — exports
-- Heavy caching of aggregations (see [[architecture/caching]], [[architecture/performance]])
-- Always enforces CompanyScope — no cross-tenant data leakage (see [[architecture/multi-tenancy]])
-- Reads metrics from all active domains; respects module activation
+- Heavy caching of aggregations ([[architecture/caching]], [[architecture/performance]])
+- CompanyScope on every aggregate path — report-isolation test is the domain's most important test
