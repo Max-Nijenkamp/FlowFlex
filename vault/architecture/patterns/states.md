@@ -1,12 +1,40 @@
 ---
 type: architecture
-category: pattern
+category: patterns
+pattern-key: states
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 
 # State Machines (spatie/laravel-model-states)
 
 Use for any field that has constrained transitions — status fields where moving from state A to state B is only valid under certain conditions. Replaces raw string enums with enforced transition rules.
+
+---
+
+## Transition Auditing
+
+Every state transition is recorded via `spatie/laravel-activitylog` — who, when, from, to. Implement once in the transition base class, not per model:
+
+```php
+abstract class Transition extends \Spatie\ModelStates\Transition
+{
+    protected function logTransition(Model $model, string $from, string $to): void
+    {
+        activity('state-transition')
+            ->performedOn($model)
+            ->causedBy(auth()->user())          // null in jobs — WithCompanyContext sets no user
+            ->withProperties(['from' => $from, 'to' => $to])
+            ->log(class_basename($model) . " {$from} → {$to}");
+    }
+}
+```
+
+Rules:
+- The log records `from`/`to` and field name — never additional model PII in `properties` ([[architecture/data-lifecycle]])
+- Concurrent-transition safety: wrap transition + side effects in `DB::transaction()` with `lockForUpdate()` on the row — second writer re-reads state and gets `InvalidStateTransitionException` rather than double-firing events
+- Transition history surfaces in Filament view pages via the activitylog timeline (`rmsramos/activitylog`)
 
 ---
 

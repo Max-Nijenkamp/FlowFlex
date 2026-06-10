@@ -1,6 +1,8 @@
 ---
 type: architecture
-category: data-model
+category: data
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 

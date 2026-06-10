@@ -1,6 +1,9 @@
 ---
 type: architecture
-category: panels
+category: filament
+pattern-key: panels
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 

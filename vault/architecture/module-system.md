@@ -1,6 +1,9 @@
 ---
 type: architecture
-category: modules
+category: tenancy
+pattern-key: modules
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 

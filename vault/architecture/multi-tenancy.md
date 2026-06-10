@@ -1,6 +1,9 @@
 ---
 type: architecture
-category: pattern
+category: tenancy
+pattern-key: tenancy
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 

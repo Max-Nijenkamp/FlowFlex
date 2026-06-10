@@ -1,6 +1,9 @@
 ---
 type: architecture
-category: email
+category: infra
+pattern-key: email
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 

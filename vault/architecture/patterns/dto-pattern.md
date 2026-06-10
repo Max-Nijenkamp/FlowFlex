@@ -1,12 +1,69 @@
 ---
 type: architecture
-category: pattern
+category: patterns
+pattern-key: dto
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 
 # DTO Pattern (spatie/laravel-data)
 
 `spatie/laravel-data` Data classes replace both `FormRequest` (input validation) and `JsonResource` (output serialisation) in a single class.
+
+---
+
+## Cross-Field Validation & Custom Messages
+
+Attribute validation handles single fields. Cross-field rules and messages go in static methods on the Data class:
+
+```php
+class SubmitLeaveRequestData extends Data
+{
+    public function __construct(
+        #[Required, Date]
+        public readonly CarbonImmutable $start_date,
+        #[Required, Date]
+        public readonly CarbonImmutable $end_date,
+        // ...
+    ) {}
+
+    public static function rules(ValidationContext $context): array
+    {
+        return [
+            'end_date' => ['after_or_equal:start_date'],
+            // company-scoped uniqueness — CompanyScope applies inside the closure
+            'email' => [Rule::unique('hr_employees', 'email')
+                ->where('company_id', app(CompanyContext::class)->currentId())
+                ->ignore($context->payload['id'] ?? null)],
+        ];
+    }
+
+    public static function messages(): array
+    {
+        return [
+            'end_date.after_or_equal' => 'End date must be on or after the start date.',
+            'email.unique' => 'An employee with this email already exists in your company.',
+        ];
+    }
+
+    // Rules attributes can't express conditional logic — use withValidator for it
+    public static function withValidator(Validator $validator): void
+    {
+        $validator->after(function ($v) {
+            $data = $v->getData();
+            if (($data['outcome'] ?? null) === 'lost' && blank($data['lost_reason'] ?? null)) {
+                $v->errors()->add('lost_reason', 'A reason is required when marking a deal as lost.');
+            }
+        });
+    }
+}
+```
+
+Conventions:
+- **Uniqueness is always company-scoped** — a bare `Rule::unique(...)` without the `company_id` where-clause is a tenancy bug
+- Custom messages for every cross-field rule and every company-scoped uniqueness rule (specs list them under the DTO table)
+- Async/expensive checks (overlap detection, balance checks) do NOT belong in validation — they are service-level domain rules throwing typed exceptions
 
 ---
 

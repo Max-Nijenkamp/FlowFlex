@@ -1,12 +1,37 @@
 ---
 type: architecture
-category: queues
+category: infra
+pattern-key: queues
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 
 # Queue Jobs & Horizon
 
 All background work runs through Laravel Horizon on Redis. Domain-specific queues prevent one slow domain from starving another.
+
+---
+
+## Idempotency & Partial Failure
+
+Every scheduled command and every retryable job must be **safe to re-run** — Horizon retries 3×, the scheduler may overlap a crashed run, and ops will re-trigger manually.
+
+Rules:
+1. **Scheduled commands**: always `->withoutOverlapping()` + `->onOneServer()`. Work must be expressed as idempotent writes — `upsert` on a natural key, or `WHERE` guards that skip already-processed rows (e.g. `MarkOverdueInvoicesCommand` only touches `status = sent AND due_date < today` — re-running marks nothing twice).
+2. **Batch loops never abort on one failure**: process per-row in try/catch, collect failures, `Log::warning` each with IDs, continue. Report `{processed, skipped, failed}` at the end. A 1-in-500 failure must not block the other 499 — the failed row is retried next run because the WHERE guard still matches it.
+3. **State checks inside the job, not at dispatch**: a queued job re-validates preconditions on execution (`if ($invoice->status !== 'sent') return;`) — the world may have changed while it sat in the queue.
+4. **Jobs that create records** need a uniqueness guard (unique constraint + `firstOrCreate`/`upsert`) so a retry after a mid-job crash cannot double-create.
+5. **Money-moving jobs** (payouts, Stripe charges) additionally use `ShouldBeUnique` + an idempotency key passed to the provider (Stripe `idempotency_key`).
+6. Spec declares the idempotency mechanism per job in `## Jobs & Scheduling` — "safe because X", never blank.
+
+## Export / Import Chunking
+
+`maatwebsite/laravel-excel` on `exports`/`imports` queues (1 worker each, low priority, memory-isolated):
+
+- Exports: implement `FromQuery` + `WithChunkReading`, `chunkSize: 500` *(default — raise to 1000 for narrow tables, lower to 100 for rows with relations)*; always `ShouldQueue`. Result stored under `companies/{id}/exports/`, user notified with a temporary signed URL — **never stream a large export in the request**.
+- Imports: `WithChunkReading` + `ShouldQueue`, validate per-row, write failures to a results file (`row, error`) rather than aborting the import; report `{imported, failed}` on completion.
+- Worker `memory_limit` 512M for these queues; a single export may not load > chunk rows into memory at once (no `->get()` on the full set).
 
 ---
 

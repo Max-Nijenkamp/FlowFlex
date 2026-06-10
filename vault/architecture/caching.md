@@ -1,6 +1,9 @@
 ---
 type: architecture
-category: caching
+category: infra
+pattern-key: caching
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 
@@ -190,6 +193,16 @@ Always prefix with `company:{id}` — never cache data without a tenant scope.
 | Employee hired or terminated | `company:{id}:hr:headcount` |
 | Journal entry posted | `company:{id}:finance:pl:{period}` |
 | Deal stage changed | `company:{id}:crm:pipeline-value` |
+
+### Cascading Invalidation
+
+Rules for writes that affect cached aggregates beyond their own model:
+
+1. **The writer busts, not the reader.** Whichever service/action mutates the source data is responsible for `Cache::forget()` of every derived key — listed in the module spec's `## Caching` table under "Invalidated by". Readers never check freshness.
+2. **Bust by exact key, not by pattern.** No `KEYS`/`SCAN` wildcard deletes in request paths. If a write invalidates a period-keyed family (e.g. P&L per month), the spec must bound the family (current + affected period only).
+3. **Cross-domain busts go through listeners.** Domain A's write never busts Domain B's keys directly — the queued listener consuming the event does it (e.g. `PostPayrollJournalEntryListener` busts `finance:pl:{period}` after posting).
+4. **Parent-rename rule.** Renames of referenced entities (company name, employee name, stage name) do NOT bust aggregate caches — aggregates store IDs + numbers, display names resolve at render. If a cached payload embeds display names, that's a spec bug.
+5. **TTL is the safety net, not the mechanism.** Every key has a TTL even when explicitly invalidated — a missed bust self-heals within the TTL window. Max TTL anywhere: 1 hour.
 
 ---
 

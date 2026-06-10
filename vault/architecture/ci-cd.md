@@ -1,6 +1,9 @@
 ---
 type: architecture
-category: ci-cd
+category: process
+pattern-key: ci
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 

@@ -1,6 +1,9 @@
 ---
 type: architecture
-category: deployment
+category: infra
+pattern-key: deployment
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 
@@ -188,6 +191,19 @@ Use Laravel Octane + deployment with Caddy or a rolling deploy strategy. Alterna
 5. Stop old container
 
 **Migration safety rule**: never remove a column or rename a table in the same deploy as the code that stops using it. Two-step: deploy code that handles both old and new schema → migrate → deploy code that removes the old fallback.
+
+### Zero-Downtime Migration Checklist
+
+Run through this for every production migration (expand–contract pattern):
+
+- [ ] **Additive only in deploy N**: new columns nullable or defaulted; new tables; new indexes
+- [ ] **Indexes on big tables**: `CREATE INDEX CONCURRENTLY` (raw statement, `withinTransaction = false` on the migration) — plain `CREATE INDEX` locks writes
+- [ ] **Column drops/renames**: deploy N stops reading/writing old name → deploy N+1 drops it. Rename = add new + backfill + dual-write window + drop old (never `RENAME COLUMN` on hot tables)
+- [ ] **Type changes**: new column + backfill + swap reads + drop, never in-place `ALTER TYPE` on large tables
+- [ ] **Backfills**: chunked command on the `default` queue, not inside the migration (migrations must run in seconds)
+- [ ] **NOT NULL on existing column**: backfill first, add `CHECK` constraint `NOT VALID` → `VALIDATE CONSTRAINT`, then set NOT NULL
+- [ ] **Queued jobs survive the deploy**: old workers may process jobs referencing the old schema for up to `timeout` seconds — code in deploy N must tolerate both schemas
+- [ ] Down-migrations exist and are tested for the last 3 migrations (rollback path)
 
 ---
 

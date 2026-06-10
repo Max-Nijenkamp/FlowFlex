@@ -1,6 +1,9 @@
 ---
 type: architecture
-category: pattern
+category: filament
+pattern-key: filament
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 

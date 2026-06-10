@@ -1,12 +1,33 @@
 ---
 type: architecture
-category: websockets
+category: infra
+pattern-key: websockets
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 
 # WebSockets (Laravel Reverb)
 
 Real-time features via Laravel Reverb 1.x. Reverb is a first-party WebSocket server — no third-party service needed. Features: notification badges, live data updates, presence channels for collaborative editing.
+
+---
+
+## Broadcast vs Poll — The Decision Rule
+
+Default = **no realtime**. Escalate only to the cheapest mechanism that meets the real user expectation (rule shared with [[architecture/ui-strategy]] — specs cite it in `## Search & Realtime`):
+
+| Level | Mechanism | Use when | Examples |
+|---|---|---|---|
+| 0 | Nothing | data changes rarely / user refreshes naturally | all standard CRUD |
+| 1 | Livewire polling — `wire:poll.30s`, widget `$pollingInterval` | staleness ≥ 30s acceptable, single-user view | dashboards, calendars, stats widgets, pending lists |
+| 2 | Reverb broadcast | collaborative view (multiple users mutate same board, sub-5s expectation) · presence ("who's viewing") · notification bell | Kanban/pipeline boards, shared inbox, `company.{id}.notifications` |
+
+Hard rules:
+- Never poll faster than 15s — that workload belongs on Reverb
+- Never broadcast what a 30s poll covers — each broadcast event is code + channel auth + frontend listener to maintain
+- v1 Reverb surface is exactly: notification bell, pipeline/kanban boards, shared inbox. Adding a new broadcast use case = update this table first
+- Filament live-search/table filters are plain Livewire requests — they never involve Reverb or Meilisearch-triggered events
 
 ---
 

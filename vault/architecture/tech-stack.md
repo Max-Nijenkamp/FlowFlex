@@ -1,6 +1,9 @@
 ---
 type: architecture
 category: stack
+pattern-key: stack
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 

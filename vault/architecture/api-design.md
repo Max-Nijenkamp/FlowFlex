@@ -1,6 +1,9 @@
 ---
 type: architecture
 category: api
+pattern-key: api
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 
@@ -183,6 +186,15 @@ Signed with `X-FlowFlex-Signature: sha256={hmac}`. Recipients verify with `hash_
 ## Pagination
 
 All list endpoints are paginated. Default: 25 per page. Maximum: 100. Controlled by `?per_page=` query param. Use `spatie/laravel-query-builder` when the external API layer is built (deferred — see [[architecture/packages]]).
+
+### Cursor vs Offset Rule
+
+| Use | When | Endpoints |
+|---|---|---|
+| **Offset** (`paginate()`, `current_page`/`last_page` meta) | human-browsed admin tables; result sets that fit in a UI; client needs page numbers | default for all Filament tables + most API list endpoints |
+| **Cursor** (`cursorPaginate()`, `next_cursor` meta, no `total`) | append-only feeds and timelines (activities, audit log, notifications, messages); any programmatic consumer walking the full set (sync clients, exports via API); tables where deep `OFFSET` gets slow (≳100k rows per company) | activity/audit/notification/message endpoints from day one |
+
+Hard rules: never offer offset paging past page 400 (`max page × per_page = 10,000` cap → tell clients to use cursor or filters); cursor endpoints sort on an indexed, immutable key (`(company_id, id)` — ULIDs are time-ordered); bulk data extraction is NOT paginated API walking — use the export jobs ([[architecture/queue-jobs]]).
 
 ---
 

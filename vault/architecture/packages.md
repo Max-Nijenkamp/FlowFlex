@@ -1,6 +1,9 @@
 ---
 type: architecture
-category: packages
+category: stack
+pattern-key: packages
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 
@@ -493,6 +496,8 @@ $ics = Calendar::create()
 **Problem**: Custom per-company fields are needed in CRM (custom contact fields) and other domains. Promoted to Use — add when CRM custom fields are built.
 
 **Use in**: CRM (custom contact/deal fields), extensible to other domains.
+
+**Implementation pattern**: [[architecture/patterns/custom-fields]] — definitions table + JSONB column, dynamic validation, Filament rendering, limits.
 
 ---
 

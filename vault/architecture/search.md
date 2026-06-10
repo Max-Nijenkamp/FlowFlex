@@ -1,6 +1,9 @@
 ---
 type: architecture
-category: search
+category: infra
+pattern-key: search
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 

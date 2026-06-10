@@ -1,12 +1,36 @@
 ---
 type: architecture
-category: pattern
+category: patterns
+pattern-key: testing
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 
 # Testing Pattern
 
 Pest PHP. Integration tests by default — real SQLite in-memory database, full stack from controller/service to database.
+
+---
+
+## Coverage Scope — 80% of What
+
+The 80% line-coverage target applies to **app code that contains decisions**:
+
+| Layer | Counted in coverage | How tested |
+|---|---|---|
+| `Services/`, `Actions/` | ✅ yes | feature tests through the service/action |
+| `Listeners/`, `Jobs/`, console commands | ✅ yes | dispatch + assert effects |
+| `States/` (transition guards, side effects) | ✅ yes | via service tests that trigger transitions |
+| `Data/` custom rules + casts | ✅ yes | form/DTO validation tests |
+| Filament resources/pages | ➖ behavior only | `pest-plugin-livewire` per the spec Test Checklist — form validation, create/edit flows, `canAccess` — NOT coverage-counted |
+| Models (relationships, casts, scopes) | ➖ indirect | covered through the above; no dedicated getter tests |
+| Migrations, providers, config | ❌ no | `migrate:fresh --seed` in CI is the test |
+| Framework + Filament internals | ❌ never | testing the framework is waste |
+
+**Per-module floor** (regardless of %): every box in the spec's `## Test Checklist`, always including tenant-isolation + module-gating. A module with 90% coverage but no tenant-isolation test fails the definition of done ([[architecture/way-of-working]]).
+
+**Intentionally not tested**: Filament table column formatting, navigation/icon config, Blade markup, third-party package behavior, getters with no logic.
 
 ---
 

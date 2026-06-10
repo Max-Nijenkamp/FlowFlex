@@ -1,6 +1,9 @@
 ---
 type: architecture
-category: pattern
+category: patterns
+pattern-key: encryption
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 
@@ -76,6 +79,24 @@ protected static function boot(): void
 // Query by hash
 Employee::where('national_id_hash', hash('sha256', $searchTerm))->first();
 ```
+
+---
+
+## Range Queries on Encrypted Fields
+
+Hash-alongside only covers **equality**. Range/sort needs (`DOB between 1990–2000`, salary bands) cannot query ciphertext — store a **derived, less-precise plaintext column** next to the encrypted one:
+
+| Encrypted field | Derived column | Type | Enables |
+|---|---|---|---|
+| `date_of_birth` | `birth_year` | smallint | age-range eligibility, demographics |
+| `salary_raw` | `salary_band` | string (e.g. `b30-50k`) | compensation reports without exact salaries |
+
+Rules:
+- The derived column is intentionally coarse — precise enough for the query, vague enough that a DB dump doesn't reconstruct the secret
+- Maintained in the model's `saving` hook (same place as the hash), never written directly
+- **Never** sort, filter, or index on the encrypted column itself; ciphertext order is meaningless
+- If a feature needs exact-value ranges (exact salary sorting), that feature reads decrypted values in PHP over a bounded, already-filtered set — never as a SQL WHERE
+- No composite hashes across multiple encrypted fields — hash one field per column; combine conditions in SQL on the separate hash/derived columns
 
 ---
 

@@ -1,6 +1,8 @@
 ---
 type: architecture
-category: auth
+category: security
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 

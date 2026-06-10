@@ -1,6 +1,9 @@
 ---
 type: architecture
-category: performance
+category: quality
+pattern-key: performance
+status: stable
+last-reviewed: 2026-06-10
 color: "#A78BFA"
 ---
 
