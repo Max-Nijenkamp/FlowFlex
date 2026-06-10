@@ -8,7 +8,7 @@ color: "#F97316"
 
 Per-domain progress. Update `status` frontmatter in module specs — this table is the manual view (Dataview query below auto-populates if Dataview plugin is installed).
 
-**Last updated:** 2026-06-01 (vault rebuilt)
+**Last updated:** 2026-06-11 (vault remapped to v2 — all 173 specs implementation-ready; build not started)
 
 ---
 
