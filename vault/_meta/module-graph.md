@@ -131,8 +131,28 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | support.automations | p2 | support.tickets, core.billing, core.rbac, foundation.queues | support.sla, support.canned | — | — | sup_automation_rules, sup_automation_logs |
 | support.chat | p2 | support.tickets, core.billing, core.rbac, foundation.queues | support.canned, crm.contacts | — | — | sup_chats, sup_chat_messages, sup_agent_availability |
 | support.analytics | p2 | support.tickets, core.billing, core.rbac | support.sla | — | TicketResolved | sup_csat_responses |
-## Communications (8) — Wave 4
-## Document Management (6) — Wave 4
+## Communications (8)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| comms.inbox | p2 | core.billing, core.rbac, core.files, foundation.queues | crm.contacts, comms.email, comms.whatsapp, comms.sms, comms.automations | — | — | comms_channels, comms_conversations, comms_messages |
+| comms.whatsapp | p2 | comms.inbox, core.billing, core.rbac, foundation.queues | comms.broadcast | — | — | comms_whatsapp_templates, comms_whatsapp_config |
+| comms.email | p2 | comms.inbox, core.billing, core.rbac, foundation.queues | — | — | — | comms_email_channels |
+| comms.sms | p2 | comms.inbox, core.billing, core.rbac, foundation.queues | comms.broadcast | — | — | comms_sms_config, comms_sms_optouts |
+| comms.broadcast | p2 | comms.inbox, core.billing, core.rbac, foundation.queues | crm.segments, hr.profiles, comms.whatsapp, comms.sms, core.notifications | — | — | comms_broadcasts, comms_broadcast_recipients |
+| comms.automations | p2 | comms.inbox, core.billing, core.rbac, core.settings | — | — | — | comms_automation_rules, comms_chatbot_flows |
+| comms.internal | p2 | core.billing, core.rbac, core.files, core.notifications | — | — | — | comms_channels_internal, comms_channel_members, comms_internal_messages |
+| comms.analytics | p2 | comms.inbox, core.billing, core.rbac | comms.broadcast | — | — | — |
+## Document Management (6)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| dms.library | p2 | core.billing, core.rbac, core.files | dms.versions, dms.approvals, dms.retention | — | — | dms_folders, dms_folder_access, dms_documents |
+| dms.versions | p2 | dms.library, core.billing, core.rbac | — | — | — | dms_document_versions, dms_document_locks |
+| dms.wiki | p2 | core.billing, core.rbac | — | — | — | dms_wiki_pages, dms_wiki_page_versions |
+| dms.templates | p2 | dms.library, core.billing, core.rbac | hr.profiles, crm.contacts | — | — | dms_templates |
+| dms.approvals | p2 | dms.library, core.billing, core.rbac, core.notifications | dms.versions | — | — | dms_approval_workflows, dms_approval_requests, dms_approval_actions |
+| dms.retention | p2 | dms.library, core.billing, core.rbac, core.notifications, foundation.queues | core.privacy | — | — | dms_retention_policies, dms_legal_holds, dms_retention_log |
 ## Marketing (7) — Wave 5
 ## Operations (7) — Wave 5
 ## Analytics & BI (5) — Wave 5
