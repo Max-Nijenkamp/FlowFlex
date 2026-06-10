@@ -105,8 +105,32 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | crm.revenue-intelligence | v1 | crm.deals, crm.activities, core.billing, core.rbac | ai.copilot, crm.forecasting | — | — | crm_deal_health, crm_win_loss |
 | crm.referrals | v1 | crm.contacts, core.billing, core.rbac, core.notifications | crm.deals, ecommerce.promotions | — | — | crm_referral_programs, crm_referrals |
 
-## Projects & Work (11) — Wave 4
-## Support & Help Desk (7) — Wave 4
+## Projects & Work (11)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| projects.projects | p2 | core.billing, core.rbac | crm.contacts, projects.tasks, projects.time | — | — | proj_projects, proj_project_members |
+| projects.tasks | p2 | projects.projects, core.billing, core.rbac, core.notifications, core.files | projects.kanban, projects.sprints, projects.time, projects.milestones | — | — | proj_tasks, proj_task_sections, proj_task_dependencies, proj_task_comments |
+| projects.kanban | p2 | projects.tasks, core.billing, core.rbac | projects.sprints | — | — | — |
+| projects.sprints | p2 | projects.tasks, core.billing, core.rbac | — | — | — | proj_sprints, proj_sprint_tasks |
+| projects.time | p2 | projects.tasks, core.billing, core.rbac | finance.invoicing | — | — | proj_time_entries |
+| projects.milestones | p2 | projects.projects, projects.tasks, core.billing, core.rbac, core.notifications | projects.gantt | — | — | proj_milestones, proj_milestone_tasks |
+| projects.gantt | p2 | projects.tasks, projects.milestones, core.billing, core.rbac | — | — | — | — |
+| projects.okrs | p2 | core.billing, core.rbac, core.notifications | projects.projects | — | — | proj_objectives, proj_key_results, proj_okr_checkins |
+| projects.templates | p2 | projects.projects, projects.tasks, projects.milestones, core.billing, core.rbac | — | — | — | proj_templates, proj_template_sections, proj_template_tasks, proj_template_milestones |
+| projects.workload | p2 | projects.tasks, core.billing, core.rbac | hr.profiles, projects.resources | — | — | — |
+| projects.resources | p2 | projects.projects, core.billing, core.rbac | projects.time, projects.workload | — | — | proj_resource_allocations |
+## Support & Help Desk (7)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| support.tickets | p2 | core.billing, core.rbac, core.files, core.notifications, foundation.email | crm.contacts, support.sla, support.canned, support.automations | TicketResolved | — | sup_tickets, sup_ticket_replies, sup_ticket_categories |
+| support.kb | p2 | core.billing, core.rbac | support.tickets | — | — | sup_kb_articles, sup_kb_categories |
+| support.sla | p2 | support.tickets, core.billing, core.rbac, core.notifications, core.settings | — | — | — | sup_sla_policies, sup_sla_targets, sup_sla_events |
+| support.canned | p2 | support.tickets, core.billing, core.rbac | support.chat | — | — | sup_canned_responses |
+| support.automations | p2 | support.tickets, core.billing, core.rbac, foundation.queues | support.sla, support.canned | — | — | sup_automation_rules, sup_automation_logs |
+| support.chat | p2 | support.tickets, core.billing, core.rbac, foundation.queues | support.canned, crm.contacts | — | — | sup_chats, sup_chat_messages, sup_agent_availability |
+| support.analytics | p2 | support.tickets, core.billing, core.rbac | support.sla | — | TicketResolved | sup_csat_responses |
 ## Communications (8) — Wave 4
 ## Document Management (6) — Wave 4
 ## Marketing (7) — Wave 5
