@@ -1,14 +1,14 @@
 ---
 type: meta
 category: graph
-status: draft
-last-updated: 2026-06-10
+status: stable
+last-updated: 2026-06-11
 color: "#6B7280"
 ---
 
 # Module Graph — Whole-Vault Dependency Map
 
-One row per module: the machine-readable graph in a single read. **Generated from spec frontmatter — never hand-edit a row without updating the spec; frontmatter is the source of truth.** Rows are added per rewrite wave; `status: draft` until all 173 rows present.
+One row per module: the machine-readable graph in a single read. **Generated from spec frontmatter — never hand-edit a row without updating the spec; frontmatter is the source of truth.** Rows are added per rewrite wave; `status: stable` until all 173 rows present.
 
 Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · fires/consumes = event class names.
 
@@ -236,7 +236,16 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | ai.workflows | p3 | core.billing, core.rbac, foundation.queues | — | — | (all mapped events as triggers) | ai_workflows, ai_workflow_runs |
 | ai.copilot | p3 | ai.config, core.billing, core.rbac | — | — | — | ai_copilot_conversations, ai_copilot_messages |
 | ai.document-intelligence | p3 | ai.config, core.billing, core.rbac, core.files, foundation.queues | finance.ap, finance.expenses, hr.recruitment | — | — | ai_extractions |
-## Customer Success (6) — Wave 5
+## Customer Success (6)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| cs.health | p3 | crm.contacts, core.billing, core.rbac, core.notifications, foundation.queues | support.tickets, finance.invoicing, cs.nps | — | — | cs_health_scores, cs_health_config |
+| cs.churn | p3 | cs.health, core.billing, core.rbac, core.notifications | cs.playbooks | — | — | cs_churn_risks |
+| cs.playbooks | p3 | crm.contacts, core.billing, core.rbac, core.notifications | cs.health, crm.contracts | — | — | cs_playbooks, cs_playbook_steps, cs_playbook_runs, cs_playbook_run_steps |
+| cs.nps | p3 | crm.contacts, core.billing, core.rbac, core.notifications, foundation.email, foundation.queues | cs.health | — | — | cs_nps_surveys, cs_nps_responses |
+| cs.qbr | p3 | crm.contacts, core.billing, core.rbac, core.notifications | cs.health, support.tickets | — | — | cs_qbrs, cs_qbr_action_items |
+| cs.analytics | p3 | cs.health, core.billing, core.rbac | cs.churn, cs.nps, cs.playbooks, finance.invoicing | — | — | — |
 ## Procurement (6)
 
 | module-key | priority | deps | soft | fires | consumes | tables |
@@ -247,8 +256,26 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | procurement.purchase-orders | p3 | operations.purchase-orders, procurement.requisitions, procurement.approvals, core.billing, core.rbac | procurement.catalogue | — | — | proc_po_sourcing |
 | procurement.goods-receipt | p3 | operations.goods-receipt, finance.ap, core.billing, core.rbac | — | — | — | proc_three_way_matches |
 | procurement.spend | p3 | procurement.requisitions, operations.purchase-orders, core.billing, core.rbac | procurement.catalogue, finance.budgets | — | — | — |
-## Workplace (5) — Wave 5
-## Events Management (7) — Wave 5
+## Workplace (5)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| workplace.rooms | p3 | hr.profiles, core.billing, core.rbac, core.notifications | — | — | — | wp_rooms, wp_room_bookings |
+| workplace.desks | p3 | hr.profiles, core.billing, core.rbac | — | — | — | wp_desks, wp_desk_bookings |
+| workplace.visitors | p3 | hr.profiles, core.billing, core.rbac, core.notifications, foundation.email | — | — | — | wp_visitors |
+| workplace.maintenance | p3 | core.billing, core.rbac, core.files, core.notifications | — | — | — | wp_maintenance_requests, wp_maintenance_schedules |
+| workplace.analytics | p3 | workplace.rooms, core.billing, core.rbac | workplace.desks, workplace.visitors, workplace.maintenance | — | — | — |
+## Events Management (7)
+
+| module-key | priority | deps | soft | fires | consumes | tables |
+|---|---|---|---|---|---|---|
+| events.events | p3 | core.billing, core.rbac, core.files | events.venues, events.speakers, events.registrations | — | — | ev_events, ev_sessions |
+| events.registrations | p3 | events.events, core.billing, core.rbac, foundation.email, foundation.queues | crm.contacts, events.tickets | EventRegistrationReceived | — | ev_registrations |
+| events.tickets | p3 | events.events, events.registrations, core.billing, core.rbac, foundation.queues | finance.invoicing | — | — | ev_tickets, ev_ticket_purchases, ev_ticket_discounts |
+| events.speakers | p3 | events.events, core.billing, core.rbac, core.files | — | — | — | ev_speakers, ev_session_speakers |
+| events.sponsors | p3 | events.events, core.billing, core.rbac, core.files | crm.contacts, finance.invoicing | — | — | ev_sponsors, ev_sponsor_deliverables |
+| events.venues | p3 | core.billing, core.rbac | events.events | — | — | ev_venues, ev_venue_rooms |
+| events.analytics | p3 | events.events, events.registrations, core.billing, core.rbac | events.tickets, events.sponsors | — | — | — |
 
 ---
 
