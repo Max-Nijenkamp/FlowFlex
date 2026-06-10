@@ -1,15 +1,37 @@
 ---
 type: module
 domain: Core Platform
+domain-key: core
 panel: app
 module-key: core.setup
 status: planned
+priority: v1
+depends-on: [core.settings, core.invitations, core.marketplace]
+soft-depends: [core.files]
+fires-events: []
+consumes-events: []
+patterns: [custom-pages]
+tables: []
+permission-prefix: core.setup
+encrypted-fields: []
+last-reviewed: 2026-06-10
 color: "#4ADE80"
 ---
 
 # Setup Wizard
 
-First-login onboarding wizard for new company owners. Multi-step flow covering workspace identity, locale settings, team invitations, and first module selection. Completes in ~5 minutes.
+First-login onboarding wizard for new company owners. Multi-step flow covering workspace identity, locale settings, team invitations, and first module selection. Completes in ~5 minutes. A custom Filament page in `/app` — NOT a public Vue flow ([[build/decisions/decision-2026-06-10-no-public-registration]]).
+
+---
+
+## Dependencies
+
+| Type | Module | Why |
+|---|---|---|
+| Hard | [[domains/core/company-settings\|core.settings]] | steps 1–2 write settings |
+| Hard | [[domains/core/invitation-system\|core.invitations]] | step 3 sends invites |
+| Hard | [[domains/core/module-marketplace\|core.marketplace]] | step 4 activates first module |
+| Soft | [[domains/core/file-storage\|core.files]] | logo upload in step 1 |
 
 ---
 
@@ -33,12 +55,58 @@ First-login onboarding wizard for new company owners. Multi-step flow covering w
 |---|---|
 | `setup_completed_at` | null = wizard not completed, timestamp = done |
 
+Step progress: Livewire page state persisted per session; resume restarts at first incomplete step computed from settings/invites presence *(assumed — no extra table)*.
+
+---
+
+## DTOs
+
+Steps reuse the owning modules' inputs: settings classes (steps 1–2), `CreateInvitationData` (step 3), `ActivateModuleData` (step 4). No wizard-specific DTOs.
+
+## Services & Actions
+
+- `CompleteSetupAction::run(): void` — sets `setup_completed_at`, redirects to dashboard
+- Redirect middleware: owner with `setup_completed_at = null` hitting `/app` → wizard *(assumed: middleware on app panel)*
+
 ---
 
 ## Filament
 
-**`/app` panel:**
-- `SetupWizardPage` (custom page) — multi-step form with step progress indicator
+**Nav group:** hidden (`$shouldRegisterNavigation = false`)
+
+| Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
+|---|---|---|
+| `SetupWizardPage` | #7 multi-step wizard custom page | Filament Wizard component, step progress indicator, skip on 3–4 |
+
+---
+
+## Permissions
+
+`core.setup.complete` — owner role only; page invisible to other roles and after completion.
+
+---
+
+## Test Checklist
+
+- [ ] Owner first login redirects to wizard; non-owner does not
+- [ ] Completed wizard (`setup_completed_at` set) never redirects again
+- [ ] Step 1–2 persist into settings classes
+- [ ] Step 3 sends invitations (queued)
+- [ ] Step 4 activates chosen module via BillingService
+- [ ] Skip on steps 3/4 completes wizard without invites/module
+- [ ] Resume lands on first incomplete step
+
+---
+
+## Build Manifest
+
+```
+app/Filament/App/Pages/SetupWizardPage.php
+resources/views/filament/app/pages/setup-wizard.blade.php
+app/Actions/Core/CompleteSetupAction.php
+app/Http/Middleware/RedirectToSetupWizard.php
+tests/Feature/Core/SetupWizardTest.php
+```
 
 ---
 
@@ -47,3 +115,4 @@ First-login onboarding wizard for new company owners. Multi-step flow covering w
 - [[domains/core/company-settings]]
 - [[domains/core/module-marketplace]]
 - [[domains/core/invitation-system]] — team invites sent from wizard step 3
+- [[build/decisions/decision-2026-06-10-no-public-registration]]

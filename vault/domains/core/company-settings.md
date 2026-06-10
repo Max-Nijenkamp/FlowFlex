@@ -1,15 +1,36 @@
 ---
 type: module
 domain: Core Platform
+domain-key: core
 panel: app
 module-key: core.settings
 status: planned
+priority: v1-core
+depends-on: [foundation.panels, foundation.tenancy]
+soft-depends: [core.files]
+fires-events: []
+consumes-events: []
+patterns: [custom-pages]
+tables: []
+permission-prefix: core.settings
+encrypted-fields: []
+last-reviewed: 2026-06-10
 color: "#4ADE80"
 ---
 
 # Company Settings
 
-Source of truth for workspace configuration: timezone, locale, currency, branding, and business identity. All other modules read settings from here — they never maintain their own locale or currency config.
+Source of truth for workspace configuration: timezone, locale, currency, branding, and business identity. All other modules read settings from here — they never maintain their own locale or currency config. Always-free core module, cannot be deactivated.
+
+---
+
+## Dependencies
+
+| Type | Module | Why |
+|---|---|---|
+| Hard | [[domains/foundation/filament-panels\|foundation.panels]] | lives in `/app` |
+| Hard | [[domains/foundation/multi-tenancy-layer\|foundation.tenancy]] | settings scoped by company |
+| Soft | [[domains/core/file-storage\|core.files]] | logo/favicon upload; without it, identity tab hides upload fields *(assumed)* |
 
 ---
 
@@ -27,21 +48,75 @@ Source of truth for workspace configuration: timezone, locale, currency, brandin
 
 ## Data Model
 
-No custom tables — stored via `spatie/laravel-settings` in its `settings` table, scoped by `company_id`.
+No custom tables — stored via `spatie/laravel-settings` in its `settings` table, scoped by `company_id` (settings cache enabled per [[architecture/caching]]).
 
-Key setting groups:
-- `CompanyIdentitySettings` — name, slug, logo path, favicon path, primary color
-- `CompanyLocaleSettings` — timezone, locale, date format, currency, currency position
-- `CompanyBusinessSettings` — fiscal year start, week start, holiday calendar country
-- `CompanyPrivacySettings` — data retention months, DSAR email, consent logging enabled
+Setting groups (classes in `app/Settings/`):
+
+| Class | Fields |
+|---|---|
+| `CompanyIdentitySettings` | name, slug, logo_path, favicon_path, primary_color |
+| `CompanyLocaleSettings` | timezone, locale, date_format, currency, currency_position, decimal_places |
+| `CompanyBusinessSettings` | fiscal_year_start_month, week_start, holiday_calendar_country |
+| `CompanyPrivacySettings` | data_retention_months, dsar_email, consent_logging_enabled |
+
+---
+
+## DTOs
+
+Settings classes ARE the typed objects — Filament form writes them directly; no separate Data classes *(assumed: spatie/laravel-settings convention)*. Validation on the form components (timezone in IANA list, locale in supported set, color hex, slug unique).
+
+## Services & Actions
+
+None — `app(CompanyLocaleSettings::class)` is the read API for all other modules.
 
 ---
 
 ## Filament
 
-**`/app` panel:**
-- `CompanySettingsPage` (custom page) — tabbed settings form: Identity, Locale, Business, Privacy
-- Changes saved immediately; locale/currency changes take effect on next page load
+**Nav group:** Settings
+
+| Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
+|---|---|---|
+| `CompanySettingsPage` | #7 wizard-style custom page (tabbed form) | tabs: Identity, Locale, Business, Privacy; saves per tab |
+
+---
+
+## Permissions
+
+`core.settings.view` · `core.settings.update`
+
+Owner + admin roles only *(assumed)*.
+
+---
+
+## Caching
+
+| Key | TTL | Invalidated by |
+|---|---|---|
+| spatie settings cache (`settings.*`) | 10 min (Spatie default) | automatic on save |
+
+---
+
+## Test Checklist
+
+- [ ] Tenant isolation: company A settings change does not affect company B
+- [ ] Locale change reflects in `SetLocale` middleware on next request
+- [ ] Currency change affects new money formatting, not stored amounts
+- [ ] Slug uniqueness enforced across companies
+- [ ] Non-admin user cannot access the settings page (`canAccess`)
+- [ ] Settings cache busts on save
+
+---
+
+## Build Manifest
+
+```
+app/Settings/{CompanyIdentitySettings,CompanyLocaleSettings,CompanyBusinessSettings,CompanyPrivacySettings}.php
+database/settings/ (spatie settings migrations)
+app/Filament/App/Pages/CompanySettingsPage.php
+resources/views/filament/app/pages/company-settings.blade.php
+tests/Feature/Core/CompanySettingsTest.php
+```
 
 ---
 
@@ -49,3 +124,4 @@ Key setting groups:
 
 - [[architecture/packages]] (`spatie/laravel-settings`)
 - [[domains/core/data-privacy]]
+- [[domains/core/i18n]]

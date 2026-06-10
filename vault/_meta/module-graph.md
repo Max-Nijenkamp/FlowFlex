@@ -27,10 +27,25 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | foundation.permissions | v1-core | foundation.scaffold, foundation.tenancy, foundation.panels | — | — | — | — |
 | foundation.tests | v1-core | foundation.scaffold, foundation.tenancy | — | — | — | — |
 
-## Core Platform (15) — rows added in Wave 2
+## Core Platform (15)
 
 | module-key | priority | deps | soft | fires | consumes | tables |
 |---|---|---|---|---|---|---|
+| core.settings | v1-core | foundation.panels, foundation.tenancy | core.files | — | — | (spatie settings) |
+| core.rbac | v1-core | foundation.panels, foundation.permissions | core.invitations | — | — | (spatie permission) |
+| core.invitations | v1-core | foundation.panels, foundation.email, core.rbac | — | — | — | user_invitations |
+| core.billing | v1-core | foundation.panels, foundation.tenancy, foundation.queues, core.settings | core.notifications | ModuleActivated, CompanySubscriptionSuspended | — | module_catalog, company_module_subscriptions, billing_invoices, billing_invoice_lines |
+| core.marketplace | v1-core | core.billing | — | — | — | — |
+| core.audit | v1-core | foundation.panels, foundation.tenancy | — | — | — | activity_log |
+| core.notifications | v1-core | foundation.panels, foundation.email, foundation.queues | — | — | ModuleActivated, CompanySubscriptionSuspended, DSARRequestSubmitted | notifications, notification_preferences |
+| core.files | v1-core | foundation.tenancy, core.settings | — | — | — | media |
+| core.import | v1 | core.files, foundation.queues, core.billing, core.rbac | hr.profiles, crm.contacts | — | — | data_imports |
+| core.webhooks | v1 | foundation.queues, core.billing, core.rbac | — | — | — | webhook_endpoints, webhook_deliveries |
+| core.api | v1 | core.rbac, core.billing | — | — | — | personal_access_tokens |
+| core.setup | v1 | core.settings, core.invitations, core.marketplace | core.files | — | — | — |
+| core.privacy | v1 | core.settings, foundation.queues, core.files, core.rbac, core.billing | — | DSARRequestSubmitted | — | dsar_requests, consent_logs |
+| core.i18n | v1 | core.settings | — | — | — | — |
+| core.health | v1 | foundation.queues, foundation.panels | — | — | — | — |
 
 ## HR & People (15) — rows added in Wave 3
 
