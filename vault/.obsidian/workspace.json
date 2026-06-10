@@ -11,10 +11,14 @@
             "id": "cc91f2af4b84a66c",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "markdown",
+              "state": {
+                "file": "_index.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "_index"
             }
           }
         ]
@@ -176,24 +180,24 @@
       "bases:Create new base": false
     }
   },
-  "active": "cc91f2af4b84a66c",
+  "active": "453c2bf7c2753d3b",
   "lastOpenFiles": [
+    "build/ROADMAP.md",
+    "build/BUILD-ORDER.md",
+    "domains/hr/dei-metrics.md.tmp.40560.2439442b59fe",
+    "_index.md",
+    "domains/hr/employee-feedback.md.tmp.40560.966ad6f21df7",
+    "domains/hr/compensation-benefits.md.tmp.40560.765d36203bb1",
+    "domains/hr/payroll.md.tmp.40560.0a17f6d07b97",
+    "domains/hr/employee-self-service.md.tmp.40560.56c5d14fd966",
+    "domains/hr/org-chart.md.tmp.40560.855731cfdae2",
+    "domains/hr/employee-profiles.md.tmp.40560.0ba6f7497635",
     "domains/core/health-monitoring.md.tmp.40560.0b7391a41259",
     "domains/core/data-privacy.md.tmp.40560.35b6c5e65ecc",
     "domains/core/setup-wizard.md.tmp.40560.191f99c1a3c1",
-    "domains/core/file-storage.md.tmp.40560.836d98ac2981",
-    "domains/core/notifications.md.tmp.40560.9048db54ea96",
-    "domains/core/module-marketplace.md.tmp.40560.8d4e4e83cc91",
-    "domains/core/invitation-system.md.tmp.40560.f53f69849bd3",
-    "_meta/module-graph.md.tmp.40560.24c3c39c11c9",
-    "domains/foundation/_index.md.tmp.40560.73c82875d820",
-    "domains/foundation/test-suite.md.tmp.40560.2f7c48b955e0",
-    "domains/foundation/permissions-seed.md.tmp.40560.40a937d1939e",
     "architecture/patterns/custom-fields.md",
     "architecture/data-lifecycle.md",
     "architecture/local-dev.md",
-    "_index.md",
-    "build/BUILD-ORDER.md",
     "domains/communications/sms-channel.md",
     "domains/communications/email-channel.md",
     "domains/communications/comms-analytics.md",

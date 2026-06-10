@@ -1,15 +1,38 @@
 ---
 type: module
 domain: HR & People
+domain-key: hr
 panel: hr
 module-key: hr.self-service
 status: planned
+priority: v1
+depends-on: [hr.profiles, core.billing, core.rbac]
+soft-depends: [hr.leave, hr.payroll, hr.onboarding]
+fires-events: []
+consumes-events: []
+patterns: [custom-pages]
+tables: []
+permission-prefix: hr.self-service
+encrypted-fields: []
+last-reviewed: 2026-06-10
 color: "#4ADE80"
 ---
 
 # Employee Self-Service
 
 Employee-facing portal for viewing personal info, submitting leave requests, downloading payslips, and completing onboarding tasks. Lives inside the `/hr` panel, scoped to the logged-in employee's own data only.
+
+---
+
+## Dependencies
+
+| Type | Module | Why |
+|---|---|---|
+| Hard | [[domains/hr/employee-profiles\|hr.profiles]] | `Auth::user()->employee` link |
+| Hard | [[domains/core/billing-engine\|core.billing]] + [[domains/core/rbac\|core.rbac]] | gating + permissions |
+| Soft | [[domains/hr/leave-management\|hr.leave]] | leave tile + submission; tile hidden without it |
+| Soft | [[domains/hr/payroll\|hr.payroll]] | payslip downloads; tile hidden without it |
+| Soft | [[domains/hr/onboarding\|hr.onboarding]] | task completion; tile hidden without it |
 
 ---
 
@@ -29,14 +52,64 @@ Employee-facing portal for viewing personal info, submitting leave requests, dow
 
 No additional tables — reads from existing HR tables scoped to `Auth::user()->employee`.
 
+## DTOs
+
+### UpdateOwnProfileData (input)
+| Field | Type | Validation |
+|---|---|---|
+| phone | ?string | nullable, phone:AUTO |
+| personal_email | ?string | nullable, email |
+| emergency_contacts | array<{name, relationship, phone, email?}> | max 3 *(assumed)* |
+
+Employees may NOT edit: name, email, job, salary, department, manager, national_id — HR-only fields.
+
+## Services & Actions
+
+- `UpdateOwnProfileAction::run(UpdateOwnProfileData $data): void` — operates strictly on `auth()->user()->employee`
+- **Own-data rule**: every query in this module adds `whereBelongsTo(auth()->user()->employee)` / `where('employee_id', $self->id)` ON TOP of CompanyScope — second-layer isolation
+
 ---
 
 ## Filament
 
-**Nav group:** (top-level, always visible to all authenticated users in `/hr` panel)
+**Nav group:** (top-level "My HR", visible to all authenticated `/hr` users)
 
-- `SelfServiceDashboardPage` (custom page) — overview tiles (leave balance, next payslip, pending tasks)
-- All self-service views enforce `WHERE employee.user_id = auth()->id()` — employees cannot see other employees' data
+| Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
+|---|---|---|
+| `SelfServiceDashboardPage` | #6 dashboard custom page | tiles: leave balance, next payslip, pending tasks — soft-dep tiles conditional on `hasModule` |
+| `MyProfilePage` | #7 custom page (form) | own-profile edit + photo + emergency contacts |
+| `MyDocumentsPage` | #1-style list (own scope) | personal docs from Media Library |
+
+---
+
+## Permissions
+
+`hr.self-service.view` · `hr.self-service.update-own`
+
+Granted to `employee` role by default in PermissionSeeder.
+
+---
+
+## Test Checklist
+
+- [ ] **Own-data isolation: employee A cannot read employee B's profile/payslips/leave via any self-service route** (the critical test)
+- [ ] Tenant isolation on top (cross-company)
+- [ ] Module gating: dashboard tiles hide when soft-dep modules inactive
+- [ ] Employee cannot edit HR-only fields (job_title etc. rejected)
+- [ ] User without linked employee record sees friendly empty state *(assumed)*
+- [ ] Payslip download streams own payslip only
+
+---
+
+## Build Manifest
+
+```
+app/Data/HR/UpdateOwnProfileData.php
+app/Actions/HR/UpdateOwnProfileAction.php
+app/Filament/HR/Pages/{SelfServiceDashboardPage,MyProfilePage,MyDocumentsPage}.php
+resources/views/filament/hr/pages/{self-service-dashboard,my-profile,my-documents}.blade.php
+tests/Feature/HR/{SelfServiceIsolationTest,SelfServiceProfileTest}.php
+```
 
 ---
 
@@ -45,3 +118,4 @@ No additional tables — reads from existing HR tables scoped to `Auth::user()->
 - [[domains/hr/leave-management]]
 - [[domains/hr/payroll]]
 - [[domains/hr/onboarding]]
+- [[domains/hr/employee-profiles]]
