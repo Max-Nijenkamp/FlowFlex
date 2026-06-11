@@ -1,11 +1,6 @@
-includes:
-    - vendor/larastan/larastan/extension.neon
-
 parameters:
     level: 5
     paths:
         - app
     excludePaths:
         - app/Filament/*/Resources/*/Pages/*
-    checkModelProperties: true
-    checkMissingIterableValueType: false

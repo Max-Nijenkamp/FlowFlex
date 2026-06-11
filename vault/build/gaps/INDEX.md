@@ -13,8 +13,7 @@ Bugs, spec issues, and missing details discovered during build sessions.
 
 | ID | Severity | Domain | Module | Description | Discovered |
 |---|---|---|---|---|---|
-| [[gap-larastan-laravel-boot-crash]] | high | foundation | foundation.scaffold | Larastan crashes silently analysing Laravel classes — blocks static-analysis gate | 2026-06-11 |
-| [[gap-filament5-plugins-unavailable]] | medium | foundation | foundation.scaffold | 4 Filament plugins (shield, tiptap, fullcalendar, activitylog) have no Filament 5 release yet | 2026-06-11 |
+| [[gap-filament5-plugins-unavailable]] | medium | foundation | foundation.scaffold | 4 Filament plugins (shield, tiptap, fullcalendar, activitylog) have no Filament 5 release yet — external; non-blocking for foundation, re-check at each dependent module | 2026-06-11 |
 
 All 7 audit gaps resolved at spec level 2026-06-11 (see below). Code-level enforcement is carried into each module build via the Definition of Done. Full per-spec worklist: [[build/security-audit-2026-06-11]].
 
@@ -31,6 +30,7 @@ All 7 audit gaps resolved at spec level 2026-06-11 (see below). Code-level enfor
 | [[gap-rate-limiter-missing]] | All | Missing rate limiters — Security notes added to 50 specs | 2026-06-11 |
 | [[gap-file-upload-contract]] | All | Upload contract omitted — Security notes added to 24 specs | 2026-06-11 |
 | [[gap-ui-row-not-in-table]] | All | UI kinds not in table — ADR + rows 17–19, 3 specs re-cited | 2026-06-11 |
+| [[gap-larastan-laravel-boot-crash]] | foundation | Larastan crash — switched gate to plain PHPStan + @property docblocks (ADR) | 2026-06-11 |
 
 ---
 

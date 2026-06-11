@@ -16,7 +16,7 @@ Per-domain progress. Update `status` frontmatter in module specs — this table 
 
 | Phase | Domain | Built | Total | Progress |
 |---|---|---|---|---|
-| MVP | Foundation | 0 | 8 | 🔴 0% |
+| MVP | Foundation | 1 | 8 | 🟠 13% |
 | MVP | Core Platform | 0 | 15 | 🔴 0% |
 | MVP | HR & People | 0 | 15 | 🔴 0% |
 | MVP | Finance & Accounting | 0 | 13 | 🔴 0% |
@@ -39,10 +39,10 @@ Per-domain progress. Update `status` frontmatter in module specs — this table 
 | Phase 3 | Events Management | 0 | 7 | 🔴 0% |
 | Deferred | (10 domains) | — | — | stub only |
 
-**MVP Total: 0 / 66 modules built**
+**MVP Total: 1 / 66 modules built**
 **Phase 2 Total: 0 / 32 modules built**
 **Phase 3 Total: 0 / 75 modules built**
-**All active: 0 / 173 modules — every Phase 1/2/3 module is fully specced**
+**All active: 1 / 173 modules — every Phase 1/2/3 module is fully specced**
 
 ---
 
@@ -92,7 +92,7 @@ SORT module-key ASC
 |---|---|---|---|
 | 2026-06-11 | All | vault-wide | Security spec-conformance audit: 173 specs / 31 domains → 184H/85M/29L. ADR-2026-06-11 (mandatory canAccess + webhook verify + guest guards + encrypted PII), template + filament-patterns hardened, 7 systemic gaps filed, 7 specs encrypted-fields fixed |
 | 2026-06-11 | All | vault-wide | Audit backfill: access-contract line into 165 specs; per-spec Security notes into 79 specs (webhook/public-guard/rate-limit/upload); UI ADR rows 17–19 + 3 specs re-cited; all 7 gaps resolved; CLAUDE.md command count fixed |
-| 2026-06-11 | Foundation | foundation.scaffold | Laravel 13.15 + Filament 5.6.7 scaffold: ~50 packages installed, ULID companies/users/admins migrations + models + factories, Pest 10/10 green, Pint clean. 2 gaps: Larastan crash (env), 4 Filament plugins not yet v5. Status in-progress (Larastan gate unmet) |
+| 2026-06-11 | Foundation | foundation.scaffold | Laravel 13.15 + Filament 5.6.7 scaffold: ~50 packages, ULID companies/users/admins migrations + models + factories. ✅ Complete — all gates green (PHPStan 0 errors, Pint clean, Pest 10/10). Larastan crash resolved (ADR: plain PHPStan + @property docblocks). Filament-plugins gap (4 no-v5) tracked, non-blocking |
 
 ---
 

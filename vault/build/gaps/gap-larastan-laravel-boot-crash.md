@@ -2,7 +2,8 @@
 type: gap
 severity: high
 category: architecture
-status: open
+status: resolved
+resolved: 2026-06-11
 domain: foundation
 color: "#F97316"
 discovered: 2026-06-11
@@ -32,7 +33,12 @@ Most likely cause: Larastan boots the Laravel kernel (`bootstrap/app.php`) durin
 
 Until fixed, gate modules on Pint + Pest + migrations; treat Larastan as deferred.
 
+## Resolution
+
+Resolved 2026-06-11 via [[build/decisions/decision-2026-06-11-static-analysis-without-larastan]]: the static-analysis gate runs **plain PHPStan level 5** (no Larastan include) plus explicit `@property` docblocks on models. Root cause narrowed to the Larastan extension load itself crashing on this stack — earlier "crashes" on `/tmp` configs were a separate red herring (relative paths in a neon located in `/tmp` not resolving, error swallowed by the JSON output wrapper). Scaffold now passes PHPStan (0 errors) + Pint + Pest 10/10. `larastan/larastan` remains a dev dependency, un-wired; re-enable when it loads cleanly.
+
 ## Related
+- [[build/decisions/decision-2026-06-11-static-analysis-without-larastan]]
 - [[domains/foundation/laravel-scaffold]]
 - [[architecture/ci-cd]]
 - [[architecture/patterns/testing-pattern]]

@@ -11,7 +11,25 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property string $id
+ * @property string $company_id
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $email
+ * @property string $password
+ * @property bool $two_factor_enabled
+ * @property bool $email_deliverable
+ * @property Carbon|null $email_verified_at
+ * @property Carbon|null $last_login_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property Carbon|null $deleted_at
+ * @property-read string $full_name
+ * @property-read Company $company
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */

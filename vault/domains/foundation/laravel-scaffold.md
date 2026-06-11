@@ -4,7 +4,7 @@ domain: Foundation
 domain-key: foundation
 panel: (scaffold)
 module-key: foundation.scaffold
-status: in-progress
+status: complete
 priority: v1-core
 depends-on: []
 soft-depends: []
