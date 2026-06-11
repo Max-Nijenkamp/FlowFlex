@@ -22,7 +22,7 @@ function submit() {
 </script>
 
 <template>
-    <h1 class="text-2xl font-bold tracking-display">Choose a new password</h1>
+    <h1 class="text-center text-2xl font-bold tracking-display">Choose a new password</h1>
 
     <form class="mt-9 space-y-5" @submit.prevent="submit">
         <FormField label="New password" for="password" :error="form.errors.password" hint="At least 12 characters.">

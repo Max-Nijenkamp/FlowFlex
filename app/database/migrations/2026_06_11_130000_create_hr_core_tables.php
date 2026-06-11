@@ -14,7 +14,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->foreignUlid('company_id')->constrained('companies')->cascadeOnDelete();
             $table->string('name');
-            $table->foreignUlid('parent_department_id')->nullable()->constrained('hr_departments')->nullOnDelete();
+            $table->ulid('parent_department_id')->nullable(); // self-FK added post-create (pgsql constraint ordering)
             $table->ulid('head_employee_id')->nullable(); // FK added after hr_employees exists
             $table->timestamps();
             $table->softDeletes();
@@ -41,7 +41,7 @@ return new class extends Migration
             $table->text('termination_reason')->nullable();
             $table->string('job_title');
             $table->foreignUlid('department_id')->nullable()->constrained('hr_departments')->nullOnDelete();
-            $table->foreignUlid('manager_id')->nullable()->constrained('hr_employees')->nullOnDelete();
+            $table->ulid('manager_id')->nullable(); // self-FK added post-create (pgsql constraint ordering)
             $table->string('employment_type'); // full-time / part-time / contractor
             $table->string('status')->default('active'); // state machine
             $table->timestamps();
@@ -65,6 +65,15 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index('company_id');
+        });
+
+        // Self-referencing FKs after creation — Postgres needs the primary key
+        // constraint committed before a same-table reference.
+        Schema::table('hr_departments', function (Blueprint $table) {
+            $table->foreign('parent_department_id')->references('id')->on('hr_departments')->nullOnDelete();
+        });
+        Schema::table('hr_employees', function (Blueprint $table) {
+            $table->foreign('manager_id')->references('id')->on('hr_employees')->nullOnDelete();
         });
     }
 

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('code'); // e.g. 1100
             $table->string('name');
             $table->string('type'); // asset / liability / equity / revenue / expense
-            $table->foreignUlid('parent_account_id')->nullable()->constrained('fin_accounts')->nullOnDelete();
+            $table->ulid('parent_account_id')->nullable(); // self-FK added post-create (pgsql constraint ordering)
             $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
@@ -64,6 +64,11 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['company_id', 'account_id']);
+        });
+
+        // Self-referencing FK after creation (pgsql constraint ordering).
+        Schema::table('fin_accounts', function (Blueprint $table) {
+            $table->foreign('parent_account_id')->references('id')->on('fin_accounts')->nullOnDelete();
         });
     }
 

@@ -16,8 +16,8 @@ function submit() {
 </script>
 
 <template>
-    <h1 class="text-2xl font-bold tracking-display">Sign in to FlowFlex</h1>
-    <p class="mt-1.5 text-sm text-ink-soft">Welcome back.</p>
+    <h1 class="text-center text-2xl font-bold tracking-display">Sign in to FlowFlex</h1>
+    <p class="mt-1.5 text-center text-sm text-ink-soft">Welcome back.</p>
 
     <form class="mt-9 space-y-5" @submit.prevent="submit">
         <FormField label="Work email" for="email" :error="form.errors.email">

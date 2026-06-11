@@ -35,6 +35,14 @@ class AppServiceProvider extends ServiceProvider
         // Catch lazy-loading bugs in local dev only (kept lenient in tests + prod).
         Model::preventLazyLoading($this->app->environment('local'));
 
+        // Panel auth pages: brand mark above the card (public-login parity).
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::SIMPLE_PAGE_START,
+            fn (): string => '<a href="'.url('/').'" class="ff-login-mark-link">'
+                .'<img src="'.asset('images/logo/flowflex-icon.svg').'" alt="FlowFlex" class="ff-login-mark" />'
+                .'</a>',
+        );
+
         // Panel auth pages: footer strip matching the public Vue login.
         FilamentView::registerRenderHook(
             PanelsRenderHook::SIMPLE_PAGE_END,
