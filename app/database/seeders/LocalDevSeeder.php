@@ -12,7 +12,12 @@ use App\Models\CRM\Contact;
 use App\Models\CRM\Deal;
 use App\Models\CRM\PipelineStage;
 use App\Models\Finance\Customer;
+use App\Models\Finance\DunningRule;
+use App\Models\Finance\ExchangeRate;
 use App\Models\Finance\ExpenseCategory;
+use App\Models\Finance\FixedAsset;
+use App\Models\Finance\Supplier;
+use App\Models\Finance\TaxRate;
 use App\Models\HR\Department;
 use App\Models\HR\Employee;
 use App\Models\HR\LeaveBalance;
@@ -116,6 +121,35 @@ class LocalDevSeeder extends Seeder
         ExpenseCategory::firstOrCreate(
             ['company_id' => $company->id, 'name' => 'Travel'],
             ['limit_per_transaction_cents' => 25000],
+        );
+
+        // --- Finance v1 demo data (suppliers, tax, budgets, assets, fx) ---
+        $supplier = Supplier::firstOrCreate(
+            ['company_id' => $company->id, 'name' => 'Office Supplies BV'],
+            ['email' => 'sales@officesupplies.nl', 'iban' => 'NL91ABNA0417164300', 'payment_terms_days' => 30],
+        );
+        TaxRate::firstOrCreate(
+            ['company_id' => $company->id, 'name' => 'NL High 21%'],
+            ['rate_basis_points' => 2100, 'type' => 'vat', 'jurisdiction' => 'NL'],
+        );
+        TaxRate::firstOrCreate(
+            ['company_id' => $company->id, 'name' => 'NL Low 9%'],
+            ['rate_basis_points' => 900, 'type' => 'vat', 'jurisdiction' => 'NL'],
+        );
+        DunningRule::firstOrCreate(
+            ['company_id' => $company->id, 'escalation_level' => 1],
+            ['aging_bucket' => '1-30', 'days_overdue' => 7, 'email_template' => 'dunning-friendly'],
+        );
+        ExchangeRate::firstOrCreate(
+            ['company_id' => $company->id, 'from_currency' => 'USD', 'to_currency' => 'EUR', 'effective_date' => now()->toDateString()],
+            ['rate' => '0.92000000'],
+        );
+        FixedAsset::firstOrCreate(
+            ['company_id' => $company->id, 'name' => 'Laptop fleet'],
+            [
+                'category' => 'it-equipment', 'cost_cents' => 1800000, 'purchase_date' => now()->subMonths(6)->toDateString(),
+                'useful_life_months' => 36, 'method' => 'straight-line', 'salvage_cents' => 180000,
+            ],
         );
 
         // --- CRM demo data ---

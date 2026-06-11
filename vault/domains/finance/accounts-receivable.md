@@ -4,7 +4,7 @@ domain: Finance & Accounting
 domain-key: finance
 panel: finance
 module-key: finance.ar
-status: planned
+status: complete
 priority: v1
 depends-on: [finance.invoicing, core.billing, core.rbac, core.notifications]
 soft-depends: []

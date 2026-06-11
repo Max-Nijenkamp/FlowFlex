@@ -42,7 +42,7 @@ class Invoice extends Model
     protected $fillable = [
         'company_id', 'customer_id', 'invoice_number', 'status', 'issue_date', 'due_date',
         'subtotal_cents', 'tax_total_cents', 'total_cents', 'paid_amount_cents',
-        'currency', 'discount_percent', 'notes', 'source_deal_id', 'pdf_path',
+        'currency', 'discount_percent', 'notes', 'source_deal_id', 'pdf_path', 'last_dunning_level',
     ];
 
     protected function casts(): array
@@ -56,6 +56,7 @@ class Invoice extends Model
             'total_cents' => 'integer',
             'paid_amount_cents' => 'integer',
             'discount_percent' => 'float',
+            'last_dunning_level' => 'integer',
         ];
     }
 

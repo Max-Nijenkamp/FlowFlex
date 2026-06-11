@@ -16,7 +16,7 @@ class Customer extends Model
 
     protected $table = 'fin_customers';
 
-    protected $fillable = ['company_id', 'name', 'email', 'address', 'vat_number', 'crm_account_id', 'payment_terms_days'];
+    protected $fillable = ['company_id', 'name', 'email', 'address', 'vat_number', 'crm_account_id', 'payment_terms_days', 'credit_limit_cents'];
 
     protected function casts(): array
     {

@@ -4,7 +4,7 @@ domain: Finance & Accounting
 domain-key: finance
 panel: finance
 module-key: finance.budgets
-status: planned
+status: complete
 priority: v1
 depends-on: [finance.ledger, core.billing, core.rbac, core.notifications]
 soft-depends: [finance.forecasting, procurement.requisitions, hr.workforce]

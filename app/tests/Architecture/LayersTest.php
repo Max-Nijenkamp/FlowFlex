@@ -6,11 +6,22 @@ use App\Models\BillingInvoiceLine;
 use App\Models\CompanyModuleSubscription;
 use App\Models\ConsentLog;
 use App\Models\CRM\QuoteLine;
+use App\Models\Finance\ArWriteoff;
 use App\Models\Finance\BankTransaction;
+use App\Models\Finance\BillLine;
+use App\Models\Finance\BudgetLine;
+use App\Models\Finance\CashflowItem;
+use App\Models\Finance\CashflowProjection;
+use App\Models\Finance\Currency;
+use App\Models\Finance\DepreciationEntry;
+use App\Models\Finance\ExchangeRate;
 use App\Models\Finance\FiscalPeriod;
+use App\Models\Finance\ForecastLine;
 use App\Models\Finance\InvoiceLine;
 use App\Models\Finance\JournalLine;
 use App\Models\Finance\Payment;
+use App\Models\Finance\PaymentRun;
+use App\Models\Finance\TaxPeriod;
 use App\Models\HR\DeiAttribute;
 use App\Models\HR\DeiSnapshot;
 use App\Models\HR\EmergencyContact;
@@ -87,6 +98,18 @@ arch('models soft delete unless append-only by design')
         PlannedRole::class,
         DeiAttribute::class,
         DeiSnapshot::class,
+        // Finance append-only / snapshot / line rows.
+        ArWriteoff::class,
+        BillLine::class,
+        PaymentRun::class,
+        BudgetLine::class,
+        TaxPeriod::class,
+        CashflowProjection::class,
+        CashflowItem::class,
+        DepreciationEntry::class,
+        ForecastLine::class,
+        Currency::class,
+        ExchangeRate::class,
     ]);
 
 arch('append-only core models still use ULIDs')

@@ -24,6 +24,9 @@ parameters:
         # Eloquent builder get() resolves to stdClass collections without Larastan.
         - message: '#should return Illuminate\\Support\\Collection<int, App\\Models\\.+> but returns Illuminate\\Support\\Collection<int, stdClass>#'
         - message: '#Cannot call method [A-Za-z]+\(\) on stdClass#'
+        # Same stdClass degradation on the callback side of each()/filter()/map().
+        - message: '#expects .{0,2}callable\(stdClass.+Closure\(App\\Models\\.+\)#'
+        - message: '#expects App\\Models\\Finance\\Account, stdClass given#'
         # increment()/decrement() are proxied via __call in Laravel 13 (runtime-public).
         - identifier: method.protected
           paths:

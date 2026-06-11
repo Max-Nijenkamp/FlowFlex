@@ -4,7 +4,7 @@ domain: Finance & Accounting
 domain-key: finance
 panel: finance
 module-key: finance.cashflow
-status: planned
+status: complete
 priority: v1
 depends-on: [finance.invoicing, finance.bank, core.billing, core.rbac, core.notifications]
 soft-depends: [finance.ap, hr.payroll, finance.forecasting]

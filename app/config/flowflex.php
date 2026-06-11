@@ -44,6 +44,15 @@ return [
         'finance.invoicing' => ['name' => 'Invoicing', 'domain' => 'finance', 'per_user_monthly_price_cents' => 250],
         'finance.expenses' => ['name' => 'Expenses', 'domain' => 'finance', 'per_user_monthly_price_cents' => 150],
         'finance.bank' => ['name' => 'Bank Accounts', 'domain' => 'finance', 'per_user_monthly_price_cents' => 100],
+        'finance.ar' => ['name' => 'Accounts Receivable', 'domain' => 'finance', 'per_user_monthly_price_cents' => 100], // *(assumed)*
+        'finance.ap' => ['name' => 'Accounts Payable', 'domain' => 'finance', 'per_user_monthly_price_cents' => 100], // *(assumed)*
+        'finance.budgets' => ['name' => 'Budgets', 'domain' => 'finance', 'per_user_monthly_price_cents' => 100], // *(assumed)*
+        'finance.reporting' => ['name' => 'Financial Reporting', 'domain' => 'finance', 'per_user_monthly_price_cents' => 150], // *(assumed)*
+        'finance.tax' => ['name' => 'Tax Management', 'domain' => 'finance', 'per_user_monthly_price_cents' => 100], // *(assumed)*
+        'finance.cashflow' => ['name' => 'Cash Flow', 'domain' => 'finance', 'per_user_monthly_price_cents' => 100], // *(assumed)*
+        'finance.assets' => ['name' => 'Fixed Assets', 'domain' => 'finance', 'per_user_monthly_price_cents' => 100], // *(assumed)*
+        'finance.forecasting' => ['name' => 'Forecasting', 'domain' => 'finance', 'per_user_monthly_price_cents' => 100], // *(assumed)*
+        'finance.currency' => ['name' => 'Multi-Currency', 'domain' => 'finance', 'per_user_monthly_price_cents' => 50], // *(assumed)*
         // CRM & Sales
         'crm.contacts' => ['name' => 'Contacts', 'domain' => 'crm', 'per_user_monthly_price_cents' => 200],
         'crm.deals' => ['name' => 'Deals', 'domain' => 'crm', 'per_user_monthly_price_cents' => 250],

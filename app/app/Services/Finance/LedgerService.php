@@ -130,6 +130,15 @@ class LedgerService implements LedgerServiceInterface
             '4000' => ['Revenue', 'revenue'],
             '6000' => ['Wages Expense', 'expense'],
             '6100' => ['Operating Expenses', 'expense'],
+            '1200' => ['Fixed Assets', 'asset'],
+            '1250' => ['Accumulated Depreciation', 'asset'], // contra-asset
+            '1300' => ['VAT Input Receivable', 'asset'],
+            '2400' => ['VAT Output Payable', 'liability'],
+            '6200' => ['Depreciation Expense', 'expense'],
+            '6300' => ['Bad Debt Expense', 'expense'],
+            '7000' => ['FX Gains', 'revenue'],
+            '7100' => ['FX Losses', 'expense'],
+            '8000' => ['Gain/Loss on Disposal', 'revenue'],
         ];
 
         [$name, $type] = $defaults[$code] ?? ["Account {$code}", 'expense'];
