@@ -1,3 +1,25 @@
+x-app-env: &app-env
+  APP_ENV: local
+  DB_CONNECTION: pgsql
+  DB_HOST: postgres
+  DB_PORT: 5432
+  DB_DATABASE: flowflex
+  DB_USERNAME: flowflex
+  DB_PASSWORD: secret
+  REDIS_CLIENT: phpredis
+  REDIS_HOST: redis
+  REDIS_PASSWORD: secret
+  REDIS_PORT: 6379
+  CACHE_STORE: redis
+  QUEUE_CONNECTION: redis
+  SESSION_DRIVER: redis
+  MAIL_MAILER: smtp
+  MAIL_HOST: mailpit
+  MAIL_PORT: 1025
+  SCOUT_DRIVER: meilisearch
+  MEILISEARCH_HOST: http://meilisearch:7700
+  MEILISEARCH_KEY: masterKey
+
 services:
   app:
     build:
@@ -5,6 +27,8 @@ services:
       dockerfile: Dockerfile
     container_name: flowflex_app
     working_dir: /var/www
+    environment:
+      <<: *app-env
     volumes:
       - ./app:/var/www
     depends_on:
@@ -50,7 +74,8 @@ services:
     image: redis:8-alpine
     container_name: flowflex_redis
     command: ["redis-server", "--requirepass", "secret"]
-    ports: ["6379:6379"]
+    # No host port published — a Redis already runs on host :6379. Containers
+    # reach this one as `redis:6379` over the internal network.
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "secret", "ping"]
       interval: 5s
@@ -71,7 +96,9 @@ services:
   mailpit:
     image: axllent/mailpit
     container_name: flowflex_mailpit
-    ports: ["8025:8025", "1025:1025"]
+    # Internal-only (host already runs Mailpit). App sends to mailpit:1025;
+    # inspect via `docker compose exec mailpit ...` or temporarily publish 8025.
+    expose: ["1025", "8025"]
     networks: [flowflex]
 
   horizon:
@@ -80,6 +107,8 @@ services:
       dockerfile: Dockerfile
     container_name: flowflex_horizon
     working_dir: /var/www
+    environment:
+      <<: *app-env
     command: ["php", "artisan", "horizon"]
     volumes: ["./app:/var/www"]
     depends_on: [app, redis, postgres]
@@ -92,9 +121,13 @@ services:
       dockerfile: Dockerfile
     container_name: flowflex_reverb
     working_dir: /var/www
+    environment:
+      <<: *app-env
     command: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8081"]
     volumes: ["./app:/var/www"]
-    ports: ["8081:8081"]
+    # Host port left unpublished (host ports saturated). Publish "<free>:8081"
+    # when doing real-time/browser WebSocket work.
+    expose: ["8081"]
     depends_on: [app, redis]
     restart: unless-stopped
     networks: [flowflex]
