@@ -167,6 +167,18 @@ npm run dev                                            # Vite (host machine)
 
 ---
 
+## Two Databases — Know Which One You're Hitting
+
+| Surface | Database | Seed/migrate with |
+|---|---|---|
+| Browser (nginx `:8080`) | docker pgsql (`flowflex_postgres`) | `docker compose exec -T app php artisan migrate:fresh --seed --force` |
+| Host CLI (`php artisan ...`) | local sqlite `database/database.sqlite` | `php artisan migrate:fresh --seed` |
+| Test suite | sqlite `:memory:` | automatic (RefreshDatabase) |
+
+Host-side seeds never reach the browser's database. After changing migrations, run the pgsql gate (way-of-working) — sqlite tolerates constraint orderings pgsql rejects.
+
+---
+
 ## Quick-Test Logins (LocalDevSeeder — never runs in production)
 
 | Surface | Email | Password | Scope |

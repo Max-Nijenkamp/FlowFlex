@@ -350,3 +350,20 @@ it('does not leak data between companies', function () {
 
     expect(Employee::all())->toHaveCount(1); // CompanyScope filters to CompanyA
 });
+
+---
+
+## SQLite Blind Spots (two production bugs proved this — 2026-06-11)
+
+The suite runs on sqlite :memory:. Two classes of failure stay invisible:
+
+1. **Postgres constraint ordering** — self-referencing `->constrained()` inside
+   `Schema::create()` aborts on pgsql ("no unique constraint matching given keys")
+   while sqlite accepts it. Rule: self-FKs always go in a post-create
+   `Schema::table()` alter ([[../../build/gaps/gap-pgsql-self-fk-ordering]]).
+2. **Browser-only JS breakage** — Livewire feature tests never execute browser
+   JavaScript. Unpublished Filament assets broke every panel interaction while
+   235 tests stayed green ([[../../build/gaps/gap-filament-assets-unpublished]]).
+
+Mitigations: the pgsql gate below + the browser verify before any release.
+

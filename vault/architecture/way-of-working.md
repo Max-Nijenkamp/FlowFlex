@@ -47,6 +47,7 @@ Work strictly from the spec's **Build Manifest** — if a file isn't in the mani
 | Tests | `docker exec flowflex_app php artisan test` | all green, no skipped tenant-isolation tests |
 | N+1 check | Telescope queries tab on the module's list + view pages | no duplicate queries |
 | TypeScript sync | `php artisan typescript:transform` (if DTOs changed) | generated.d.ts updated |
+| pgsql migrate (if migrations changed) | `docker compose exec -T app php artisan migrate:fresh --seed --force` | clean — sqlite tests miss pgsql constraint ordering |
 
 A failing gate means the session is **not done** — fix or log a gap; never sync `complete` over a red gate.
 
