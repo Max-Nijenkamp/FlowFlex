@@ -15,7 +15,7 @@ function submit() {
 </script>
 
 <template>
-    <h1 class="text-3xl font-bold tracking-display">Reset your password</h1>
+    <h1 class="text-2xl font-bold tracking-display">Reset your password</h1>
     <p class="mt-2 text-sm text-ink-soft">We'll email you a link to choose a new one.</p>
 
     <form class="mt-9 space-y-5" @submit.prevent="submit">

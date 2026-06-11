@@ -18,7 +18,7 @@ function submit() {
 
 <template>
     <p class="section-index">INVITATION</p>
-    <h1 class="mt-3 text-3xl font-bold tracking-display">Join {{ company }}</h1>
+    <h1 class="mt-3 text-2xl font-bold tracking-display">Join {{ company }}</h1>
     <p class="mt-2 text-sm text-ink-soft">
         Creating your account for <span class="font-medium text-ink">{{ email }}</span>.
     </p>
