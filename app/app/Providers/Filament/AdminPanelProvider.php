@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -34,6 +35,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            ->emailVerification() // no portal access without verified email (security.md)
+            ->multiFactorAuthentication(AppAuthentication::make()->recoverable()) // self-service TOTP 2FA
+            ->profile(isSimple: false)
             ->authGuard('admin')
             ->authPasswordBroker('admins')
             ->brandName('FlowFlex Staff')

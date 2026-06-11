@@ -22,10 +22,19 @@ Comprehensive security model for a multi-tenant SaaS. Every layer: authenticatio
 - Concurrent session limit: configurable (default: no limit)
 
 **Two-factor authentication:**
-- TOTP 2FA via Laravel Fortify (built into the project)
-- Company admins can mandate 2FA for all users via Company Settings
-- 2FA status tracked on `users.two_factor_confirmed_at`
-- Recovery codes stored encrypted in `users.two_factor_recovery_codes`
+- TOTP 2FA, self-service: **every user can enable/disable it themselves, any time, in their own settings page** (no admin involvement needed)
+- Enable flow: show QR + secret → user confirms with a valid TOTP code → `two_factor_confirmed_at` set → recovery codes shown once
+- Disable flow: requires current password + valid TOTP code
+- Company admins can additionally mandate 2FA for all users via Company Settings
+- Secret stored encrypted in `users.two_factor_secret`; recovery codes encrypted in `users.two_factor_recovery_codes` (single-use, regenerable)
+- Login with 2FA enabled: password ok → 2FA challenge page (TOTP or recovery code) → session marked confirmed
+
+**Email verification (mandatory):**
+- **No portal access without a verified email** — applies to every Filament panel and every authenticated route
+- `User` implements `MustVerifyEmail`; `verified` middleware on all panels; unverified users land on a resend-verification page
+- Invitation-accepted users: accepting the invite link IS verification (`email_verified_at` set on accept)
+- **Email change resets verification**: any change to `users.email` nulls `email_verified_at` and sends a new verification mail to the NEW address; user is locked out of portals until re-verified
+- Verification links: signed URLs, 60-min expiry, throttled resend (6/hour)
 
 **Password requirements:**
 - Minimum 12 characters

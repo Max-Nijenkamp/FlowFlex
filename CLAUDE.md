@@ -200,6 +200,7 @@ Examples:
 - `/flowflex:patterns custom-fields` → read `architecture/patterns/custom-fields.md`
 - `/flowflex:patterns gdpr` → read `architecture/data-lifecycle.md`
 - `/flowflex:patterns dev` → read `architecture/local-dev.md`
+- `/flowflex:patterns perceived-performance` → read `architecture/patterns/perceived-performance.md`
 
 ---
 
@@ -445,6 +446,7 @@ app/
 | Local dev: .env spec, docker, troubleshooting | `architecture/local-dev.md` |
 | GDPR cascades, retention, DSAR | `architecture/data-lifecycle.md` |
 | Custom per-company fields (schemaless attributes) | `architecture/patterns/custom-fields.md` |
+| Perceived performance (skeletons, optimistic UI, motion) | `architecture/patterns/perceived-performance.md` |
 | Filament patterns (critical, read first) | `architecture/filament-patterns.md` |
 | Per-domain: colors, custom pages, permissions | `architecture/domain-panels.md` |
 | Multi-tenancy, CompanyScope, queue context | `architecture/multi-tenancy.md` |

@@ -9,6 +9,7 @@ use App\Http\Middleware\RedirectToSetupWizard;
 use App\Http\Middleware\SetCompanyContext;
 use App\Http\Middleware\SetLocale;
 use App\Models\User;
+use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -38,6 +39,9 @@ class AppPanelProvider extends PanelProvider
             ->id('app')
             ->path('app')
             ->login()
+            ->emailVerification() // no portal access without verified email (security.md)
+            ->multiFactorAuthentication(AppAuthentication::make()->recoverable()) // self-service TOTP 2FA
+            ->profile(isSimple: false)
             ->authGuard('web')
             ->authPasswordBroker('users')
             ->brandName('FlowFlex')

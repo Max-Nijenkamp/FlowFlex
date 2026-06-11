@@ -28,6 +28,8 @@ Architectural decisions made during the build. One file per decision.
 | 2026-06-11 | [[build/decisions/decision-2026-06-11-static-analysis-without-larastan\|Static analysis: plain PHPStan + @property docblocks (Larastan deferred)]] | decided | All |
 | 2026-06-11 | [[build/decisions/decision-2026-06-11-flat-namespace-foldering\|Flat namespace foldering — no Core/Foundation build-phase subfolders]] | decided | All |
 | 2026-06-11 | [[build/decisions/decision-2026-06-11-mvp-v1-deviations\|MVP v1 implementation deviations from specs (documented trims)]] | decided | HR, Finance, CRM |
+| 2026-06-11 | [[decision-2026-06-11-2fa-and-mandatory-email-verification\|Self-Service 2FA + Mandatory Email Verification]] | decided | All |
+| 2026-06-11 | [[decision-2026-06-11-perceived-performance-standard\|Perceived-Performance Standard]] | decided | All |
 
 ---
 

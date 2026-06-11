@@ -7,6 +7,7 @@ namespace App\Providers\Filament;
 use App\Http\Middleware\EnsureSubscriptionActive;
 use App\Http\Middleware\SetCompanyContext;
 use App\Http\Middleware\SetLocale;
+use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -35,6 +36,9 @@ class HrPanelProvider extends PanelProvider
             ->id('hr')
             ->path('hr')
             ->authGuard('web')
+            ->emailVerification() // no portal access without verified email (security.md)
+            ->multiFactorAuthentication(AppAuthentication::make()->recoverable()) // self-service TOTP 2FA
+            ->profile(isSimple: false)
             ->brandName('FlowFlex — HR & People')
             ->colors([
                 'primary' => Color::Violet,

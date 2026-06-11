@@ -15,6 +15,8 @@ The single decision table for "what tech do I build this screen with". Every mod
 
 ---
 
+> **Perceived performance is mandatory on every row of this table** — skeleton loaders (no spinners), optimistic UI for quick actions, ease-out transitions. See [[patterns/perceived-performance]].
+
 ## Why
 
 - Custom Filament pages **are** Livewire components — full custom UI freedom (Kanban, Gantt, chat) while panel nav, theming, `canAccess()`, tenancy middleware, and dark mode come free.

@@ -65,6 +65,7 @@ A module is `complete` only when ALL of:
 7. No open **high-severity** gap against this module in [[build/gaps/INDEX]]
 8. Spec updated: anything that changed during build is reflected back (spec stays truth)
 9. Vault synced: STATUS.md row, module-graph row still accurate
+10. Perceived performance ([[patterns/perceived-performance]]): no spinners — skeleton loaders on every data view; quick actions optimistic where listed; transitions ease-out (start fast, end slow)
 
 ---
 

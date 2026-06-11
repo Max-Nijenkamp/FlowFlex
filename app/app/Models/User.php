@@ -6,9 +6,12 @@ namespace App\Models;
 
 use App\Support\Traits\BelongsToCompany;
 use Database\Factories\UserFactory;
+use Filament\Auth\MultiFactor\App\Contracts\HasAppAuthentication;
+use Filament\Auth\MultiFactor\App\Contracts\HasAppAuthenticationRecovery;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Panel;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,6 +31,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $email
  * @property string $password
  * @property bool $two_factor_enabled
+ * @property string|null $app_authentication_secret
+ * @property array<string>|null $app_authentication_recovery_codes
  * @property bool $email_deliverable
  * @property Carbon|null $email_verified_at
  * @property Carbon|null $last_login_at
@@ -38,7 +43,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property-read Company $company
  * @property-read Collection<int, Role> $roles
  */
-class User extends Authenticatable implements FilamentUser, HasName
+class User extends Authenticatable implements FilamentUser, HasAppAuthentication, HasAppAuthenticationRecovery, HasName, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use BelongsToCompany, HasApiTokens, HasFactory, HasRoles, HasUlids, Notifiable, SoftDeletes;
@@ -57,7 +62,26 @@ class User extends Authenticatable implements FilamentUser, HasName
     protected $hidden = [
         'password',
         'remember_token',
+        'app_authentication_secret',
+        'app_authentication_recovery_codes',
     ];
+
+    protected static function booted(): void
+    {
+        // Email change invalidates verification — user must re-verify the NEW
+        // address before regaining portal access (security.md).
+        static::updating(function (User $user): void {
+            if ($user->isDirty('email')) {
+                $user->email_verified_at = null;
+            }
+        });
+
+        static::updated(function (User $user): void {
+            if ($user->wasChanged('email')) {
+                $user->sendEmailVerificationNotification();
+            }
+        });
+    }
 
     protected function casts(): array
     {
@@ -67,6 +91,8 @@ class User extends Authenticatable implements FilamentUser, HasName
             'two_factor_enabled' => 'boolean',
             'email_deliverable' => 'boolean',
             'password' => 'hashed',
+            'app_authentication_secret' => 'encrypted',
+            'app_authentication_recovery_codes' => 'encrypted:array',
         ];
     }
 
@@ -78,6 +104,36 @@ class User extends Authenticatable implements FilamentUser, HasName
     public function getFilamentName(): string
     {
         return $this->full_name;
+    }
+
+    public function getAppAuthenticationSecret(): ?string
+    {
+        return $this->app_authentication_secret;
+    }
+
+    public function saveAppAuthenticationSecret(?string $secret): void
+    {
+        $this->forceFill([
+            'app_authentication_secret' => $secret,
+            'two_factor_enabled' => $secret !== null,
+        ])->save();
+    }
+
+    public function getAppAuthenticationHolderName(): string
+    {
+        return $this->email;
+    }
+
+    /** @return ?array<string> */
+    public function getAppAuthenticationRecoveryCodes(): ?array
+    {
+        return $this->app_authentication_recovery_codes;
+    }
+
+    /** @param ?array<string> $codes */
+    public function saveAppAuthenticationRecoveryCodes(?array $codes): void
+    {
+        $this->forceFill(['app_authentication_recovery_codes' => $codes])->save();
     }
 
     public function canAccessPanel(Panel $panel): bool
