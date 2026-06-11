@@ -22,7 +22,26 @@ return [
     |     'is_active' => true,
     | ],
     */
-    'modules' => [],
+    'modules' => [
+        // HR & People *(prices assumed — pricing-model ADR at launch)*
+        'hr.profiles' => ['name' => 'Employee Profiles', 'domain' => 'hr', 'per_user_monthly_price_cents' => 200],
+        'hr.org' => ['name' => 'Org Chart', 'domain' => 'hr', 'per_user_monthly_price_cents' => 50],
+        'hr.self-service' => ['name' => 'Employee Self-Service', 'domain' => 'hr', 'per_user_monthly_price_cents' => 100],
+        'hr.leave' => ['name' => 'Leave Management', 'domain' => 'hr', 'per_user_monthly_price_cents' => 150],
+        'hr.onboarding' => ['name' => 'Onboarding', 'domain' => 'hr', 'per_user_monthly_price_cents' => 100],
+        'hr.payroll' => ['name' => 'Payroll', 'domain' => 'hr', 'per_user_monthly_price_cents' => 300],
+        // Finance & Accounting
+        'finance.ledger' => ['name' => 'General Ledger', 'domain' => 'finance', 'per_user_monthly_price_cents' => 200],
+        'finance.invoicing' => ['name' => 'Invoicing', 'domain' => 'finance', 'per_user_monthly_price_cents' => 250],
+        'finance.expenses' => ['name' => 'Expenses', 'domain' => 'finance', 'per_user_monthly_price_cents' => 150],
+        'finance.bank' => ['name' => 'Bank Accounts', 'domain' => 'finance', 'per_user_monthly_price_cents' => 100],
+        // CRM & Sales
+        'crm.contacts' => ['name' => 'Contacts', 'domain' => 'crm', 'per_user_monthly_price_cents' => 200],
+        'crm.deals' => ['name' => 'Deals', 'domain' => 'crm', 'per_user_monthly_price_cents' => 250],
+        'crm.pipeline' => ['name' => 'Pipeline Board', 'domain' => 'crm', 'per_user_monthly_price_cents' => 100],
+        'crm.activities' => ['name' => 'Activities', 'domain' => 'crm', 'per_user_monthly_price_cents' => 50],
+        'crm.quotes' => ['name' => 'Quotes', 'domain' => 'crm', 'per_user_monthly_price_cents' => 150],
+    ],
 
     /*
     |--------------------------------------------------------------------------

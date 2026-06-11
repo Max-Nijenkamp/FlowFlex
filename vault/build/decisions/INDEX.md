@@ -27,6 +27,7 @@ Architectural decisions made during the build. One file per decision.
 | 2026-06-11 | [[build/decisions/decision-2026-06-11-ui-strategy-new-rows\|UI strategy rows 17–19: gallery/directory, heat-map/matrix, spatial/floor-map]] | decided | All |
 | 2026-06-11 | [[build/decisions/decision-2026-06-11-static-analysis-without-larastan\|Static analysis: plain PHPStan + @property docblocks (Larastan deferred)]] | decided | All |
 | 2026-06-11 | [[build/decisions/decision-2026-06-11-flat-namespace-foldering\|Flat namespace foldering — no Core/Foundation build-phase subfolders]] | decided | All |
+| 2026-06-11 | [[build/decisions/decision-2026-06-11-mvp-v1-deviations\|MVP v1 implementation deviations from specs (documented trims)]] | decided | HR, Finance, CRM |
 
 ---
 

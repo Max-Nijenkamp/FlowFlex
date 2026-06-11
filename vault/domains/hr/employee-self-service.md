@@ -4,7 +4,7 @@ domain: HR & People
 domain-key: hr
 panel: hr
 module-key: hr.self-service
-status: planned
+status: in-progress
 priority: v1
 depends-on: [hr.profiles, core.billing, core.rbac]
 soft-depends: [hr.leave, hr.payroll, hr.onboarding]

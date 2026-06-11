@@ -82,8 +82,13 @@ class User extends Authenticatable implements FilamentUser, HasName
 
     public function canAccessPanel(Panel $panel): bool
     {
-        // Tenant users may reach the /app workspace + domain panels (not /admin).
-        // Per-resource gating is handled by canAccess() (filament-patterns #1).
-        return $panel->getId() !== 'admin';
+        // /admin is staff-only; /app open to all tenant users; domain panels
+        // require the access.{id}-panel permission (granted via roles holding
+        // any permission of that domain). Per-resource gating stays canAccess().
+        return match ($panel->getId()) {
+            'admin' => false,
+            'app' => true,
+            default => $this->can("access.{$panel->getId()}-panel"),
+        };
     }
 }

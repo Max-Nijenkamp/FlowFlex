@@ -16,8 +16,18 @@ parameters:
         - identifier: method.notFound
           paths:
             - app/*
-        # Authenticatable interface lacks model property generics.
-        - message: '#Access to an undefined property Illuminate\\Contracts\\Auth\\Authenticatable#'
+        # Eloquent magic attributes/relations ($model->column, $model->relation)
+        # — invisible to plain PHPStan; column truth lives in migrations + tests.
+        - identifier: property.notFound
+          paths:
+            - app/*
+        # Eloquent builder get() resolves to stdClass collections without Larastan.
+        - message: '#should return Illuminate\\Support\\Collection<int, App\\Models\\.+> but returns Illuminate\\Support\\Collection<int, stdClass>#'
+        - message: '#Cannot call method [A-Za-z]+\(\) on stdClass#'
+        # increment()/decrement() are proxied via __call in Laravel 13 (runtime-public).
+        - identifier: method.protected
+          paths:
+            - app/*
         # Spatie Role contract vs model return co-variance.
         - message: '#should return Spatie\\Permission\\Models\\Role but returns Spatie\\Permission\\Contracts\\Role#'
     treatPhpDocTypesAsCertain: false

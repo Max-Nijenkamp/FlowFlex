@@ -1,0 +1,19 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/CRM/**/*';
+@source '../../../../resources/views/filament/crm/**/*';
+
+/* FlowFlex domain panel theme. */
+.fi-sidebar {
+    @apply border-e border-slate-200/60 dark:border-slate-800;
+}
+
+.fi-topbar nav {
+    @apply backdrop-blur-md bg-white/80 dark:bg-slate-900/80;
+}
+
+.fi-section,
+.fi-ta-ctn,
+.fi-wi {
+    border-radius: 0.875rem;
+}

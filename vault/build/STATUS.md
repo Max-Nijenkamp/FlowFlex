@@ -8,7 +8,7 @@ color: "#F97316"
 
 Per-domain progress. Update `status` frontmatter in module specs — this table is the manual view (Dataview query below auto-populates if Dataview plugin is installed).
 
-**Last updated:** 2026-06-11 (vault remapped to v2 — all 173 specs implementation-ready; build not started)
+**Last updated:** 2026-06-11 (MVP gate path BUILT — 36/173 modules live; specs = source of truth, deviations in ADR 2026-06-11-mvp-v1-deviations)
 
 ---
 
@@ -18,9 +18,9 @@ Per-domain progress. Update `status` frontmatter in module specs — this table 
 |---|---|---|---|---|
 | MVP | Foundation | 8 | 8 | 🟢 100% |
 | MVP | Core Platform | 15 | 15 | 🟢 100% |
-| MVP | HR & People | 0 | 15 | 🔴 0% |
-| MVP | Finance & Accounting | 0 | 13 | 🔴 0% |
-| MVP | CRM & Sales | 0 | 15 | 🔴 0% |
+| MVP | HR & People | 5 | 15 | 🟠 33% |
+| MVP | Finance & Accounting | 4 | 13 | 🟠 31% |
+| MVP | CRM & Sales | 4 | 15 | 🟠 27% |
 | Phase 2 | Projects & Work | 0 | 11 | 🔴 0% |
 | Phase 2 | Support & Help Desk | 0 | 7 | 🔴 0% |
 | Phase 2 | Communications | 0 | 8 | 🔴 0% |
@@ -39,10 +39,10 @@ Per-domain progress. Update `status` frontmatter in module specs — this table 
 | Phase 3 | Events Management | 0 | 7 | 🔴 0% |
 | Deferred | (10 domains) | — | — | stub only |
 
-**MVP Total: 23 / 66 modules built** (Foundation + Core Platform complete — M0 gate met, M1/M2 core scope done)
+**MVP Total: 36 / 66 modules built** (Foundation + Core complete; HR/Finance/CRM MVP-gate path built — company can be onboarded, manage employees, send invoices, run a pipeline = SELLABLE)
 **Phase 2 Total: 0 / 32 modules built**
 **Phase 3 Total: 0 / 75 modules built**
-**All active: 23 / 173 modules — every Phase 1/2/3 module is fully specced**
+**All active: 36 / 173 modules — every Phase 1/2/3 module is fully specced**
 
 ---
 
@@ -95,6 +95,7 @@ SORT module-key ASC
 | 2026-06-11 | Foundation | foundation.scaffold | Laravel 13.15 + Filament 5.6.7 scaffold: ~50 packages, ULID companies/users/admins migrations + models + factories. ✅ Complete — all gates green (PHPStan 0 errors, Pint clean, Pest 10/10). Larastan crash resolved (ADR: plain PHPStan + @property docblocks). Filament-plugins gap (4 no-v5) tracked, non-blocking |
 | 2026-06-11 | Foundation | tenancy/queues/email/panels/permissions/tests/docker | ✅ Foundation COMPLETE (8/8) — M0 gate met. CompanyContext+CompanyScope+BelongsToCompany+WithCompanyContext (teams=company_id, ULID morphs); Horizon (admin-gated, named queues); FlowFlexMailable + signature-verified Resend webhook; /admin + /app panels (separate guards, FilamentUser); seeders (migrate --seed clean, demo logins); Pest 41/41, PHPStan 0, Pint clean, docker-compose 8 services |
 | 2026-06-11 | Foundation | foundation.docker | ✅ Docker stack verified LIVE — 8/8 containers up, migrate --seed clean on Postgres 17, nginx serves /app+/admin login, Meilisearch available, Redis cache+auth, Horizon running, Mailpit captured test email. Host-port conflicts → redis/mailpit/reverb made internal-only (host already runs a stack on 6379/1025/8025/8081) |
+| 2026-06-11 | HR+Finance+CRM | 15 MVP-gate modules | ✅ MVP GATE PATH BUILT. HR: profiles (EmployeeHired/Offboarded, encrypted PII+hash), org chart, leave (balances/approval/LeaveRequestApproved), onboarding (listener-started plans), payroll (four-eyes runs, encrypted payslips, PayrollRunApproved). Finance: ledger (balanced entries, periods, reversals), invoicing (gap-free numbers, AR/cash GL postings, InvoicePaid), expenses (ExpenseApproved+GL), bank (import dedupe+reconcile). CRM: contacts (findOrCreateByEmail), deals (DealWon→invoice stub!, DealLost), pipeline Kanban, activities. 3 themed domain panels (violet/emerald/sky). Cross-domain chain verified in tests: payroll→GL, deal-won→draft invoice, invoice-paid→account LTV. Demo seeder extended. Pest 155/155, PHPStan 0, Pint clean. hr.self-service + crm.quotes in-progress (UI surfaces pending) |
 | 2026-06-11 | Core Platform | ALL 15 modules | ✅ Core Platform COMPLETE (15/15). Gating (BillingService.hasModule + EnforceModuleAccess + config-extensible Sushi catalog), settings (company-scoped spatie repo), rbac (custom RoleResource — no shield needed), invitations (token flow + public accept), billing (invoices/states/Stripe webhook/dunning/suspension), marketplace, audit (AuditLogger + PII denylist), notifications (prefs + listeners + Filament bell), files (CompanyPathGenerator), import (registry + chunked job + error report), webhooks (HMAC outbound + auto-disable), api (Sanctum scoped tokens), setup wizard, privacy (DSAR + erasure cascade + registry), i18n (LocaleFormatter), health (/health + status page). Panel theming: FlowFlex brand, custom vite themes both panels (no stock Filament look). Gates: Pest 119/119, PHPStan 0, Pint clean, migrate:fresh --seed clean |
 
 ---

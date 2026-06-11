@@ -11,6 +11,9 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/css/filament/app/theme.css',
                 'resources/css/filament/admin/theme.css',
+                'resources/css/filament/hr/theme.css',
+                'resources/css/filament/finance/theme.css',
+                'resources/css/filament/crm/theme.css',
             ],
             refresh: true,
             fonts: [

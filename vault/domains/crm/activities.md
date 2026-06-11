@@ -4,7 +4,7 @@ domain: CRM & Sales
 domain-key: crm
 panel: crm
 module-key: crm.activities
-status: planned
+status: complete
 priority: v1-core
 depends-on: [crm.contacts, core.billing, core.rbac, core.notifications]
 soft-depends: [crm.deals]

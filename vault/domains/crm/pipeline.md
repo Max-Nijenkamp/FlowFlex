@@ -4,7 +4,7 @@ domain: CRM & Sales
 domain-key: crm
 panel: crm
 module-key: crm.pipeline
-status: planned
+status: complete
 priority: v1-core
 depends-on: [crm.deals, core.billing, core.rbac]
 soft-depends: []

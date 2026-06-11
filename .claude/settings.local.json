@@ -209,7 +209,16 @@
       "Bash(perl -i -pe 's/\\\\?\\\\? \\\\$owner\\\\?->company_id/?? \\\\$owner->company_id/' app/Support/Media/CompanyPathGenerator.php)",
       "Bash(perl -0pi -e 's/\\\\$ownerCompanyId = \\\\$media->getCustomProperty\\\\\\('\\\\''company_id'\\\\''\\\\\\) \\\\?\\\\? \\\\$media->model\\\\?->company_id;/\\\\$owner = \\\\$media->getRelationValue\\('\\\\''model'\\\\''\\);\\\\n        \\\\$ownerCompanyId = \\\\$media->getCustomProperty\\('\\\\''company_id'\\\\''\\) ?? \\\\$owner->company_id ?? null;/' app/Actions/Core/TemporaryUrlAction.php)",
       "Bash(perl -0pi -e \"s/input: \\\\['resources\\\\/css\\\\/app.css', 'resources\\\\/js\\\\/app.js'\\\\],/input: [\\\\n                'resources\\\\/css\\\\/app.css',\\\\n                'resources\\\\/js\\\\/app.js',\\\\n                'resources\\\\/css\\\\/filament\\\\/app\\\\/theme.css',\\\\n                'resources\\\\/css\\\\/filament\\\\/admin\\\\/theme.css',\\\\n            ],/\" vite.config.js)",
-      "Bash(perl -i -pe \"s/'mail\\\\.core\\\\.invitation'/'mail.invitation'/; s/'mail\\\\.core\\\\.invoice'/'mail.invoice'/\" app/Mail/InvitationMail.php app/Mail/InvoiceMail.php)"
+      "Bash(perl -i -pe \"s/'mail\\\\.core\\\\.invitation'/'mail.invitation'/; s/'mail\\\\.core\\\\.invoice'/'mail.invoice'/\" app/Mail/InvitationMail.php app/Mail/InvoiceMail.php)",
+      "Bash(perl -0pi -e \"s/use App\\\\\\\\\\\\\\\\Providers\\\\\\\\\\\\\\\\Filament\\\\\\\\\\\\\\\\AppPanelProvider;/use App\\\\\\\\\\\\\\\\Providers\\\\\\\\\\\\\\\\Filament\\\\\\\\\\\\\\\\AppPanelProvider;\\\\nuse App\\\\\\\\\\\\\\\\Providers\\\\\\\\\\\\\\\\Filament\\\\\\\\\\\\\\\\HrPanelProvider;/\" bootstrap/providers.php)",
+      "Bash(perl -0pi -e \"s/    AppPanelProvider::class,/    AppPanelProvider::class,\\\\n    HrPanelProvider::class,/\" bootstrap/providers.php)",
+      "Bash(perl -0pi -e \"s/use App\\\\\\\\\\\\\\\\Providers\\\\\\\\\\\\\\\\Filament\\\\\\\\\\\\\\\\HrPanelProvider;/use App\\\\\\\\\\\\\\\\Providers\\\\\\\\\\\\\\\\Filament\\\\\\\\\\\\\\\\FinancePanelProvider;\\\\nuse App\\\\\\\\\\\\\\\\Providers\\\\\\\\\\\\\\\\Filament\\\\\\\\\\\\\\\\HrPanelProvider;/\" bootstrap/providers.php)",
+      "Bash(perl -0pi -e \"s/    HrPanelProvider::class,/    HrPanelProvider::class,\\\\n    FinancePanelProvider::class,/\" bootstrap/providers.php)",
+      "Bash(perl -i -pe 's/'\\\\''email'\\\\'' => \\\\$deal->contact\\\\?->email \\\\?\\\\? '\\\\''unknown\\\\@example.invalid'\\\\'',/'\\\\''email'\\\\'' => \\\\$deal->contact->email ?? '\\\\''unknown\\\\@example.invalid'\\\\'',/' app/Listeners/Finance/CreateInvoiceStubListener.php)",
+      "Bash(perl -i -pe 's/return \\\\$this->hasMany\\\\\\(OnboardingTask::class, '\\\\''template_id'\\\\''\\\\\\)->orderBy\\\\\\('\\\\''order'\\\\''\\\\\\);/return \\\\$this->hasMany\\(OnboardingTask::class, '\\\\''template_id'\\\\''\\);/' app/Models/HR/OnboardingTemplate.php)",
+      "Bash(cat)",
+      "Bash(perl -i -pe 's/\\\\| 2026-06-11 \\\\| \\\\[\\\\[build\\\\/decisions\\\\/decision-2026-06-11-flat-namespace-foldering.*$/$&\\\\n| 2026-06-11 | [[build\\\\/decisions\\\\/decision-2026-06-11-mvp-v1-deviations\\\\\\\\|MVP v1 implementation deviations from specs \\(documented trims\\)]] | decided | HR, Finance, CRM |/' vault/build/decisions/INDEX.md)",
+      "Bash(echo \"commit exit $?\")"
     ]
   },
   "enabledMcpjsonServers": [

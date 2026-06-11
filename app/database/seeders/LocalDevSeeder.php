@@ -7,6 +7,16 @@ namespace Database\Seeders;
 use App\Contracts\BillingServiceInterface;
 use App\Models\Admin;
 use App\Models\Company;
+use App\Models\CompanyModuleSubscription;
+use App\Models\CRM\Contact;
+use App\Models\CRM\Deal;
+use App\Models\CRM\PipelineStage;
+use App\Models\Finance\Customer;
+use App\Models\Finance\ExpenseCategory;
+use App\Models\HR\Department;
+use App\Models\HR\Employee;
+use App\Models\HR\LeaveBalance;
+use App\Models\HR\LeaveType;
 use App\Models\User;
 use App\Support\Services\CompanyContext;
 use Illuminate\Database\Seeder;
@@ -57,5 +67,78 @@ class LocalDevSeeder extends Seeder
 
         // A few extra demo users.
         User::factory()->forCompany($company)->count(5)->create();
+
+        // All MVP modules active for the demo company.
+        foreach (array_keys(config('flowflex.modules', [])) as $moduleKey) {
+            CompanyModuleSubscription::firstOrCreate(
+                ['company_id' => $company->id, 'module_key' => $moduleKey, 'deactivated_at' => null],
+                ['activated_at' => now()],
+            );
+        }
+        cache()->forget("company:{$company->id}:modules");
+
+        // --- HR demo data ---
+        $engineering = Department::firstOrCreate(
+            ['company_id' => $company->id, 'name' => 'Engineering'],
+        );
+        $employees = collect([
+            ['Sanne', 'de Vries', 'sanne@flowflex-demo.nl', 'Engineering Manager'],
+            ['Tim', 'Bakker', 'tim@flowflex-demo.nl', 'Software Engineer'],
+            ['Lisa', 'Visser', 'lisa@flowflex-demo.nl', 'Designer'],
+        ])->map(fn (array $row, int $i) => Employee::firstOrCreate(
+            ['company_id' => $company->id, 'email' => $row[2]],
+            [
+                'employee_number' => (string) ($i + 1),
+                'first_name' => $row[0],
+                'last_name' => $row[1],
+                'job_title' => $row[3],
+                'hire_date' => now()->subMonths(6 + $i),
+                'employment_type' => 'full-time',
+                'department_id' => $engineering->id,
+            ],
+        ));
+        $annual = LeaveType::firstOrCreate(
+            ['company_id' => $company->id, 'name' => 'Annual Leave'],
+            ['accrual_days_per_year' => 25, 'carry_over_days' => 5],
+        );
+        foreach ($employees as $employee) {
+            LeaveBalance::firstOrCreate(
+                ['company_id' => $company->id, 'employee_id' => $employee->id, 'leave_type_id' => $annual->id, 'year' => now()->year],
+                ['allocated_days' => 25],
+            );
+        }
+
+        // --- Finance demo data ---
+        $customer = Customer::firstOrCreate(
+            ['company_id' => $company->id, 'email' => 'billing@acme-client.nl'],
+            ['name' => 'Acme Client BV', 'payment_terms_days' => 14],
+        );
+        ExpenseCategory::firstOrCreate(
+            ['company_id' => $company->id, 'name' => 'Travel'],
+            ['limit_per_transaction_cents' => 25000],
+        );
+
+        // --- CRM demo data ---
+        $stages = collect([['Lead', 1, 10], ['Qualified', 2, 30], ['Proposal', 3, 60], ['Negotiation', 4, 80]])
+            ->map(fn (array $row) => PipelineStage::firstOrCreate(
+                ['company_id' => $company->id, 'name' => $row[0]],
+                ['order' => $row[1], 'probability_default' => $row[2]],
+            ));
+        $contact = Contact::firstOrCreate(
+            ['company_id' => $company->id, 'email' => 'jan@acme-client.nl'],
+            ['first_name' => 'Jan', 'last_name' => 'Smit', 'lifecycle_stage' => 'opportunity', 'owner_id' => $ownerUser->id],
+        );
+        Deal::firstOrCreate(
+            ['company_id' => $company->id, 'name' => 'Acme Platform Licence'],
+            [
+                'stage_id' => $stages[2]->id,
+                'contact_id' => $contact->id,
+                'owner_id' => $ownerUser->id,
+                'value_cents' => 1200000,
+                'probability' => 60,
+                'expected_close_date' => now()->addMonth(),
+                'stage_entered_at' => now(),
+            ],
+        );
     }
 }

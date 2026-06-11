@@ -4,7 +4,7 @@ domain: HR & People
 domain-key: hr
 panel: hr
 module-key: hr.payroll
-status: planned
+status: complete
 priority: v1-core
 depends-on: [hr.profiles, core.billing, core.rbac, core.notifications]
 soft-depends: [finance.ledger, hr.leave, hr.time, hr.compensation, finance.expenses]
