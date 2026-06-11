@@ -222,7 +222,8 @@
       "Bash(perl -0pi -e 's/use Illuminate\\\\\\\\Database\\\\\\\\Eloquent\\\\\\\\SoftDeletes;\\\\n\\\\nclass QuoteLine extends Model\\\\n\\\\{\\\\n    use BelongsToCompany, HasFactory, HasUlids, SoftDeletes;/use Illuminate\\\\\\\\Database\\\\\\\\Eloquent\\\\\\\\Model;\\\\n\\\\nclass QuoteLine extends Model\\\\n{\\\\n    use BelongsToCompany, HasFactory, HasUlids;/' app/Models/CRM/QuoteLine.php)",
       "Bash(perl -0pi -e 's|<env name=\"QUEUE_CONNECTION\" value=\"sync\"/>|<env name=\"QUEUE_CONNECTION\" value=\"sync\"/>\\\\n        <env name=\"SCOUT_DRIVER\" value=\"null\"/>|' phpunit.xml)",
       "Bash(perl -i -pe \"s/'owner_id' => Auth::guard\\\\\\('web'\\\\\\)->id\\\\\\(\\\\\\),/'owner_id' => request\\(\\)->user\\(\\)?->id ?? Auth::guard\\('web'\\)->id\\(\\),/\" app/Services/CRM/DealService.php)",
-      "Bash(perl -i -pe \"s/request\\\\\\(\\\\\\)->user\\\\\\(\\\\\\)\\\\?->id \\\\?\\\\? Auth::guard\\\\\\('web'\\\\\\)->id\\\\\\(\\\\\\)/request\\(\\)->user\\(\\)->id ?? Auth::guard\\('web'\\)->id\\(\\)/\" app/Services/CRM/DealService.php)"
+      "Bash(perl -i -pe \"s/request\\\\\\(\\\\\\)->user\\\\\\(\\\\\\)\\\\?->id \\\\?\\\\? Auth::guard\\\\\\('web'\\\\\\)->id\\\\\\(\\\\\\)/request\\(\\)->user\\(\\)->id ?? Auth::guard\\('web'\\)->id\\(\\)/\" app/Services/CRM/DealService.php)",
+      "Bash(npm pkg *)"
     ]
   },
   "enabledMcpjsonServers": [

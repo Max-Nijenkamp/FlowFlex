@@ -6,6 +6,8 @@ color: "#FBBF24"
 
 # Public Frontend — Vue 3 + Inertia
 
+> **Build status (2026-06-11)**: v1 SHIPPED — marketing pages (home, pricing calculator from module catalog, features, about, contact w/ honeypot, terms, privacy) + auth (Vue login w/ session regen, invite-accept registration replacing the Blade page, forgot/reset password w/o enumeration). Blog + portals = Phase 2. Inertia progress bar off — skeletons carry loading state (perceived-performance).
+
 The public-facing side of FlowFlex. Separate from Filament panels — custom design, SEO, external users.
 
 **Tech**: Vue 3.5 + TypeScript 5 + Inertia.js v2 + Tailwind CSS v4 + Vite 6

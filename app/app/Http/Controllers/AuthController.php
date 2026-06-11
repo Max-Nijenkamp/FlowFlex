@@ -9,17 +9,15 @@ use App\Data\AcceptInvitationData;
 use App\Exceptions\InvalidInvitationTokenException;
 use App\Models\UserInvitation;
 use App\Support\Scopes\CompanyScope;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class AuthController extends Controller
 {
-    /**
-     * Public invite-registration page. Blade for now — swapped to the
-     * Vue + Inertia page when the public site ships (frontend phase).
-     */
-    public function showInviteRegistration(string $token): View
+    /** Public invite-registration page (Vue + Inertia per frontend/_index.md). */
+    public function showInviteRegistration(string $token): Response
     {
         $invitation = UserInvitation::query()
             ->withoutGlobalScope(CompanyScope::class)
@@ -30,9 +28,9 @@ class AuthController extends Controller
             ->where('expires_at', '>', now())
             ->firstOrFail();
 
-        return view('auth.invite-register', [
+        return Inertia::render('Auth/InviteRegister', [
             'email' => $invitation->email,
-            'companyName' => $invitation->company->name,
+            'company' => $invitation->company->name,
             'token' => $token,
         ]);
     }

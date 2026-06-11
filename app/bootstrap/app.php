@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Middleware\EnforceModuleAccess;
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SetCompanyContextFromToken;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -24,6 +25,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'module' => EnforceModuleAccess::class,
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
+        ]);
+
+        // Inertia shared props for the public Vue site.
+        $middleware->web(append: [
+            HandleInertiaRequests::class,
         ]);
 
         // API requests authenticate via Sanctum bearer tokens — tenant context

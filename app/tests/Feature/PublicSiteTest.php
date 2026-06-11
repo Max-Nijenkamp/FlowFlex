@@ -1,0 +1,78 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Models\Company;
+use App\Models\User;
+use App\Models\UserInvitation;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+
+it('serves every marketing page as an Inertia response', function (string $path, string $component) {
+    $this->get($path)
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->component($component));
+})->with([
+    ['/', 'Marketing/Home'],
+    ['/pricing', 'Marketing/Pricing'],
+    ['/features', 'Marketing/Features'],
+    ['/about', 'Marketing/About'],
+    ['/contact', 'Marketing/Contact'],
+    ['/terms', 'Marketing/Terms'],
+    ['/privacy', 'Marketing/Privacy'],
+]);
+
+it('shares the module catalog with the pricing calculator', function () {
+    $this->get('/pricing')->assertInertia(fn ($page) => $page
+        ->component('Marketing/Pricing')
+        ->has('modules')
+        ->has('base_price_cents'));
+});
+
+it('accepts a contact submission and blocks honeypot bots', function () {
+    $this->post('/contact', [
+        'name' => 'Max', 'email' => 'max@lead.test', 'message' => 'Tell me more',
+    ])->assertRedirect('/contact')->assertSessionHas('success');
+
+    $this->post('/contact', [
+        'name' => 'Bot', 'email' => 'bot@spam.test', 'message' => 'spam', 'website' => 'http://spam.test',
+    ])->assertRedirect('/contact')->assertSessionMissing('success');
+});
+
+it('logs in through the public Vue login and lands in the workspace', function () {
+    $company = Company::factory()->create();
+    $this->setCompany($company);
+    $user = User::factory()->forCompany($company)->create(['password' => 'super-secret-password']);
+
+    $this->get('/login')->assertInertia(fn ($page) => $page->component('Auth/Login'));
+
+    $this->post('/login', ['email' => $user->email, 'password' => 'super-secret-password'])
+        ->assertRedirect('/app');
+    $this->assertAuthenticatedAs($user, 'web');
+
+    $this->post('/logout')->assertRedirect('/');
+    $this->assertGuest('web');
+});
+
+it('rejects bad credentials without enumeration detail', function () {
+    $this->post('/login', ['email' => 'nobody@nowhere.test', 'password' => 'wrong-password-123'])
+        ->assertSessionHasErrors('email');
+});
+
+it('serves the invite registration as a Vue page', function () {
+    $company = Company::factory()->create();
+    $this->setCompany($company);
+    $invitation = UserInvitation::factory()->forCompany($company)->create();
+
+    $this->get("/register/invite/{$invitation->token}")
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('Auth/InviteRegister')
+            ->where('email', $invitation->email));
+});
+
+it('sends a password reset link without account enumeration', function () {
+    $this->post('/forgot-password', ['email' => 'ghost@nowhere.test'])
+        ->assertSessionHas('success'); // same response either way
+});
