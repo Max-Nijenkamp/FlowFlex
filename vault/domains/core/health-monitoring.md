@@ -4,7 +4,7 @@ domain: Core Platform
 domain-key: core
 panel: app
 module-key: core.health
-status: planned
+status: complete
 priority: v1
 depends-on: [foundation.queues, foundation.panels]
 soft-depends: []

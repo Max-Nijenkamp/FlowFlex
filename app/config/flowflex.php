@@ -1,6 +1,10 @@
 <?php
 
 declare(strict_types=1);
+use App\Events\Core\CompanySubscriptionSuspended;
+use App\Events\Core\ModuleActivated;
+use App\Notifications\Core\ModuleActivatedNotification;
+use App\Notifications\Core\SubscriptionSuspendedNotification;
 
 return [
 
@@ -19,6 +23,31 @@ return [
     | ],
     */
     'modules' => [],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Webhook events (the event-bus map)
+    |--------------------------------------------------------------------------
+    | Cross-domain events subscribable by outbound webhooks. Domains append
+    | their events as they ship. WebhookDispatcher is registered as a listener
+    | for every entry (CoreServiceProvider).
+    */
+    'webhook_events' => [
+        ModuleActivated::class,
+        CompanySubscriptionSuspended::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Notification types
+    |--------------------------------------------------------------------------
+    | Registry of preference-managed notification types. Domains append their
+    | own entries as they ship. Key = type key (class), value = display label.
+    */
+    'notification_types' => [
+        ModuleActivatedNotification::class => 'Module activated',
+        SubscriptionSuspendedNotification::class => 'Subscription suspended',
+    ],
 
     /*
     |--------------------------------------------------------------------------

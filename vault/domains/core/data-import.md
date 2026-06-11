@@ -4,7 +4,7 @@ domain: Core Platform
 domain-key: core
 panel: app
 module-key: core.import
-status: planned
+status: complete
 priority: v1
 depends-on: [core.files, foundation.queues, core.billing, core.rbac]
 soft-depends: [hr.profiles, crm.contacts]

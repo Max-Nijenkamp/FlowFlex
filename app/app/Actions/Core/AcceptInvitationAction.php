@@ -31,7 +31,7 @@ class AcceptInvitationAction
             ->first();
 
         if ($invitation === null || ! $invitation->isUsable()) {
-            throw new InvalidInvitationTokenException();
+            throw new InvalidInvitationTokenException;
         }
 
         return DB::transaction(function () use ($invitation, $data): User {

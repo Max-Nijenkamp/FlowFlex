@@ -6,8 +6,10 @@ use App\Contracts\Core\BillingServiceInterface;
 use App\Data\Core\ActivateModuleData;
 use App\Exceptions\Core\CannotDeactivateCoreModuleException;
 use App\Exceptions\Core\ModuleAlreadyActiveException;
+use App\Http\Middleware\SetCompanyContext;
 use App\Models\Company;
 use App\Models\Core\CompanyModuleSubscription;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 
@@ -78,11 +80,11 @@ it('rejects unknown module keys', function () {
 })->throws(InvalidArgumentException::class);
 
 it('gates API routes via the module middleware alias', function () {
-    Route::middleware(['web', App\Http\Middleware\SetCompanyContext::class, 'module:core.settings'])
+    Route::middleware(['web', SetCompanyContext::class, 'module:core.settings'])
         ->get('/_test/gated', fn () => response()->json(['ok' => true]));
 
     $company = Company::factory()->create();
-    $user = App\Models\User::factory()->forCompany($company)->create();
+    $user = User::factory()->forCompany($company)->create();
 
     // Not active -> 403
     $this->actingAs($user, 'web')->get('/_test/gated')->assertForbidden();

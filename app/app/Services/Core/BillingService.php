@@ -15,11 +15,11 @@ use App\Models\Company;
 use App\Models\Core\BillingInvoice;
 use App\Models\Core\CompanyModuleSubscription;
 use App\Models\Core\ModuleCatalog;
+use App\Models\User;
 use App\States\Core\BillingInvoice\Open;
 use App\States\Core\BillingInvoice\Paid;
 use App\States\Core\BillingInvoice\PastDue;
 use App\States\Core\BillingInvoice\Uncollectible;
-use App\Support\Scopes\CompanyScope;
 use App\Support\Services\CompanyContext;
 use Brick\Money\Money;
 use Carbon\CarbonImmutable;
@@ -126,12 +126,12 @@ class BillingService implements BillingServiceInterface
             ->whereDate('period_start', $periodStart->toDateString())
             ->first();
 
-        if ($existing !== null) {
+        if ($existing instanceof BillingInvoice) {
             return BillingInvoiceData::fromModel($existing->load('lines'));
         }
 
         $currency = 'EUR';
-        $userCount = \App\Models\User::query()->withoutGlobalScopes()
+        $userCount = User::query()->withoutGlobalScopes()
             ->where('company_id', $companyId)
             ->count();
 

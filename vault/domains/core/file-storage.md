@@ -4,7 +4,7 @@ domain: Core Platform
 domain-key: core
 panel: app
 module-key: core.files
-status: planned
+status: complete
 priority: v1-core
 depends-on: [foundation.tenancy, core.settings]
 soft-depends: []

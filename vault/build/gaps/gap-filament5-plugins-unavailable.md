@@ -25,10 +25,10 @@ Installed fine: `pxlrbt/filament-excel`, `leandrocfe/filament-apex-charts`, `cod
 
 ## Impact
 Blocks specific later modules, not the scaffold:
-- filament-shield → `core.rbac` permission-management UI (workaround: drive spatie/laravel-permission directly + a custom Filament page).
-- filament-fullcalendar → calendar UIs (`hr.leave`, `hr.shifts`, `events.events`) — ui-strategy row #4.
-- filament-tiptap-editor → rich-text fields (comms, dms) — Phase 2.
-- rmsramos/activitylog → `core.audit` log viewer UI.
+- ~~filament-shield → `core.rbac`~~ **RESOLVED 2026-06-11**: custom `RoleResource` with permission matrix built directly over spatie/laravel-permission — shield not needed.
+- ~~rmsramos/activitylog → `core.audit`~~ **RESOLVED 2026-06-11**: custom read-only `AuditLogResource` over the tenant-scoped Activity model.
+- filament-fullcalendar → calendar UIs (`hr.leave`, `hr.shifts`, `events.events`) — ui-strategy row #4. Still open — re-check at hr.leave build.
+- filament-tiptap-editor → rich-text fields (comms, dms) — Phase 2. Still open.
 
 ## Proposed Solution
 1. Re-check each package for a Filament 5 release before building its dependent module (ecosystem catching up).

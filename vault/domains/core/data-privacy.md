@@ -4,7 +4,7 @@ domain: Core Platform
 domain-key: core
 panel: app
 module-key: core.privacy
-status: planned
+status: complete
 priority: v1
 depends-on: [core.settings, foundation.queues, core.files, core.rbac, core.billing]
 soft-depends: []

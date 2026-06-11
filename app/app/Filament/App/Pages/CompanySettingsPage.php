@@ -31,6 +31,9 @@ use UnitEnum;
  * Source of truth for workspace configuration. Tabs: Identity, Locale,
  * Business, Privacy. ui-strategy row #7 (wizard-style tabbed form).
  */
+/**
+ * @property-read Schema $form
+ */
 class CompanySettingsPage extends Page
 {
     protected string $view = 'filament.app.pages.company-settings-page';

@@ -4,7 +4,7 @@ domain: Core Platform
 domain-key: core
 panel: app
 module-key: core.marketplace
-status: planned
+status: complete
 priority: v1-core
 depends-on: [core.billing]
 soft-depends: []

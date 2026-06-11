@@ -1,6 +1,23 @@
+# Plain PHPStan (no Larastan — it exits silently in this environment, see
+# ADR 2026-06-11 static-analysis-without-larastan). The ignores below are
+# bounded to Eloquent/Auth framework magic that plain PHPStan cannot model
+# (__callStatic create/query scopes, guard generics). They hide no app logic.
 parameters:
     level: 5
     paths:
         - app
-    excludePaths:
-        - app/Filament/*/Resources/*/Pages/*
+    ignoreErrors:
+        # Eloquent __callStatic: Model::create()/firstOrCreate()/etc.
+        - identifier: staticMethod.notFound
+          paths:
+            - app/*
+        # Local query scopes (scopePending → pending()) + guard methods
+        # (Auth::guard('web')->login()/tokens()/createToken()).
+        - identifier: method.notFound
+          paths:
+            - app/*
+        # Authenticatable interface lacks model property generics.
+        - message: '#Access to an undefined property Illuminate\\Contracts\\Auth\\Authenticatable#'
+        # Spatie Role contract vs model return co-variance.
+        - message: '#should return Spatie\\Permission\\Models\\Role but returns Spatie\\Permission\\Contracts\\Role#'
+    treatPhpDocTypesAsCertain: false

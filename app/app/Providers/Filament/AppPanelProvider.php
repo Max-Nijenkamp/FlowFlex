@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Http\Middleware\EnsureSubscriptionActive;
+use App\Http\Middleware\RedirectToSetupWizard;
 use App\Http\Middleware\SetCompanyContext;
 use App\Http\Middleware\SetLocale;
 use App\Models\User;
@@ -39,10 +40,17 @@ class AppPanelProvider extends PanelProvider
             ->login()
             ->authGuard('web')
             ->authPasswordBroker('users')
-            ->colors(['primary' => Color::Slate])
+            ->brandName('FlowFlex')
+            ->colors([
+                'primary' => Color::hex('#38BDF8'), // FlowFlex sky
+                'gray' => Color::Slate,
+            ])
             ->font('Inter')
             ->defaultThemeMode(ThemeMode::System)
             ->sidebarCollapsibleOnDesktop()
+            ->viteTheme('resources/css/filament/app/theme.css')
+            ->databaseNotifications() // bell + inbox (ui-strategy row #10; Reverb later)
+            ->databaseNotificationsPolling('30s')
             ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\Filament\App\Resources')
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\Filament\App\Pages')
             ->pages([Dashboard::class])
@@ -58,12 +66,13 @@ class AppPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                SetLocale::class,
             ])
             ->authMiddleware([
                 Authenticate::class,     // establishes the user first
                 SetCompanyContext::class, // then sets tenant context (filament-patterns #7)
+                SetLocale::class,        // locale from settings — needs context first
                 EnsureSubscriptionActive::class, // suspended companies blocked
+                RedirectToSetupWizard::class, // owners with incomplete setup → wizard
             ]);
     }
 }

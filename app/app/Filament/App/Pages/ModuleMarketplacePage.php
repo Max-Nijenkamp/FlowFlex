@@ -73,7 +73,7 @@ class ModuleMarketplacePage extends Page
 
         try {
             app(BillingServiceInterface::class)->activateModule(new ActivateModuleData($moduleKey));
-            Notification::make()->success()->title("Module activated")->send();
+            Notification::make()->success()->title('Module activated')->send();
         } catch (ModuleAlreadyActiveException|\InvalidArgumentException $e) {
             Notification::make()->danger()->title($e->getMessage())->send();
         }

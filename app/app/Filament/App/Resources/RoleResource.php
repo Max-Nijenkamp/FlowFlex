@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Resources;
 
+use App\Actions\Core\DeleteRoleAction;
 use App\Contracts\Core\BillingServiceInterface;
 use App\Exceptions\Core\CannotDeleteBuiltInRoleException;
 use BackedEnum;
@@ -12,9 +13,6 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
-use Filament\Resources\Pages\CreateRecord;
-use Filament\Resources\Pages\EditRecord;
-use Filament\Resources\Pages\ListRecords;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -75,7 +73,7 @@ class RoleResource extends Resource
                 DeleteAction::make()
                     ->using(function (Role $record): void {
                         try {
-                            \App\Actions\Core\DeleteRoleAction::run($record->id);
+                            DeleteRoleAction::run($record->id);
                         } catch (CannotDeleteBuiltInRoleException|\RuntimeException $e) {
                             Notification::make()->danger()->title($e->getMessage())->send();
                         }

@@ -19,7 +19,7 @@ class AssignRolesAction
 
         // Removing `owner` from the only owner is forbidden.
         if ($user->hasRole('owner') && ! in_array('owner', $data->roles, true) && $this->isLastOwner($user)) {
-            throw new CannotRemoveLastOwnerException();
+            throw new CannotRemoveLastOwnerException;
         }
 
         $user->syncRoles($data->roles);

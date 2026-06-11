@@ -1,0 +1,13 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/Admin/**/*';
+@source '../../../../resources/views/filament/admin/**/*';
+
+/* FlowFlex staff console theme. */
+.fi-sidebar {
+    @apply border-e border-indigo-200/40 dark:border-indigo-950;
+}
+
+.fi-topbar nav {
+    @apply backdrop-blur-md bg-white/80 dark:bg-slate-900/80;
+}

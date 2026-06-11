@@ -13,7 +13,7 @@ Bugs, spec issues, and missing details discovered during build sessions.
 
 | ID | Severity | Domain | Module | Description | Discovered |
 |---|---|---|---|---|---|
-| [[gap-filament5-plugins-unavailable]] | medium | foundation | foundation.scaffold | 4 Filament plugins (shield, tiptap, fullcalendar, activitylog) have no Filament 5 release yet — external; non-blocking for foundation, re-check at each dependent module | 2026-06-11 |
+| [[gap-filament5-plugins-unavailable]] | low | foundation | foundation.scaffold | 2 of 4 Filament plugins still lack v5 (fullcalendar, tiptap — needed Phase 2+); shield + activitylog resolved via custom resources in core.rbac/core.audit | 2026-06-11 |
 
 All 7 audit gaps resolved at spec level 2026-06-11 (see below). Code-level enforcement is carried into each module build via the Definition of Done. Full per-spec worklist: [[build/security-audit-2026-06-11]].
 

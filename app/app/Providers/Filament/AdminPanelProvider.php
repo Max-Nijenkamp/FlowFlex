@@ -36,10 +36,15 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->authGuard('admin')
             ->authPasswordBroker('admins')
-            ->colors(['primary' => Color::Indigo])
+            ->brandName('FlowFlex Staff')
+            ->colors([
+                'primary' => Color::Indigo,
+                'gray' => Color::Slate,
+            ])
             ->font('Inter')
             ->defaultThemeMode(ThemeMode::System)
             ->sidebarCollapsibleOnDesktop()
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\Filament\Admin\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\Filament\Admin\Pages')
             ->pages([Dashboard::class])

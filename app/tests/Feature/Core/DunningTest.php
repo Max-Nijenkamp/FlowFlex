@@ -6,6 +6,7 @@ use App\Contracts\Core\BillingServiceInterface;
 use App\Events\Core\CompanySubscriptionSuspended;
 use App\Models\Company;
 use App\Models\Core\BillingInvoice;
+use App\Models\User;
 use App\States\Core\BillingInvoice\Open;
 use App\States\Core\BillingInvoice\Paid;
 use App\States\Core\BillingInvoice\PastDue;
@@ -76,7 +77,7 @@ it('suspends the company after dunning exhausts', function () {
 
 it('blocks suspended companies from the app panel', function () {
     $company = Company::factory()->create(['subscription_status' => 'suspended']);
-    $user = App\Models\User::factory()->forCompany($company)->create();
+    $user = User::factory()->forCompany($company)->create();
 
     $this->actingAs($user, 'web')->get('/app')->assertStatus(402);
 });

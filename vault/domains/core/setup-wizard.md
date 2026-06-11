@@ -4,7 +4,7 @@ domain: Core Platform
 domain-key: core
 panel: app
 module-key: core.setup
-status: planned
+status: complete
 priority: v1
 depends-on: [core.settings, core.invitations, core.marketplace]
 soft-depends: [core.files]

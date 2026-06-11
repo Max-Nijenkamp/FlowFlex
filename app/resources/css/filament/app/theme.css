@@ -1,0 +1,35 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/App/**/*';
+@source '../../../../resources/views/filament/app/**/*';
+
+/* FlowFlex workspace theme — not stock Filament. */
+:root {
+    --ff-radius: 0.875rem;
+}
+
+.fi-sidebar {
+    @apply border-e border-slate-200/60 dark:border-slate-800;
+}
+
+.fi-sidebar-item-button {
+    border-radius: var(--ff-radius);
+}
+
+.fi-topbar nav {
+    @apply backdrop-blur-md bg-white/80 dark:bg-slate-900/80;
+}
+
+.fi-section,
+.fi-ta-ctn,
+.fi-wi {
+    border-radius: var(--ff-radius);
+}
+
+.fi-btn {
+    border-radius: calc(var(--ff-radius) - 0.25rem);
+}
+
+.fi-logo {
+    @apply font-semibold tracking-tight;
+}

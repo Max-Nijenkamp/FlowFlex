@@ -7,6 +7,7 @@ namespace App\Models\Core;
 use App\States\Core\BillingInvoice\BillingInvoiceState;
 use App\Support\Traits\BelongsToCompany;
 use Database\Factories\Core\BillingInvoiceFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,7 +28,7 @@ use Spatie\ModelStates\HasStates;
  * @property Carbon|null $paid_at
  * @property int $dunning_attempts
  * @property Carbon|null $next_dunning_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, BillingInvoiceLine> $lines
+ * @property-read Collection<int, BillingInvoiceLine> $lines
  */
 class BillingInvoice extends Model
 {

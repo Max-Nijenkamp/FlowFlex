@@ -4,7 +4,7 @@ domain: Core Platform
 domain-key: core
 panel: app
 module-key: core.webhooks
-status: planned
+status: complete
 priority: v1
 depends-on: [foundation.queues, core.billing, core.rbac]
 soft-depends: []

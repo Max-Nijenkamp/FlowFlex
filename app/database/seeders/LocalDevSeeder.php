@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Contracts\Core\BillingServiceInterface;
 use App\Models\Admin;
 use App\Models\Company;
 use App\Models\User;
@@ -52,7 +53,7 @@ class LocalDevSeeder extends Seeder
         $ownerUser->assignRole($owner);
 
         // Free core modules active for the demo company.
-        app(\App\Contracts\Core\BillingServiceInterface::class)->seedFreeCoreModules($company->id);
+        app(BillingServiceInterface::class)->seedFreeCoreModules($company->id);
 
         // A few extra demo users.
         User::factory()->forCompany($company)->count(5)->create();

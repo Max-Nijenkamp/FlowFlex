@@ -188,7 +188,27 @@
       "Bash(echo \"exit $?\")",
       "Bash(sed -n 1,50p \"vendor/filament/filament/stubs/Resource.stub\")",
       "Bash(sed -n 1,30p \"vendor/filament/filament/stubs/Page.stub\")",
-      "Bash(printf '<x-filament-panels::page>\\\\n    {{ $this->content }}\\\\n</x-filament-panels::page>\\\\n')"
+      "Bash(printf '<x-filament-panels::page>\\\\n    {{ $this->content }}\\\\n</x-filament-panels::page>\\\\n')",
+      "Bash(perl -i -pe 's/\\(\\\\$table->nullableUlidMorphs\\\\\\('\\\\''causer'\\\\'', '\\\\''causer'\\\\''\\\\\\);\\)/$1\\\\n            \\\\$table->json\\('\\\\''attribute_changes'\\\\''\\)->nullable\\(\\); \\\\/\\\\/ activitylog v5/' 2026_06_11_120500_create_activity_log_table.php)",
+      "Bash(perl -i -pe \"s/use Spatie\\\\\\\\\\\\\\\\Activitylog\\\\\\\\\\\\\\\\Models\\\\\\\\\\\\\\\\Activity;/use App\\\\\\\\\\\\\\\\Models\\\\\\\\\\\\\\\\Core\\\\\\\\\\\\\\\\Activity;/\" config/activitylog.php)",
+      "Bash(perl -i -pe \"s/'path_generator' => Spatie\\\\\\\\\\\\\\\\MediaLibrary\\\\\\\\\\\\\\\\Support\\\\\\\\\\\\\\\\PathGenerator\\\\\\\\\\\\\\\\DefaultPathGenerator::class,/'path_generator' => App\\\\\\\\\\\\\\\\Support\\\\\\\\\\\\\\\\Media\\\\\\\\\\\\\\\\CompanyPathGenerator::class,/\" config/media-library.php)",
+      "Bash(perl -i -pe \"s/'path_generator' => DefaultPathGenerator::class,/'path_generator' => \\\\\\\\\\\\\\\\App\\\\\\\\\\\\\\\\Support\\\\\\\\\\\\\\\\Media\\\\\\\\\\\\\\\\CompanyPathGenerator::class,/\" config/media-library.php)",
+      "Bash(mkdir -p resources/views/filament/app/pages/partials)",
+      "Bash(printf '<x-filament::button type=\"submit\" size=\"sm\">\\\\n    Finish setup\\\\n</x-filament::button>\\\\n')",
+      "Bash(echo \"pint exit $?\")",
+      "Bash(perl -i -pe 's/\\\\$preference\\\\?->in_app_enabled \\\\?\\\\? true/\\\\$preference->in_app_enabled ?? true/; s/\\\\$preference\\\\?->email_enabled \\\\?\\\\? true/\\\\$preference->email_enabled ?? true/' app/Services/Core/NotificationPreferenceService.php app/Filament/App/Pages/NotificationPreferencesPage.php)",
+      "Bash(perl -i -pe 's/\\\\\\(\\\\\\(\\\\$preference\\\\?->email_enabled \\\\?\\\\? true\\\\\\)/\\(\\(\\\\$preference->email_enabled ?? true\\)/' app/Services/Core/NotificationPreferenceService.php)",
+      "Bash(perl -i -pe 's/\\\\$latest\\\\?->storedCheckResults \\\\?\\\\? \\\\[\\\\]/\\\\$latest->storedCheckResults ?? []/' app/Filament/App/Pages/SystemStatusPage.php)",
+      "Bash(perl -i -pe 's/request\\\\\\(\\\\\\)\\\\?->ip\\\\\\(\\\\\\)/request\\(\\)->ip\\(\\)/' app/Support/Services/AuditLogger.php)",
+      "Bash(perl -0pi -e 's/\\\\$companyId = \\\\$media->getCustomProperty\\\\\\('\\\\''company_id'\\\\''\\\\\\)\\\\s*\\\\n\\\\s*\\\\?\\\\? \\\\$media->model\\\\?->company_id\\\\s*\\\\n\\\\s*\\\\?\\\\? '\\\\''platform'\\\\'';/\\\\$owner = \\\\$media->getRelationValue\\('\\\\''model'\\\\''\\);\\\\n        \\\\$companyId = \\\\$media->getCustomProperty\\('\\\\''company_id'\\\\''\\)\\\\n            ?? \\\\$owner?->company_id\\\\n            ?? '\\\\''platform'\\\\'';/' app/Support/Media/CompanyPathGenerator.php)",
+      "Bash(perl -0pi -e 's/\\( \\\\* \\\\@property-read string \\\\$full_name\\\\n \\\\* \\\\@property-read Company \\\\$company\\)/\\\\$1\\\\n \\\\* \\\\@property-read \\\\\\\\\\\\\\\\Illuminate\\\\\\\\\\\\\\\\Database\\\\\\\\\\\\\\\\Eloquent\\\\\\\\\\\\\\\\Collection<int, \\\\\\\\\\\\\\\\Spatie\\\\\\\\\\\\\\\\Permission\\\\\\\\\\\\\\\\Models\\\\\\\\\\\\\\\\Role> \\\\$roles/' app/Models/User.php)",
+      "Bash(perl -i -pe 's/use Illuminate\\\\\\\\\\\\\\\\View\\\\\\\\\\\\\\\\View;/use Illuminate\\\\\\\\\\\\\\\\Contracts\\\\\\\\\\\\\\\\View\\\\\\\\\\\\\\\\View;/' app/Http/Controllers/AuthController.php)",
+      "Bash(perl -i -pe 's/^use Illuminate\\\\\\\\View\\\\\\\\View;$/use Illuminate\\\\\\\\Contracts\\\\\\\\View\\\\\\\\View;/' app/Http/Controllers/AuthController.php)",
+      "Bash(perl -i -pe \"s/\\\\]\\\\\\)->submitAction\\\\\\(view\\\\\\('filament\\\\.app\\\\.pages\\\\.partials\\\\.wizard-submit'\\\\\\)\\\\\\),/]\\)->submitAction\\(new \\\\\\\\\\\\\\\\Illuminate\\\\\\\\\\\\\\\\Support\\\\\\\\\\\\\\\\HtmlString\\(view\\('filament.app.pages.partials.wizard-submit'\\)->render\\(\\)\\)\\),/\" app/Filament/App/Pages/SetupWizardPage.php)",
+      "Bash(echo \"pint=$?\")",
+      "Bash(perl -i -pe 's/\\\\?\\\\? \\\\$owner\\\\?->company_id/?? \\\\$owner->company_id/' app/Support/Media/CompanyPathGenerator.php)",
+      "Bash(perl -0pi -e 's/\\\\$ownerCompanyId = \\\\$media->getCustomProperty\\\\\\('\\\\''company_id'\\\\''\\\\\\) \\\\?\\\\? \\\\$media->model\\\\?->company_id;/\\\\$owner = \\\\$media->getRelationValue\\('\\\\''model'\\\\''\\);\\\\n        \\\\$ownerCompanyId = \\\\$media->getCustomProperty\\('\\\\''company_id'\\\\''\\) ?? \\\\$owner->company_id ?? null;/' app/Actions/Core/TemporaryUrlAction.php)",
+      "Bash(perl -0pi -e \"s/input: \\\\['resources\\\\/css\\\\/app.css', 'resources\\\\/js\\\\/app.js'\\\\],/input: [\\\\n                'resources\\\\/css\\\\/app.css',\\\\n                'resources\\\\/js\\\\/app.js',\\\\n                'resources\\\\/css\\\\/filament\\\\/app\\\\/theme.css',\\\\n                'resources\\\\/css\\\\/filament\\\\/admin\\\\/theme.css',\\\\n            ],/\" vite.config.js)"
     ]
   },
   "enabledMcpjsonServers": [

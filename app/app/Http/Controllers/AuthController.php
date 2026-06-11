@@ -9,9 +9,9 @@ use App\Data\Core\AcceptInvitationData;
 use App\Exceptions\Core\InvalidInvitationTokenException;
 use App\Models\Core\UserInvitation;
 use App\Support\Scopes\CompanyScope;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class AuthController extends Controller
 {

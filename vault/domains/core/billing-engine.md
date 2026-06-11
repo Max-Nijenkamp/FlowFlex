@@ -4,7 +4,7 @@ domain: Core Platform
 domain-key: core
 panel: app
 module-key: core.billing
-status: planned
+status: complete
 priority: v1-core
 depends-on: [foundation.panels, foundation.tenancy, foundation.queues, core.settings]
 soft-depends: [core.notifications]
