@@ -14,7 +14,7 @@ patterns: [states, queues, email]
 tables: [mkt_campaigns, mkt_campaign_recipients, mkt_unsubscribes]
 permission-prefix: marketing.campaigns
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -105,6 +105,14 @@ Email marketing campaigns: build, segment, schedule, send, and track. Bulk one-o
 |---|---|---|
 | `CampaignResource` | #1 CRUD resource | composer, audience picker, test-send, stats on view |
 | `CampaignStatsWidget` | #6 widget | open/click funnel |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('marketing.campaigns.view-any') && BillingService::hasModule('marketing.campaigns')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Public/portal guard** (HIGH): Specify these endpoints use signed/tokenized URLs (e.g. Laravel signed routes or per-recipient opaque token validation) and run outside the Sanctum session guard; document the token scheme and that they resolve company by token, not session.
+- **Rate limiter** (medium): Add a rate limiter (throttle middleware, per-IP or per-token) to the public Track/Unsubscribe routes in the spec.
 
 ---
 

@@ -91,6 +91,9 @@ Composite health score per customer account combining usage, support, sentiment,
 | `HealthScoreResource` | #1 (read-only) | tier filter, factor breakdown on view, trend chart |
 | `HealthDashboardPage` | #6 dashboard page | distribution, at-risk list |
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('cs.health.view-any') && BillingService::hasModule('cs.health')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
 ---
 
 ## Permissions

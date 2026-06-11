@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [legal_frameworks, legal_controls, legal_compliance_tasks]
 permission-prefix: legal.compliance
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -96,6 +96,13 @@ Track regulatory obligations, compliance tasks, and audit readiness. Registers f
 | `FrameworkResource` | #1 CRUD resource | |
 | `ControlResource` | #1 CRUD resource | status + evidence, gap filter |
 | `ComplianceDashboardPage` | #6 dashboard page | readiness % per framework, gap list |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('legal.compliance.view-any') && BillingService::hasModule('legal.compliance')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): Specify allowed evidence file types (e.g. pdf/png/jpg/docx), max size, and the companies/{id}/ scoped storage path for the Media Library collection.
 
 ---
 

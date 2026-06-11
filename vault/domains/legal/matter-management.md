@@ -14,7 +14,7 @@ patterns: [states]
 tables: [legal_matters, legal_matter_events]
 permission-prefix: legal.matters
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -96,6 +96,13 @@ Track legal matters (disputes, cases, advisory work): status, assigned counsel, 
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `MatterResource` | #1 CRUD resource | timeline relation, spend summary (soft-dep), confidential badge |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('legal.matters.view-any') && BillingService::hasModule('legal.matters')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): Specify allowed document types, max size, and companies/{id}/ scoped storage path for the matter-document Media Library collection.
 
 ---
 

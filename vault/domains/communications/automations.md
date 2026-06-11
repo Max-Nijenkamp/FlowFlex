@@ -14,7 +14,7 @@ patterns: []
 tables: [comms_automation_rules, comms_chatbot_flows]
 permission-prefix: comms.automations
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -99,6 +99,9 @@ Conversation flow position: `comms_conversations` meta *(assumed: jsonb meta col
 |---|---|---|
 | `CommsAutomationRuleResource` | #1 CRUD resource | condition/action repeaters, reorder |
 | `ChatbotFlowResource` | #1 CRUD resource | node repeater builder (tree) |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('comms.automations.view-any') && BillingService::hasModule('comms.automations')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

@@ -2,7 +2,8 @@
 type: gap
 severity: high
 category: architecture
-status: open
+status: resolved
+resolved: 2026-06-11
 domain: All
 color: "#F97316"
 discovered: 2026-06-11
@@ -22,6 +23,10 @@ Specs declare resources/pages/widgets without the mandatory `canAccess() = permi
 
 ## Proposed Solution
 Resolved at the template level by [[build/decisions/decision-2026-06-11-security-contract-hardening]]: spec-template `## Filament` skeleton now mandates the contract; filament-patterns #1 strengthened. Backfill per-module at `/flowflex:start` using the per-spec list in [[build/security-audit-2026-06-11]]. Prioritise hr.payroll, hr.compensation, core.rbac, core.audit-log, core.billing, it.mdm.
+
+## Resolution
+
+Access-contract line backfilled into 165 specs (every spec with a `## Filament` section), derived from each spec's `permission-prefix` + `module-key`. Template + filament-patterns #1 now mandate it for new specs. Code-level enforcement happens at build per DoD.
 
 ## Related
 - [[build/security-audit-2026-06-11]]

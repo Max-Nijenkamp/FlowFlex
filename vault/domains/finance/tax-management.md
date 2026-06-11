@@ -14,7 +14,7 @@ patterns: [money, custom-pages]
 tables: [fin_tax_rates, fin_tax_classes, fin_tax_periods]
 permission-prefix: finance.tax
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -104,6 +104,9 @@ Tax rate configuration, VAT/GST calculation on invoices and bills, and tax perio
 | `TaxRateResource` | #1 CRUD resource | rates + classes management |
 | `TaxReturnPage` | #9 report custom page | period summary, VAT return prep, file action |
 | VAT-validate action | table/form action | on customer/supplier records |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('finance.tax.view-any') && BillingService::hasModule('finance.tax')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

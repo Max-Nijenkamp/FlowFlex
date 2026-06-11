@@ -14,7 +14,7 @@ patterns: [queues, encryption]
 tables: [webhook_endpoints, webhook_deliveries]
 permission-prefix: core.webhooks
 encrypted-fields: ["webhook_endpoints.secret"]
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -104,6 +104,13 @@ Message: "Webhook URLs must use HTTPS."
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `WebhookEndpointResource` | #1 CRUD resource | event checkboxes grouped by domain; delivery log relation manager; test + rotate-secret actions |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('core.webhooks.view-any') && BillingService::hasModule('core.webhooks')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle limiter on SendTestWebhookAction (e.g. a few test sends per endpoint per minute) in the Actions/Filament section.
 
 ---
 

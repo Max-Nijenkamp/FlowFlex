@@ -14,7 +14,7 @@ patterns: [service, search, custom-fields]
 tables: [crm_contacts, crm_accounts, crm_contact_accounts]
 permission-prefix: crm.contacts
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -147,6 +147,13 @@ Interface→Service: `ContactServiceInterface` → `ContactService`.
 | `ContactResource` | #1 CRUD resource | search, filters: owner/account/stage/tag; lifecycle stage quick-move; excel export |
 | Contact view page | #2 detail with tabs | Overview, Activities (soft-dep), Deals (soft-dep), Files |
 | `AccountResource` | #1 CRUD resource | view shows contacts + deals + LTV |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.contacts.view-any') && BillingService::hasModule('crm.contacts')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a named rate limiter for the import upload and export actions, and note throttling/dedupe on contact-creating event listeners.
 
 ---
 

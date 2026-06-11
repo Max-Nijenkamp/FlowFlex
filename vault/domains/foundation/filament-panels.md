@@ -14,7 +14,7 @@ patterns: [panels, custom-pages]
 tables: []
 permission-prefix: ""
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -129,6 +129,13 @@ vite.config.js (theme inputs)
 bootstrap/providers.php (registrations)
 tests/Feature/Foundation/PanelAuthTest.php
 ```
+
+---
+
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Add a note to the Filament panel spec that login endpoints on both panels enforce a login throttle (Laravel's default Filament login rate limit or an explicit `throttle` rule), and reference architecture/security.md for the limit values.
 
 ---
 

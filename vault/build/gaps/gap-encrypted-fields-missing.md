@@ -2,7 +2,8 @@
 type: gap
 severity: high
 category: data-model
-status: open
+status: resolved
+resolved: 2026-06-11
 domain: All
 color: "#F97316"
 discovered: 2026-06-11
@@ -22,6 +23,10 @@ HIGH across AI, communications, events, workplace, legal, HR. Regulated PII at r
 
 ## Proposed Solution
 7 named specs FIXED this session (ai.document-intelligence, comms.whatsapp, comms.sms, events.registrations, hr.recruitment, legal.dsar, workplace.visitors) — encrypted-fields populated, 🔐 markers added, queryable email backed by *_hash column. Template convention now enforces the rule going forward (SEC-ENCRYPT in [[build/security-audit-2026-06-11]]). Re-scan other domains for any further sensitive columns.
+
+## Resolution
+
+All 7 flagged specs fixed: encrypted-fields populated, 🔐 markers added, encrypted columns set to text, events.registrations given attendee_email_hash for unique lookup, hr_offers.salary_cents→salary_raw.
 
 ## Related
 - [[build/security-audit-2026-06-11]]

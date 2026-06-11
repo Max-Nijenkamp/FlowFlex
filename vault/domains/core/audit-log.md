@@ -14,7 +14,7 @@ patterns: []
 tables: [activity_log]
 permission-prefix: core.audit
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -83,6 +83,9 @@ None — log rows are written via the service and rendered by the package resour
 |---|---|---|
 | `AuditLogResource` (`/app`, via rmsramos/activitylog) | #1 CRUD (read-only) | filters: date range, domain, user, action; no create/edit/delete |
 | Admin cross-company log view (`/admin`) | #1 (read-only) | `withoutGlobalScope` allowed here only |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('core.audit.view-any') && BillingService::hasModule('core.audit')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

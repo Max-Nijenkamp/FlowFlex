@@ -14,7 +14,7 @@ patterns: [states, interface-service, events, money]
 tables: [crm_deals, crm_deal_contacts, crm_deal_products]
 permission-prefix: crm.deals
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -237,6 +237,9 @@ No v1 consumers — analytics consumes in Phase 3 *(assumed)*.
 | `CloseDealAction` | modal action | outcome + lost_reason form |
 
 (The Kanban board itself is [[domains/crm/pipeline|crm.pipeline]]'s `PipelineBoardPage` — ui-strategy row #3, Reverb broadcast.)
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.deals.view-any') && BillingService::hasModule('crm.deals')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [gdpr, queues]
 tables: [dms_retention_policies, dms_legal_holds, dms_retention_log]
 permission-prefix: dms.retention
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -96,6 +96,9 @@ Automated document lifecycle: archive or delete documents after a defined retent
 | `RetentionPolicyResource` | #1 CRUD resource | preview affected-count *(assumed)* |
 | `LegalHoldResource` | #1 CRUD resource | place/release with reason |
 | Retention log | #1 (read-only) | compliance view |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('dms.retention.view-any') && BillingService::hasModule('dms.retention')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

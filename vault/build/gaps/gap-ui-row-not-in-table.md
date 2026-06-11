@@ -2,7 +2,8 @@
 type: gap
 severity: high
 category: architecture
-status: open
+status: resolved
+resolved: 2026-06-11
 domain: All
 color: "#F97316"
 discovered: 2026-06-11
@@ -22,6 +23,10 @@ HIGH in lms (skills-matrix heat-map, mentoring directory) and workplace (desk-bo
 
 ## Proposed Solution
 Raise 3 ADRs adding the rows (or remapping to existing rows) before those modules build: skills-matrix heat-map, mentor directory gallery, desk-booking floor map. See [[architecture/ui-strategy]] and [[build/security-audit-2026-06-11]] (UI-ROW).
+
+## Resolution
+
+ADR-2026-06-11 (UI strategy rows 17–19) added gallery/directory, heat-map/matrix, spatial/floor-map rows to ui-strategy.md; the 3 specs (lms.mentoring #17, lms.skills-matrix #18, workplace.desk-booking #19) now cite correct rows.
 
 ## Related
 - [[build/security-audit-2026-06-11]]

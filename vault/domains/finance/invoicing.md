@@ -14,7 +14,7 @@ patterns: [states, service, money, pdf, email, events]
 tables: [fin_invoices, fin_invoice_lines, fin_payments, fin_customers]
 permission-prefix: finance.invoicing
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -191,6 +191,13 @@ Listener: `CreateInvoiceStubListener` — draft invoice, lines from `crm_deal_pr
 | Invoice view page | #2 detail | PDF preview + payment history + actions (Send, Record Payment, Void) |
 | `CustomerResource` | #1 CRUD resource | billing customers |
 | `InvoiceStatsWidget` | #6 widget | outstanding, overdue count, paid this month |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('finance.invoicing.view-any') && BillingService::hasModule('finance.invoicing')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a per-user/per-company rate limiter (RateLimiter::for) on the export action and PDF-generation endpoint per architecture/api-design.md / security.md.
 
 ---
 

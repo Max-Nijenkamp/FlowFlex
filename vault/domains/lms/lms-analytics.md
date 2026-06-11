@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: lms.analytics
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -74,6 +74,13 @@ Output only: `LmsMetricsData`.
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `LmsDashboardPage` | #6 dashboard page + apex charts | compliance tab, export |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('lms.analytics.view-any') && BillingService::hasModule('lms.analytics')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter / throttle on the report export action in the Services or Filament section.
 
 ---
 

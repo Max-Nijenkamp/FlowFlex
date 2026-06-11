@@ -14,7 +14,7 @@ patterns: [states, custom-pages]
 tables: [it_tickets, it_ticket_replies]
 permission-prefix: it.helpdesk
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -93,6 +93,9 @@ Actions: `CreateItTicketAction`, `AssignItTicketAction`, `ReplyAction` (requeste
 |---|---|---|
 | `ItTicketResource` | #1 CRUD resource | My tickets / All (permission) tabs |
 | `ItHelpdeskQueuePage` | #8-style queue custom page | IT staff queue, priority-sorted, polling 30s |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('it.helpdesk.view-any') && BillingService::hasModule('it.helpdesk')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

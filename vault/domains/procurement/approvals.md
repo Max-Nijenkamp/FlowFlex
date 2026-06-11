@@ -14,7 +14,7 @@ patterns: []
 tables: [proc_approval_rules, proc_approval_delegations]
 permission-prefix: procurement.approvals
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -92,6 +92,9 @@ Configurable approval workflows and authority matrix for requisitions and POs ba
 | `ApprovalRuleResource` | #1 CRUD resource | matrix table grouped by applies_to/level |
 | `ApprovalDelegationResource` | #1 CRUD resource | own delegations |
 | `PendingApprovalsPage` | #1-style custom page | unified queue (requisitions + POs) |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('procurement.approvals.view-any') && BillingService::hasModule('procurement.approvals')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

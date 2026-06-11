@@ -14,7 +14,7 @@ patterns: [custom-pages, money]
 tables: [fin_cashflow_projections, fin_cashflow_items]
 permission-prefix: finance.cashflow
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -103,6 +103,9 @@ Cash flow forecasting and receivables-vs-payables timeline. Short-term liquidity
 |---|---|---|
 | `CashFlowPage` | #9 report custom page | 13-week grid + apex chart, scenario toggle, manual item add |
 | Low-cash alert widget | #6 widget | next breach week |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('finance.cashflow.view-any') && BillingService::hasModule('finance.cashflow')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [custom-pages, events]
 tables: [hr_shifts, hr_shift_swap_requests]
 permission-prefix: hr.shifts
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -109,6 +109,9 @@ Listener: `BlockShiftsOnLeaveListener` — queued, `WithCompanyContext`; unassig
 |---|---|---|
 | `ShiftSchedulePage` | #4 Calendar custom page | fullcalendar week view, drag-drop assignment, gap highlighting, publish + copy-week actions; polling 30s |
 | `ShiftSwapRequestResource` | #1 CRUD resource | pending swaps, approve action |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.shifts.view-any') && BillingService::hasModule('hr.shifts')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

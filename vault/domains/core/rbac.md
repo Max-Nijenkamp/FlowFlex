@@ -14,7 +14,7 @@ patterns: [policy, seeding]
 tables: []
 permission-prefix: core.rbac
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -92,6 +92,9 @@ Actions (simple ops):
 |---|---|---|
 | `RoleResource` | #1 CRUD resource | shield-generated permission matrix grouped by domain |
 | `UserResource` | #1 CRUD resource | list users, assign roles, deactivate; invite action (soft-dep) |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('core.rbac.view-any') && BillingService::hasModule('core.rbac')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

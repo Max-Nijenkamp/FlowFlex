@@ -14,7 +14,7 @@ patterns: [websockets, email]
 tables: [notifications, notification_preferences]
 permission-prefix: core.notifications
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -103,6 +103,9 @@ Listeners notify owner/admins per [[architecture/event-bus]] contracts (suspensi
 |---|---|---|
 | Bell + slide-out panel (all panels) | #10 render hook + Livewire | Reverb badge updates |
 | `NotificationPreferencesPage` (`/app`) | #7 custom page (form) | matrix: type × channel toggles |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('core.notifications.view-any') && BillingService::hasModule('core.notifications')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

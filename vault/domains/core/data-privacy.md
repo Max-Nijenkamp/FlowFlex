@@ -14,7 +14,7 @@ patterns: [gdpr, queues, states]
 tables: [dsar_requests, consent_logs]
 permission-prefix: core.privacy
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -125,6 +125,13 @@ Consumers per [[architecture/event-bus]] (Notifications now; Legal in P3).
 |---|---|---|
 | `DsarRequestResource` | #1 CRUD resource | deadline countdown column, process/reject actions, result download |
 | `DataExportPage` | #7 custom page | trigger full export, download when ready (polling 30s) |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('core.privacy.view-any') && BillingService::hasModule('core.privacy')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle limiter on the export trigger (e.g. one export per company per N minutes) in the Filament/Actions section.
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [crm_deal_rooms, crm_deal_room_documents, crm_deal_room_action_items, crm_deal_room_stakeholders]
 permission-prefix: crm.deal-rooms
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -110,6 +110,13 @@ Shared digital space for buyer and seller during a deal — documents, mutual ac
 |---|---|---|
 | `DealRoomResource` | #1 CRUD resource | per-deal room, engagement panel, revoke action |
 | Public room | Vue + Inertia `/room/{token}` (ui-strategy row #16) | branded, action plan, docs, stakeholders |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.deal-rooms.view-any') && BillingService::hasModule('crm.deal-rooms')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Public/portal guard** (HIGH): Specify the public route guard (guest/no app-session) and confirm the token resolves the company context without exposing the authenticated app guard; document middleware for /room/{token}.
 
 ---
 

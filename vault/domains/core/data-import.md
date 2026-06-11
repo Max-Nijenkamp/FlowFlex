@@ -14,7 +14,7 @@ patterns: [queues]
 tables: [data_imports]
 permission-prefix: core.import
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -106,6 +106,14 @@ Row-level errors do NOT fail the import — they land in the error report.
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `DataImportResource` | #1 CRUD resource | create = upload + mapping wizard steps; view = progress + counts + error report download |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('core.import.view-any') && BillingService::hasModule('core.import')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle limiter on the import-create surface (e.g. a low-rate 'import' limiter) in the Filament/Actions section.
+- **Upload contract** (medium): Note in Core Features / DTOs that the uploaded import file is stored via FileStorageService under companies/{company_id}/ (no raw Storage::put), matching the file-storage path contract.
 
 ---
 

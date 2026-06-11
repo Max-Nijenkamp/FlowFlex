@@ -14,7 +14,7 @@ patterns: [custom-pages, money]
 tables: []
 permission-prefix: procurement.spend
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -75,6 +75,13 @@ Output only: `SpendMetricsData` — spend breakdowns, trend series, maverick lis
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `SpendAnalyticsDashboard` | #6 dashboard page + apex charts | filters: period/supplier/category; export |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('procurement.spend.view-any') && BillingService::hasModule('procurement.spend')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter (e.g. throttle on the export action) for the spend report export per architecture/security.md.
 
 ---
 

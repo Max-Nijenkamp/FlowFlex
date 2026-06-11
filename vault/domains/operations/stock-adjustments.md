@@ -14,7 +14,7 @@ patterns: [money, custom-pages]
 tables: [ops_stock_adjustments]
 permission-prefix: operations.adjustments
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -85,6 +85,13 @@ Manual stock corrections for damage, loss, stocktake reconciliation, and write-o
 |---|---|---|
 | `StockAdjustmentResource` | #1 CRUD resource | approve action, pending tab, reason/period report filters |
 | `StocktakePage` | #7 custom page | warehouse pick → count grid → preview deltas → confirm |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('operations.adjustments.view-any') && BillingService::hasModule('operations.adjustments')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter on the stocktake bulk submission to throttle large bulk adjustment runs per company.
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [custom-pages, money]
 tables: [hr_headcount_plans, hr_planned_roles]
 permission-prefix: hr.workforce
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -103,6 +103,9 @@ erDiagram
 | `HeadcountPlanResource` | #1 CRUD resource | per-period plans, budget columns |
 | `PlannedRoleResource` | #1 CRUD resource | pipeline status, approve action |
 | `WorkforcePlanningDashboard` | #6 dashboard page | planned-vs-actual charts, scenario toggle |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.workforce.view-any') && BillingService::hasModule('hr.workforce')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [custom-pages, search]
 tables: [dms_folders, dms_folder_access, dms_documents]
 permission-prefix: dms.library
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -108,6 +108,14 @@ Interface→Service: `DocumentServiceInterface` → `DocumentService`.
 | `DocumentLibraryPage` | #11 tree custom page | folder tree sidebar + document grid; drag-drop upload |
 | `DocumentViewerPage` | #2-style custom page | PDF/image preview (temp signed URL), metadata, versions (soft-dep) |
 | `FolderResource` | #1 CRUD resource | access config |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('dms.library.view-any') && BillingService::hasModule('dms.library')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter (RateLimiter::for) on document search and upload endpoints, scoped per company/user, to prevent abuse of Meilisearch and storage.
+- **Upload contract** (medium): In Core Features / DTOs, state the allowed MIME/extension whitelist and max upload size enforced on UploadDocumentData (e.g. via mimes + max validation), referencing the security baseline values explicitly rather than only by link.
 
 ---
 

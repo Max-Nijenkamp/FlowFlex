@@ -14,7 +14,7 @@ patterns: [queues, events]
 tables: [crm_sequences, crm_sequence_steps, crm_sequence_enrolments]
 permission-prefix: crm.sequences
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -123,6 +123,13 @@ Interface→Service: `SequenceServiceInterface` → `SequenceService`.
 | `SequenceResource` | #1 CRUD resource | step repeater builder, performance tab |
 | `SequenceEnrolmentResource` | #1 CRUD resource | who's where, pause/unenrol actions |
 | Enrol action | table/view action | on Contact + Deal |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.sequences.view-any') && BillingService::hasModule('crm.sequences')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rich-text sanitize** (medium): Note HTMLPurifier sanitization on sequence email-step template HTML on save (consistent with crm.email body purification).
 
 ---
 

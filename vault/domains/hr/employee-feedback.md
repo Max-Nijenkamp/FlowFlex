@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [hr_feedback, hr_one_on_ones]
 permission-prefix: hr.feedback
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -103,6 +103,9 @@ Actions (simple ops):
 | `FeedbackResource` | #1 CRUD resource | give/view; visibility-scoped queries |
 | `OneOnOneResource` | #1 CRUD resource | participant-scoped; action-item checklist |
 | `RecognitionFeedPage` | #3-style custom page (feed) | public praise wall; polling 60s |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.feedback.view-any') && BillingService::hasModule('hr.feedback')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [encryption, email]
 tables: [crm_meeting_types, crm_bookings, crm_availability]
 permission-prefix: crm.scheduling
 encrypted-fields: ["crm_availability.calendar_connection"]
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -120,6 +120,14 @@ Rate-limited + honeypot.
 | `AvailabilityPage` | #7 custom page (form) | own working hours |
 
 Public booking page: Vue + Inertia `/book/{company-slug}/{meeting-slug}` — ui-strategy row #16.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.scheduling.view-any') && BillingService::hasModule('crm.scheduling')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Public/portal guard** (HIGH): Specify the guard for the public booking surface (guest/no-auth route group, isolated from app session guard) and confirm no app/Sanctum session leakage; document the route group's middleware stack.
+- **Rate limiter** (medium): Cite a specific named rate limiter for the public booking POST (e.g. RateLimiter::for('public-booking')) covering slot lookup and PaymentIntent creation.
 
 ---
 

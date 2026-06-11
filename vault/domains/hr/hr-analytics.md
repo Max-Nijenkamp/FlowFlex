@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: hr.analytics
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -75,6 +75,13 @@ Output only: `HrMetricsData` — period, headcount_series[], turnover_rate, dept
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `HrAnalyticsDashboard` | #6 dashboard page + apex-chart widgets | period filter in header; widget polling 60s; soft-dep widgets conditional |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.analytics.view-any') && BillingService::hasModule('hr.analytics')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a named throttle on the CSV/PNG export action per architecture/security.md.
 
 ---
 

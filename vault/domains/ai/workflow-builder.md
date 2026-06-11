@@ -14,7 +14,7 @@ patterns: [queues, events, custom-pages]
 tables: [ai_workflows, ai_workflow_runs]
 permission-prefix: ai.workflows
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -85,6 +85,13 @@ Visual no-code automation builder. Trigger → conditions → actions across dom
 | `WorkflowBuilderPage` | #9-style node editor custom page | Livewire + Alpine/JS graph editor *(assumed: list-based builder v1, visual canvas later)* |
 | `WorkflowResource` | #1 CRUD resource | enable/disable, run count |
 | `WorkflowRunResource` | #1 (read-only) | per-node results |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('ai.workflows.view-any') && BillingService::hasModule('ai.workflows')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter on outbound webhook actions (and/or per-workflow execution throttling) to prevent abuse/SSRF-amplification, in addition to the existing loop guard.
 
 ---
 

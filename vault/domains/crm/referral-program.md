@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [crm_referral_programs, crm_referrals]
 permission-prefix: crm.referrals
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -100,6 +100,13 @@ Customer referral tracking with unique links, conversion detection, and configur
 | `ReferralProgramResource` | #1 CRUD resource | reward config |
 | `ReferralResource` | #1 CRUD resource | status pipeline, qualify/reward actions |
 | `ReferralLeaderboardPage` | #9 report custom page | top referrers |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.referrals.view-any') && BillingService::hasModule('crm.referrals')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Public/portal guard** (HIGH): Specify the public referral-capture route's guest guard and a named rate limiter; document the unauthenticated entry surface explicitly (currently absent from the spec).
 
 ---
 

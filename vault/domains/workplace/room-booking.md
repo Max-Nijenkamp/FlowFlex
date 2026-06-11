@@ -92,6 +92,9 @@ Book meeting rooms with availability calendar, recurring bookings, and conflict 
 | `RoomResource` | #1 CRUD resource | amenities, bookable toggle |
 | `RoomBookingPage` | #4 calendar custom page | fullcalendar, room filter, booking form; polling 30s |
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('workplace.rooms.view-any') && BillingService::hasModule('workplace.rooms')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
 ---
 
 ## Permissions

@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [mkt_utm_touches]
 permission-prefix: marketing.utm
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -84,6 +84,9 @@ Unique `(contact_id, touch_type)`.
 |---|---|---|
 | `UtmBuilderPage` | #7 custom page (form) | URL generator with copy |
 | Attribution tables | rendered inside Marketing Analytics dashboard | first/last toggle |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('marketing.utm.view-any') && BillingService::hasModule('marketing.utm')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

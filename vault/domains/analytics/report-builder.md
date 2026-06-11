@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [bi_reports]
 permission-prefix: analytics.reports
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -72,6 +72,13 @@ Build custom tabular reports: select a data source, choose columns, apply filter
 |---|---|---|
 | `ReportBuilderPage` | #9 report builder custom page | source/column/filter pickers, live preview |
 | `ReportResource` | #1 CRUD resource | saved reports, run + export actions |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('analytics.reports.view-any') && BillingService::hasModule('analytics.reports')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter on the analytics.reports.run/export actions per architecture/security.md.
 
 ---
 

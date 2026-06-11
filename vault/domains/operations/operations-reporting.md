@@ -14,7 +14,7 @@ patterns: [custom-pages, money]
 tables: []
 permission-prefix: operations.reporting
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -74,6 +74,13 @@ Output only: `OperationsMetricsData` — valuation breakdown, movement series, s
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `OperationsDashboardPage` | #6 dashboard page + apex charts | date filter; excel export; soft-dep sections conditional |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('operations.reporting.view-any') && BillingService::hasModule('operations.reporting')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter on the Excel export action (e.g. throttled export endpoint per user/company).
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: core.setup
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -77,6 +77,9 @@ Steps reuse the owning modules' inputs: settings classes (steps 1–2), `CreateI
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `SetupWizardPage` | #7 multi-step wizard custom page | Filament Wizard component, step progress indicator, skip on 3–4 |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('core.setup.view-any') && BillingService::hasModule('core.setup')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

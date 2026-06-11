@@ -14,7 +14,7 @@ patterns: []
 tables: [ops_suppliers, ops_supplier_items]
 permission-prefix: operations.suppliers
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -84,6 +84,9 @@ Supplier/vendor records with contact details, payment terms, and supplied items 
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `OpsSupplierResource` | #1 CRUD resource | supplied-items relation manager, performance + order history on view |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('operations.suppliers.view-any') && BillingService::hasModule('operations.suppliers')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

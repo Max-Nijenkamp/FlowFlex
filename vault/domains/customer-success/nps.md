@@ -91,6 +91,13 @@ Unique `(survey_id, contact_id)`.
 
 Public response page: Vue + Inertia `/nps/{token}` — ui-strategy row #16.
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('cs.nps.view-any') && BillingService::hasModule('cs.nps')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Public/portal guard** (HIGH): Specify the public surface is served outside any authenticated panel guard, with token-scoped access only (no Sanctum session), and document token validity/single-use enforcement at the controller boundary.
+
 ---
 
 ## Permissions

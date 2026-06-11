@@ -14,7 +14,7 @@ patterns: [states, events]
 tables: [hr_time_entries, hr_timesheets]
 permission-prefix: hr.time
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -135,6 +135,9 @@ Interface→Service: `TimeServiceInterface` → `TimeService`.
 | `TimesheetResource` | #1 CRUD resource | pending-approval tab; approve/reject actions |
 | `TimeEntryResource` | #1 CRUD resource | entries list, filters by employee/date |
 | Clock widget (self-service dashboard) | #6 widget | clock in/out button + running timer |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.time.view-any') && BillingService::hasModule('hr.time')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

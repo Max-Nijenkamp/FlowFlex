@@ -14,7 +14,7 @@ patterns: []
 tables: [ec_reviews]
 permission-prefix: ecommerce.reviews
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -90,6 +90,13 @@ Customer product reviews with ratings, moderation, and display on the storefront
 | `ReviewResource` | #1 CRUD resource | moderation queue tab, approve/reject, reply |
 
 Storefront review display + submit: Vue + Inertia (storefront module).
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('ecommerce.reviews.view-any') && BillingService::hasModule('ecommerce.reviews')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Public/portal guard** (HIGH): Specify the public submission/helpful-vote routes run on the public/guest guard with signed-URL validation of review_token, distinct from the authenticated Filament panel guard.
 
 ---
 

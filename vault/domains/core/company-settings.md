@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: core.settings
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -78,6 +78,9 @@ None — `app(CompanyLocaleSettings::class)` is the read API for all other modul
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `CompanySettingsPage` | #7 wizard-style custom page (tabbed form) | tabs: Identity, Locale, Business, Privacy; saves per tab |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('core.settings.view-any') && BillingService::hasModule('core.settings')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

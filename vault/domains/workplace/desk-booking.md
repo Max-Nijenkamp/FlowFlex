@@ -78,7 +78,10 @@ Hot-desk reservation for hybrid workplaces. Employees book desks by date; floor 
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `DeskResource` | #1 CRUD resource | map position fields |
-| `DeskBookingPage` | #11-style map custom page | floor map, date picker, click-to-book, team view; polling 60s |
+| `DeskBookingPage` | #19 spatial/floor-map custom page | floor map, date picker, click-to-book, team view; polling 60s |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('workplace.desks.view-any') && BillingService::hasModule('workplace.desks')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [custom-pages, websockets, search]
 tables: [comms_channels, comms_conversations, comms_messages]
 permission-prefix: comms.inbox
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -132,6 +132,14 @@ Interface→Service: `InboxServiceInterface` → `InboxService`.
 |---|---|---|
 | `SharedInboxPage` | #8 inbox custom page | three-panel; Reverb broadcast for arrivals + collision whispers; per-channel composer (driver capabilities) |
 | `ChannelResource` | #1 CRUD resource | channel list/activation (config in channel modules) |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('comms.inbox.view-any') && BillingService::hasModule('comms.inbox')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter (e.g. throttle middleware on the channel webhook controllers) to protect the inbound pipeline from flooding.
+- **Upload contract** (medium): Specify allowed MIME/extension whitelist, max upload size, and tenant-scoped path companies/{company_id}/comms/... for message attachments.
 
 ---
 

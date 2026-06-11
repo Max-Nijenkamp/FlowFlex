@@ -14,7 +14,7 @@ patterns: [encryption, money, queues]
 tables: [fin_bank_accounts, fin_bank_transactions]
 permission-prefix: finance.bank
 encrypted-fields: ["fin_bank_accounts.iban", "fin_bank_accounts.account_number"]
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -104,6 +104,14 @@ Interface→Service: `BankServiceInterface` → `BankService`.
 |---|---|---|
 | `BankAccountResource` | #1 CRUD resource | masked IBAN (last4), balance comparison column |
 | `BankTransactionResource` | #1 CRUD resource | unreconciled tab; import action (upload + mapping); reconcile action with suggestions |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('finance.bank.view-any') && BillingService::hasModule('finance.bank')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter on the import action (e.g. N imports per company per minute) in addition to the queued chunked job.
+- **Upload contract** (medium): Document MIME whitelist (text/csv) + the companies/{company_id}/bank-imports/ storage path so uploaded statements are tenant-isolated; reference Security upload rules in architecture/security.md.
 
 ---
 

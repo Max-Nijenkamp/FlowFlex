@@ -14,7 +14,7 @@ patterns: []
 tables: [lms_paths, lms_path_courses, lms_path_enrolments]
 permission-prefix: lms.paths
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -75,6 +75,9 @@ Sequenced collections of courses forming a structured curriculum (e.g. "New Mana
 | `LearningPathResource` | #1 CRUD resource | ordered course repeater, bulk assign, progress columns |
 
 Learner path view: portal pages.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('lms.paths.view-any') && BillingService::hasModule('lms.paths')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

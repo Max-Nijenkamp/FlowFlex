@@ -14,7 +14,7 @@ patterns: [encryption, queues]
 tables: [crm_email_connections, crm_emails]
 permission-prefix: crm.email
 encrypted-fields: ["crm_email_connections.oauth_token"]
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -116,6 +116,15 @@ GDPR: emails of an erased contact are unlinked + body purged *(assumed — perso
 | `EmailConnectionResource` | #1 CRUD resource (own only) | connect (OAuth redirect), disconnect, visibility default |
 | Email thread component | #2 (embedded) | thread view on Contact + Deal pages, visibility-scoped |
 | Compose action | modal action | on contact/deal view |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.email.view-any') && BillingService::hasModule('crm.email')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Public/portal guard** (HIGH): Specify these run on a guest (no app-session) route group; validate the per-email token signature and isolate from authenticated guards.
+- **Rate limiter** (medium): Cite a named rate limiter for the tracking pixel and click-redirect endpoints, and constrain click redirect to validated stored URLs only.
+- **Webhook verification** (HIGH): Require signature/state verification on the OAuth callback (state + PKCE) and on any provider push webhook (validate provider signature) before processing; document in the controllers section.
 
 ---
 

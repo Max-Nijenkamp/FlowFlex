@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [lms_courses, lms_course_modules]
 permission-prefix: lms.courses
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -92,6 +92,9 @@ Create courses with modules and lessons. The container structure for all learnin
 | `CourseBuilderPage` | #3-style custom page | drag-drop module/lesson ordering |
 
 Learner-facing course pages: Vue + Inertia learner portal (ui-strategy row #15; enrolments module surfaces it).
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('lms.courses.view-any') && BillingService::hasModule('lms.courses')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

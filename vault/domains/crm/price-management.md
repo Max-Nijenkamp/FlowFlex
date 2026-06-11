@@ -14,7 +14,7 @@ patterns: [money]
 tables: [crm_products, crm_price_books, crm_price_book_entries, crm_volume_discounts]
 permission-prefix: crm.pricing
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -113,6 +113,9 @@ Product/service catalogue, price books, volume discounts, and CPQ (configure-pri
 | `ProductResource` | #1 CRUD resource | catalogue, active toggle |
 | `PriceBookResource` | #1 CRUD resource | entries relation manager, promo windows |
 | `VolumeDiscountResource` | #1 CRUD (or relation on product) | tiers |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.pricing.view-any') && BillingService::hasModule('crm.pricing')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

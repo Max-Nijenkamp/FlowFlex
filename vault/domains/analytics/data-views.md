@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: analytics.data-views
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -75,6 +75,13 @@ Output only: per-view `DataViewResult` (columns, rows, drill targets).
 |---|---|---|
 | `DataViewsPage` | #6 gallery custom page | available views (module-filtered) |
 | Per-view page | #9 report page | charts + drill-down table, export |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('analytics.data-views.view-any') && BillingService::hasModule('analytics.data-views')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter (e.g. throttle on the export action) for the data-view export endpoint per architecture/security.md.
 
 ---
 

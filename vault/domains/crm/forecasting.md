@@ -14,7 +14,7 @@ patterns: [custom-pages, money]
 tables: [crm_quotas, crm_forecast_snapshots]
 permission-prefix: crm.forecasting
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -96,6 +96,9 @@ Reads from `crm_deals` (+ `forecast_category` column this module adds).
 | `QuotaResource` | #1 CRUD resource | per rep/period |
 | `ForecastPage` | #6 dashboard page + apex charts | attainment, coverage, week-over-week trend from snapshots |
 | `ForecastWidget` | #6 widget | team attainment summary |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.forecasting.view-any') && BillingService::hasModule('crm.forecasting')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

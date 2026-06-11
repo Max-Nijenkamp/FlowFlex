@@ -75,6 +75,14 @@ Manage event speakers: profiles, session assignments, and speaker logistics.
 
 Public profiles on event landing (confirmed only).
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('events.speakers.view-any') && BillingService::hasModule('events.speakers')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rich-text sanitize** (medium): State bio is sanitized via HTMLPurifier on both admin and public-token writes.
+- **Upload contract** (medium): Note allowed image MIME whitelist, max file size, and companies/{id}/ media path for speaker photo uploads (especially the public submit endpoint).
+
 ---
 
 ## Permissions

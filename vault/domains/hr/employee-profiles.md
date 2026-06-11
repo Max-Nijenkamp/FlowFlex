@@ -14,7 +14,7 @@ patterns: [states, service, encryption, search]
 tables: [hr_employees, hr_departments, hr_emergency_contacts]
 permission-prefix: hr.employees
 encrypted-fields: ["hr_employees.national_id", "hr_employees.date_of_birth", "hr_employees.personal_email"]
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -206,6 +206,13 @@ Consumers per [[architecture/event-bus]] (payroll record stub, onboarding plan, 
 | `DepartmentResource` | #1 CRUD resource | tree via parent_department_id *(assumed: simple list v1)* |
 | `OffboardAction` | modal action | termination form on view page |
 | `EmployeeProfileWidget` | #6 widgets on list page | headcount, new hires this month, turnover rate |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.employees.view-any') && BillingService::hasModule('hr.profiles')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle (e.g. RateLimiter 'hr-export' per-user/company) on the export action per architecture/security.md.
 
 ---
 

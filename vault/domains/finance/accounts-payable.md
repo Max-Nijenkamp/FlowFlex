@@ -14,7 +14,7 @@ patterns: [states, money, custom-pages, events]
 tables: [fin_suppliers, fin_bills, fin_bill_lines, fin_payment_runs]
 permission-prefix: finance.ap
 encrypted-fields: ["fin_suppliers.iban"]
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -145,6 +145,13 @@ Interface→Service: `ApServiceInterface` → `ApService`.
 | `BillResource` | #1 CRUD resource | approve action, match status badge |
 | `ApAgingPage` | #9 report custom page | |
 | `PaymentRunPage` | #7 custom page | bill selection by due date, totals, execute |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('finance.ap.view-any') && BillingService::hasModule('finance.ap')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): Specify pdf MIME whitelist, max size, and companies/{company_id}/ap-bills/ storage path for bill attachments.
 
 ---
 

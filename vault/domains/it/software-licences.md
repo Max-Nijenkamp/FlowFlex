@@ -14,7 +14,7 @@ patterns: [money, events]
 tables: [it_licences, it_licence_assignments]
 permission-prefix: it.licences
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -95,6 +95,9 @@ Track software subscriptions and licences: seats, costs, renewal dates, and util
 |---|---|---|
 | `LicenceResource` | #1 CRUD resource | utilisation bar, seat assignment relation |
 | `LicenceRenewalWidget` | #6 widget | renewals next 60d + flagged seats |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('it.licences.view-any') && BillingService::hasModule('it.licences')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [states, service, money]
 tables: [proj_projects, proj_project_members]
 permission-prefix: projects.projects
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -115,6 +115,9 @@ Interface→Service: `ProjectServiceInterface` → `ProjectService`.
 | `ProjectResource` | #1 CRUD resource | member-scoped listing; status filters |
 | Project view page | #2 detail with tabs | Overview, Tasks, Sprints, Milestones, Files, Time Entries (soft-dep tabs conditional) |
 | `ProjectStatsWidget` | #6 widget | active count, health pie |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('projects.projects.view-any') && BillingService::hasModule('projects.projects')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

@@ -107,6 +107,13 @@ Consumer: CRM find-or-create contact ([[architecture/event-bus]]).
 
 Public form: part of event landing (Vue) — ui-strategy row #16.
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('events.registrations.view-any') && BillingService::hasModule('events.registrations')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle for the attendee export action.
+
 ---
 
 ## Permissions

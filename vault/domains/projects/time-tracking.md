@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [proj_time_entries]
 permission-prefix: projects.time
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -95,6 +95,13 @@ Actions:
 | `TimesheetPage` | #9 report custom page | weekly grid users × days |
 | `ProjectTimeReportPage` | #9 report custom page | logged vs estimate, billable split, CSV export |
 | Timer widget | on task view + kanban card | start/stop |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('projects.time.view-any') && BillingService::hasModule('projects.time')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Add a rate-limit note for the CSV export endpoint (per-user/company throttle).
 
 ---
 

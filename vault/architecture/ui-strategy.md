@@ -43,6 +43,9 @@ The single decision table for "what tech do I build this screen with". Every mod
 | 14 | Client portal (external CRM clients) | **Vue 3 + Inertia** | Sanctum, scoped portal guard | None (poll if needed) | `crm.client-portal` |
 | 15 | Learner portal (external learners) | **Vue 3 + Inertia** | Sanctum, scoped portal guard | None | `lms.learner-portal` |
 | 16 | Public event landing / registration / checkout | **Vue 3 + Inertia** | Stripe Elements where paid | None | `events.registrations`, `ecommerce.storefront` |
+| 17 | Gallery / directory (card grid of people/items) | **Custom Filament Page** | Page + Blade grid + Livewire filters | None | `lms.mentoring` |
+| 18 | Heat-map / matrix grid (color-coded cells) | **Custom Filament Page** | Page + Blade/CSS grid (+ apexcharts heatmap if charted) | None | `lms.skills-matrix` |
+| 19 | Spatial / floor map (positioned hotspots over an image) | **Custom Filament Page** + Alpine | Page + absolute-positioned divs over floor image, click-to-act | Polling 30s (live occupancy) | `workplace.desk-booking` |
 
 ---
 

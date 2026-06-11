@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [bi_dashboards, bi_widgets]
 permission-prefix: analytics.dashboards
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -75,6 +75,9 @@ Drag-and-drop dashboard builder. Compose widgets pulling data from any domain in
 |---|---|---|
 | `DashboardBuilderPage` | #6 dashboard custom page | drag-drop grid (Livewire + Alpine), widget picker |
 | `DashboardResource` | #1 CRUD resource | list/manage, share toggle |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('analytics.dashboards.view-any') && BillingService::hasModule('analytics.dashboards')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

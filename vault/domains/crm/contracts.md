@@ -14,7 +14,7 @@ patterns: [states, money, pdf]
 tables: [crm_contracts]
 permission-prefix: crm.contracts
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -111,6 +111,13 @@ Customer contracts with renewal tracking, value, and signature status. Sales-foc
 |---|---|---|
 | `ContractResource` | #1 CRUD resource | create-from-deal action, signed-PDF upload, renew/terminate actions |
 | `ContractRenewalWidget` | #6 widget | renewals next 90 days |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.contracts.view-any') && BillingService::hasModule('crm.contracts')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): In the contract record / markSigned section note: accept application/pdf only, max size cap, stored under companies/{company_id}/contracts/ via Media Library.
 
 ---
 

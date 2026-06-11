@@ -89,6 +89,13 @@ Register and track office visitors: pre-registration, check-in/out, host notific
 | `VisitorResource` | #1 CRUD resource | pre-register, check-in/out actions, log filters |
 | `VisitorKioskPage` | #7 custom page | self-service check-in (kiosk role) |
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('workplace.visitors.view-any') && BillingService::hasModule('workplace.visitors')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter on the kiosk check-in/lookup actions (e.g. throttle per device session/IP).
+
 ---
 
 ## Permissions

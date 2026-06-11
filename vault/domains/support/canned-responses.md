@@ -14,7 +14,7 @@ patterns: []
 tables: [sup_canned_responses]
 permission-prefix: support.canned
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -83,6 +83,9 @@ Saved reply templates for common questions. Agents insert them into ticket repli
 |---|---|---|
 | `CannedResponseResource` | #1 CRUD resource | shared/personal tabs, usage column |
 | Composer insert action | within ticket reply (and chat later) | `/shortcut` autocomplete |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('support.canned.view-any') && BillingService::hasModule('support.canned')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

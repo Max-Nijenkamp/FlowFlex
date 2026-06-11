@@ -14,7 +14,7 @@ patterns: [money]
 tables: [ec_product_options, ec_variants]
 permission-prefix: ecommerce.variants
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -83,6 +83,9 @@ Product options (size, colour) generating purchasable variants, each with its ow
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | Variant relation manager | on EcProductResource | matrix generator + bulk-edit table |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('ecommerce.variants.view-any') && BillingService::hasModule('ecommerce.variants')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

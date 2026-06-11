@@ -2,7 +2,8 @@
 type: gap
 severity: medium
 category: security
-status: open
+status: resolved
+resolved: 2026-06-11
 domain: All
 color: "#F97316"
 discovered: 2026-06-11
@@ -22,6 +23,10 @@ MEDIUM, very widespread. Abuse / amplification / cost-runaway risk.
 
 ## Proposed Solution
 Cite a rate limiter (throttle / RateLimiter::for) on the affected actions per [[architecture/security]]. Per-spec list in [[build/security-audit-2026-06-11]] (SEC-RATELIMIT). Template convention now requires it.
+
+## Resolution
+
+**Security notes** (Rate limiter) added to all 50 flagged specs citing a throttle on the affected exports/webhooks/public endpoints. Code enforcement at build.
 
 ## Related
 - [[build/security-audit-2026-06-11]]

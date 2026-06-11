@@ -14,7 +14,7 @@ patterns: [money, search]
 tables: [ec_products, ec_categories]
 permission-prefix: ecommerce.products
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -95,6 +95,13 @@ Product records with pricing, images, categories, and inventory linkage. The cor
 | `EcCategoryResource` | #1 CRUD resource | tree |
 
 Storefront browse: Vue + Inertia (ui-strategy row #16; storefront module owns rendering).
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('ecommerce.products.view-any') && BillingService::hasModule('ecommerce.products')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): Add an upload note: restrict to image MIME types (jpg/png/webp), enforce a max file size, and store under companies/{company_id}/ per the security baseline.
 
 ---
 

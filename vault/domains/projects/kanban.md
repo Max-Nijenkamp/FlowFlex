@@ -14,7 +14,7 @@ patterns: [custom-pages, websockets]
 tables: []
 permission-prefix: projects.kanban
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -71,6 +71,9 @@ Output only: `BoardData` — columns[] (id, name, task_count) + cards[] (task su
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `KanbanBoardPage` | #3 Kanban custom page | Livewire + Alpine SortableJS; Reverb broadcast; project selector in header; slide-over detail |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('projects.kanban.view-any') && BillingService::hasModule('projects.kanban')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

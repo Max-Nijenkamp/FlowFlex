@@ -2,7 +2,8 @@
 type: gap
 severity: high
 category: security
-status: open
+status: resolved
+resolved: 2026-06-11
 domain: All
 color: "#F97316"
 discovered: 2026-06-11
@@ -22,6 +23,10 @@ HIGH in foundation/email-setup (Resend bounce flips email_deliverable), events/t
 
 ## Proposed Solution
 Promote verification from assumption to a stated requirement naming the mechanism + secret source. Template now forbids `*(assumed)*` on webhook verification. Per-spec list in [[build/security-audit-2026-06-11]] (SEC-WEBHOOK).
+
+## Resolution
+
+**Security notes** (Webhook verification, HIGH) added to the 3 flagged specs (crm.email-integration, events.tickets, foundation.email-setup) promoting verification from *(assumed)* to a stated requirement naming mechanism + secret source.
 
 ## Related
 - [[build/security-audit-2026-06-11]]

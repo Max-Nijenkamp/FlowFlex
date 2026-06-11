@@ -14,7 +14,7 @@ patterns: [states, money, pdf, email]
 tables: [ops_purchase_orders, ops_po_lines]
 permission-prefix: operations.purchase-orders
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -106,6 +106,13 @@ Interface→Service: `PurchaseOrderServiceInterface` → `PurchaseOrderService`.
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `PurchaseOrderResource` | #1 CRUD resource | line repeater, send/cancel actions, PDF preview, receipt progress columns |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('operations.purchase-orders.view-any') && BillingService::hasModule('operations.purchase-orders')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter on the send action / GeneratePoPdfJob+PurchaseOrderMail dispatch (e.g. per-company throttle) to prevent PDF/email abuse.
 
 ---
 

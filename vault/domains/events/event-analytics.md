@@ -74,6 +74,13 @@ Output only: `EventMetricsData`.
 |---|---|---|
 | `EventAnalyticsDashboard` | #6 dashboard page + apex charts | event selector, comparison view, export |
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('events.analytics.view-any') && BillingService::hasModule('events.analytics')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle (e.g. RateLimiter on the export action) for analytics report exports.
+
 ---
 
 ## Permissions

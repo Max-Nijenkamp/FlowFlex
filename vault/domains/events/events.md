@@ -108,6 +108,13 @@ Create and manage events: details, schedule, capacity, venue, and status. The co
 
 Public landing: Vue + Inertia `/e/{company}/{slug}` — ui-strategy row #16.
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('events.events.view-any') && BillingService::hasModule('events.events')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rich-text sanitize** (medium): State that description is sanitized via HTMLPurifier before persistence.
+
 ---
 
 ## Permissions

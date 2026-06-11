@@ -152,6 +152,15 @@ Interface→Service: `RecruitmentServiceInterface` → `RecruitmentService`.
 
 Public careers pages: Vue + Inertia (`/careers`, `/careers/{slug}`) — ui-strategy row #16.
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.recruitment.view-any') && BillingService::hasModule('hr.recruitment')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Public/portal guard** (HIGH): Specify the public submission goes through a guest/unauthenticated controller (no Sanctum session), with company resolved+validated from requisition slug, plus explicit input validation and abuse controls; document the guard boundary in the spec.
+- **Rate limiter** (medium): Cite a concrete named RateLimiter (e.g. 'public-apply' per IP + per requisition) per architecture/security.md and remove the *(assumed)* marker.
+- **Upload contract** (medium): State CV files store under companies/{company_id}/recruitment/ (private disk) with the type+size rules, matching the file-storage tenant path convention.
+
 ---
 
 ## Permissions

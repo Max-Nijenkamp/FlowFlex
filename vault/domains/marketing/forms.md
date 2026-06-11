@@ -14,7 +14,7 @@ patterns: [events]
 tables: [mkt_forms, mkt_form_submissions]
 permission-prefix: marketing.forms
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -104,6 +104,13 @@ Consumer: CRM find-or-create contact ([[architecture/event-bus]]).
 | `FormSubmissionResource` | #1 (read-only) | export |
 
 Hosted page: Vue + Inertia `/f/{slug}` — ui-strategy row #16.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('marketing.forms.view-any') && BillingService::hasModule('marketing.forms')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Public/portal guard** (HIGH): Specify the public submit endpoint runs outside the Sanctum session guard with an explicit public route (no auth), resolves company by form slug, and document CSRF exemption + allowed-origin handling for cross-site embeds.
 
 ---
 

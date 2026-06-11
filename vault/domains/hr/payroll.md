@@ -14,7 +14,7 @@ patterns: [states, service, encryption, money, pdf, events]
 tables: [hr_payroll_runs, hr_payslips, hr_deduction_types, hr_payroll_employees]
 permission-prefix: hr.payroll
 encrypted-fields: ["hr_payroll_employees.salary_raw", "hr_payroll_employees.iban", "hr_payslips.amounts_raw"]
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -186,6 +186,13 @@ Interface→Service: `PayrollServiceInterface` → `PayrollService`.
 | `PayrollEmployeeResource` | #1 CRUD | salary/IBAN entry (view-sensitive gated) |
 | `DeductionTypeResource` | #1 CRUD | company deduction config |
 | `PayrollRunWidget` | #6 widget | headcount, gross, net, employer cost of latest run |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.payroll.view-any') && BillingService::hasModule('hr.payroll')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a named throttle on payslip PDF download / export action per architecture/security.md.
 
 ---
 

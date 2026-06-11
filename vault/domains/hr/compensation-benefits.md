@@ -14,7 +14,7 @@ patterns: [money, encryption]
 tables: [hr_compensation_bands, hr_benefits, hr_employee_benefits, hr_salary_history]
 permission-prefix: hr.compensation
 encrypted-fields: ["hr_salary_history.amount_raw"]
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -121,6 +121,9 @@ Interface→Service: `CompensationServiceInterface` → `CompensationService`.
 | `BenefitResource` | #1 CRUD resource | catalog |
 | `BenefitEnrollmentResource` | #1 CRUD resource | enrollments, enroll/unenroll actions |
 | `SalaryHistoryRelationManager` | on employee view | view-sensitive gated, read-only |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.compensation.view-any') && BillingService::hasModule('hr.compensation')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

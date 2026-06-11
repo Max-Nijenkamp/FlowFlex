@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: marketing.analytics
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -74,6 +74,13 @@ Output only: `MarketingMetricsData` — campaign series, form conversion table, 
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `MarketingDashboardPage` | #6 dashboard page + apex charts | date range filter; soft-dep widgets conditional; polling 60s |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('marketing.analytics.view-any') && BillingService::hasModule('marketing.analytics')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter (throttle) on the CSV export action in the spec.
 
 ---
 

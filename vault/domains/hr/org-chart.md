@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: hr.org
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -67,6 +67,9 @@ Output only: `OrgNodeData` — employee_id, full_name, job_title, department_nam
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `OrgChartPage` | #11 tree-view custom page | Livewire + Alpine/JS tree render in Blade; dept filter in header; PNG/PDF export *(assumed: client-side render-to-image)* |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.org.view-any') && BillingService::hasModule('hr.org')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

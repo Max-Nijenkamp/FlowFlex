@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: projects.workload
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -70,6 +70,9 @@ Output only: `WorkloadGridData` — rows[] (user, capacity_hours, cells[{date, h
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `WorkloadPage` | #5-style heat-map custom page | Livewire + Alpine grid; drag-to-reassign; filters in header; polling 60s |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('projects.workload.view-any') && BillingService::hasModule('projects.workload')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

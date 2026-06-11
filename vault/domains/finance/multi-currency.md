@@ -14,7 +14,7 @@ patterns: [money]
 tables: [fin_currencies, fin_exchange_rates]
 permission-prefix: finance.currency
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -94,6 +94,9 @@ Invoices/bills/expenses carry `currency` + `exchange_rate` columns (migration sh
 | `CurrencyResource` | #1 CRUD resource | activate currencies |
 | `ExchangeRateResource` | #1 CRUD resource | manual rates, history |
 | FX gain/loss report page | #9 report custom page | realised + unrealised per period |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('finance.currency.view-any') && BillingService::hasModule('finance.currency')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

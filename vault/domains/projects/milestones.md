@@ -14,7 +14,7 @@ patterns: []
 tables: [proj_milestones, proj_milestone_tasks]
 permission-prefix: projects.milestones
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -96,6 +96,9 @@ Actions:
 |---|---|---|
 | `MilestoneResource` | #1 CRUD resource | achieve action, progress column, cross-project list |
 | Milestone timeline widget | #6 widget | on project view page |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('projects.milestones.view-any') && BillingService::hasModule('projects.milestones')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

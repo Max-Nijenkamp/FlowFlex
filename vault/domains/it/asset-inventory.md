@@ -14,7 +14,7 @@ patterns: [states, events]
 tables: [it_assets, it_asset_assignments]
 permission-prefix: it.assets
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -112,6 +112,13 @@ Track IT hardware and software assets: laptops, phones, monitors, licences. Assi
 |---|---|---|
 | `AssetResource` | #1 CRUD resource | filters type/status/assignee; assign/return/retire actions; assignment history relation |
 | `AssetExpiryWidget` | #6 widget | warranties expiring 30d |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('it.assets.view-any') && BillingService::hasModule('it.assets')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Note that bulk asset import inherits/uses a rate limiter (per architecture/security.md) on the import endpoint/action.
 
 ---
 

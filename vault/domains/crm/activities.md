@@ -14,7 +14,7 @@ patterns: []
 tables: [crm_activities]
 permission-prefix: crm.activities
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -104,6 +104,9 @@ Actions (simple ops):
 | `ActivityResource` | #1 CRUD resource | filters: type/owner/status; complete action |
 | Timeline widget | #2 (embedded in view pages) | cursor-paginated feed on Contact/Deal/Account view |
 | `OverdueTasksWidget` | #6 widget | owner's overdue count |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.activities.view-any') && BillingService::hasModule('crm.activities')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

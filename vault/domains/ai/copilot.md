@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [ai_copilot_conversations, ai_copilot_messages]
 permission-prefix: ai.copilot
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -75,6 +75,13 @@ Conversations are **private to their user** (second-layer scope). Provider confi
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `CopilotPage` | #8-style chat custom page | Livewire chat with streaming; conversation sidebar |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('ai.copilot.view-any') && BillingService::hasModule('ai.copilot')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a per-user/per-company rate limiter (RateLimiter / throttle) on copilot message sends in addition to the LlmGateway budget.
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [states, money, events]
 tables: [fin_expenses, fin_expense_categories, fin_expense_reports]
 permission-prefix: finance.expenses
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -158,6 +158,13 @@ Consumer: hr.payroll reimbursement line (employee_id non-null only) — [[archit
 | `ExpenseResource` | #1 CRUD resource | tabs: My expenses / All (permission-gated); approve/reject actions; over-limit badge |
 | `ExpenseReportResource` | #1 CRUD resource | grouped submission |
 | `ExpenseCategoryResource` | #1 CRUD resource | category + limit + GL account |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('finance.expenses.view-any') && BillingService::hasModule('finance.expenses')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): State that receipts store under companies/{company_id}/expense-receipts/ (Media Library tenant-scoped collection) and pin a concrete max size default.
 
 ---
 

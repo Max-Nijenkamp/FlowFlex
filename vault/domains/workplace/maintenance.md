@@ -108,6 +108,13 @@ Report and track facility maintenance requests (broken AC, lighting, cleaning) w
 | `MaintenanceRequestResource` | #1 CRUD resource | queue tabs (open/assigned/overdue), assign/resolve actions |
 | `MaintenanceScheduleResource` | #1 CRUD resource | preventive schedules |
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('workplace.maintenance.view-any') && BillingService::hasModule('workplace.maintenance')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): Add an upload note: restrict to image MIME types (jpg/png/webp), set a max size, and store under companies/{company_id}/maintenance/ for tenant isolation.
+
 ---
 
 ## Permissions

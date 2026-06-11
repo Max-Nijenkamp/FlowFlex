@@ -14,7 +14,7 @@ patterns: [money]
 tables: [ec_payments]
 permission-prefix: ecommerce.payments
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -85,6 +85,13 @@ Stripe payment processing for orders: checkout, payment capture, refunds, and we
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `EcPaymentResource` | #1 (read-only) | refund action; status on order view |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('ecommerce.payments.view-any') && BillingService::hasModule('ecommerce.payments')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter on the webhook route (e.g. throttle:webhooks) in addition to the existing Stripe signature verification and idempotency guards.
 
 ---
 

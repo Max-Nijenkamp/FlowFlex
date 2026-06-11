@@ -14,7 +14,7 @@ patterns: [events, custom-pages]
 tables: [it_systems, it_access_grants, it_access_templates]
 permission-prefix: it.access
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -88,6 +88,13 @@ Unique active `(employee_id, system_id)`.
 | `AccessGrantResource` | #1 CRUD resource | pending/flagged tabs, grant/revoke actions |
 | `AccessTemplateResource` | #1 CRUD resource | role templates |
 | `AccessReviewPage` | #9 matrix custom page | employees × systems, export |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('it.access.view-any') && BillingService::hasModule('it.access')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle on the matrix export action (e.g. RateLimiter per company-user) in the Filament/Services section.
 
 ---
 

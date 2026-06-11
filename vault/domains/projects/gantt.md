@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: projects.gantt
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -72,6 +72,9 @@ Output only: `GanttData` — tasks[] (id, title, start, end, progress, dependenc
 | `GanttChartPage` | #5 Gantt custom page | `frappe-gantt` (or similar) in Blade partial via Alpine bridge; project selector + zoom in header; polling 60s |
 
 JS lib bundled in panel theme (vite) — no CDN *(assumed)*.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('projects.gantt.view-any') && BillingService::hasModule('projects.gantt')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

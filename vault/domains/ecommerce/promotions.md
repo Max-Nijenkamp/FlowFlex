@@ -14,7 +14,7 @@ patterns: [money]
 tables: [ec_coupons, ec_promotions, ec_coupon_redemptions]
 permission-prefix: ecommerce.promotions
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -89,6 +89,9 @@ Discount codes, automatic promotions, and sales campaigns.
 |---|---|---|
 | `CouponResource` | #1 CRUD resource | usage columns, redemptions relation |
 | `EcPromotionResource` | #1 CRUD resource | rule builder repeater |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('ecommerce.promotions.view-any') && BillingService::hasModule('ecommerce.promotions')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

@@ -2,7 +2,8 @@
 type: gap
 severity: medium
 category: security
-status: open
+status: resolved
+resolved: 2026-06-11
 domain: All
 color: "#F97316"
 discovered: 2026-06-11
@@ -22,6 +23,10 @@ MEDIUM across nearly every domain handling attachments. Untyped/oversized upload
 
 ## Proposed Solution
 Each upload-bearing spec restates type-whitelist + max-size + companies/{id}/ path. Per-spec list in [[build/security-audit-2026-06-11]] (SEC-UPLOAD). Template convention now requires it.
+
+## Resolution
+
+**Security notes** (Upload contract) added to all 24 flagged specs restating type-whitelist + max-size + companies/{id}/ path. Code enforcement at build.
 
 ## Related
 - [[build/security-audit-2026-06-11]]

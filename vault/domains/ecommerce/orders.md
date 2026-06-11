@@ -14,7 +14,7 @@ patterns: [states, money, pdf, events]
 tables: [ec_orders, ec_order_lines, ec_order_events]
 permission-prefix: ecommerce.orders
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -127,6 +127,9 @@ Consumers per [[architecture/event-bus]]: Finance (record sale), Analytics (P3).
 | `OrderStatsWidget` | #6 widget | orders today, revenue, AOV |
 
 Checkout: Vue + Inertia storefront (ui-strategy row #16; storefront module).
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('ecommerce.orders.view-any') && BillingService::hasModule('ecommerce.orders')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

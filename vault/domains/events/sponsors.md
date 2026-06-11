@@ -75,6 +75,13 @@ Manage event sponsors: tiers, deliverables, logos, and sponsorship revenue.
 
 Logos on landing page by tier.
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('events.sponsors.view-any') && BillingService::hasModule('events.sponsors')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): Note allowed image MIME whitelist, max file size, and companies/{id}/ media path for sponsor logo uploads.
+
 ---
 
 ## Permissions

@@ -75,6 +75,13 @@ Output only: `CsMetricsData`.
 |---|---|---|
 | `CsDashboardPage` | #6 dashboard page + apex charts | export |
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('cs.analytics.view-any') && BillingService::hasModule('cs.analytics')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle/rate limiter on the export action (e.g. a per-user export throttle) in the Filament or Services section.
+
 ---
 
 ## Permissions

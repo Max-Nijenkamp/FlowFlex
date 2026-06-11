@@ -14,7 +14,7 @@ patterns: [pdf, custom-pages]
 tables: [dms_templates]
 permission-prefix: dms.templates
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -82,6 +82,13 @@ Reusable document templates (contracts, SOPs, policies, letters) with variable s
 |---|---|---|
 | `DocumentTemplateResource` | #1 CRUD resource | Tiptap + merge-field insert menu; system templates read-only |
 | `GenerateFromTemplatePage` | #7 wizard custom page | template → source/fields → folder → generate |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('dms.templates.view-any') && BillingService::hasModule('dms.templates')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter on the generate action (per user/company) to throttle PDF rendering and document creation.
 
 ---
 

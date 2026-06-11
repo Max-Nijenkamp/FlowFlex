@@ -14,7 +14,7 @@ patterns: [service, money]
 tables: [ops_items, ops_stock_levels, ops_stock_movements]
 permission-prefix: operations.inventory
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -105,6 +105,9 @@ Interface→Service: `StockServiceInterface` → `StockService`.
 | `ItemResource` | #1 CRUD resource | per-warehouse levels inline; SKU search |
 | `StockMovementResource` | #1 (read-only) | history, filters |
 | `LowStockWidget` | #6 widget | below reorder point |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('operations.inventory.view-any') && BillingService::hasModule('operations.inventory')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

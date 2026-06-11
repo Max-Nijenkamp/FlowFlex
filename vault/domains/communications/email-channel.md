@@ -14,7 +14,7 @@ patterns: [encryption, queues]
 tables: [comms_email_channels]
 permission-prefix: comms.email
 encrypted-fields: ["comms_email_channels.oauth_token"]
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -83,6 +83,14 @@ Inbound payload → normalised `InboundMessageData` (inbox contract).
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `EmailChannelResource` | #1 CRUD resource | shows forwarding address to configure, signature editor, test-connection action |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('comms.email.view-any') && BillingService::hasModule('comms.email')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle / rate limiter on the inbound email webhook route.
+- **Upload contract** (medium): Specify MIME/extension whitelist, max size, and tenant-scoped companies/{id}/ path for email attachments.
 
 ---
 

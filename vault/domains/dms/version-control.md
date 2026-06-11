@@ -14,7 +14,7 @@ patterns: []
 tables: [dms_document_versions, dms_document_locks]
 permission-prefix: dms.versions
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -86,6 +86,13 @@ Version history on documents. Upload a new version, view history, compare metada
 |---|---|---|
 | Version history relation manager | on DocumentViewerPage | download/restore actions |
 | Upload-new-version + lock actions | on document view | lock badge |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('dms.versions.view-any') && BillingService::hasModule('dms.versions')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): State explicitly that version files reuse the document-library upload whitelist, max size, and companies/{id}/dms/ path (via CompanyPathGenerator) in the DTO/Services section.
 
 ---
 

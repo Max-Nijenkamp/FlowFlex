@@ -88,6 +88,9 @@ None input — detection automatic; `ResolveRiskData` (risk_id, note) for manual
 | `ChurnRiskResource` | #1 (read-only + actions) | severity queue, factor breakdown, run-playbook + resolve actions |
 | `ChurnRiskWidget` | #6 widget | counts by level |
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('cs.churn.view-any') && BillingService::hasModule('cs.churn')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
 ---
 
 ## Permissions

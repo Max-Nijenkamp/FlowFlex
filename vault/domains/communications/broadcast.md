@@ -14,7 +14,7 @@ patterns: [queues, states]
 tables: [comms_broadcasts, comms_broadcast_recipients]
 permission-prefix: comms.broadcast
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -123,6 +123,13 @@ Unique `(broadcast_id, address)` — duplicate-recipient guard.
 |---|---|---|
 | `BroadcastResource` | #1 CRUD resource | audience builder + composer + preview; delivery funnel on view |
 | `BroadcastStatsWidget` | #6 widget | funnel per broadcast |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('comms.broadcast.view-any') && BillingService::hasModule('comms.broadcast')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a rate limiter on the delivery/open webhook callbacks; outbound batch send throttling is already noted.
 
 ---
 

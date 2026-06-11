@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [ec_storefront_pages]
 permission-prefix: ecommerce.storefront
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -78,6 +78,9 @@ Settings via `spatie/laravel-settings` (`StorefrontSettings` class — theme_con
 | `StorefrontPageResource` | #1 CRUD resource | content pages |
 
 Public storefront: Vue + Inertia — ui-strategy row #16 (browse, product, cart, checkout pages).
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('ecommerce.storefront.view-any') && BillingService::hasModule('ecommerce.storefront')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

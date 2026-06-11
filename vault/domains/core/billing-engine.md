@@ -14,7 +14,7 @@ patterns: [service, states, money, queues]
 tables: [module_catalog, company_module_subscriptions, billing_invoices, billing_invoice_lines]
 permission-prefix: core.billing
 encrypted-fields: ["companies.stripe_customer_id"]
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -181,6 +181,13 @@ Consumers + behavior: [[architecture/event-bus]] contracts. Module cache bust is
 | `ModulePricingResource` (`/admin`) | #1 CRUD | per-module global prices (writes the catalog source) |
 
 (Marketplace UI itself = [[domains/core/module-marketplace]].)
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('core.billing.view-any') && BillingService::hasModule('core.billing')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle limiter on the Stripe webhook route (e.g. a dedicated 'webhook' limiter) in the routes/Filament section, in addition to the existing signature verification.
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: hr.self-service
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -79,6 +79,9 @@ Employees may NOT edit: name, email, job, salary, department, manager, national_
 | `SelfServiceDashboardPage` | #6 dashboard custom page | tiles: leave balance, next payslip, pending tasks — soft-dep tiles conditional on `hasModule` |
 | `MyProfilePage` | #7 custom page (form) | own-profile edit + photo + emergency contacts |
 | `MyDocumentsPage` | #1-style list (own scope) | personal docs from Media Library |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.self-service.view-any') && BillingService::hasModule('hr.self-service')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

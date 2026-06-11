@@ -14,7 +14,7 @@ patterns: [encryption, money, custom-pages]
 tables: [ai_config, ai_usage_log]
 permission-prefix: ai.config
 encrypted-fields: ["ai_config.api_key"]
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -74,6 +74,9 @@ Configure LLM providers, models, API keys, usage limits, and cost controls for a
 |---|---|---|
 | `AiConfigPage` | #7 custom page (form) | provider, models, key (write-only), budget, toggles |
 | `AiUsageDashboardPage` | #6 dashboard page | tokens + cost charts |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('ai.config.view-any') && BillingService::hasModule('ai.config')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

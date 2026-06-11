@@ -14,7 +14,7 @@ patterns: [queues, websockets, custom-pages]
 tables: [sup_sla_policies, sup_sla_targets, sup_sla_events]
 permission-prefix: support.sla
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -88,6 +88,9 @@ Service Level Agreement policies: first-response and resolution time targets per
 | `SlaPolicyResource` | #1 CRUD resource | per-priority targets repeater |
 | `SlaMonitorPage` | #8-style live custom page | tickets nearing breach, Reverb broadcast updates |
 | `SlaComplianceWidget` | #6 widget | compliance % |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('support.sla.view-any') && BillingService::hasModule('support.sla')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

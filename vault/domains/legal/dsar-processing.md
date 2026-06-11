@@ -87,6 +87,9 @@ Append-only — compliance proof, never purged ([[architecture/data-lifecycle]])
 | `DsarRequestResource` (extended) | #1 CRUD resource | deadline-sorted, verification + action trail |
 | `DsarFulfilmentPage` | #7 custom page | discovery table + trigger export/erasure (delegated) |
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('legal.dsar.view-any') && BillingService::hasModule('legal.dsar')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
 ---
 
 ## Permissions

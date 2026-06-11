@@ -14,7 +14,7 @@ patterns: []
 tables: [lms_lessons, lms_quizzes, lms_lesson_progress]
 permission-prefix: lms.lessons
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -82,6 +82,13 @@ Individual lessons within a course module: video, text, file attachments, and qu
 | Lesson relation manager | on course modules | type-specific forms, quiz repeater |
 
 Learner lesson player: Vue + Inertia learner portal.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('lms.lessons.view-any') && BillingService::hasModule('lms.lessons')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): Add upload constraints to the lesson video/file content section: allowed MIME/type whitelist, max file size, and companies/{company_id}/ storage path.
 
 ---
 

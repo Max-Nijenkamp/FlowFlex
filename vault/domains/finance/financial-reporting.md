@@ -14,7 +14,7 @@ patterns: [custom-pages, money, pdf]
 tables: []
 permission-prefix: finance.reporting
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -84,6 +84,13 @@ Interface→Service: `ReportingServiceInterface` → `ReportingService`.
 | `CashFlowStatementPage` | #9 report custom page | |
 
 Export + (P3) schedule actions per report.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('finance.reporting.view-any') && BillingService::hasModule('finance.reporting')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Add a rate limiter on the report export actions to prevent export abuse / resource exhaustion.
 
 ---
 

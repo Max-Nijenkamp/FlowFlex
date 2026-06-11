@@ -80,6 +80,9 @@ Quarterly Business Review management: schedule, prepare, and track strategic rev
 |---|---|---|
 | `QbrResource` | #1 CRUD resource | prepare-deck + record-outcomes actions, action-items relation |
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('cs.qbr.view-any') && BillingService::hasModule('cs.qbr')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
 ---
 
 ## Permissions

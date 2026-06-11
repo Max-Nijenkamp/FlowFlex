@@ -14,7 +14,7 @@ patterns: [service, money, custom-pages, events]
 tables: [fin_accounts, fin_journal_entries, fin_journal_lines, fin_fiscal_periods]
 permission-prefix: finance.ledger
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -147,6 +147,9 @@ Listener: `PostPayrollJournalEntryListener` — queued, `WithCompanyContext`; ba
 | `JournalEntryResource` | #1 CRUD resource | manual create only; auto-posted entries read-only; reverse action |
 | `TrialBalancePage` | #9 report custom page | date range selector, drill-down to lines |
 | `FiscalPeriodResource` | #1 CRUD (status toggle) | close/reopen periods |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('finance.ledger.view-any') && BillingService::hasModule('finance.ledger')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

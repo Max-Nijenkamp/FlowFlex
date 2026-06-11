@@ -14,7 +14,7 @@ patterns: [search]
 tables: [mkt_posts, mkt_post_categories]
 permission-prefix: marketing.cms
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -91,6 +91,13 @@ Blog and content management for the company's public marketing presence. Author 
 | `PostCategoryResource` | #1 CRUD resource | |
 
 Public blog: Vue + Inertia (`/blog`, `/blog/{slug}`) — ui-strategy row #12/16.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('marketing.cms.view-any') && BillingService::hasModule('marketing.cms')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle/rate limiter on the public blog and search routes to protect Meilisearch-backed queries from abuse.
 
 ---
 

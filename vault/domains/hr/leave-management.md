@@ -14,7 +14,7 @@ patterns: [states, interface-service, custom-pages, events, email]
 tables: [hr_leave_types, hr_leave_balances, hr_leave_requests]
 permission-prefix: hr.leave
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -235,6 +235,9 @@ Consumed by: `hr.payroll` (`UpdatePayrollDeductionsListener` — unpaid-type ded
 | `LeaveTypeResource` | #1 CRUD resource | admin config: accrual, carry-over, approval flag |
 | `LeaveCalendarPage` | #4 Calendar custom page | `saade/filament-fullcalendar`, team filter, polling 30s |
 | `PendingApprovalsWidget` | #6 dashboard widget | count for current approver *(assumed)* |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.leave.view-any') && BillingService::hasModule('hr.leave')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

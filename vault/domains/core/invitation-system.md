@@ -14,7 +14,7 @@ patterns: [email]
 tables: [user_invitations]
 permission-prefix: core.invitations
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -124,6 +124,9 @@ Registration form: name + password only (email pre-filled and read-only). Rate-l
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `InvitationResource` | #1 CRUD resource | pending list w/ expiry countdown; create, resend, revoke actions |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('core.invitations.view-any') && BillingService::hasModule('core.invitations')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

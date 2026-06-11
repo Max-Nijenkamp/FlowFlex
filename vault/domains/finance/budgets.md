@@ -14,7 +14,7 @@ patterns: [custom-pages, money]
 tables: [fin_budgets, fin_budget_lines]
 permission-prefix: finance.budgets
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -100,6 +100,9 @@ Interface→Service: `BudgetServiceInterface` → `BudgetService`.
 | `BudgetResource` | #1 CRUD resource | line editor grid; approve action; version column |
 | `BudgetVariancePage` | #9 report custom page | variance highlighting, drill-down |
 | `BudgetVarianceWidget` | #6 widget | over-budget alerts |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('finance.budgets.view-any') && BillingService::hasModule('finance.budgets')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

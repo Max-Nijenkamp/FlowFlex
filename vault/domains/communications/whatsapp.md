@@ -105,6 +105,14 @@ Messages flow through `comms_messages` (channel_type = whatsapp).
 
 Sending happens through the Shared Inbox composer (template picker outside 24h window).
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('comms.whatsapp.view-any') && BillingService::hasModule('comms.whatsapp')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle / rate limiter on the WhatsApp webhook route.
+- **Upload contract** (medium): Specify MIME/extension whitelist, max size, and tenant-scoped storage path for WhatsApp media attachments.
+
 ---
 
 ## Permissions

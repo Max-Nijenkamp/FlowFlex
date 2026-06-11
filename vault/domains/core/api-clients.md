@@ -14,7 +14,7 @@ patterns: [api]
 tables: [personal_access_tokens]
 permission-prefix: core.api
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -84,6 +84,9 @@ Uses Sanctum's `personal_access_tokens` table — no custom tables.
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `ApiClientResource` | #1 CRUD resource | create modal shows token once with copy button; revoke actions; last-used column |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('core.api.view-any') && BillingService::hasModule('core.api')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

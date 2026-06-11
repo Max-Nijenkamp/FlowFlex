@@ -14,7 +14,7 @@ patterns: [custom-pages, queues]
 tables: [bi_kpis, bi_kpi_snapshots]
 permission-prefix: analytics.kpis
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -80,6 +80,9 @@ Define key performance indicators with targets, track actuals over time, and vis
 |---|---|---|
 | `KpiResource` | #1 CRUD resource | targets, manual value entry |
 | `KpiDashboardPage` | #6 dashboard page | gauges + trends (apex) |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('analytics.kpis.view-any') && BillingService::hasModule('analytics.kpis')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

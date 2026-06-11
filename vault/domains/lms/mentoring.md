@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [lms_mentorships, lms_mentorship_sessions, lms_mentor_profiles]
 permission-prefix: lms.mentoring
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -74,7 +74,10 @@ Pair mentors with mentees, track mentoring relationships, schedule sessions, and
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `MentorshipResource` | #1 CRUD resource | own relationships; sessions relation (pair-scoped) |
-| `MentorDirectoryPage` | #9 gallery custom page | browse + request |
+| `MentorDirectoryPage` | #17 gallery/directory custom page | browse + request |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('lms.mentoring.view-any') && BillingService::hasModule('lms.mentoring')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

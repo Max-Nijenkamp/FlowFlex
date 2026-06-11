@@ -14,7 +14,7 @@ patterns: [money, custom-pages]
 tables: [legal_expenses, legal_budgets]
 permission-prefix: legal.spend
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -89,6 +89,9 @@ Track legal costs: external counsel invoices, spend per matter, budget vs actual
 |---|---|---|
 | `LegalExpenseResource` | #1 CRUD resource | approve action, matter/vendor filters |
 | `LegalSpendDashboardPage` | #6 dashboard page | budget vs actual + vendor breakdown (apex) |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('legal.spend.view-any') && BillingService::hasModule('legal.spend')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

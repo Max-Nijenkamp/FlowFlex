@@ -14,7 +14,7 @@ patterns: [states, pdf]
 tables: [hr_review_cycles, hr_reviews, hr_review_goals]
 permission-prefix: hr.performance
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -121,6 +121,9 @@ Interface→Service: `PerformanceServiceInterface` → `PerformanceService`.
 | `ReviewCycleResource` | #1 CRUD resource | completion % column; activate/calibrate/finalise actions |
 | `ReviewResource` | #1 CRUD resource | own pending reviews list + submit form; HR sees all |
 | `MyGoalsPage` | #7 custom page | employee goal progress updates *(assumed: lives with self-service nav)* |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.performance.view-any') && BillingService::hasModule('hr.performance')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

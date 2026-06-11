@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [lms_skills, lms_employee_skills, lms_role_skills, lms_course_skills]
 permission-prefix: lms.skills
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -78,7 +78,10 @@ Track employee skills and proficiency levels. Identify skill gaps and link train
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `SkillResource` | #1 CRUD resource | catalogue + role requirements |
-| `SkillsMatrixPage` | #9 heat-map custom page | employees × skills, gap highlighting |
+| `SkillsMatrixPage` | #18 heat-map/matrix custom page | employees × skills, gap highlighting |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('lms.skills.view-any') && BillingService::hasModule('lms.skills')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

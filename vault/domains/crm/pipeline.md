@@ -14,7 +14,7 @@ patterns: [custom-pages, websockets]
 tables: [crm_pipeline_stages]
 permission-prefix: crm.pipeline
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -91,6 +91,9 @@ Default stages seeded on module activation: Lead → Qualified → Proposal → 
 |---|---|---|
 | `PipelineBoardPage` | #3 Kanban custom page | Livewire + Alpine sortable; Reverb broadcast (collaborative); quick-add; filters in header |
 | `PipelineStageResource` | #1 CRUD resource | stage config, reorder |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.pipeline.view-any') && BillingService::hasModule('crm.pipeline')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

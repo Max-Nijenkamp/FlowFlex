@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [proj_objectives, proj_key_results, proj_okr_checkins]
 permission-prefix: projects.okrs
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -104,6 +104,9 @@ Objectives and Key Results: company-level and team-level goal setting with progr
 |---|---|---|
 | `ObjectiveResource` | #1 CRUD resource (tree-ish list) | nested display, KR relation manager, check-in action |
 | `OkrDashboardPage` | #6 dashboard page | quarter selector, health distribution, recent check-ins |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('projects.okrs.view-any') && BillingService::hasModule('projects.okrs')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

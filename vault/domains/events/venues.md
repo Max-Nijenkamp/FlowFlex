@@ -69,6 +69,9 @@ None beyond CRUD — events reference `venue_id`; session room picker reads venu
 |---|---|---|
 | `VenueResource` | #1 CRUD resource | rooms relation, usage list |
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('events.venues.view-any') && BillingService::hasModule('events.venues')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
 ---
 
 ## Permissions

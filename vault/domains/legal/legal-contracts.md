@@ -14,7 +14,7 @@ patterns: [states, money]
 tables: [legal_contracts, legal_contract_obligations]
 permission-prefix: legal.contracts
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -115,6 +115,13 @@ Central contract repository with key dates, renewal tracking, obligations, and s
 |---|---|---|
 | `LegalContractResource` | #1 CRUD resource | filters type/status/renewal; obligations relation; sign/renew/terminate actions |
 | `ContractRenewalWidget` | #6 widget | notice deadlines + renewals |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('legal.contracts.view-any') && BillingService::hasModule('legal.contracts')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): Specify PDF-only whitelist, max size, and companies/{id}/ scoped storage path for the signed-contract Media Library collection.
 
 ---
 

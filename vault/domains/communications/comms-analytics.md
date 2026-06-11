@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: comms.analytics
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -73,6 +73,9 @@ Output only: `CommsMetricsData` — series + breakdowns + agent table + broadcas
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `CommsAnalyticsDashboard` | #6 dashboard page + apex charts | date range + channel filter; polling 60s |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('comms.analytics.view-any') && BillingService::hasModule('comms.analytics')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

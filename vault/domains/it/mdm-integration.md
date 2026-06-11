@@ -14,7 +14,7 @@ patterns: [encryption, queues]
 tables: [it_mdm_config, it_mdm_devices]
 permission-prefix: it.mdm
 encrypted-fields: ["it_mdm_config.api_key"]
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -90,6 +90,9 @@ Mobile Device Management integration: sync managed devices from an MDM provider 
 |---|---|---|
 | `MdmDeviceResource` | #1 (read-only synced) | compliance filter, link actions, lock/wipe actions |
 | `MdmConfigPage` | #7 custom page (form) | connect provider, credentials write-only |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('it.mdm.view-any') && BillingService::hasModule('it.mdm')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

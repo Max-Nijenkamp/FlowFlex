@@ -14,7 +14,7 @@ patterns: [states]
 tables: [proj_tasks, proj_task_sections, proj_task_dependencies, proj_task_comments]
 permission-prefix: projects.tasks
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -117,6 +117,14 @@ Actions:
 | `TaskResource` | #1 CRUD resource | filters: project/assignee/status/priority |
 | Task view | #2 detail | comments thread, sub-tasks, dependencies, time log, attachments |
 | `MyTasksPage` | #1-style custom page (own scope) | cross-project, grouped by due date |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('projects.tasks.view-any') && BillingService::hasModule('projects.tasks')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rich-text sanitize** (medium): In Core Features/CommentData, state that rich-text comment bodies are sanitized with HTMLPurifier before persistence.
+- **Upload contract** (medium): Add an upload constraints note: allowed MIME/type whitelist, max file size, and tenant-scoped companies/{id}/ storage path.
 
 ---
 

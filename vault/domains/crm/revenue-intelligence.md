@@ -14,7 +14,7 @@ patterns: [custom-pages, queues]
 tables: [crm_deal_health, crm_win_loss]
 permission-prefix: crm.revenue-intelligence
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -107,6 +107,9 @@ Output only: `DealHealthData` (deal, score, factors[], risk_level), `WinLossAnal
 | `DealHealthResource` | #1 (read-only) | at-risk queue sorted by score, factor breakdown |
 | `WinLossPage` | #9 report custom page + apex charts | reasons, competitors, funnel |
 | `RevenueIntelligenceDashboard` | #6 dashboard page | velocity, conversion, health distribution |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.revenue-intelligence.view-any') && BillingService::hasModule('crm.revenue-intelligence')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

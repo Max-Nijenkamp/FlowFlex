@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [sup_csat_responses]
 permission-prefix: support.analytics
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -91,6 +91,13 @@ Output: `SupportMetricsData` — period series + breakdowns + agent table.
 | `SupportDashboardPage` | #6 dashboard page + apex charts | date range filter; widget polling 60s |
 
 Public CSAT page: Vue + Inertia `/csat/{token}` — ui-strategy row #16.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('support.analytics.view-any') && BillingService::hasModule('support.analytics')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Public/portal guard** (HIGH): State the public CSAT submit endpoint runs under an explicit unauthenticated guard/middleware (token-only, no panel session) alongside the existing rate limiter.
 
 ---
 

@@ -87,6 +87,13 @@ Extract structured data from documents (invoices, receipts, CVs) using OCR + LLM
 |---|---|---|
 | `DocumentExtractionResource` | #1 CRUD resource | upload (create), review page with confidence highlighting, apply action |
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('ai.document-intelligence.view-any') && BillingService::hasModule('ai.document-intelligence')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): State an explicit max upload size (e.g. max:10240 KB) in the upload rules alongside the type whitelist and tenant-scoped path.
+
 ---
 
 ## Permissions

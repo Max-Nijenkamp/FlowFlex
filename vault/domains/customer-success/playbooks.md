@@ -84,6 +84,9 @@ Repeatable success playbooks: sequences of tasks triggered by customer lifecycle
 | `PlaybookResource` | #1 CRUD resource | step repeater |
 | `PlaybookRunResource` | #1 CRUD resource | step checklist, complete actions |
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('cs.playbooks.view-any') && BillingService::hasModule('cs.playbooks')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
 ---
 
 ## Permissions

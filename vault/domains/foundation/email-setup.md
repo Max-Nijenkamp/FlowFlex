@@ -14,7 +14,7 @@ patterns: [email]
 tables: []
 permission-prefix: ""
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -92,6 +92,14 @@ routes/api.php (webhook route, CSRF-exempt, signature-verified)
 config/mail.php
 tests/Feature/Foundation/{MailBrandingTest,BounceWebhookTest}.php
 ```
+
+---
+
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Add a throttle middleware to the webhook route (e.g. `throttle:resend-webhook` with a per-IP/per-source limit) in routes/api.php and document it in the Build Manifest alongside the signature-verification middleware.
+- **Webhook verification** (HIGH): Promote signature verification from *(assumed)* to a concrete requirement: specify the Svix/Resend signature header, the secret env var (e.g. RESEND_WEBHOOK_SECRET), and a dedicated verification middleware on the route that rejects unsigned/invalid requests with 403 before reaching the controller.…
 
 ---
 

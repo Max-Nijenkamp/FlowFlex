@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: core.health
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -73,6 +73,13 @@ Health::checks([
 |---|---|---|
 | `SystemStatusPage` (`/app`, owner) | #7 custom page | green/red per check, last-checked timestamp, polling 60s |
 | Pulse + Horizon (`/admin`) | external dashboards | gated by admin guard; links from admin nav |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('core.health.view-any') && BillingService::hasModule('core.health')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle limiter on GET /health and/or restrict detailed output to authenticated/monitoring callers (token-guarded), returning minimal status to anonymous callers.
 
 ---
 

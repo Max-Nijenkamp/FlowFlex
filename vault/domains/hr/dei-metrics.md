@@ -14,7 +14,7 @@ patterns: [encryption, custom-pages, gdpr]
 tables: [hr_dei_attributes, hr_dei_snapshots]
 permission-prefix: hr.dei
 encrypted-fields: ["hr_dei_attributes.value"]
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -106,6 +106,9 @@ Dashboards read snapshots only — never live decrypt-and-group over individuals
 |---|---|---|
 | `DeiDashboardPage` | #6 dashboard page | snapshot-driven charts; "insufficient group size" placeholders |
 | DEI section in self-service MyProfilePage | form section | opt-in collection + withdraw button |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.dei.view-any') && BillingService::hasModule('hr.dei')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

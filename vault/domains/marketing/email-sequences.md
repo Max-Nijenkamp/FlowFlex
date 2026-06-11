@@ -14,7 +14,7 @@ patterns: [queues]
 tables: [mkt_sequences, mkt_sequence_steps, mkt_sequence_enrolments]
 permission-prefix: marketing.sequences
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -97,6 +97,9 @@ Step engagement: open/click tracked per send (campaign tracking machinery reused
 |---|---|---|
 | `SequenceResource` | #1 CRUD resource | step repeater, trigger config, per-step stats |
 | `SequenceEnrolmentResource` | #1 CRUD resource | who/where, unenrol action |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('marketing.sequences.view-any') && BillingService::hasModule('marketing.sequences')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

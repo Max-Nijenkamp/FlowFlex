@@ -14,7 +14,7 @@ patterns: [money]
 tables: [proc_catalogue_items, proc_supplier_status]
 permission-prefix: procurement.catalogue
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -89,6 +89,9 @@ Curated catalogue of approved suppliers and their offered products/services with
 | `SupplierStatusResource` | #1 CRUD resource | approve/blacklist with notes |
 
 Catalogue picker component used in requisition form.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('procurement.catalogue.view-any') && BillingService::hasModule('procurement.catalogue')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

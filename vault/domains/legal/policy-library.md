@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [legal_policies, legal_policy_acknowledgements]
 permission-prefix: legal.policies
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -94,6 +94,9 @@ Company policies (privacy, security, HR, code of conduct) with versioning, ackno
 | `PolicyResource` | #1 CRUD resource | Tiptap, publish/version actions |
 | `PolicyAcknowledgementPage` | #9 matrix custom page | employees × policies status, export |
 | `MyPoliciesPage` | self-service custom page | read + acknowledge |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('legal.policies.view-any') && BillingService::hasModule('legal.policies')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

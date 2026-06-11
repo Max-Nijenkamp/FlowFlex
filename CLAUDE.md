@@ -89,7 +89,7 @@ vault/
 
 ## FlowFlex Commands
 
-Seven commands. Four fetch from vault, three write to vault.
+Eight commands. Four fetch from vault (`start`, `status`, `spec`, `patterns`), four write to vault (`sync`, `done`, `bug`, `decision`).
 
 ---
 

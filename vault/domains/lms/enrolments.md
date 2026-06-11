@@ -14,7 +14,7 @@ patterns: [states, events]
 tables: [lms_enrolments, lms_learners]
 permission-prefix: lms.enrolments
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -112,6 +112,14 @@ Interface→Service: `EnrolmentServiceInterface` → `EnrolmentService`.
 | `EnrolmentProgressWidget` | #6 widget | completion rates |
 
 Learner portal: Vue + Inertia `/learn` (ui-strategy row #15) — my courses, lesson player, progress.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('lms.enrolments.view-any') && BillingService::hasModule('lms.enrolments')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Public/portal guard** (HIGH): Specify in the ## Filament / portal section that the /learn portal authenticates external learners via a Sanctum scoped portal guard (learner guard), and that lms_learners.portal_token issuance/rotation flows through that guard rather than ad-hoc token checks.
+- **Rate limiter** (medium): Cite a throttle/rate limiter on the bulk-enrol action (e.g. per-user throttle) in the Services or Filament section.
 
 ---
 

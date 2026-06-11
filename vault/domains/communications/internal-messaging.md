@@ -14,7 +14,7 @@ patterns: [websockets, custom-pages, search]
 tables: [comms_channels_internal, comms_channel_members, comms_internal_messages]
 permission-prefix: comms.internal
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -102,6 +102,13 @@ Team chat for internal communication — direct messages and group channels betw
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `InternalMessagingPage` | #8 chat custom page | channel sidebar + thread pane; Reverb presence + typing whispers; cursor-paginated history |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('comms.internal.view-any') && BillingService::hasModule('comms.internal')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): Specify MIME/extension whitelist, max size, and tenant-scoped storage path for chat attachments.
 
 ---
 

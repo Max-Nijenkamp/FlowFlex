@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [proj_templates, proj_template_sections, proj_template_tasks, proj_template_milestones]
 permission-prefix: projects.templates
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -77,6 +77,13 @@ System templates: `company_id` null + global read scope exception *(assumed: sus
 |---|---|---|
 | `ProjectTemplateResource` | #1 CRUD resource | sections/tasks repeaters; system templates read-only |
 | `CreateProjectFromTemplatePage` | #7 wizard custom page | template → name/start date → confirm |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('projects.templates.view-any') && BillingService::hasModule('projects.templates')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Tenancy** (medium): Document the exact scope override: a read-only global scope exception that surfaces is_system/company_id-null rows to all tenants while blocking any cross-tenant write/edit; reference multi-tenancy.md.
 
 ---
 

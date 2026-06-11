@@ -2,7 +2,8 @@
 type: gap
 severity: high
 category: architecture
-status: open
+status: resolved
+resolved: 2026-06-11
 domain: All
 color: "#F97316"
 discovered: 2026-06-11
@@ -22,6 +23,10 @@ Recurring HIGH across CRM, ecommerce, marketing, HR, support, LMS, customer-succ
 
 ## Proposed Solution
 Each public surface must declare its guest/scoped-portal guard + signed/single-use token semantics. Per-spec list in [[build/security-audit-2026-06-11]] (SEC-EXTERNAL). Prioritise crm.scheduling, events.tickets, marketing.forms, hr.recruitment apply, ecommerce cart-recovery/reviews.
+
+## Resolution
+
+Per-spec **Security notes** (Public/portal guard) added to all 14 flagged specs naming the guest/scoped-portal guard + signed/single-use token requirement. Code enforcement at build.
 
 ## Related
 - [[build/security-audit-2026-06-11]]

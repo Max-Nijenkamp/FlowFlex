@@ -14,7 +14,7 @@ patterns: [states, money, pdf, email]
 tables: [crm_quotes, crm_quote_lines]
 permission-prefix: crm.quotes
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -129,6 +129,13 @@ Interface→Service: `QuoteServiceInterface` → `QuoteService`.
 | Quote view page | #2 detail | PDF preview, acceptance status |
 
 Public accept page: Vue + Inertia `/quotes/{token}` — ui-strategy row #16, rate-limited.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.quotes.view-any') && BillingService::hasModule('crm.quotes')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Public/portal guard** (HIGH): Specify the public quote route runs on a guest (no app-session) guard, validate the signed accept_token, and isolate from authenticated guards.
 
 ---
 

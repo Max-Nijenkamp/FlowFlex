@@ -14,7 +14,7 @@ patterns: [states, money]
 tables: [proc_requisitions, proc_requisition_items, proc_requisition_approvals]
 permission-prefix: procurement.requisitions
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -107,6 +107,9 @@ Interface→Service: `RequisitionServiceInterface` → `RequisitionService`.
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `RequisitionResource` | #1 CRUD resource | My requisitions / Approval queue tabs; catalogue picker; convert action |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('procurement.requisitions.view-any') && BillingService::hasModule('procurement.requisitions')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

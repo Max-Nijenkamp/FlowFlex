@@ -14,7 +14,7 @@ patterns: [custom-pages, money]
 tables: [fin_forecasts, fin_forecast_lines]
 permission-prefix: finance.forecasting
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -94,6 +94,9 @@ Financial forecasting, scenario modelling, and variance analysis. Absorbed from 
 |---|---|---|
 | `ForecastResource` | #1 CRUD resource | scenario + assumptions editor, seed-from-actuals action |
 | `ForecastComparisonPage` | #9 report custom page + apex charts | scenario side-by-side, three-way comparison |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('finance.forecasting.view-any') && BillingService::hasModule('finance.forecasting')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [custom-fields]
 tables: [crm_segments, crm_segment_members]
 permission-prefix: crm.segments
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -95,6 +95,9 @@ Allowed operators: equals, not-equals, contains, gt, lt, in, has-tag, days-since
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `SegmentResource` | #1 CRUD resource | condition builder (repeater), live preview count, members relation for static |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.segments.view-any') && BillingService::hasModule('crm.segments')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [events, email]
 tables: [hr_onboarding_templates, hr_onboarding_tasks, hr_onboarding_plans, hr_onboarding_plan_tasks]
 permission-prefix: hr.onboarding
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -133,6 +133,9 @@ Listener: `StartOnboardingFlowListener` — queued, `WithCompanyContext`; behavi
 | `OnboardingResource` | #1 CRUD resource | active plans list w/ % complete; view = task checklist with Livewire complete/skip actions |
 | `OnboardingTemplateResource` | #1 CRUD resource | template + repeater task editor |
 | `ActiveOnboardingsWidget` | #6 widget | count + overdue tasks *(assumed)* |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('hr.onboarding.view-any') && BillingService::hasModule('hr.onboarding')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

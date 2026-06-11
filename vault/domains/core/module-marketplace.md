@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: core.marketplace
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -65,6 +65,9 @@ None new — page calls `BillingServiceInterface::activateModule()` / `deactivat
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `ModuleMarketplacePage` | #3-style custom page (grid, no drag) | domain sections, activate/deactivate buttons with confirm modal, price preview per card |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('core.marketplace.view-any') && BillingService::hasModule('core.marketplace')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

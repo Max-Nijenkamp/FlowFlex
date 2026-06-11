@@ -93,6 +93,14 @@ Paid and free ticket types for events with pricing, quantity limits, and Stripe 
 
 Purchase flow: public registration pages (Vue) — ui-strategy row #16, Stripe Elements.
 
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('events.tickets.view-any') && BillingService::hasModule('events.tickets')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Rate limiter** (medium): Cite a throttle on the public purchase endpoint (and discount-code validation) to prevent abuse/enumeration.
+- **Webhook verification** (HIGH): State in the Services/webhook section that the inbound Stripe webhook verifies the Stripe-Signature header (signing secret) before processing payment-confirmation events.
+
 ---
 
 ## Permissions

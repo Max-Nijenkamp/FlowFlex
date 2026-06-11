@@ -14,7 +14,7 @@ patterns: [custom-pages, search]
 tables: [dms_wiki_pages, dms_wiki_page_versions]
 permission-prefix: dms.wiki
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -90,6 +90,9 @@ Internal knowledge wiki with rich text, nested pages, and table of contents. Com
 |---|---|---|
 | `WikiPageResource` | #1 CRUD resource | tree-ordered list, Tiptap editor, version history relation |
 | `WikiViewerPage` | #2-style custom page | rendered page + TOC sidebar + nested nav |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('dms.wiki.view-any') && BillingService::hasModule('dms.wiki')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

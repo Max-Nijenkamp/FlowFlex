@@ -14,7 +14,7 @@ patterns: [queues, email]
 tables: [bi_export_schedules, bi_export_log]
 permission-prefix: analytics.exports
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -78,6 +78,13 @@ Schedule reports and dashboards to be generated and emailed automatically on a r
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `ScheduledExportResource` | #1 CRUD resource | pause/resume, delivery log relation |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('analytics.exports.view-any') && BillingService::hasModule('analytics.exports')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): State that generated export files are stored under companies/{id}/exports/ with the company disk, and that signed links for large files are tenant-scoped and time-limited.
 
 ---
 

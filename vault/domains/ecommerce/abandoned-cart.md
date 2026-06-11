@@ -14,7 +14,7 @@ patterns: [queues, email]
 tables: [ec_carts, ec_cart_recovery_emails]
 permission-prefix: ecommerce.abandoned-cart
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -98,6 +98,14 @@ None public-input beyond storefront cart capture; recovery link restores session
 |---|---|---|
 | `AbandonedCartResource` | #1 (read-only) | status, recovery funnel |
 | `CartRecoveryWidget` | #6 widget | recovery rate, revenue recovered |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('ecommerce.abandoned-cart.view-any') && BillingService::hasModule('ecommerce.abandoned-cart')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Public/portal guard** (HIGH): Specify the route uses Laravel signed URLs (signed middleware) validating recovery_token, on the public/guest guard, with the recovery_token treated as a single-use capability token.
+- **Rate limiter** (medium): Add a throttle/RateLimiter to the public restore-cart route (e.g. throttle:public).
 
 ---
 

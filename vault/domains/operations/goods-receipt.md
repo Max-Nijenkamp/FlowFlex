@@ -14,7 +14,7 @@ patterns: [events]
 tables: [ops_goods_receipts, ops_grn_lines]
 permission-prefix: operations.goods-receipt
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -97,6 +97,9 @@ Consumer: finance.ap draft bill + 3-way match ([[architecture/event-bus]]).
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `GoodsReceiptResource` | #1 CRUD resource | create-from-PO (lines prefilled with open qty), accept/reject per line; linked from PO view |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('operations.goods-receipt.view-any') && BillingService::hasModule('operations.goods-receipt')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

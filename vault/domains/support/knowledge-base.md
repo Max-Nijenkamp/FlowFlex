@@ -14,7 +14,7 @@ patterns: [search]
 tables: [sup_kb_articles, sup_kb_categories]
 permission-prefix: support.kb
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -93,6 +93,9 @@ Self-service article library. Internal agents reference articles; customers brow
 | `KbCategoryResource` | #1 CRUD resource | tree order |
 
 Public help centre: Vue + Inertia (`/help/{company}`, `/help/{company}/{category}/{slug}`) — ui-strategy row #16.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('support.kb.view-any') && BillingService::hasModule('support.kb')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

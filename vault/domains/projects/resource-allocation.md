@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: [proj_resource_allocations]
 permission-prefix: projects.resources
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -84,6 +84,9 @@ Allocate team members to projects by percentage of their time. Plan capacity acr
 |---|---|---|
 | `ResourceAllocationResource` | #1 CRUD resource | over-allocation badge |
 | `AllocationTimelinePage` | #5 timeline custom page | users × time allocation bars |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('projects.resources.view-any') && BillingService::hasModule('projects.resources')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

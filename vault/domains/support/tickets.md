@@ -14,7 +14,7 @@ patterns: [states, service, custom-pages, email, search, events]
 tables: [sup_tickets, sup_ticket_replies, sup_ticket_categories]
 permission-prefix: support.tickets
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -149,6 +149,13 @@ Consumer: Marketing CSAT survey (P3) per [[architecture/event-bus]]. CSAT respon
 | `TicketCategoryResource` | #1 CRUD resource | |
 
 Public ticket form: Vue + Inertia `/support/new` *(assumed: optional embed)* — ui-strategy row #16.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('support.tickets.view-any') && BillingService::hasModule('support.tickets')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Upload contract** (medium): Specify allowed attachment MIME/extension whitelist, a max file size, and the companies/{company_id}/ storage path for ticket attachments.
 
 ---
 

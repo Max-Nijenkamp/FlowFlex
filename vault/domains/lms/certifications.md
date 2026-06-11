@@ -14,7 +14,7 @@ patterns: [pdf, queues]
 tables: [lms_certificate_templates, lms_certificates]
 permission-prefix: lms.certifications
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -93,6 +93,13 @@ Issue certificates on course completion, track validity/expiry, and manage renew
 | `CertificationExpiryWidget` | #6 widget | expiring 60d |
 
 Public verify page: Vue + Inertia `/verify/{number}` — ui-strategy row #16.
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('lms.certifications.view-any') && BillingService::hasModule('lms.certifications')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
+
+**Security notes** (per [[build/security-audit-2026-06-11]]):
+
+- **Data class** (medium): Add a CreateCertificateTemplateData (spatie/laravel-data) DTO covering name, design, course_id, validity_months for the template write path.
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [money]
 tables: [proc_po_sourcing]
 permission-prefix: procurement.purchase-orders
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -85,6 +85,9 @@ Uses `ops_purchase_orders` + `ops_po_lines` (shared). PO gains `procurement_appr
 | Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
 |---|---|---|
 | `ProcurementPoResource` | #1 CRUD resource (over ops POs) | sourcing relation (quote comparison table), approval actions, commitment columns |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('procurement.purchase-orders.view-any') && BillingService::hasModule('procurement.purchase-orders')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [custom-pages, money, email, queues]
 tables: [fin_ar_dunning_rules, fin_ar_writeoffs]
 permission-prefix: finance.ar
 encrypted-fields: []
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -104,6 +104,9 @@ Listener: `UpdateARAgingListener` — recompute aging cache for the account, res
 | `ArAgingPage` | #9 report custom page | buckets by customer, drill-down to invoices |
 | `CustomerStatementPage` | #9 report custom page | per-customer, period selector, PDF export |
 | `DunningRuleResource` | #1 CRUD resource | sequence steps |
+
+
+**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('finance.ar.view-any') && BillingService::hasModule('finance.ar')` per [[architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[architecture/ui-strategy]]).
 
 ---
 
