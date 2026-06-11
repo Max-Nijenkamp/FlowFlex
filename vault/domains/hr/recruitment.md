@@ -4,7 +4,7 @@ domain: HR & People
 domain-key: hr
 panel: hr
 module-key: hr.recruitment
-status: planned
+status: complete
 priority: v1
 depends-on: [hr.profiles, core.billing, core.rbac, core.files, core.notifications]
 soft-depends: [hr.workforce]

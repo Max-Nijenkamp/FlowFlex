@@ -11,9 +11,20 @@ use App\Models\Finance\FiscalPeriod;
 use App\Models\Finance\InvoiceLine;
 use App\Models\Finance\JournalLine;
 use App\Models\Finance\Payment;
+use App\Models\HR\DeiAttribute;
+use App\Models\HR\DeiSnapshot;
 use App\Models\HR\EmergencyContact;
+use App\Models\HR\EmployeeBenefit;
+use App\Models\HR\Interview;
+use App\Models\HR\Offer;
 use App\Models\HR\OnboardingPlanTask;
 use App\Models\HR\OnboardingTask;
+use App\Models\HR\PlannedRole;
+use App\Models\HR\Review;
+use App\Models\HR\ReviewGoal;
+use App\Models\HR\SalaryHistory;
+use App\Models\HR\ShiftSwapRequest;
+use App\Models\HR\TimeEntry;
 use App\Models\ModuleCatalog;
 use App\Models\NotificationPreference;
 use App\Models\UserInvitation;
@@ -64,6 +75,18 @@ arch('models soft delete unless append-only by design')
         FiscalPeriod::class,
         BankTransaction::class,
         QuoteLine::class,
+        // HR append-only / pivot-style / aggregate rows.
+        Interview::class,
+        Offer::class,
+        Review::class,
+        ReviewGoal::class,
+        TimeEntry::class,
+        ShiftSwapRequest::class,
+        EmployeeBenefit::class,
+        SalaryHistory::class,
+        PlannedRole::class,
+        DeiAttribute::class,
+        DeiSnapshot::class,
     ]);
 
 arch('append-only core models still use ULIDs')

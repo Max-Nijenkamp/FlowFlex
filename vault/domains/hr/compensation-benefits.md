@@ -4,7 +4,7 @@ domain: HR & People
 domain-key: hr
 panel: hr
 module-key: hr.compensation
-status: planned
+status: complete
 priority: v1
 depends-on: [hr.profiles, hr.payroll, core.billing, core.rbac]
 soft-depends: []

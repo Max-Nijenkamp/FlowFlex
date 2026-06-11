@@ -18,7 +18,7 @@ Per-domain progress. Update `status` frontmatter in module specs — this table 
 |---|---|---|---|---|
 | MVP | Foundation | 8 | 8 | 🟢 100% |
 | MVP | Core Platform | 15 | 15 | 🟢 100% |
-| MVP | HR & People | 6 | 15 | 🟠 40% |
+| MVP | HR & People | 15 | 15 | 🟢 100% |
 | MVP | Finance & Accounting | 4 | 13 | 🟠 31% |
 | MVP | CRM & Sales | 5 | 15 | 🟠 33% |
 | Phase 2 | Projects & Work | 0 | 11 | 🔴 0% |
@@ -39,10 +39,10 @@ Per-domain progress. Update `status` frontmatter in module specs — this table 
 | Phase 3 | Events Management | 0 | 7 | 🔴 0% |
 | Deferred | (10 domains) | — | — | stub only |
 
-**MVP Total: 38 / 66 modules built** (Foundation + Core complete; HR/Finance/CRM MVP-gate path built — company can be onboarded, manage employees, send invoices, run a pipeline = SELLABLE)
+**MVP Total: 47 / 66 modules built** (Foundation + Core complete; HR/Finance/CRM MVP-gate path built — company can be onboarded, manage employees, send invoices, run a pipeline = SELLABLE)
 **Phase 2 Total: 0 / 32 modules built**
 **Phase 3 Total: 0 / 75 modules built**
-**All active: 38 / 173 modules — every Phase 1/2/3 module is fully specced**
+**All active: 47 / 173 modules — every Phase 1/2/3 module is fully specced**
 
 ---
 
@@ -99,6 +99,7 @@ SORT module-key ASC
 | 2026-06-11 | All | cross-cutting passes | ✅ Search (Scout on Employee+Contact, encrypted fields excluded, null driver in tests), Realtime server-side (channels.php auth for company.{id}.notifications + .pipeline, NotificationCreated + DealStageMoved broadcasts, native drag-drop Kanban; Echo JS lands with public-site pass), PDF (invoice + payslip via spatie/laravel-pdf, tenant-scoped paths, throttled download action), API v1 (employees/leave/invoices/contacts/deals, output DTOs, ability+module middleware, SetCompanyContextFromToken, cursor pagination on leave feed). Pest 171/171, PHPStan 0 |
 | 2026-06-11 | HR+CRM | hr.self-service, crm.quotes | ✅ Both closed: My HR dashboard (conditional tiles) + MyProfile (own-data rule, contact replacement), quote line editor + send w/ single-use token + public guest accept page (throttled, expiry-checked, token consumed). Pest 163/163, PHPStan 0 |
 | 2026-06-11 | Core Platform | ALL 15 modules | ✅ Core Platform COMPLETE (15/15). Gating (BillingService.hasModule + EnforceModuleAccess + config-extensible Sushi catalog), settings (company-scoped spatie repo), rbac (custom RoleResource — no shield needed), invitations (token flow + public accept), billing (invoices/states/Stripe webhook/dunning/suspension), marketplace, audit (AuditLogger + PII denylist), notifications (prefs + listeners + Filament bell), files (CompanyPathGenerator), import (registry + chunked job + error report), webhooks (HMAC outbound + auto-disable), api (Sanctum scoped tokens), setup wizard, privacy (DSAR + erasure cascade + registry), i18n (LocaleFormatter), health (/health + status page). Panel theming: FlowFlex brand, custom vite themes both panels (no stock Filament look). Gates: Pest 119/119, PHPStan 0, Pint clean, migrate:fresh --seed clean |
+| 2026-06-11 | HR | 9 remaining v1 modules | ✅ HR DOMAIN 15/15. recruitment (public careers page w/ honeypot+throttle, slug apply, pipeline applied→hired, offer→hire wires salary via CompensationService, auto-close at headcount), performance (cycle matrix self+manager, calibration locks, finalise), time (clock in/out, week submit, approve fires TimesheetApproved, own-approval guard), shifts (conflict+leave blocks, LeaveRequestApproved unassigns→coverage gap), compensation (encrypted append-only salary history, compa-ratio vs bands, benefits enroll), analytics (single-query metrics), workforce (plan-vs-actual), feedback (visibility forced by type, self-feedback blocked), dei (encrypted self-reported attrs, consent log, suppression<5, withdrawal hard-deletes). 8 lean Filament resources. Pest 182/182, PHPStan 0, Pint clean |
 
 ---
 

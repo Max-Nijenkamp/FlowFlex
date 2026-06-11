@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CareersController;
 use App\Http\Controllers\QuoteAcceptController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,4 +23,10 @@ Route::middleware('throttle:5,1')->group(function (): void {
 Route::middleware('throttle:10,1')->group(function (): void {
     Route::get('/quotes/accept/{token}', [QuoteAcceptController::class, 'show']);
     Route::post('/quotes/accept/{token}', [QuoteAcceptController::class, 'accept']);
+});
+
+// Public careers pages — guest, throttled, honeypot (hr.recruitment).
+Route::middleware('throttle:10,1')->group(function (): void {
+    Route::get('/careers/{slug}', [CareersController::class, 'show']);
+    Route::post('/careers/{slug}/apply', [CareersController::class, 'apply']);
 });
