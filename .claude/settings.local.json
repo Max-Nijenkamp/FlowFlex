@@ -140,7 +140,24 @@
       "Read(//c/Users/maxni/.claude/plugins/**)",
       "Read(//c/Users/maxni/.claude/**)",
       "PowerShell(Get-ChildItem -Recurse -File vault | Group-Object { $_.Directory.FullName.Replace\\(\\(Resolve-Path vault\\).Path, ''\\) } | Sort-Object Name | ForEach-Object { \"{0,4}  {1}\" -f $_.Count, $_.Name })",
-      "Bash(echo \"---EXIT $?---\")"
+      "Bash(echo \"---EXIT $?---\")",
+      "Bash(npm -v)",
+      "Bash(psql --version)",
+      "Bash(ls package.json)",
+      "Bash(find . -maxdepth 2 -name package.json -not -path '*/node_modules/*')",
+      "Bash(./vendor/bin/phpstan analyse *)",
+      "Bash(echo \"exit=$?\")",
+      "Read(//tmp/**)",
+      "Bash(echo \"v-exit=$?\")",
+      "Bash(php vendor/bin/phpstan analyse app/Models/Company.php --level=5 --no-progress)",
+      "Bash(echo \"REAL_EXIT=$?\")",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(printf '<?php\\\\ndeclare\\(strict_types=1\\);\\\\nfunction f\\(int %sx\\): int { return %sx + 1; }\\\\n' '$' '$')",
+      "Bash(php /Users/maxnijenkamp/Documents/FlowFlex/app/vendor/bin/phpstan analyse t.php --level=0 --no-progress)",
+      "Bash(printf 'includes:\\\\n    - vendor/larastan/larastan/extension.neon\\\\nparameters:\\\\n    level: 5\\\\n    paths:\\\\n        - app/Models\\\\n    parallel:\\\\n        maximumNumberOfProcesses: 1\\\\n')",
+      "Bash(php -d memory_limit=4G vendor/bin/phpstan analyse -c /tmp/single.neon --no-progress --error-format=table)",
+      "Bash(printf '<?php\\\\ndeclare\\(strict_types=1\\);\\\\nfunction g\\(int %sx\\): string { return %sx + 1; }\\\\n' '$' '$')",
+      "Bash(php /Users/maxnijenkamp/Documents/FlowFlex/app/vendor/bin/phpstan analyse bad.php --level=5 --no-progress)"
     ]
   },
   "enabledMcpjsonServers": [

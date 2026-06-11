@@ -13,7 +13,8 @@ Bugs, spec issues, and missing details discovered during build sessions.
 
 | ID | Severity | Domain | Module | Description | Discovered |
 |---|---|---|---|---|---|
-| — | — | — | — | No open gaps | — |
+| [[gap-larastan-laravel-boot-crash]] | high | foundation | foundation.scaffold | Larastan crashes silently analysing Laravel classes — blocks static-analysis gate | 2026-06-11 |
+| [[gap-filament5-plugins-unavailable]] | medium | foundation | foundation.scaffold | 4 Filament plugins (shield, tiptap, fullcalendar, activitylog) have no Filament 5 release yet | 2026-06-11 |
 
 All 7 audit gaps resolved at spec level 2026-06-11 (see below). Code-level enforcement is carried into each module build via the Definition of Done. Full per-spec worklist: [[build/security-audit-2026-06-11]].
 
