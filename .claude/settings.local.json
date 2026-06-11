@@ -228,7 +228,12 @@
       "Bash(sed -n '/## Core Promise/,/## Competitor/p' vault/product/positioning.md)",
       "Bash(sed -n '/## Key Differentiator/,/$/p' vault/product/positioning.md)",
       "Bash(mkdir -p public/images/logo)",
-      "Bash(pip3 install *)"
+      "Bash(pip3 install *)",
+      "WebFetch(domain:www.flowplan.dk)",
+      "WebFetch(domain:www.pipedrive.com)",
+      "WebFetch(domain:www.linear.app)",
+      "Bash(npm ls *)",
+      "Bash(npm i *)"
     ]
   },
   "enabledMcpjsonServers": [

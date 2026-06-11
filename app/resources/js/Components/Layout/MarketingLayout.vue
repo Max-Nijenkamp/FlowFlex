@@ -1,18 +1,38 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3'
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import Logo from '@/Components/UI/Logo.vue'
 
 const page = usePage<{ auth: { user: { name: string } | null } }>()
 const user = computed(() => page.props.auth?.user ?? null)
 const menuOpen = ref(false)
+const productOpen = ref(false)
+const productMenu = ref<HTMLElement | null>(null)
 
-const nav = [
-    { href: '/features', label: 'Product' },
-    { href: '/pricing', label: 'Pricing' },
-    { href: '/about', label: 'About' },
-    { href: '/contact', label: 'Contact' },
+const productItems = [
+    { href: '/features', label: 'HR & people', detail: 'Recruiting to payroll' },
+    { href: '/features', label: 'Finance & accounting', detail: 'Ledger-first books' },
+    { href: '/features', label: 'CRM & sales', detail: 'Pipeline to contract' },
+    { href: '/features', label: 'Core platform', detail: 'Roles, audit, API' },
 ]
+
+function onClickOutside(e: MouseEvent) {
+    if (productMenu.value && !productMenu.value.contains(e.target as Node)) productOpen.value = false
+}
+
+function onEscape(e: KeyboardEvent) {
+    if (e.key === 'Escape') productOpen.value = false
+}
+
+onMounted(() => {
+    document.addEventListener('click', onClickOutside)
+    document.addEventListener('keydown', onEscape)
+})
+
+onUnmounted(() => {
+    document.removeEventListener('click', onClickOutside)
+    document.removeEventListener('keydown', onEscape)
+})
 </script>
 
 <template>
@@ -27,9 +47,39 @@ const nav = [
                     <Logo variant="dark" />
                 </Link>
 
-                <nav class="hidden md:flex items-center gap-9 text-[15px] font-medium text-ink-soft">
-                    <Link v-for="item in nav" :key="item.href" :href="item.href"
-                        class="hover:text-ink transition ease-out duration-150">{{ item.label }}</Link>
+                <nav class="hidden md:flex items-center gap-8 text-[15px] font-medium text-ink-soft">
+                    <div ref="productMenu" class="relative">
+                        <button type="button"
+                            class="flex items-center gap-1.5 hover:text-ink transition ease-out duration-150"
+                            :class="productOpen ? 'text-ink' : ''"
+                            :aria-expanded="productOpen"
+                            @click="productOpen = !productOpen">
+                            Product
+                            <svg class="h-3.5 w-3.5 transition-transform ease-out duration-200" :class="productOpen ? 'rotate-180' : ''"
+                                viewBox="0 0 16 16" fill="none">
+                                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div v-if="productOpen"
+                            class="absolute left-1/2 top-full mt-3 w-[420px] -translate-x-1/2 rounded-2xl border border-line bg-white p-2 shadow-[0_16px_40px_-12px_rgba(17,24,39,0.18)]"
+                            style="animation: ff-enter 0.18s cubic-bezier(0, 0, 0.2, 1)">
+                            <div class="grid grid-cols-2 gap-1">
+                                <Link v-for="item in productItems" :key="item.label" :href="item.href"
+                                    class="rounded-xl px-4 py-3 hover:bg-paper transition ease-out duration-150"
+                                    @click="productOpen = false">
+                                    <span class="block text-sm font-semibold text-ink">{{ item.label }}</span>
+                                    <span class="block text-[13px] text-ink-faint">{{ item.detail }}</span>
+                                </Link>
+                            </div>
+                            <Link href="/features" class="mt-1 block rounded-xl bg-paper-deep px-4 py-3 text-sm font-medium text-ink hover:bg-line/60 transition ease-out duration-150"
+                                @click="productOpen = false">
+                                All modules →
+                            </Link>
+                        </div>
+                    </div>
+                    <Link href="/pricing" class="hover:text-ink transition ease-out duration-150">Pricing</Link>
+                    <Link href="/about" class="hover:text-ink transition ease-out duration-150">About</Link>
+                    <Link href="/contact" class="hover:text-ink transition ease-out duration-150">Contact</Link>
                 </nav>
 
                 <div class="hidden md:flex items-center gap-5">
@@ -57,8 +107,10 @@ const nav = [
             </div>
 
             <div v-if="menuOpen" class="md:hidden border-t border-line bg-paper px-6 py-4 space-y-3">
-                <Link v-for="item in nav" :key="item.href" :href="item.href" class="block py-1.5 font-medium text-ink-soft"
-                    @click="menuOpen = false">{{ item.label }}</Link>
+                <Link href="/features" class="block py-1.5 font-medium text-ink-soft" @click="menuOpen = false">Product</Link>
+                <Link href="/pricing" class="block py-1.5 font-medium text-ink-soft" @click="menuOpen = false">Pricing</Link>
+                <Link href="/about" class="block py-1.5 font-medium text-ink-soft" @click="menuOpen = false">About</Link>
+                <Link href="/contact" class="block py-1.5 font-medium text-ink-soft" @click="menuOpen = false">Contact</Link>
                 <Link href="/login" class="block py-1.5 font-medium text-ink-soft" @click="menuOpen = false">Sign in</Link>
             </div>
         </header>
@@ -108,3 +160,16 @@ const nav = [
         </footer>
     </div>
 </template>
+
+<style scoped>
+@keyframes ff-enter {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 4px) scale(0.99);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+    }
+}
+</style>

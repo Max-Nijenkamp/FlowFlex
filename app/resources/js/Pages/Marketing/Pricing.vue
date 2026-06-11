@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import MarketingLayout from '@/Components/Layout/MarketingLayout.vue'
-import Reveal from '@/Components/UI/Reveal.vue'
+import Accordion from '@/Components/UI/Accordion.vue'
 import { Link } from '@inertiajs/vue3'
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 defineOptions({ layout: MarketingLayout })
 
@@ -36,9 +36,20 @@ const byDomain = computed(() => {
     return groups
 })
 
+// First domain open by default; rest collapsed (dropdown UX).
+const openDomains = reactive<Record<string, boolean>>({ core: false, hr: true, finance: false, crm: false })
+
 const chosenModules = computed(() => props.modules.filter((m) => selected.value.includes(m.key)))
 const perUserCents = computed(() => props.base_price_cents + chosenModules.value.reduce((sum, m) => sum + m.price_cents, 0))
 const monthlyCents = computed(() => perUserCents.value * users.value)
+
+function domainSelectedCount(domain: string) {
+    return chosenModules.value.filter((m) => m.domain === domain).length
+}
+
+function domainSubtotalCents(domain: string) {
+    return chosenModules.value.filter((m) => m.domain === domain).reduce((sum, m) => sum + m.price_cents, 0)
+}
 
 const euro = (cents: number) => `€${(cents / 100).toLocaleString('nl-NL', { minimumFractionDigits: 2 })}`
 const euroShort = (cents: number) => `€${Math.round(cents / 100).toLocaleString('nl-NL')}`
@@ -60,41 +71,52 @@ const euroShort = (cents: number) => `€${Math.round(cents / 100).toLocaleStrin
 
     <section class="mx-auto max-w-6xl px-6 pb-24">
         <div class="grid gap-10 lg:grid-cols-[1fr_360px] lg:items-start">
-            <!-- Module picker -->
-            <div class="space-y-12">
-                <Reveal v-for="(mods, domain) in byDomain" :key="domain">
-                    <div>
-                        <h2 class="flex items-baseline gap-3 border-b border-line pb-3">
-                            <span class="font-semibold">{{ domainLabels[domain] ?? domain }}</span>
-                            <span class="font-mono text-xs text-ink-faint">{{ mods.length }} modules</span>
-                        </h2>
-                        <div class="mt-4 grid gap-2 sm:grid-cols-2">
-                            <button v-for="m in mods" :key="m.key" type="button" @click="toggle(m.key)"
-                                class="group flex items-center justify-between rounded-xl border px-4 py-3.5 text-left transition ease-out duration-150"
-                                :class="selected.includes(m.key)
-                                    ? 'border-accent bg-accent-soft'
-                                    : 'border-line bg-white hover:border-ink-faint'">
-                                <span class="flex items-center gap-3">
-                                    <span class="flex h-4.5 w-4.5 items-center justify-center rounded-full border transition ease-out duration-150"
-                                        :class="selected.includes(m.key) ? 'border-accent bg-accent' : 'border-line bg-white'">
-                                        <svg v-if="selected.includes(m.key)" class="h-2.5 w-2.5 text-white" viewBox="0 0 10 10" fill="none">
-                                            <path d="M1.5 5.5L4 8L8.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-                                        </svg>
-                                    </span>
-                                    <span class="text-sm font-medium">{{ m.name }}</span>
+            <!-- Domain accordions -->
+            <div class="space-y-4">
+                <Accordion v-for="(mods, domain) in byDomain" :key="domain" v-model:open="openDomains[domain]">
+                    <template #header>
+                        <div class="flex flex-1 items-center justify-between gap-4">
+                            <div>
+                                <span class="font-semibold">{{ domainLabels[domain] ?? domain }}</span>
+                                <span class="ml-3 font-mono text-xs text-ink-faint">{{ mods.length }} modules</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-sm">
+                                <span v-if="domainSelectedCount(domain)"
+                                    class="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-semibold text-accent">
+                                    {{ domainSelectedCount(domain) }} selected
                                 </span>
-                                <span class="font-mono text-xs text-ink-faint">
-                                    {{ m.price_cents === 0 ? 'included' : euro(m.price_cents) }}
+                                <span v-if="domainSubtotalCents(domain)" class="font-mono text-xs text-ink-soft">
+                                    +{{ euro(domainSubtotalCents(domain)) }}/user
                                 </span>
-                            </button>
+                            </div>
                         </div>
+                    </template>
+                    <div class="grid gap-2 sm:grid-cols-2">
+                        <button v-for="m in mods" :key="m.key" type="button" @click="toggle(m.key)"
+                            class="group flex items-center justify-between rounded-xl border px-4 py-3.5 text-left transition ease-out duration-150"
+                            :class="selected.includes(m.key)
+                                ? 'border-accent bg-accent-soft'
+                                : 'border-line bg-white hover:border-ink-faint/60'">
+                            <span class="flex items-center gap-3">
+                                <span class="flex h-[18px] w-[18px] items-center justify-center rounded-full border transition ease-out duration-150"
+                                    :class="selected.includes(m.key) ? 'border-accent bg-accent' : 'border-line bg-white group-hover:border-ink-faint/60'">
+                                    <svg v-if="selected.includes(m.key)" class="h-2.5 w-2.5 text-white" viewBox="0 0 10 10" fill="none">
+                                        <path d="M1.5 5.5L4 8L8.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                                    </svg>
+                                </span>
+                                <span class="text-sm font-medium">{{ m.name }}</span>
+                            </span>
+                            <span class="font-mono text-xs text-ink-faint">
+                                {{ m.price_cents === 0 ? 'included' : euro(m.price_cents) }}
+                            </span>
+                        </button>
                     </div>
-                </Reveal>
+                </Accordion>
             </div>
 
             <!-- Live invoice -->
             <aside class="lg:sticky lg:top-24">
-                <div class="rounded-2xl border border-line bg-white shadow-[0_1px_2px_rgba(17,24,39,0.04)]">
+                <div class="rounded-2xl border border-line bg-white shadow-[0_2px_12px_rgba(17,24,39,0.05)]">
                     <div class="border-b border-line px-6 py-4">
                         <h3 class="font-semibold">Your monthly invoice</h3>
                     </div>
@@ -132,7 +154,7 @@ const euroShort = (cents: number) => `€${Math.round(cents / 100).toLocaleStrin
                         </div>
 
                         <Link href="/contact"
-                            class="mt-5 block rounded-full bg-ink px-6 py-3 text-center font-semibold text-white hover:bg-accent transition ease-out duration-150">
+                            class="mt-5 block rounded-full bg-ink px-6 py-3 text-center font-semibold text-white hover:bg-accent transition ease-out duration-150 active:scale-[0.98]">
                             Talk to us
                         </Link>
                         <p class="mt-3 text-center text-xs text-ink-faint">Change modules any month. No contracts.</p>

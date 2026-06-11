@@ -57,3 +57,94 @@
     opacity: 0.6;
     transition: opacity 0.15s ease-out;
 }
+
+/* ── FlowFlex panel skin (brand pass 2026-06-11) ──
+   Distinctive but workable: warm surfaces, single accent discipline,
+   pill primary actions, editorial table headers. Brand: product/brand.md. */
+
+/* Warm paper canvas instead of stock gray. */
+.fi-body {
+    background-color: #fbfaf8;
+}
+
+.dark .fi-body {
+    background-color: rgb(15 23 42);
+}
+
+/* Sidebar: calm list, active item gets accent bar + tint. */
+.fi-sidebar-item-button {
+    border-radius: 0.625rem;
+    transition: background-color 0.15s cubic-bezier(0, 0, 0.2, 1), color 0.15s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-button {
+    position: relative;
+    background-color: color-mix(in srgb, var(--primary-500) 9%, transparent);
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-button::before {
+    content: '';
+    position: absolute;
+    left: -0.5rem;
+    top: 20%;
+    bottom: 20%;
+    width: 3px;
+    border-radius: 9999px;
+    background-color: var(--primary-500);
+}
+
+.fi-sidebar-group-label {
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+/* Primary actions: pill, press feedback. */
+.fi-btn {
+    border-radius: 9999px;
+    transition: transform 0.05s ease-out, background-color 0.15s cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Inputs: consistent radius, calm borders, accent focus. */
+.fi-input-wrp,
+.fi-select-input,
+.fi-fo-field-wrp .fi-input-wrp {
+    border-radius: 0.75rem;
+}
+
+.fi-input-wrp:focus-within {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-500) 15%, transparent);
+}
+
+/* Tables: editorial headers, warm hairlines, calmer hover. */
+.fi-ta-header-cell {
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.fi-ta-row:hover {
+    background-color: color-mix(in srgb, var(--primary-500) 4%, transparent);
+}
+
+/* Cards, sections, widgets: soft single-direction shadow. */
+.fi-section,
+.fi-wi,
+.fi-ta-ctn {
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
+}
+
+/* Badges: pill + tighter. */
+.fi-badge {
+    border-radius: 9999px;
+}
+
+/* Modals: stronger radius, calmer header. */
+.fi-modal-window {
+    border-radius: 1.25rem;
+}
+
+/* Page headings: tighter display tracking. */
+.fi-header-heading {
+    letter-spacing: -0.025em;
+}

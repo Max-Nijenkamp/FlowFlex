@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppMock from '@/Components/Marketing/AppMock.vue'
 import MarketingLayout from '@/Components/Layout/MarketingLayout.vue'
 import FlowLine from '@/Components/Marketing/FlowLine.vue'
 import Reveal from '@/Components/UI/Reveal.vue'
@@ -34,32 +35,37 @@ const flows = [
 <template>
     <!-- ── Hero ── -->
     <section class="relative overflow-hidden">
-        <div class="mx-auto max-w-6xl px-6 pt-24 pb-16 sm:pt-32 sm:pb-24">
-            <div class="max-w-3xl">
-                <p class="section-index">EVERYTHING FLOWS</p>
-                <h1 class="mt-5 text-5xl sm:text-7xl font-bold tracking-display leading-[1.02] text-balance">
-                    Run the whole company.<br />
-                    <span class="text-accent">Drop the other 12 tools.</span>
-                </h1>
-                <p class="mt-7 max-w-xl text-lg leading-relaxed text-ink-soft">
-                    HR, finance, CRM and {{ module_count }} more modules on one platform —
-                    one login, one database, one bill. Activate a module when you need it.
-                    Switch it off when you don't.
-                </p>
-                <div class="mt-9 flex flex-wrap items-center gap-4">
-                    <Link href="/pricing"
-                        class="rounded-full bg-ink px-7 py-3.5 font-semibold text-white hover:bg-accent transition ease-out duration-150">
-                        Build your price
-                    </Link>
-                    <Link href="/features" class="group font-semibold text-ink">
-                        See what's inside
-                        <span class="inline-block transition-transform ease-out duration-150 group-hover:translate-x-1">→</span>
-                    </Link>
+        <div class="mx-auto max-w-6xl px-6 pt-20 pb-20 sm:pt-28">
+            <div class="grid items-center gap-14 lg:grid-cols-[1.1fr_1fr]">
+                <div>
+                    <p class="section-index">EVERYTHING FLOWS</p>
+                    <h1 class="mt-5 text-5xl sm:text-6xl font-bold tracking-display leading-[1.04] text-balance">
+                        Run the whole company.<br />
+                        <span class="text-accent">Drop the other 12 tools.</span>
+                    </h1>
+                    <p class="mt-7 max-w-xl text-lg leading-relaxed text-ink-soft">
+                        HR, finance, CRM and {{ module_count }} more modules on one platform —
+                        one login, one database, one bill. Activate a module when you need it.
+                        Switch it off when you don't.
+                    </p>
+                    <div class="mt-9 flex flex-wrap items-center gap-4">
+                        <Link href="/pricing"
+                            class="rounded-full bg-ink px-7 py-3.5 font-semibold text-white hover:bg-accent transition ease-out duration-150 active:scale-[0.98]">
+                            Build your price
+                        </Link>
+                        <Link href="/features" class="group font-semibold text-ink">
+                            See what's inside
+                            <span class="inline-block transition-transform ease-out duration-150 group-hover:translate-x-1">→</span>
+                        </Link>
+                    </div>
+                    <p class="mt-6 text-sm text-ink-faint">For teams of 50–500 · per user, per module · no tiers, no lock-in</p>
                 </div>
-                <p class="mt-6 text-sm text-ink-faint">For teams of 50–500 · per user, per module · no tiers, no lock-in</p>
+                <Reveal :delay="150" class="hidden lg:block">
+                    <AppMock />
+                </Reveal>
             </div>
         </div>
-        <div class="absolute inset-x-0 bottom-0 h-28 pointer-events-none">
+        <div class="absolute inset-x-0 bottom-0 h-24 pointer-events-none opacity-70">
             <FlowLine />
         </div>
     </section>

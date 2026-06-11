@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import FormField from '@/Components/Form/FormField.vue'
+import TextInput from '@/Components/Form/TextInput.vue'
 import AuthLayout from '@/Components/Layout/AuthLayout.vue'
+import BaseButton from '@/Components/UI/BaseButton.vue'
 import { Link, useForm } from '@inertiajs/vue3'
 
 defineOptions({ layout: AuthLayout })
@@ -16,16 +19,13 @@ function submit() {
     <p class="mt-2 text-sm text-ink-soft">We'll email you a link to choose a new one.</p>
 
     <form class="mt-9 space-y-5" @submit.prevent="submit">
-        <div>
-            <label for="email" class="block text-sm font-medium">Work email</label>
-            <input id="email" v-model="form.email" type="email" required autofocus autocomplete="email"
-                class="mt-1.5 w-full rounded-lg border-line bg-white focus:border-accent focus:ring-accent" />
-            <p v-if="form.errors.email" class="mt-1 text-sm text-red-600">{{ form.errors.email }}</p>
-        </div>
-        <button type="submit" :disabled="form.processing"
-            class="w-full rounded-full bg-ink px-6 py-3.5 font-semibold text-white hover:bg-accent transition ease-out duration-150 disabled:opacity-60">
+        <FormField label="Work email" for="email" :error="form.errors.email">
+            <TextInput id="email" v-model="form.email" type="email" required autofocus
+                autocomplete="email" placeholder="you@company.com" :invalid="!!form.errors.email" />
+        </FormField>
+        <BaseButton type="submit" size="lg" class="w-full" :loading="form.processing">
             {{ form.recentlySuccessful ? 'Link sent — check your inbox' : 'Send reset link' }}
-        </button>
+        </BaseButton>
     </form>
 
     <p class="mt-8 text-center text-sm">
