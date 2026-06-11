@@ -38,7 +38,7 @@ class Deal extends Model
     protected $fillable = [
         'company_id', 'name', 'account_id', 'contact_id', 'owner_id', 'stage_id',
         'value_cents', 'currency', 'probability', 'expected_close_date',
-        'actual_close_date', 'status', 'lost_reason', 'stage_entered_at',
+        'actual_close_date', 'status', 'lost_reason', 'stage_entered_at', 'forecast_category',
     ];
 
     protected function casts(): array

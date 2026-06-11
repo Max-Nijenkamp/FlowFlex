@@ -59,6 +59,16 @@ return [
         'crm.pipeline' => ['name' => 'Pipeline Board', 'domain' => 'crm', 'per_user_monthly_price_cents' => 100],
         'crm.activities' => ['name' => 'Activities', 'domain' => 'crm', 'per_user_monthly_price_cents' => 50],
         'crm.quotes' => ['name' => 'Quotes', 'domain' => 'crm', 'per_user_monthly_price_cents' => 150],
+        'crm.forecasting' => ['name' => 'Sales Forecasting', 'domain' => 'crm', 'per_user_monthly_price_cents' => 100], // *(assumed)*
+        'crm.segments' => ['name' => 'Customer Segments', 'domain' => 'crm', 'per_user_monthly_price_cents' => 50], // *(assumed)*
+        'crm.scheduling' => ['name' => 'Appointment Scheduling', 'domain' => 'crm', 'per_user_monthly_price_cents' => 100], // *(assumed)*
+        'crm.deal-rooms' => ['name' => 'Deal Rooms', 'domain' => 'crm', 'per_user_monthly_price_cents' => 150], // *(assumed)*
+        'crm.contracts' => ['name' => 'Contracts', 'domain' => 'crm', 'per_user_monthly_price_cents' => 100], // *(assumed)*
+        'crm.email' => ['name' => 'Email Integration', 'domain' => 'crm', 'per_user_monthly_price_cents' => 150], // *(assumed)*
+        'crm.sequences' => ['name' => 'Sales Sequences', 'domain' => 'crm', 'per_user_monthly_price_cents' => 150], // *(assumed)*
+        'crm.pricing' => ['name' => 'Price Management', 'domain' => 'crm', 'per_user_monthly_price_cents' => 100], // *(assumed)*
+        'crm.referrals' => ['name' => 'Referral Program', 'domain' => 'crm', 'per_user_monthly_price_cents' => 100], // *(assumed)*
+        'crm.revenue-intelligence' => ['name' => 'Revenue Intelligence', 'domain' => 'crm', 'per_user_monthly_price_cents' => 200], // *(assumed)*
     ],
 
     /*

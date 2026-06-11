@@ -140,10 +140,14 @@ class LocalDevSeeder extends Seeder
             ['company_id' => $company->id, 'escalation_level' => 1],
             ['aging_bucket' => '1-30', 'days_overdue' => 7, 'email_template' => 'dunning-friendly'],
         );
-        ExchangeRate::firstOrCreate(
-            ['company_id' => $company->id, 'from_currency' => 'USD', 'to_currency' => 'EUR', 'effective_date' => now()->toDateString()],
-            ['rate' => '0.92000000'],
-        );
+        if (! ExchangeRate::query()
+            ->where('from_currency', 'USD')->where('to_currency', 'EUR')
+            ->whereDate('effective_date', now()->toDateString())->exists()) {
+            ExchangeRate::create([
+                'company_id' => $company->id, 'from_currency' => 'USD', 'to_currency' => 'EUR',
+                'effective_date' => now()->toDateString(), 'rate' => '0.92000000',
+            ]);
+        }
         FixedAsset::firstOrCreate(
             ['company_id' => $company->id, 'name' => 'Laptop fleet'],
             [

@@ -5,7 +5,25 @@ use App\Models\Activity;
 use App\Models\BillingInvoiceLine;
 use App\Models\CompanyModuleSubscription;
 use App\Models\ConsentLog;
+use App\Models\CRM\Availability;
+use App\Models\CRM\Booking;
+use App\Models\CRM\CrmEmail;
+use App\Models\CRM\DealHealth;
+use App\Models\CRM\DealRoom;
+use App\Models\CRM\DealRoomActionItem;
+use App\Models\CRM\DealRoomDocument;
+use App\Models\CRM\DealRoomStakeholder;
+use App\Models\CRM\EmailConnection;
+use App\Models\CRM\ForecastSnapshot;
+use App\Models\CRM\PriceBookEntry;
+use App\Models\CRM\Quota;
 use App\Models\CRM\QuoteLine;
+use App\Models\CRM\Referral;
+use App\Models\CRM\SegmentMember;
+use App\Models\CRM\SequenceEnrolment;
+use App\Models\CRM\SequenceStep;
+use App\Models\CRM\VolumeDiscount;
+use App\Models\CRM\WinLoss;
 use App\Models\Finance\ArWriteoff;
 use App\Models\Finance\BankTransaction;
 use App\Models\Finance\BillLine;
@@ -110,6 +128,25 @@ arch('models soft delete unless append-only by design')
         ForecastLine::class,
         Currency::class,
         ExchangeRate::class,
+        // CRM append-only / snapshot / pivot / token rows.
+        Quota::class,
+        ForecastSnapshot::class,
+        SegmentMember::class,
+        Booking::class,
+        Availability::class,
+        DealRoom::class,
+        DealRoomDocument::class,
+        DealRoomActionItem::class,
+        DealRoomStakeholder::class,
+        EmailConnection::class,
+        CrmEmail::class,
+        SequenceStep::class,
+        SequenceEnrolment::class,
+        PriceBookEntry::class,
+        VolumeDiscount::class,
+        Referral::class,
+        DealHealth::class,
+        WinLoss::class,
     ]);
 
 arch('append-only core models still use ULIDs')

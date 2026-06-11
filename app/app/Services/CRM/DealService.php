@@ -75,7 +75,9 @@ class DealService implements DealServiceInterface
         $deal = Deal::query()->findOrFail($dealId);
 
         $deal->status->transitionTo(Won::class);
-        $deal->forceFill(['actual_close_date' => now(), 'probability' => 100])->save();
+        $deal->forceFill(['actual_close_date' => now(), 'probability' => 100, 'forecast_category' => 'closed'])->save();
+
+        app(WinLossService::class)->record($deal->id, 'won', 'won'); // revenue-intelligence row (same-domain)
 
         event(new DealWon(
             company_id: $deal->company_id,
@@ -97,6 +99,8 @@ class DealService implements DealServiceInterface
 
         $deal->status->transitionTo(Lost::class);
         $deal->forceFill(['actual_close_date' => now(), 'probability' => 0, 'lost_reason' => $reason])->save();
+
+        app(WinLossService::class)->record($deal->id, 'lost', $reason); // revenue-intelligence row (same-domain)
 
         event(new DealLost(
             company_id: $deal->company_id,

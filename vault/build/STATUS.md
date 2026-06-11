@@ -20,7 +20,7 @@ Per-domain progress. Update `status` frontmatter in module specs — this table 
 | MVP | Core Platform | 15 | 15 | 🟢 100% |
 | MVP | HR & People | 15 | 15 | 🟢 100% |
 | MVP | Finance & Accounting | 13 | 13 | 🟢 100% |
-| MVP | CRM & Sales | 5 | 15 | 🟠 33% |
+| MVP | CRM & Sales | 15 | 15 | 🟢 100% |
 | Phase 2 | Projects & Work | 0 | 11 | 🔴 0% |
 | Phase 2 | Support & Help Desk | 0 | 7 | 🔴 0% |
 | Phase 2 | Communications | 0 | 8 | 🔴 0% |
@@ -39,10 +39,10 @@ Per-domain progress. Update `status` frontmatter in module specs — this table 
 | Phase 3 | Events Management | 0 | 7 | 🔴 0% |
 | Deferred | (10 domains) | — | — | stub only |
 
-**MVP Total: 56 / 66 modules built** (Foundation + Core complete; HR/Finance/CRM MVP-gate path built — company can be onboarded, manage employees, send invoices, run a pipeline = SELLABLE)
+**MVP Total: 66 / 66 modules built** 🎉 MVP GATE: ALL DOMAIN MODULES BUILT (public site = last piece) (Foundation + Core complete; HR/Finance/CRM MVP-gate path built — company can be onboarded, manage employees, send invoices, run a pipeline = SELLABLE)
 **Phase 2 Total: 0 / 32 modules built**
 **Phase 3 Total: 0 / 75 modules built**
-**All active: 56 / 173 modules — every Phase 1/2/3 module is fully specced**
+**All active: 66 / 173 modules — every Phase 1/2/3 module is fully specced**
 
 ---
 
@@ -103,6 +103,7 @@ SORT module-key ASC
 | 2026-06-11 | Platform | auth hardening | ✅ Self-service TOTP 2FA (Filament native MFA, encrypted secret+recovery codes, enable/disable in profile any time) + mandatory email verification on all 5 panels (MustVerifyEmail, invite accept = verified, email change resets verification + re-notifies new address). 2 ADRs. Pest 191/191 |
 | 2026-06-11 | Platform | perceived performance retrofit | ✅ 5 shared skeleton components (table/stat-cards/form/list/board), deferLoading on all 34 resource tables, lazy wire:init + skeletons on pipeline board / self-service dash / marketplace / org chart, optimistic drag-drop (DOM move before server), ease-out motion CSS in all 5 panel themes (staggered row entrances, instant button press). Pest 191/191 |
 | 2026-06-11 | Finance | 9 remaining v1 modules | ✅ FINANCE DOMAIN 13/13. AR (aging buckets, dunning escalation+InvoicePaid reset listener, write-off→bad-debt GL, payment allocation, DSO), AP (suppliers w/ encrypted IBAN, bills+lines sum check, approve→liability GL, payment runs w/ early discount, AP aging), budgets (variance vs GL actuals, approved immutable, versioned revisions, remaining() hook), reporting (P&L/balance sheet w/ balance assertion/cash flow), tax (basis-point calculator, reverse charge, filed-period lock, VIES failure-tolerant), cashflow (13-week chained projection, paid invoices drop out), fixed assets (SL+declining schedules exact to cost−salvage, idempotent monthly run, disposal gain/loss GL), forecasting (seed-from-actuals×growth, MAPE accuracy), multi-currency (date-locked rates, JPY/BHD minor units, realised FX). 7 lean resources + Reports/CashFlow pages. Pest 203/203, PHPStan 0 |
+| 2026-06-11 | CRM | 10 remaining v1 modules | ✅ CRM DOMAIN 15/15 → ALL 66 MVP DOMAIN MODULES BUILT. forecasting (categories/attainment/coverage, weekly snapshots idempotent), segments (query-time dynamic conditions AND/OR + custom fields, static lists, single audience API), scheduling (slots w/ buffers, transactional SlotTaken guard, round-robin, find-or-create contact+activity), deal-rooms (tokenised public view, doc view tracking, buyer-side-only toggles, revocation), contracts (state machine, signed-PDF upload, auto-renew lifecycle, 90/30 alerts once, MRR normalisation), email (encrypted OAuth, dedupe sync, purified bodies, private-mail scope, pause-sequence-on-reply), sequences (A/B variants, step advancement idempotent, DealWon/InvoicePaid trigger listeners), pricing (book hierarchy, volume tiers, margin guard), referrals (self-referral+duplicate fraud guards, leaderboard), revenue-intelligence (explainable 4-factor health score, at-risk, win/loss rows from close path). 8 lean resources + Forecast page. Pest 213/213, PHPStan 0 |
 
 ---
 

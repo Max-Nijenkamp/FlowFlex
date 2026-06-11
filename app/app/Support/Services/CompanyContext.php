@@ -20,6 +20,12 @@ class CompanyContext
         $this->company = $company;
     }
 
+    /** Queued listeners carry only the scalar id (event-bus rule). */
+    public function setById(string $companyId): void
+    {
+        $this->company = Company::query()->findOrFail($companyId);
+    }
+
     public function current(): Company
     {
         return $this->company ?? throw new MissingCompanyContextException;
