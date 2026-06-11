@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Finance\Resources;
 
+use App\Actions\Finance\GenerateInvoicePdfAction;
 use App\Contracts\BillingServiceInterface;
 use App\Contracts\Finance\InvoiceServiceInterface;
 use App\Data\Finance\RecordPaymentData;
@@ -23,6 +24,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use UnitEnum;
 
@@ -92,6 +95,27 @@ class InvoiceResource extends Resource
                     ->action(function (Invoice $record): void {
                         app(InvoiceServiceInterface::class)->send($record->id);
                         Notification::make()->success()->title('Invoice sent')->send();
+                    }),
+                Action::make('pdf')
+                    ->icon(Heroicon::OutlinedArrowDownTray)
+                    ->label('PDF')
+                    ->visible(fn (Invoice $r) => (string) $r->status !== 'draft')
+                    ->action(function (Invoice $record) {
+                        // Throttled per security notes: 10 renders/min per user.
+                        $key = 'invoice-pdf:'.Auth::guard('web')->id();
+                        if (RateLimiter::tooManyAttempts($key, 10)) {
+                            Notification::make()->danger()->title('Too many PDF requests — wait a minute.')->send();
+
+                            return null;
+                        }
+                        RateLimiter::hit($key, 60);
+
+                        $path = GenerateInvoicePdfAction::run($record->id);
+
+                        return response()->download(
+                            Storage::path($path),
+                            basename($path),
+                        );
                     }),
                 Action::make('recordPayment')
                     ->icon(Heroicon::OutlinedBanknotes)

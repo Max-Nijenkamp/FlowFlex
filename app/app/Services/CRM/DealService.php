@@ -6,6 +6,7 @@ namespace App\Services\CRM;
 
 use App\Contracts\CRM\DealServiceInterface;
 use App\Events\CRM\DealLost;
+use App\Events\CRM\DealStageMoved;
 use App\Events\CRM\DealWon;
 use App\Exceptions\CRM\ClosedDealImmutableException;
 use App\Models\CRM\Deal;
@@ -36,11 +37,11 @@ class DealService implements DealServiceInterface
             'value_cents' => $valueCents,
             'contact_id' => $contactId,
             'account_id' => $accountId,
-            'owner_id' => Auth::guard('web')->id(),
+            'owner_id' => request()->user()->id ?? Auth::guard('web')->id(),
             'probability' => $stage->probability_default,
             'expected_close_date' => $expectedCloseDate,
             'stage_entered_at' => now(),
-        ]);
+        ])->refresh(); // pull DB defaults (currency, status)
     }
 
     public function moveToStage(string $dealId, string $stageId): Deal
@@ -58,6 +59,13 @@ class DealService implements DealServiceInterface
             'probability' => $stage->probability_default,
             'stage_entered_at' => now(),
         ]);
+
+        event(new DealStageMoved(
+            company_id: $deal->company_id,
+            deal_id: $deal->id,
+            stage_id: $stage->id,
+            moved_by: (string) Auth::guard('web')->id(),
+        ));
 
         return $deal->refresh();
     }

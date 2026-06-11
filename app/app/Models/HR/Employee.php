@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Laravel\Scout\Searchable;
 use Spatie\ModelStates\HasStates;
 
 /**
@@ -50,7 +51,7 @@ use Spatie\ModelStates\HasStates;
 class Employee extends Model
 {
     /** @use HasFactory<EmployeeFactory> */
-    use BelongsToCompany, HasFactory, HasStates, HasUlids, SoftDeletes;
+    use BelongsToCompany, HasFactory, HasStates, HasUlids, Searchable, SoftDeletes;
 
     protected $table = 'hr_employees';
 
@@ -95,6 +96,25 @@ class Employee extends Model
     public function getFullNameAttribute(): string
     {
         return trim("{$this->first_name} {$this->last_name}");
+    }
+
+    /**
+     * Scout index — NEVER includes encrypted fields (national_id, DOB,
+     * personal_email) per the spec's search rule.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'company_id' => $this->company_id,
+            'employee_number' => $this->employee_number,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'email' => $this->email,
+            'job_title' => $this->job_title,
+        ];
     }
 
     /** @return BelongsTo<Department, $this> */

@@ -232,3 +232,6 @@
 {"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/tests/Feature/HR/SelfServiceTest.php","timestamp":1781169713832,"sessionId":null}
 {"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/tests/Feature/CRM/QuoteFlowTest.php","timestamp":1781169724145,"sessionId":null}
 {"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/app/Models/CRM/QuoteLine.php","timestamp":1781170328237,"sessionId":null}
+{"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/tests/Feature/Api/V1ApiTest.php","timestamp":1781173544047,"sessionId":null}
+{"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/bootstrap/app.php","timestamp":1781173574791,"sessionId":null}
+{"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/tests/Feature/Finance/PdfGenerationTest.php","timestamp":1781173740048,"sessionId":null}
