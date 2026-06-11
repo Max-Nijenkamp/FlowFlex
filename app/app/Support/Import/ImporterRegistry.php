@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Support\Import;
 
-use App\Contracts\Core\BillingServiceInterface;
+use App\Contracts\BillingServiceInterface;
 
 /**
  * Each domain module registers its importer in its ServiceProvider:

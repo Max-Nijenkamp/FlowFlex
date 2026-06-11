@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\Core\AcceptInvitationAction;
-use App\Data\Core\AcceptInvitationData;
-use App\Exceptions\Core\InvalidInvitationTokenException;
-use App\Models\Core\UserInvitation;
+use App\Actions\AcceptInvitationAction;
+use App\Data\AcceptInvitationData;
+use App\Exceptions\InvalidInvitationTokenException;
+use App\Models\UserInvitation;
 use App\Support\Scopes\CompanyScope;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Pages;
 
-use App\Contracts\Core\BillingServiceInterface;
-use App\Models\Core\NotificationPreference;
+use App\Contracts\BillingServiceInterface;
+use App\Models\NotificationPreference;
 use App\Models\User;
 use BackedEnum;
 use Filament\Actions\Action;

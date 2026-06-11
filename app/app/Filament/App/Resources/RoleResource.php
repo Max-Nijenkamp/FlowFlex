@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Resources;
 
-use App\Actions\Core\DeleteRoleAction;
-use App\Contracts\Core\BillingServiceInterface;
-use App\Exceptions\Core\CannotDeleteBuiltInRoleException;
+use App\Actions\DeleteRoleAction;
+use App\Contracts\BillingServiceInterface;
+use App\Exceptions\CannotDeleteBuiltInRoleException;
 use BackedEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;

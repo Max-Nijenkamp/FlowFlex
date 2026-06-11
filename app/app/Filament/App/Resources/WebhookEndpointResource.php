@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Resources;
 
-use App\Actions\Core\RotateWebhookSecretAction;
-use App\Actions\Core\SendTestWebhookAction;
-use App\Contracts\Core\BillingServiceInterface;
-use App\Models\Core\WebhookEndpoint;
+use App\Actions\RotateWebhookSecretAction;
+use App\Actions\SendTestWebhookAction;
+use App\Contracts\BillingServiceInterface;
+use App\Models\WebhookEndpoint;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;

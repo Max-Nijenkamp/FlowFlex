@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Contracts\Core\BillingServiceInterface;
+use App\Contracts\BillingServiceInterface;
 use App\Models\Admin;
 use App\Models\Company;
 use App\Models\User;

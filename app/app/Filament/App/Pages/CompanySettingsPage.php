@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Pages;
 
-use App\Contracts\Core\BillingServiceInterface;
+use App\Contracts\BillingServiceInterface;
 use App\Settings\CompanyBusinessSettings;
 use App\Settings\CompanyIdentitySettings;
 use App\Settings\CompanyLocaleSettings;

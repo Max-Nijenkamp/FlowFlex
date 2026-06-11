@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Webhooks;
 
-use App\Contracts\Core\BillingServiceInterface;
+use App\Contracts\BillingServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

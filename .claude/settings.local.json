@@ -208,7 +208,8 @@
       "Bash(echo \"pint=$?\")",
       "Bash(perl -i -pe 's/\\\\?\\\\? \\\\$owner\\\\?->company_id/?? \\\\$owner->company_id/' app/Support/Media/CompanyPathGenerator.php)",
       "Bash(perl -0pi -e 's/\\\\$ownerCompanyId = \\\\$media->getCustomProperty\\\\\\('\\\\''company_id'\\\\''\\\\\\) \\\\?\\\\? \\\\$media->model\\\\?->company_id;/\\\\$owner = \\\\$media->getRelationValue\\('\\\\''model'\\\\''\\);\\\\n        \\\\$ownerCompanyId = \\\\$media->getCustomProperty\\('\\\\''company_id'\\\\''\\) ?? \\\\$owner->company_id ?? null;/' app/Actions/Core/TemporaryUrlAction.php)",
-      "Bash(perl -0pi -e \"s/input: \\\\['resources\\\\/css\\\\/app.css', 'resources\\\\/js\\\\/app.js'\\\\],/input: [\\\\n                'resources\\\\/css\\\\/app.css',\\\\n                'resources\\\\/js\\\\/app.js',\\\\n                'resources\\\\/css\\\\/filament\\\\/app\\\\/theme.css',\\\\n                'resources\\\\/css\\\\/filament\\\\/admin\\\\/theme.css',\\\\n            ],/\" vite.config.js)"
+      "Bash(perl -0pi -e \"s/input: \\\\['resources\\\\/css\\\\/app.css', 'resources\\\\/js\\\\/app.js'\\\\],/input: [\\\\n                'resources\\\\/css\\\\/app.css',\\\\n                'resources\\\\/js\\\\/app.js',\\\\n                'resources\\\\/css\\\\/filament\\\\/app\\\\/theme.css',\\\\n                'resources\\\\/css\\\\/filament\\\\/admin\\\\/theme.css',\\\\n            ],/\" vite.config.js)",
+      "Bash(perl -i -pe \"s/'mail\\\\.core\\\\.invitation'/'mail.invitation'/; s/'mail\\\\.core\\\\.invoice'/'mail.invoice'/\" app/Mail/InvitationMail.php app/Mail/InvoiceMail.php)"
     ]
   },
   "enabledMcpjsonServers": [

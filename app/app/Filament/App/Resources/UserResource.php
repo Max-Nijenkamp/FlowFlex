@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Resources;
 
-use App\Actions\Core\AssignRolesAction;
-use App\Contracts\Core\BillingServiceInterface;
-use App\Data\Core\AssignRolesData;
-use App\Exceptions\Core\CannotRemoveLastOwnerException;
+use App\Actions\AssignRolesAction;
+use App\Contracts\BillingServiceInterface;
+use App\Data\AssignRolesData;
+use App\Exceptions\CannotRemoveLastOwnerException;
 use App\Models\User;
 use BackedEnum;
 use Filament\Actions\Action;

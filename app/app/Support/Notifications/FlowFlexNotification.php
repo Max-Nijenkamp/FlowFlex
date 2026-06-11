@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Support\Notifications;
 
 use App\Models\User;
-use App\Services\Core\NotificationPreferenceService;
+use App\Services\NotificationPreferenceService;
 use App\Support\Services\CompanyContext;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

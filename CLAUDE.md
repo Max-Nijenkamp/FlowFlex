@@ -403,6 +403,8 @@ Mandatory: Purpose, Dependencies, Core Features, Data Model, DTOs, Services & Ac
 
 ## Key App Directory Structure
 
+**Foldering rule (ADR 2026-06-11):** NO build-phase folders (`Core/`, `Foundation/`) — platform-level code lives flat (`app/Services/BillingService.php`). `{Domain}` subfolders are for real business domains only (Hr, Finance, Crm, ...) as they ship.
+
 ```
 app/
 ├── Contracts/{Domain}/     # Service interfaces (multi-method complex services)

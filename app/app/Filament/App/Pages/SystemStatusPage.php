@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Pages;
 
-use App\Contracts\Core\BillingServiceInterface;
+use App\Contracts\BillingServiceInterface;
 use BackedEnum;
 use Filament\Pages\Page;
 use Filament\Support\Icons\Heroicon;

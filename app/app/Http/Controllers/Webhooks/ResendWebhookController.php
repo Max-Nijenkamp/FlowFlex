@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Webhooks;
 
-use App\Actions\Foundation\HandleEmailBounceAction;
+use App\Actions\HandleEmailBounceAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

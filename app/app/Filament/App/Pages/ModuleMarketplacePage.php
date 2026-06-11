@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Pages;
 
-use App\Contracts\Core\BillingServiceInterface;
-use App\Data\Core\ActivateModuleData;
-use App\Data\Core\MarketplaceModuleData;
-use App\Exceptions\Core\CannotDeactivateCoreModuleException;
-use App\Exceptions\Core\ModuleAlreadyActiveException;
-use App\Models\Core\ModuleCatalog;
+use App\Contracts\BillingServiceInterface;
+use App\Data\ActivateModuleData;
+use App\Data\MarketplaceModuleData;
+use App\Exceptions\CannotDeactivateCoreModuleException;
+use App\Exceptions\ModuleAlreadyActiveException;
+use App\Models\ModuleCatalog;
 use App\Models\User;
 use BackedEnum;
 use Filament\Notifications\Notification;

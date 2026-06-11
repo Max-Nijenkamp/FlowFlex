@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Pages;
 
-use App\Actions\Core\CompleteSetupAction;
-use App\Actions\Core\SendInvitationAction;
-use App\Contracts\Core\BillingServiceInterface;
-use App\Data\Core\ActivateModuleData;
-use App\Data\Core\CreateInvitationData;
-use App\Exceptions\Core\ModuleAlreadyActiveException;
-use App\Models\Core\ModuleCatalog;
+use App\Actions\CompleteSetupAction;
+use App\Actions\SendInvitationAction;
+use App\Contracts\BillingServiceInterface;
+use App\Data\ActivateModuleData;
+use App\Data\CreateInvitationData;
+use App\Exceptions\ModuleAlreadyActiveException;
+use App\Models\ModuleCatalog;
 use App\Settings\CompanyIdentitySettings;
 use App\Settings\CompanyLocaleSettings;
 use App\Support\Services\CompanyContext;

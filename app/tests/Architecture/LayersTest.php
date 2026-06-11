@@ -1,14 +1,14 @@
 <?php
 
 declare(strict_types=1);
-use App\Models\Core\Activity;
-use App\Models\Core\BillingInvoiceLine;
-use App\Models\Core\CompanyModuleSubscription;
-use App\Models\Core\ConsentLog;
-use App\Models\Core\ModuleCatalog;
-use App\Models\Core\NotificationPreference;
-use App\Models\Core\UserInvitation;
-use App\Models\Core\WebhookDelivery;
+use App\Models\Activity;
+use App\Models\BillingInvoiceLine;
+use App\Models\CompanyModuleSubscription;
+use App\Models\ConsentLog;
+use App\Models\ModuleCatalog;
+use App\Models\NotificationPreference;
+use App\Models\UserInvitation;
+use App\Models\WebhookDelivery;
 
 // FlowFlex architecture guard rails. See architecture/patterns/testing-pattern.
 // Layer-specific rules (Data, Services, Controllers) are added as those layers

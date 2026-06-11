@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Resources;
 
-use App\Actions\Core\ResendInvitationAction;
-use App\Actions\Core\RevokeInvitationAction;
-use App\Actions\Core\SendInvitationAction;
-use App\Contracts\Core\BillingServiceInterface;
-use App\Data\Core\CreateInvitationData;
-use App\Models\Core\UserInvitation;
+use App\Actions\ResendInvitationAction;
+use App\Actions\RevokeInvitationAction;
+use App\Actions\SendInvitationAction;
+use App\Contracts\BillingServiceInterface;
+use App\Data\CreateInvitationData;
+use App\Models\UserInvitation;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;

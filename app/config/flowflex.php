@@ -1,10 +1,10 @@
 <?php
 
 declare(strict_types=1);
-use App\Events\Core\CompanySubscriptionSuspended;
-use App\Events\Core\ModuleActivated;
-use App\Notifications\Core\ModuleActivatedNotification;
-use App\Notifications\Core\SubscriptionSuspendedNotification;
+use App\Events\CompanySubscriptionSuspended;
+use App\Events\ModuleActivated;
+use App\Notifications\ModuleActivatedNotification;
+use App\Notifications\SubscriptionSuspendedNotification;
 
 return [
 

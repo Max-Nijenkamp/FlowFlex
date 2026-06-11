@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Resources;
 
-use App\Actions\Core\CreateApiTokenAction;
-use App\Actions\Core\RevokeApiTokenAction;
-use App\Contracts\Core\BillingServiceInterface;
-use App\Data\Core\CreateApiTokenData;
+use App\Actions\CreateApiTokenAction;
+use App\Actions\RevokeApiTokenAction;
+use App\Contracts\BillingServiceInterface;
+use App\Data\CreateApiTokenData;
 use App\Models\User;
 use BackedEnum;
 use Filament\Actions\Action;

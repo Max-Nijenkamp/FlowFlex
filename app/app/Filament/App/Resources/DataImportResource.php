@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Resources;
 
-use App\Contracts\Core\BillingServiceInterface;
-use App\Models\Core\DataImport;
+use App\Contracts\BillingServiceInterface;
+use App\Models\DataImport;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
