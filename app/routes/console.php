@@ -18,3 +18,14 @@ Schedule::command('queue:prune-failed --hours=720')
 
 // Prune Horizon metrics/snapshots.
 Schedule::command('horizon:snapshot')->everyFiveMinutes()->withoutOverlapping();
+
+// Billing: monthly invoice run + daily dunning (idempotent per architecture/queue-jobs).
+Schedule::command('flowflex:generate-monthly-invoices')
+    ->monthlyOn(1, '01:00')
+    ->withoutOverlapping()
+    ->onOneServer();
+
+Schedule::command('flowflex:process-dunning')
+    ->dailyAt('06:00')
+    ->withoutOverlapping()
+    ->onOneServer();

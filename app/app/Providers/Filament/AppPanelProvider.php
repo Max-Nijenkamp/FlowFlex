@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\EnsureSubscriptionActive;
 use App\Http\Middleware\SetCompanyContext;
 use App\Http\Middleware\SetLocale;
 use App\Models\User;
@@ -62,6 +63,7 @@ class AppPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,     // establishes the user first
                 SetCompanyContext::class, // then sets tenant context (filament-patterns #7)
+                EnsureSubscriptionActive::class, // suspended companies blocked
             ]);
     }
 }

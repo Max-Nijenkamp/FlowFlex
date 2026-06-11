@@ -51,6 +51,9 @@ class LocalDevSeeder extends Seeder
         );
         $ownerUser->assignRole($owner);
 
+        // Free core modules active for the demo company.
+        app(\App\Contracts\Core\BillingServiceInterface::class)->seedFreeCoreModules($company->id);
+
         // A few extra demo users.
         User::factory()->forCompany($company)->count(5)->create();
     }

@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property string $currency
  * @property Carbon|null $trial_ends_at
  * @property Carbon|null $setup_completed_at
+ * @property string|null $stripe_customer_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
@@ -49,6 +50,7 @@ class Company extends Model
         return [
             'trial_ends_at' => 'datetime',
             'setup_completed_at' => 'datetime',
+            'stripe_customer_id' => 'encrypted',
         ];
     }
 

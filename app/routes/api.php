@@ -15,3 +15,8 @@ Route::get('/user', function (Request $request) {
 Route::post('/resend/webhook', ResendWebhookController::class)
     ->middleware([VerifyResendSignature::class, 'throttle:60,1'])
     ->name('webhooks.resend');
+
+// Stripe billing webhook — signature-verified + throttled.
+Route::post('/stripe/webhook', App\Http\Controllers\Webhooks\StripeWebhookController::class)
+    ->middleware([App\Http\Middleware\VerifyStripeSignature::class, 'throttle:60,1'])
+    ->name('webhooks.stripe');
