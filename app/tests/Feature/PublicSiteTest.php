@@ -37,6 +37,33 @@ it('shares per-domain flows with the product page', function () {
         ->has('domains.0.flows'));
 });
 
+it('serves each domain product page with its modules and flows', function (string $domain) {
+    $this->get("/product/{$domain}")
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('Marketing/Domain')
+            ->where('domain.key', $domain)
+            ->has('modules'));
+})->with(['hr', 'finance', 'crm', 'core']);
+
+it('404s unknown domains', function () {
+    $this->get('/product/warehouse')->assertNotFound();
+});
+
+it('passes the pricing deep-link through', function () {
+    $this->get('/pricing?domain=finance')->assertInertia(fn ($page) => $page
+        ->where('open_domain', 'finance'));
+    $this->get('/pricing?domain=bogus')->assertInertia(fn ($page) => $page
+        ->where('open_domain', null));
+});
+
+it('serves the sitemap', function () {
+    $this->get('/sitemap.xml')
+        ->assertOk()
+        ->assertHeader('Content-Type', 'application/xml')
+        ->assertSee('/product/hr');
+});
+
 it('shares the module catalog with the pricing calculator', function () {
     $this->get('/pricing')->assertInertia(fn ($page) => $page
         ->component('Marketing/Pricing')

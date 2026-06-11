@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MarketingLayout from '@/Components/Layout/MarketingLayout.vue'
 import Reveal from '@/Components/UI/Reveal.vue'
-import { Link } from '@inertiajs/vue3'
+import { Head, Link } from '@inertiajs/vue3'
 
 defineOptions({ layout: MarketingLayout })
 
@@ -21,6 +21,9 @@ const isNot = [
 </script>
 
 <template>
+    <Head title="About">
+        <meta name="description" content="FlowFlex is the all-in-one workspace for growing companies. Built in Europe, GDPR-first, modular by design." />
+    </Head>
     <section class="mx-auto max-w-6xl px-6 pt-20 pb-16">
         <p class="section-index">ABOUT</p>
         <h1 class="mt-4 max-w-3xl text-4xl sm:text-6xl font-bold tracking-display text-balance">

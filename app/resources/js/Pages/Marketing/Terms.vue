@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Head } from '@inertiajs/vue3'
 import MarketingLayout from '@/Components/Layout/MarketingLayout.vue'
 
 defineOptions({ layout: MarketingLayout })
@@ -7,6 +8,9 @@ defineProps<{ content: string }>()
 </script>
 
 <template>
+    <Head title="Terms of service">
+        <meta name="description" content="The terms that govern your use of FlowFlex." />
+    </Head>
     <section class="mx-auto max-w-3xl px-6 py-20">
         <p class="section-index">LEGAL</p>
         <h1 class="mt-4 text-4xl font-bold tracking-display">Terms of service</h1>

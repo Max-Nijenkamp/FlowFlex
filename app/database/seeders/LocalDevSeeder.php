@@ -48,6 +48,12 @@ class LocalDevSeeder extends Seeder
             ['name' => 'FlowFlex Admin', 'password' => Hash::make('password'), 'role' => 'super_admin'],
         );
 
+        // Quick-test staff login (founder request 2026-06-11).
+        Admin::firstOrCreate(
+            ['email' => 'test@test.nl'],
+            ['name' => 'Test Admin', 'password' => Hash::make('test1234'), 'role' => 'super_admin'],
+        );
+
         // Demo tenant.
         $company = Company::firstOrCreate(
             ['slug' => 'flowflex-demo'],
@@ -66,6 +72,13 @@ class LocalDevSeeder extends Seeder
             ['first_name' => 'Demo', 'last_name' => 'Owner', 'password' => Hash::make('password'), 'email_verified_at' => now()],
         );
         $ownerUser->assignRole($owner);
+
+        // Quick-test tenant login — every permission, every module (founder request 2026-06-11).
+        $testUser = User::firstOrCreate(
+            ['company_id' => $company->id, 'email' => 'test@test.nl'],
+            ['first_name' => 'Test', 'last_name' => 'User', 'password' => Hash::make('test1234'), 'email_verified_at' => now()],
+        );
+        $testUser->assignRole($owner);
 
         // Free core modules active for the demo company.
         app(BillingServiceInterface::class)->seedFreeCoreModules($company->id);

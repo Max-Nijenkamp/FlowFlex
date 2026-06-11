@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import MarketingLayout from '@/Components/Layout/MarketingLayout.vue'
 import Accordion from '@/Components/UI/Accordion.vue'
-import { Link } from '@inertiajs/vue3'
+import { Head, Link } from '@inertiajs/vue3'
 import { computed, reactive, ref } from 'vue'
 
 defineOptions({ layout: MarketingLayout })
@@ -9,6 +9,7 @@ defineOptions({ layout: MarketingLayout })
 const props = defineProps<{
     modules: { key: string; name: string; domain: string; price_cents: number }[]
     base_price_cents: number
+    open_domain?: string | null
 }>()
 
 const users = ref(80)
@@ -36,8 +37,13 @@ const byDomain = computed(() => {
     return groups
 })
 
-// First domain open by default; rest collapsed (dropdown UX).
-const openDomains = reactive<Record<string, boolean>>({ core: false, hr: true, finance: false, crm: false })
+// Deep-linked domain (?domain=) opens; otherwise HR by default (dropdown UX).
+const openDomains = reactive<Record<string, boolean>>({
+    core: props.open_domain === 'core',
+    hr: props.open_domain ? props.open_domain === 'hr' : true,
+    finance: props.open_domain === 'finance',
+    crm: props.open_domain === 'crm',
+})
 
 const chosenModules = computed(() => props.modules.filter((m) => selected.value.includes(m.key)))
 const perUserCents = computed(() => props.base_price_cents + chosenModules.value.reduce((sum, m) => sum + m.price_cents, 0))
@@ -56,6 +62,9 @@ const euroShort = (cents: number) => `€${Math.round(cents / 100).toLocaleStrin
 </script>
 
 <template>
+    <Head title="Pricing">
+        <meta name="description" content="No tiers, no bundles. Your invoice is the sum of the modules you switched on, times your team size." />
+    </Head>
     <section class="mx-auto max-w-6xl px-6 pt-20 pb-10">
         <p class="section-index">PRICING</p>
         <h1 class="mt-4 max-w-2xl text-4xl sm:text-6xl font-bold tracking-display text-balance">

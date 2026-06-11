@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\ModuleCatalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -29,8 +30,12 @@ class MarketingController extends Controller
         ]);
     }
 
-    public function pricing(): Response
+    public function pricing(Request $request): Response
     {
+        $openDomain = in_array($request->query('domain'), ['hr', 'finance', 'crm', 'core'], true)
+            ? $request->query('domain')
+            : null;
+
         $modules = collect(config('flowflex.modules'))
             ->map(fn (array $module, string $key) => [
                 'key' => $key,
@@ -43,6 +48,7 @@ class MarketingController extends Controller
         return Inertia::render('Marketing/Pricing', [
             'modules' => $modules,
             'base_price_cents' => config('flowflex.base_price_cents', 500), // *(assumed)*
+            'open_domain' => $openDomain,
         ]);
     }
 
@@ -50,6 +56,39 @@ class MarketingController extends Controller
     {
         return Inertia::render('Marketing/Features', [
             'domains' => $this->domainFeatures(),
+        ]);
+    }
+
+    /** One domain, deep — linked from the nav Product dropdown. */
+    public function domain(string $domain): Response
+    {
+        abort_unless(in_array($domain, ['hr', 'finance', 'crm', 'core'], true), 404);
+
+        $content = collect($this->domainFeatures())->firstWhere('key', $domain)
+            ?? $this->coreDomainContent();
+
+        // Core Platform ships with the base price — its modules live on
+        // ModuleCatalog::FREE_CORE, not the paid catalog.
+        $modules = $domain === 'core'
+            ? collect(ModuleCatalog::FREE_CORE)
+                ->map(fn (string $key) => [
+                    'key' => $key,
+                    'name' => str(str_replace('core.', '', $key))->headline()->toString(),
+                    'price_cents' => 0,
+                ])
+                ->values()
+            : collect(config('flowflex.modules'))
+                ->filter(fn (array $module, string $key) => $module['domain'] === $domain)
+                ->map(fn (array $module, string $key) => [
+                    'key' => $key,
+                    'name' => $module['name'],
+                    'price_cents' => $module['per_user_monthly_price_cents'],
+                ])
+                ->values();
+
+        return Inertia::render('Marketing/Domain', [
+            'domain' => $content,
+            'modules' => $modules,
         ]);
     }
 
@@ -96,6 +135,34 @@ class MarketingController extends Controller
         ]);
     }
 
+    /** @return array{key: string, name: string, description: string, modules: array<int, mixed>, flows: array<int, string>} */
+    private function coreDomainContent(): array
+    {
+        return [
+            'key' => 'core',
+            'name' => 'Core Platform',
+            'description' => 'The platform layer every module stands on — included with every subscription: billing, roles and permissions, audit log, file storage, imports, webhooks and a full REST API.',
+            'modules' => [],
+            'flows' => [
+                'Module activated — permissions, navigation and billing update for the whole company',
+                'Any record changed — the audit log captures who, what and when',
+            ],
+        ];
+    }
+
+    public function sitemap(): \Illuminate\Http\Response
+    {
+        $urls = ['/', '/features', '/pricing', '/about', '/contact', '/terms', '/privacy',
+            '/product/hr', '/product/finance', '/product/crm', '/product/core'];
+
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>'
+            .'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+            .collect($urls)->map(fn (string $url) => '<url><loc>'.url($url).'</loc></url>')->implode('')
+            .'</urlset>';
+
+        return response($xml, 200, ['Content-Type' => 'application/xml']);
+    }
+
     /** @return array<int, array{name: string, modules: int}> */
     private function domainSummaries(): array
     {
@@ -109,7 +176,7 @@ class MarketingController extends Controller
             ->all();
     }
 
-    /** @return array<int, array{name: string, description: string, modules: array<int, mixed>, flows: array<int, string>}> */
+    /** @return array<int, array{key: string, name: string, description: string, modules: array<int, mixed>, flows: array<int, string>}> */
     private function domainFeatures(): array
     {
         $descriptions = [
@@ -139,6 +206,7 @@ class MarketingController extends Controller
         return collect(config('flowflex.modules'))
             ->groupBy('domain')
             ->map(fn ($modules, string $domain) => [
+                'key' => $domain,
                 'name' => ucfirst($domain === 'hr' ? 'HR & People' : ($domain === 'crm' ? 'CRM & Sales' : ($domain === 'core' ? 'Core Platform' : 'Finance & Accounting'))),
                 'description' => $descriptions[$domain] ?? '',
                 'modules' => $modules->pluck('name')->all(),

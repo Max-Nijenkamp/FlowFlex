@@ -6,7 +6,7 @@ import TextInput from '@/Components/Form/TextInput.vue'
 import MarketingLayout from '@/Components/Layout/MarketingLayout.vue'
 import BaseButton from '@/Components/UI/BaseButton.vue'
 
-import { useForm } from '@inertiajs/vue3'
+import { Head, useForm } from '@inertiajs/vue3'
 
 defineOptions({ layout: MarketingLayout })
 
@@ -25,6 +25,9 @@ function submit() {
 </script>
 
 <template>
+    <Head title="Contact">
+        <meta name="description" content="Questions about modules, pricing or switching from your current stack — we reply within one business day." />
+    </Head>
     <section class="mx-auto max-w-6xl px-6 py-20">
         <div class="grid gap-16 lg:grid-cols-[1fr_1.15fr]">
             <div>

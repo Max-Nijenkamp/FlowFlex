@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [MarketingController::class, 'home'])->name('home');
 Route::get('/pricing', [MarketingController::class, 'pricing'])->name('pricing');
 Route::get('/features', [MarketingController::class, 'features'])->name('features');
+Route::get('/product/{domain}', [MarketingController::class, 'domain'])->name('product.domain');
+Route::get('/sitemap.xml', [MarketingController::class, 'sitemap']);
 Route::get('/about', [MarketingController::class, 'about'])->name('about');
 Route::get('/contact', [MarketingController::class, 'contact'])->name('contact');
 Route::post('/contact', [MarketingController::class, 'submitContact'])->middleware('throttle:10,1');

@@ -10,10 +10,10 @@ const productOpen = ref(false)
 const productMenu = ref<HTMLElement | null>(null)
 
 const productItems = [
-    { href: '/features', label: 'HR & people', detail: 'Recruiting to payroll' },
-    { href: '/features', label: 'Finance & accounting', detail: 'Ledger-first books' },
-    { href: '/features', label: 'CRM & sales', detail: 'Pipeline to contract' },
-    { href: '/features', label: 'Core platform', detail: 'Roles, audit, API' },
+    { href: '/product/hr', label: 'HR & people', detail: 'Recruiting to payroll' },
+    { href: '/product/finance', label: 'Finance & accounting', detail: 'Ledger-first books' },
+    { href: '/product/crm', label: 'CRM & sales', detail: 'Pipeline to contract' },
+    { href: '/product/core', label: 'Core platform', detail: 'Roles, audit, API' },
 ]
 
 function onClickOutside(e: MouseEvent) {
@@ -64,7 +64,7 @@ onUnmounted(() => {
                             class="absolute left-1/2 top-full mt-3 w-[420px] -translate-x-1/2 rounded-2xl border border-line bg-white p-2 shadow-[0_16px_40px_-12px_rgba(17,24,39,0.18)]"
                             style="animation: ff-enter 0.18s cubic-bezier(0, 0, 0.2, 1)">
                             <div class="grid grid-cols-2 gap-1">
-                                <Link v-for="item in productItems" :key="item.label" :href="item.href"
+                                <Link v-for="item in productItems" :key="item.label" :href="item.href" prefetch
                                     class="rounded-xl px-4 py-3 hover:bg-paper transition ease-out duration-150"
                                     @click="productOpen = false">
                                     <span class="block text-sm font-semibold text-ink">{{ item.label }}</span>
@@ -77,7 +77,7 @@ onUnmounted(() => {
                             </Link>
                         </div>
                     </div>
-                    <Link href="/pricing" class="hover:text-ink transition ease-out duration-150">Pricing</Link>
+                    <Link href="/pricing" prefetch class="hover:text-ink transition ease-out duration-150">Pricing</Link>
                     <Link href="/about" class="hover:text-ink transition ease-out duration-150">About</Link>
                     <Link href="/contact" class="hover:text-ink transition ease-out duration-150">Contact</Link>
                 </nav>

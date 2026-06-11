@@ -4,7 +4,7 @@ import MarketingLayout from '@/Components/Layout/MarketingLayout.vue'
 import FlowLine from '@/Components/Marketing/FlowLine.vue'
 import Reveal from '@/Components/UI/Reveal.vue'
 import SectionHeading from '@/Components/UI/SectionHeading.vue'
-import { Link } from '@inertiajs/vue3'
+import { Head, Link } from '@inertiajs/vue3'
 import { ref } from 'vue'
 
 defineOptions({ layout: MarketingLayout })
@@ -33,6 +33,9 @@ const flows = [
 </script>
 
 <template>
+    <Head title="">
+        <meta name="description" content="HR, finance, CRM and more on one platform. One login, one database, one bill. Per user, per module — for teams of 50 to 500." />
+    </Head>
     <!-- ── Hero ── -->
     <section class="relative overflow-hidden">
         <div class="mx-auto max-w-6xl px-6 pt-20 pb-20 sm:pt-28">

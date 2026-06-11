@@ -2,12 +2,13 @@
 import MarketingLayout from '@/Components/Layout/MarketingLayout.vue'
 import Reveal from '@/Components/UI/Reveal.vue'
 import SectionHeading from '@/Components/UI/SectionHeading.vue'
-import { Link } from '@inertiajs/vue3'
+import { Head, Link } from '@inertiajs/vue3'
 
 defineOptions({ layout: MarketingLayout })
 
 defineProps<{
     domains: {
+        key: string
         name: string
         description: string
         modules: string[]
@@ -17,6 +18,9 @@ defineProps<{
 </script>
 
 <template>
+    <Head title="Product">
+        <meta name="description" content="Every FlowFlex module that ships today — HR, finance, CRM and the core platform. Each one is a switch, not a sales call." />
+    </Head>
     <section class="mx-auto max-w-6xl px-6 pt-20 pb-12">
         <p class="section-index">PRODUCT</p>
         <h1 class="mt-4 max-w-2xl text-4xl sm:text-6xl font-bold tracking-display text-balance">
@@ -34,6 +38,10 @@ defineProps<{
                 <Reveal>
                     <SectionHeading :index="String(i + 1).padStart(2, '0')" eyebrow="Domain" :title="domain.name">
                         <p class="mt-5 text-ink-soft leading-relaxed">{{ domain.description }}</p>
+                        <Link :href="`/product/${domain.key}`" class="group mt-6 inline-block font-semibold text-accent">
+                            Explore {{ domain.name }}
+                            <span class="inline-block transition-transform ease-out duration-150 group-hover:translate-x-1">→</span>
+                        </Link>
                         <div v-if="domain.flows.length" class="mt-7 space-y-2.5">
                             <p class="text-xs font-semibold uppercase tracking-[0.18em] text-ink-faint">Flows automatically</p>
                             <p v-for="flow in domain.flows" :key="flow" class="flex gap-2.5 text-sm text-ink-soft">
