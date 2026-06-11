@@ -44,6 +44,7 @@ class ExpenseResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading() // perceived-performance: paint page, stream rows
             ->modifyQueryUsing(fn ($query) => $query->latest('expense_date'))
             ->columns([
                 TextColumn::make('merchant')->searchable(),

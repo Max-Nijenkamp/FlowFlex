@@ -66,6 +66,7 @@ class InvoiceResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading() // perceived-performance: paint page, stream rows
             ->modifyQueryUsing(fn ($query) => $query->latest('issue_date'))
             ->columns([
                 TextColumn::make('invoice_number')->placeholder('draft')->searchable(),

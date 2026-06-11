@@ -48,6 +48,7 @@ class BillingResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading() // perceived-performance: paint page, stream rows
             ->modifyQueryUsing(fn ($query) => $query->latest('period_start'))
             ->columns([
                 TextColumn::make('period_start')->date()->label('Period'),

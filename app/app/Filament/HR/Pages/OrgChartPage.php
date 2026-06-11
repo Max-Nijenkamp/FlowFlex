@@ -19,6 +19,14 @@ class OrgChartPage extends Page
 {
     protected string $view = 'filament.hr.pages.org-chart';
 
+    /** Deferred first paint — blade shows a skeleton until wire:init fires. */
+    public bool $readyToLoad = false;
+
+    public function loadData(): void
+    {
+        $this->readyToLoad = true;
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShare;
 
     protected static string|UnitEnum|null $navigationGroup = 'Employees';

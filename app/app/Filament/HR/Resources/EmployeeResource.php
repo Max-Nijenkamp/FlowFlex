@@ -70,6 +70,7 @@ class EmployeeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading() // perceived-performance: paint page, stream rows
             ->columns([
                 TextColumn::make('employee_number')->label('#')->sortable(),
                 TextColumn::make('full_name')->label('Name')

@@ -38,6 +38,7 @@ class HeadcountPlanResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading() // perceived-performance: paint page, stream rows
             ->modifyQueryUsing(fn ($query) => $query->latest())
             ->columns([
                 TextColumn::make('period'),

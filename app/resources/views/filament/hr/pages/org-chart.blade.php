@@ -1,4 +1,9 @@
 <x-filament-panels::page>
+    <div wire:init="loadData">
+        @if (! $readyToLoad)
+            <x-skeleton.list :rows="8" />
+        @else
+
     @php($tree = $this->getTree())
     @if (empty($tree))
         <p class="text-gray-500">No employees yet.</p>
@@ -9,4 +14,7 @@
             @endforeach
         </div>
     @endif
+
+        @endif
+    </div>
 </x-filament-panels::page>

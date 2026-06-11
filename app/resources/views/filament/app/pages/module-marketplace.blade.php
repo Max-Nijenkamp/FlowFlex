@@ -1,4 +1,9 @@
 <x-filament-panels::page>
+    <div wire:init="loadData">
+        @if (! $readyToLoad)
+            <x-skeleton.stat-cards :count="6" />
+        @else
+
     @foreach ($this->getModulesByDomain() as $domain => $modules)
         <div class="mb-8">
             <h2 class="text-lg font-semibold mb-4 capitalize">{{ $domain }}</h2>
@@ -45,4 +50,7 @@
             </div>
         </div>
     @endforeach
+
+        @endif
+    </div>
 </x-filament-panels::page>

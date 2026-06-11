@@ -24,6 +24,14 @@ class SelfServiceDashboardPage extends Page
 {
     protected string $view = 'filament.hr.pages.self-service-dashboard';
 
+    /** Deferred first paint — blade shows a skeleton until wire:init fires. */
+    public bool $readyToLoad = false;
+
+    public function loadData(): void
+    {
+        $this->readyToLoad = true;
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHome;
 
     protected static string|UnitEnum|null $navigationGroup = 'My HR';

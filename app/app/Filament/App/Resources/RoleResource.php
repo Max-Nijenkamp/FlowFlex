@@ -63,6 +63,7 @@ class RoleResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading() // perceived-performance: paint page, stream rows
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('permissions_count')->counts('permissions')->label('Permissions'),

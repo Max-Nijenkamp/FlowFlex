@@ -1,4 +1,9 @@
 <x-filament-panels::page>
+    <div wire:init="loadData">
+        @if (! $readyToLoad)
+            <x-skeleton.stat-cards :count="3" />
+        @else
+
     @php($tiles = $this->getTiles())
     @if ($tiles['employee'] === null)
         <p class="text-gray-500">No employee record is linked to your account yet — ask HR to connect your profile.</p>
@@ -23,4 +28,7 @@
             @endisset
         </div>
     @endif
+
+        @endif
+    </div>
 </x-filament-panels::page>

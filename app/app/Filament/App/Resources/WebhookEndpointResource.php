@@ -60,6 +60,7 @@ class WebhookEndpointResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading() // perceived-performance: paint page, stream rows
             ->columns([
                 TextColumn::make('url')->searchable()->limit(50),
                 TextColumn::make('events')->badge()->separator(','),

@@ -58,6 +58,7 @@ class OnboardingTemplateResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->deferLoading() // perceived-performance: paint page, stream rows
             ->columns([
                 TextColumn::make('name'),
                 IconColumn::make('is_default')->boolean(),

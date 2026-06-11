@@ -24,6 +24,14 @@ class PipelineBoardPage extends Page
 {
     protected string $view = 'filament.crm.pages.pipeline-board';
 
+    /** Deferred first paint — blade shows <x-skeleton.board> until wire:init fires. */
+    public bool $readyToLoad = false;
+
+    public function loadBoard(): void
+    {
+        $this->readyToLoad = true;
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedViewColumns;
 
     protected static string|UnitEnum|null $navigationGroup = 'Sales';

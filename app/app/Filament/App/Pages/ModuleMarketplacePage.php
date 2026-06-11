@@ -26,6 +26,14 @@ class ModuleMarketplacePage extends Page
 {
     protected string $view = 'filament.app.pages.module-marketplace';
 
+    /** Deferred first paint — blade shows a skeleton until wire:init fires. */
+    public bool $readyToLoad = false;
+
+    public function loadData(): void
+    {
+        $this->readyToLoad = true;
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSquaresPlus;
 
     protected static string|UnitEnum|null $navigationGroup = 'Billing';

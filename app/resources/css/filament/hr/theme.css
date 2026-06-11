@@ -17,3 +17,49 @@
 .fi-wi {
     border-radius: 0.875rem;
 }
+
+/* ── Perceived performance (architecture/patterns/perceived-performance.md) ──
+   Start fast, end slow: every entrance eases out; exits are near-instant.
+   Skeleton shimmer + staggered list entrances make waits feel shorter. */
+
+/* Ease-out entrances for panel chrome, modals, dropdowns, slide-overs. */
+.fi-modal-window,
+.fi-dropdown-panel,
+.fi-slide-over-window {
+    animation: ff-enter 0.18s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@keyframes ff-enter {
+    from { opacity: 0; transform: translateY(4px) scale(0.99); }
+    to { opacity: 1; transform: none; }
+}
+
+/* Table rows stream in with a subtle stagger — first rows appear instantly. */
+.fi-ta-row {
+    animation: ff-row-in 0.25s cubic-bezier(0, 0, 0.2, 1) backwards;
+}
+
+.fi-ta-row:nth-child(1) { animation-delay: 0ms; }
+.fi-ta-row:nth-child(2) { animation-delay: 25ms; }
+.fi-ta-row:nth-child(3) { animation-delay: 50ms; }
+.fi-ta-row:nth-child(4) { animation-delay: 75ms; }
+.fi-ta-row:nth-child(5) { animation-delay: 100ms; }
+.fi-ta-row:nth-child(n + 6) { animation-delay: 120ms; }
+
+@keyframes ff-row-in {
+    from { opacity: 0; transform: translateY(3px); }
+    to { opacity: 1; transform: none; }
+}
+
+/* Buttons acknowledge the tap instantly (optimistic feel) — press-down on
+   active, no waiting for the round-trip to "react". */
+.fi-btn:active {
+    transform: scale(0.97);
+    transition: transform 0.05s ease-out;
+}
+
+/* While Livewire is busy, keep the old content visible but calm — no spinners. */
+[wire\:loading\.delay] .fi-ta-content {
+    opacity: 0.6;
+    transition: opacity 0.15s ease-out;
+}
