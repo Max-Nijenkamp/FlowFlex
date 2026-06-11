@@ -209,3 +209,30 @@ Select::make('manager_id')
 ```
 
 `withoutGlobalScopes()` is only valid in the `/admin` panel for FlowFlex staff.
+
+---
+
+## 11. Filament Assets Must Be Published (Browser-Only Failure)
+
+`php artisan filament:assets` publishes `public/js/filament/*` — Filament's Alpine
+components (`filamentFormButton`, dropdowns, modals). When missing, **every browser
+interaction silently breaks while the entire Pest suite stays green** (Livewire feature
+tests never execute browser JS). Discovered 2026-06-11 ([[../build/gaps/gap-filament-assets-unpublished]]).
+
+Composer hooks now run it on `post-install-cmd` + `post-update-cmd` — never remove them.
+
+## 12. No Tailwind Classes in PHP-Side Panel HTML
+
+Panel theme builds scan `app/Filament/**` and `resources/views/filament/**` — NOT
+`app/Providers/**`. Any HtmlString built in a provider (brand logos, render hooks)
+must use plain CSS classes defined in the theme (e.g. `.ff-login-footer`) or native
+Filament APIs (`->brandLogo()/->darkModeBrandLogo()/->brandLogoHeight()`), never raw
+Tailwind utilities — they won't exist in the compiled theme.
+
+## 13. Auth Page Skin (Login Parity)
+
+Panel auth pages (simple layout) are skinned to match the public Vue login: warm paper
+canvas, centred 420px card, ease-out entrance, footer strip injected via the
+`SIMPLE_PAGE_END` render hook (AppServiceProvider). /admin login is a custom
+`AdminLogin` page labelled "Staff console". Shared snippet lives in all 5 theme.css files.
+

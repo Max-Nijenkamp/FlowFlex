@@ -94,6 +94,8 @@ FlowFlex speaks like a capable colleague who respects the user's time.
 - `public/images/logo/flowflex-logo-dark.svg`
 - `public/images/logo/flowflex-logo-light.svg`
 - `public/images/logo/flowflex-icon.svg`
-- `public/images/logo/flowflex-favicon.png`
+- `public/images/logo/flowflex-favicon.png` *(deviation 2026-06-11: SVG favicon shipped instead — flowflex-icon.svg serves as favicon on site + panels; PNG pending image tooling)*
 
 **Rules**: Never stretch, rotate, recolour. Never recreate in CSS. Minimum 120px wide for wordmark, 24px for icon-only.
+
+**Status (2026-06-11)**: all SVGs created and live — public site header/footer (dark/light), auth pages (icon mark), all 5 Filament panels via native brandLogo APIs, favicon on site + panels.

@@ -154,3 +154,68 @@
 .fi-header-heading {
     letter-spacing: -0.025em;
 }
+
+/* ── Panel login = same door as the public Vue login ──
+   Warm paper canvas, centred white card, icon mark, quiet footer.
+   (Simple layout is only used by auth pages.) */
+
+.fi-simple-layout {
+    background-color: #fbfaf8;
+}
+
+.dark .fi-simple-layout {
+    background-color: rgb(15 23 42);
+}
+
+.fi-simple-main {
+    max-width: 420px;
+    border-radius: 1rem;
+    border: 1px solid #e7e4dd;
+    background-color: #ffffff;
+    box-shadow: 0 2px 16px rgba(17, 24, 39, 0.05);
+    animation: ff-card-in 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.dark .fi-simple-main {
+    border-color: rgb(51 65 85);
+    background-color: rgb(30 41 59);
+}
+
+@keyframes ff-card-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fi-simple-main { animation: none; }
+}
+
+/* Icon-sized mark above the heading, matching the public login. */
+.fi-simple-main .fi-logo {
+    height: 2.5rem;
+    margin-inline: auto;
+}
+
+.fi-simple-header-heading {
+    font-size: 1.5rem;
+    letter-spacing: -0.025em;
+}
+
+/* Footer strip injected via SIMPLE_PAGE_END render hook. */
+.ff-login-footer {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+.ff-login-footer a {
+    transition: color 0.15s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.ff-login-footer a:hover {
+    color: #111827;
+}

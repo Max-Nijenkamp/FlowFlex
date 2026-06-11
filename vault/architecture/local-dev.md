@@ -164,3 +164,15 @@ npm run dev                                            # Vite (host machine)
 - [[architecture/deployment]] — production env vars
 - [[architecture/patterns/testing-pattern]] — SQLite test config
 - [[architecture/patterns/seeders]] — LocalDevSeeder contents
+
+---
+
+## Quick-Test Logins (LocalDevSeeder — never runs in production)
+
+| Surface | Email | Password | Scope |
+|---|---|---|---|
+| `/admin` staff console | test@test.nl | test1234 | super_admin |
+| All tenant panels | test@test.nl | test1234 | FlowFlex Demo owner — every permission, every module active |
+| `/admin` staff console | admin@flowflex.nl | password | super_admin |
+| All tenant panels | demo@flowflex.nl | password | FlowFlex Demo owner |
+

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Support\Services\CompanyContext;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Health\Checks\Checks\DatabaseCheck;
@@ -32,6 +34,16 @@ class AppServiceProvider extends ServiceProvider
     {
         // Catch lazy-loading bugs in local dev only (kept lenient in tests + prod).
         Model::preventLazyLoading($this->app->environment('local'));
+
+        // Panel auth pages: footer strip matching the public Vue login.
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::SIMPLE_PAGE_END,
+            fn (): string => '<div class="ff-login-footer">'
+                .'<a href="'.url('/').'">flowflex.eu</a><span aria-hidden="true">·</span>'
+                .'<a href="'.url('/privacy').'">Privacy</a><span aria-hidden="true">·</span>'
+                .'<a href="'.url('/terms').'">Terms</a>'
+                .'</div>',
+        );
 
         // Health checks (core.health). Infra checks skipped in the test env —
         // sqlite/array drivers have no Redis or Horizon to probe.

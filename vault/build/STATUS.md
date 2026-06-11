@@ -1,6 +1,6 @@
 ---
 type: build-status
-last-updated: 2026-06-10
+last-updated: 2026-06-11
 color: "#F97316"
 ---
 
@@ -8,7 +8,7 @@ color: "#F97316"
 
 Per-domain progress. Update `status` frontmatter in module specs — this table is the manual view (Dataview query below auto-populates if Dataview plugin is installed).
 
-**Last updated:** 2026-06-11 (MVP gate path BUILT — 36/173 modules live; specs = source of truth, deviations in ADR 2026-06-11-mvp-v1-deviations)
+**Last updated:** 2026-06-11 — **MVP FULLY BUILT**: all 66 domain modules + revamped public site (Vue/Inertia, brand design system) + auth hardening (self-service 2FA, mandatory email verification) + perceived-performance layer + Filament brand skin. 66/173 modules live. Quick-test login (local only): test@test.nl / test1234 (staff console AND demo-company owner). Specs = source of truth; deviations in ADRs. Remaining to v1 launch: full browser verify, then CI/deployment (deferred by order).
 
 ---
 
@@ -108,6 +108,7 @@ SORT module-key ASC
 | 2026-06-11 | Frontend | public site revamp | ✅ Complete redesign to brand.md: ink/paper/indigo system, logo SVGs created, editorial sections, interactive flex demo + live invoice calculator, dark Flow section (real cross-domain event chains), split-screen auth, brand voice copy. Pest 228/228, PHPStan 0, Vite clean |
 | 2026-06-11 | Frontend+Panels | UI polish pass 2 | ✅ Form system: @tailwindcss/forms (class strategy) + shared components (FormField/TextInput/TextArea/Checkbox/Select w/ custom chevron/BaseButton/Accordion) — root cause of 'weird inputs' was border-color w/o border-width + native input defaults. Contact + 4 auth pages rebuilt on components. Pricing → per-domain accordions w/ selected-count chip + per-user subtotal in header. Nav product dropdown (click-outside + Esc). Handcrafted AppMock product UI in hero. Filament: brand skin in all 5 themes (warm paper canvas, sidebar accent bar, pill buttons, editorial table headers, accent focus rings) + brandLogo/favicon on all panels. Pest 228/228 |
 | 2026-06-11 | Frontend | domain pages + demo seeds + SEO | ✅ /product/{hr,finance,crm,core} pages (breadcrumb, module grid w/ prices, flows, CTA to all modules + pricing deep-link ?domain= opens that accordion); nav dropdown now lands on domain pages; Features sections link through. Core page synthesized from ModuleCatalog::FREE_CORE (included in base). Seeds: test@test.nl/test1234 as super-admin AND demo-company user w/ owner role (all 211 perms, 59 active modules). SEO: per-page Inertia Head meta, sitemap.xml route, robots.txt (panels disallowed), Inertia prefetch on product/pricing links. Pest 235/235 |
+| 2026-06-11 | Panels | login parity + asset fix follow-up | ✅ Filament auth pages styled as the public login (paper canvas, 420px card w/ entrance, constrained mark, footer strip via SIMPLE_PAGE_END render hook — all 5 themes); /admin labelled 'Staff console'. Pest 235/235 |
 
 ---
 
