@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Contracts\Finance\BankServiceInterface;
 use App\Contracts\Finance\InvoiceServiceInterface;
 use App\Data\Finance\CreateInvoiceData;
+use App\Exceptions\Finance\AmountMismatchException;
 use App\Models\Company;
 use App\Models\Finance\BankAccount;
 use App\Models\Finance\BankTransaction;
@@ -69,4 +70,4 @@ it('rejects reconciliation on amount mismatch', function () {
     $transaction = BankTransaction::query()->firstOrFail();
 
     $this->bank->reconcile($transaction->id, $invoice->id);
-})->throws(App\Exceptions\Finance\AmountMismatchException::class);
+})->throws(AmountMismatchException::class);

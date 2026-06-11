@@ -227,3 +227,8 @@
 {"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/tests/Architecture/LayersTest.php","timestamp":1781165670808,"sessionId":null}
 {"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/phpstan.neon","timestamp":1781165799100,"sessionId":null}
 {"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/tests/Feature/Finance/BankImportTest.php","timestamp":1781165916046,"sessionId":null}
+{"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/HR/Pages/MyProfilePage.php","timestamp":1781169401219,"sessionId":null}
+{"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/app/Filament/HR/Pages/SelfServiceDashboardPage.php","timestamp":1781169409425,"sessionId":null}
+{"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/tests/Feature/HR/SelfServiceTest.php","timestamp":1781169713832,"sessionId":null}
+{"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/tests/Feature/CRM/QuoteFlowTest.php","timestamp":1781169724145,"sessionId":null}
+{"type":"edit","file":"/Users/maxnijenkamp/Documents/FlowFlex/app/app/Models/CRM/QuoteLine.php","timestamp":1781170328237,"sessionId":null}

@@ -8,11 +8,10 @@ use App\Support\Traits\BelongsToCompany;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class QuoteLine extends Model
 {
-    use BelongsToCompany, HasFactory, HasUlids, SoftDeletes;
+    use BelongsToCompany, HasFactory, HasUlids;
 
     protected $table = 'crm_quote_lines';
 

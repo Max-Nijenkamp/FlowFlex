@@ -6,8 +6,10 @@ namespace App\Providers;
 
 use App\Contracts\CRM\ContactServiceInterface;
 use App\Contracts\CRM\DealServiceInterface;
+use App\Contracts\CRM\QuoteServiceInterface;
 use App\Services\CRM\ContactService;
 use App\Services\CRM\DealService;
+use App\Services\CRM\QuoteService;
 use App\Support\Privacy\PersonalDataRegistry;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,6 +19,7 @@ class CrmServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ContactServiceInterface::class, ContactService::class);
         $this->app->singleton(DealServiceInterface::class, DealService::class);
+        $this->app->singleton(QuoteServiceInterface::class, QuoteService::class);
     }
 
     public function boot(): void
