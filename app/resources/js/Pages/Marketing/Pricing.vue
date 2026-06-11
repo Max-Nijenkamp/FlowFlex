@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import MarketingLayout from '@/Components/Layout/MarketingLayout.vue'
+import Reveal from '@/Components/UI/Reveal.vue'
+import { Link } from '@inertiajs/vue3'
 import { computed, ref } from 'vue'
 
 defineOptions({ layout: MarketingLayout })
@@ -9,21 +11,24 @@ const props = defineProps<{
     base_price_cents: number
 }>()
 
-const users = ref(50)
-const selected = ref<string[]>([])
+const users = ref(80)
+const selected = ref<string[]>(
+    props.modules.filter((m) => ['hr.profiles', 'hr.leave', 'finance.invoicing', 'crm.deals'].includes(m.key)).map((m) => m.key),
+)
 
+// Optimistic selection — instant local state, no server round-trip.
 function toggle(key: string) {
     selected.value = selected.value.includes(key)
         ? selected.value.filter((k) => k !== key)
         : [...selected.value, key]
 }
 
-const monthlyCents = computed(() => {
-    const moduleCents = props.modules
-        .filter((m) => selected.value.includes(m.key))
-        .reduce((sum, m) => sum + m.price_cents, 0)
-    return (props.base_price_cents + moduleCents) * users.value
-})
+const domainLabels: Record<string, string> = {
+    core: 'Core platform',
+    hr: 'HR & people',
+    finance: 'Finance & accounting',
+    crm: 'CRM & sales',
+}
 
 const byDomain = computed(() => {
     const groups: Record<string, typeof props.modules> = {}
@@ -31,50 +36,136 @@ const byDomain = computed(() => {
     return groups
 })
 
-const euro = (cents: number) => `€${(cents / 100).toFixed(2)}`
+const chosenModules = computed(() => props.modules.filter((m) => selected.value.includes(m.key)))
+const perUserCents = computed(() => props.base_price_cents + chosenModules.value.reduce((sum, m) => sum + m.price_cents, 0))
+const monthlyCents = computed(() => perUserCents.value * users.value)
+
+const euro = (cents: number) => `€${(cents / 100).toLocaleString('nl-NL', { minimumFractionDigits: 2 })}`
+const euroShort = (cents: number) => `€${Math.round(cents / 100).toLocaleString('nl-NL')}`
 </script>
 
 <template>
-    <section class="mx-auto max-w-6xl px-6 py-20">
-        <h1 class="text-center text-4xl font-bold">Pay only for what you use</h1>
-        <p class="mt-4 text-center text-slate-600">Per user, per module, per month. No bundles, no surprises.</p>
+    <section class="mx-auto max-w-6xl px-6 pt-20 pb-10">
+        <p class="section-index">PRICING</p>
+        <h1 class="mt-4 max-w-2xl text-4xl sm:text-6xl font-bold tracking-display text-balance">
+            No tiers. No bundles. One formula.
+        </h1>
+        <p class="mt-6 max-w-xl text-lg text-ink-soft leading-relaxed">
+            Your invoice is the sum of the modules you switched on, times the people on your team. That's it.
+        </p>
+        <p class="mt-8 inline-block rounded-lg bg-ink px-5 py-3 font-mono text-sm text-white">
+            monthly invoice = Σ(module price) × active users
+        </p>
+    </section>
 
-        <div class="mt-12 grid gap-10 lg:grid-cols-[1fr_320px]">
-            <div class="space-y-8">
-                <div v-for="(mods, domain) in byDomain" :key="domain">
-                    <h2 class="font-semibold uppercase tracking-wide text-sm text-slate-400">{{ domain }}</h2>
-                    <div class="mt-3 grid gap-3 sm:grid-cols-2">
-                        <!-- Optimistic toggle: selection updates instantly, no server round-trip -->
-                        <button v-for="m in mods" :key="m.key" type="button" @click="toggle(m.key)"
-                            class="flex items-center justify-between rounded-xl border p-4 text-left transition ease-out duration-150"
-                            :class="selected.includes(m.key)
-                                ? 'border-sky-400 ring-1 ring-sky-400 bg-sky-50'
-                                : 'border-slate-200 hover:border-slate-300'">
-                            <span class="font-medium text-sm">{{ m.name }}</span>
-                            <span class="text-sm text-slate-500">
-                                {{ m.price_cents === 0 ? 'Included' : euro(m.price_cents) + '/user' }}
-                            </span>
-                        </button>
+    <section class="mx-auto max-w-6xl px-6 pb-24">
+        <div class="grid gap-10 lg:grid-cols-[1fr_360px] lg:items-start">
+            <!-- Module picker -->
+            <div class="space-y-12">
+                <Reveal v-for="(mods, domain) in byDomain" :key="domain">
+                    <div>
+                        <h2 class="flex items-baseline gap-3 border-b border-line pb-3">
+                            <span class="font-semibold">{{ domainLabels[domain] ?? domain }}</span>
+                            <span class="font-mono text-xs text-ink-faint">{{ mods.length }} modules</span>
+                        </h2>
+                        <div class="mt-4 grid gap-2 sm:grid-cols-2">
+                            <button v-for="m in mods" :key="m.key" type="button" @click="toggle(m.key)"
+                                class="group flex items-center justify-between rounded-xl border px-4 py-3.5 text-left transition ease-out duration-150"
+                                :class="selected.includes(m.key)
+                                    ? 'border-accent bg-accent-soft'
+                                    : 'border-line bg-white hover:border-ink-faint'">
+                                <span class="flex items-center gap-3">
+                                    <span class="flex h-4.5 w-4.5 items-center justify-center rounded-full border transition ease-out duration-150"
+                                        :class="selected.includes(m.key) ? 'border-accent bg-accent' : 'border-line bg-white'">
+                                        <svg v-if="selected.includes(m.key)" class="h-2.5 w-2.5 text-white" viewBox="0 0 10 10" fill="none">
+                                            <path d="M1.5 5.5L4 8L8.5 2.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                                        </svg>
+                                    </span>
+                                    <span class="text-sm font-medium">{{ m.name }}</span>
+                                </span>
+                                <span class="font-mono text-xs text-ink-faint">
+                                    {{ m.price_cents === 0 ? 'included' : euro(m.price_cents) }}
+                                </span>
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </Reveal>
             </div>
 
-            <aside class="lg:sticky lg:top-24 h-fit rounded-2xl border border-slate-200 p-6 shadow-sm">
-                <h3 class="font-semibold">Your estimate</h3>
-                <label class="mt-4 block text-sm text-slate-600">
-                    Team size: <span class="font-semibold text-slate-900">{{ users }}</span>
-                    <input v-model.number="users" type="range" min="10" max="500" step="10" class="mt-2 w-full accent-sky-500" />
-                </label>
-                <div class="mt-6 border-t border-slate-100 pt-4">
-                    <div class="flex justify-between text-sm text-slate-600">
-                        <span>Base platform</span><span>{{ euro(base_price_cents) }}/user</span>
+            <!-- Live invoice -->
+            <aside class="lg:sticky lg:top-24">
+                <div class="rounded-2xl border border-line bg-white shadow-[0_1px_2px_rgba(17,24,39,0.04)]">
+                    <div class="border-b border-line px-6 py-4">
+                        <h3 class="font-semibold">Your monthly invoice</h3>
                     </div>
-                    <div class="flex justify-between text-sm text-slate-600 mt-1">
-                        <span>{{ selected.length }} modules selected</span>
+                    <div class="px-6 py-5">
+                        <label class="block text-sm text-ink-soft">
+                            <span class="flex justify-between">
+                                <span>Team size</span>
+                                <span class="font-mono font-semibold text-ink">{{ users }} people</span>
+                            </span>
+                            <input v-model.number="users" type="range" min="10" max="500" step="5"
+                                class="mt-3 w-full accent-[#4f46e5]" />
+                        </label>
+
+                        <dl class="mt-6 space-y-1.5 font-mono text-[13px]">
+                            <div class="flex justify-between text-ink-soft">
+                                <dt>Base platform</dt>
+                                <dd>{{ euro(base_price_cents) }}</dd>
+                            </div>
+                            <div v-for="m in chosenModules.filter((m) => m.price_cents > 0)" :key="m.key"
+                                class="flex justify-between text-ink-soft">
+                                <dt class="truncate pr-4">{{ m.name }}</dt>
+                                <dd>{{ euro(m.price_cents) }}</dd>
+                            </div>
+                            <div class="flex justify-between border-t border-line pt-2 font-semibold text-ink">
+                                <dt>Per user</dt>
+                                <dd>{{ euro(perUserCents) }}</dd>
+                            </div>
+                        </dl>
+
+                        <div class="mt-6 rounded-xl bg-paper-deep px-5 py-4">
+                            <div class="text-sm text-ink-soft">{{ euro(perUserCents) }} × {{ users }} users</div>
+                            <div class="mt-1 text-3xl font-bold tracking-tight">
+                                {{ euroShort(monthlyCents) }}<span class="text-base font-normal text-ink-faint">/month</span>
+                            </div>
+                        </div>
+
+                        <Link href="/contact"
+                            class="mt-5 block rounded-full bg-ink px-6 py-3 text-center font-semibold text-white hover:bg-accent transition ease-out duration-150">
+                            Talk to us
+                        </Link>
+                        <p class="mt-3 text-center text-xs text-ink-faint">Change modules any month. No contracts.</p>
                     </div>
-                    <div class="mt-4 text-3xl font-bold">{{ euro(monthlyCents) }}<span class="text-base font-normal text-slate-500">/month</span></div>
                 </div>
             </aside>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="border-t border-line bg-white">
+        <div class="mx-auto max-w-3xl px-6 py-20">
+            <h2 class="text-2xl font-bold tracking-display">Fair print</h2>
+            <dl class="mt-8 divide-y divide-line">
+                <div class="py-5">
+                    <dt class="font-semibold">What happens when I deactivate a module?</dt>
+                    <dd class="mt-1.5 text-sm text-ink-soft leading-relaxed">
+                        Billing stops at the end of the month. Your data stays — reactivate and pick up where you left off, or export it.
+                    </dd>
+                </div>
+                <div class="py-5">
+                    <dt class="font-semibold">Do prices change as we grow?</dt>
+                    <dd class="mt-1.5 text-sm text-ink-soft leading-relaxed">
+                        The per-module price stays the same at 50 or 500 users. You pay for more seats, not a higher tier.
+                    </dd>
+                </div>
+                <div class="py-5">
+                    <dt class="font-semibold">Can we take our data out?</dt>
+                    <dd class="mt-1.5 text-sm text-ink-soft leading-relaxed">
+                        Yes — full export, any day, no exit fee. Data portability is a baseline feature, not an enterprise add-on.
+                    </dd>
+                </div>
+            </dl>
         </div>
     </section>
 </template>

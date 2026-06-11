@@ -6,7 +6,7 @@ color: "#FBBF24"
 
 # Public Frontend — Vue 3 + Inertia
 
-> **Build status (2026-06-11)**: v1 SHIPPED — marketing pages (home, pricing calculator from module catalog, features, about, contact w/ honeypot, terms, privacy) + auth (Vue login w/ session regen, invite-accept registration replacing the Blade page, forgot/reset password w/o enumeration). Blog + portals = Phase 2. Inertia progress bar off — skeletons carry loading state (perceived-performance).
+> **Build status (2026-06-11, revamped same day)**: v1 SHIPPED + full design revamp. Brand-true design system per [[../product/brand]]: ink #111827 / warm paper #FBFAF8 / single indigo accent #4F46E5, editorial numbered sections, mono accents for figures, animated flow-line motif, scroll-reveal (ease-out, reduced-motion safe). Logo SVGs created at the brand.md paths (icon = flow-loop F; favicon = SVG, PNG deferred — no image tooling in env). Pages: home (problem stats, interactive flex demo, dark Flow section w/ real event chains, coverage grid), pricing ("build your invoice" live calculator + fair-print FAQ), product (per-domain stories + what-flows lists), about (values + is/isn't), contact (split layout), legal. Auth = split-screen AuthLayout (dark brand panel). Copy follows brand voice: sentence case, no exclamation marks, "you/your". Blog + portals = Phase 2.
 
 The public-facing side of FlowFlex. Separate from Filament panels — custom design, SEO, external users.
 

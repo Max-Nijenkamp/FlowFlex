@@ -23,6 +23,20 @@ it('serves every marketing page as an Inertia response', function (string $path,
     ['/privacy', 'Marketing/Privacy'],
 ]);
 
+it('shares live module data with the homepage', function () {
+    $this->get('/')->assertInertia(fn ($page) => $page
+        ->component('Marketing/Home')
+        ->has('domains')
+        ->has('module_count')
+        ->has('sample_modules'));
+});
+
+it('shares per-domain flows with the product page', function () {
+    $this->get('/features')->assertInertia(fn ($page) => $page
+        ->component('Marketing/Features')
+        ->has('domains.0.flows'));
+});
+
 it('shares the module catalog with the pricing calculator', function () {
     $this->get('/pricing')->assertInertia(fn ($page) => $page
         ->component('Marketing/Pricing')

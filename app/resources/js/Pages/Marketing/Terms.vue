@@ -8,7 +8,11 @@ defineProps<{ content: string }>()
 
 <template>
     <section class="mx-auto max-w-3xl px-6 py-20">
-        <h1 class="text-4xl font-bold">Terms of service</h1>
-        <div class="prose prose-slate mt-8" v-text="content"></div>
+        <p class="section-index">LEGAL</p>
+        <h1 class="mt-4 text-4xl font-bold tracking-display">Terms of service</h1>
+        <p class="mt-2 text-sm text-ink-faint">Last updated 11 June 2026</p>
+        <div class="mt-10 space-y-5 text-ink-soft leading-relaxed border-t border-line pt-8">
+            <p>{{ content }}</p>
+        </div>
     </section>
 </template>

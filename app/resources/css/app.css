@@ -4,7 +4,62 @@
 @source '../../storage/framework/views/*.php';
 @source '../js/**/*.vue';
 
+/* ── FlowFlex public-site design tokens (product/brand.md) ──
+   Ink + paper + one indigo accent. Clean, spacious, confident.
+   No gradients-on-everything, no glassmorphism — editorial SaaS. */
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+    /* Brand */
+    --color-ink: #111827; /* wordmark dark */
+    --color-ink-soft: #4b5563;
+    --color-ink-faint: #9ca3af;
+    --color-paper: #fbfaf8; /* warm off-white — not pure white */
+    --color-paper-deep: #f3f1ec;
+    --color-accent: #4f46e5; /* logo indigo — THE accent, used sparingly */
+    --color-accent-soft: #eef2ff;
+    --color-flow: #38bdf8; /* product sky — UI tint only */
+    --color-line: #e7e4dd; /* warm hairline */
+
+    --tracking-display: -0.035em;
+
+    --animate-flow-dash: flow-dash 6s linear infinite;
+}
+
+@keyframes flow-dash {
+    to {
+        stroke-dashoffset: -120;
+    }
+}
+
+/* Scroll-reveal — ease-out, start fast end slow (perceived-performance). */
+.reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+        opacity 0.5s cubic-bezier(0, 0, 0.2, 1),
+        transform 0.5s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
+
+/* Section numbering — editorial, anti-generic. */
+.section-index {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--color-accent);
 }

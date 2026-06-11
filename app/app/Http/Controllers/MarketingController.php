@@ -14,8 +14,18 @@ class MarketingController extends Controller
 {
     public function home(): Response
     {
+        $modules = collect(config('flowflex.modules'));
+
         return Inertia::render('Marketing/Home', [
             'domains' => $this->domainSummaries(),
+            'module_count' => $modules->count(),
+            'sample_modules' => $modules
+                ->map(fn (array $module, string $key) => [
+                    'key' => $key, 'name' => $module['name'], 'domain' => $module['domain'],
+                ])
+                ->filter(fn (array $m) => $m['domain'] !== 'core')
+                ->take(14)
+                ->values(),
         ]);
     }
 
@@ -75,14 +85,14 @@ class MarketingController extends Controller
     public function terms(): Response
     {
         return Inertia::render('Marketing/Terms', [
-            'content' => 'FlowFlex terms of service. Full legal copy lands before launch.', // *(assumed placeholder)*
+            'content' => 'These terms govern your use of FlowFlex. You keep ownership of your data at all times; we process it only to provide the service. Modules are billed per user per month and can be changed monthly. Full legal copy is being finalised with counsel before commercial launch.', // *(assumed placeholder)*
         ]);
     }
 
     public function privacy(): Response
     {
         return Inertia::render('Marketing/Privacy', [
-            'content' => 'FlowFlex privacy policy. Full legal copy lands before launch.', // *(assumed placeholder)*
+            'content' => 'FlowFlex is hosted in the EU and built GDPR-first: data subject access requests, consent records and erasure cascades are product features, not paperwork. We never sell data and collect only what the service needs. Full policy is being finalised with counsel before commercial launch.', // *(assumed placeholder)*
         ]);
     }
 
@@ -99,14 +109,31 @@ class MarketingController extends Controller
             ->all();
     }
 
-    /** @return array<int, array{name: string, description: string, modules: array<int, mixed>}> */
+    /** @return array<int, array{name: string, description: string, modules: array<int, mixed>, flows: array<int, string>}> */
     private function domainFeatures(): array
     {
         $descriptions = [
-            'core' => 'The platform layer: billing, roles, audit, files, API and more.',
-            'hr' => 'From hiring to payroll — the full employee lifecycle.',
-            'finance' => 'Ledger-first accounting with invoicing, AP/AR and reporting.',
-            'crm' => 'Pipeline, sequences, scheduling and revenue intelligence.',
+            'core' => 'The platform layer every module stands on: billing, roles and permissions, audit log, file storage, imports, webhooks and a full REST API.',
+            'hr' => 'The full employee lifecycle — recruit on your own careers page, onboard with checklists, track leave and time, run payroll, review performance.',
+            'finance' => 'Ledger-first accounting. Send invoices, manage bills and budgets, watch 13 weeks of cash, close the books with reports that always balance.',
+            'crm' => 'From first touch to signed contract — pipeline, quotes, sequences, scheduling, deal rooms and revenue intelligence that tells you which deals are slipping.',
+        ];
+
+        $flows = [
+            'hr' => [
+                'Offer accepted — the salary lands in the next payroll run',
+                'Leave approved — shifts unassign and coverage gaps get flagged',
+                'Payroll approved — wages post straight to the general ledger',
+            ],
+            'finance' => [
+                'Invoice paid — the customer\'s lifetime value updates in CRM',
+                'Expense approved — the cost posts to the right ledger account',
+            ],
+            'crm' => [
+                'Deal won — a draft invoice appears in Finance with the deal value',
+                'Quote accepted — the deal moves and the paperwork starts itself',
+            ],
+            'core' => [],
         ];
 
         return collect(config('flowflex.modules'))
@@ -115,6 +142,7 @@ class MarketingController extends Controller
                 'name' => ucfirst($domain === 'hr' ? 'HR & People' : ($domain === 'crm' ? 'CRM & Sales' : ($domain === 'core' ? 'Core Platform' : 'Finance & Accounting'))),
                 'description' => $descriptions[$domain] ?? '',
                 'modules' => $modules->pluck('name')->all(),
+                'flows' => $flows[$domain] ?? [],
             ])
             ->values()
             ->all();
