@@ -13,8 +13,8 @@ consumes-events: []
 patterns: [states, service, custom-pages, email]
 tables: [hr_job_requisitions, hr_applicants, hr_interviews, hr_offers]
 permission-prefix: hr.recruitment
-encrypted-fields: []
-last-reviewed: 2026-06-10
+encrypted-fields: ["hr_offers.salary_raw"]
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -95,7 +95,7 @@ Job requisitions, applicant tracking pipeline, interview scheduling, and offer m
 | Column | Type | Notes |
 |---|---|---|
 | id, company_id, applicant_id FK | ulid | |
-| salary_cents | bigint | |
+| 🔐 salary_raw | text | encrypted cast — minor-unit integer stored as encrypted string (brick/money for arithmetic); mirrors hr.payroll/hr.compensation. See [[architecture/patterns/encryption]] |
 | currency | string(3) | |
 | start_date | date | |
 | status | string default `draft` | draft / sent / accepted / declined |

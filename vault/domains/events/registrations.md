@@ -13,7 +13,7 @@ consumes-events: []
 patterns: [states, events, custom-pages]
 tables: [ev_registrations]
 permission-prefix: events.registrations
-encrypted-fields: []
+encrypted-fields: ["ev_registrations.attendee_name", "ev_registrations.attendee_email", "ev_registrations.custom_answers"]
 last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
@@ -57,11 +57,12 @@ Attendee registration: public sign-up, capacity enforcement, waitlist, confirmat
 | Column | Type | Notes |
 |---|---|---|
 | id, company_id (indexed), event_id FK | ulid | |
-| attendee_name / attendee_email | string | unique `(event_id, attendee_email)` |
+| 🔐 attendee_name / 🔐 attendee_email | text | encrypted cast — external attendee PII |
+| attendee_email_hash | string | indexed; sha256(attendee_email) — backs unique `(event_id, attendee_email_hash)` since encrypted attendee_email isn't queryable |
 | contact_id | ulid nullable | CRM link |
 | ticket_id | ulid nullable | paid path |
 | status | string default `registered` | state machine + waitlisted |
-| custom_answers | jsonb | per event questions |
+| 🔐 custom_answers | text | encrypted cast — per-event answers may hold PII; structured shape decoded app-side, never raw jsonb |
 | qr_code | uuid unique | check-in token |
 | registered_at / checked_in_at | timestamp | |
 

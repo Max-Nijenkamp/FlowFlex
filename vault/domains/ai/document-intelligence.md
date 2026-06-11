@@ -13,8 +13,8 @@ consumes-events: []
 patterns: [queues]
 tables: [ai_extractions]
 permission-prefix: ai.document-intelligence
-encrypted-fields: []
-last-reviewed: 2026-06-10
+encrypted-fields: ["ai_extractions.extracted_data"]
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -57,7 +57,7 @@ Extract structured data from documents (invoices, receipts, CVs) using OCR + LLM
 | document_media_id | ulid FK media | tenant-scoped upload |
 | document_type | string | invoice / receipt / cv |
 | status | string default `processing` | processing / extracted / reviewed / applied / failed |
-| extracted_data | jsonb | schema per type |
+| 🔐 extracted_data | text | encrypted cast — holds parsed PII/bank data (IBAN/BIC, DOB, gov IDs, personal email); stored as encrypted text, structured shape (schema per type) decoded app-side, never raw jsonb. See [[architecture/patterns/encryption]] |
 | confidence | jsonb | per field 0–1 |
 | target_record_type / target_record_id | string / ulid nullable | applied link |
 | reviewed_by | ulid nullable | |

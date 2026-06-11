@@ -13,8 +13,8 @@ consumes-events: []
 patterns: [encryption, queues]
 tables: [comms_whatsapp_templates, comms_whatsapp_config]
 permission-prefix: comms.whatsapp
-encrypted-fields: ["comms_whatsapp_config.api_key"]
-last-reviewed: 2026-06-10
+encrypted-fields: ["comms_whatsapp_config.api_key", "comms_whatsapp_config.webhook_secret"]
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -61,7 +61,7 @@ WhatsApp Business API channel — send and receive WhatsApp messages, manage app
 | provider | string | 360dialog / twilio / meta |
 | 🔐 api_key | text | encrypted |
 | business_account_id | string | |
-| webhook_secret | string | verify token |
+| 🔐 webhook_secret | text | encrypted cast — provider verify token |
 
 ### comms_whatsapp_templates
 

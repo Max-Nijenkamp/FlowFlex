@@ -23,6 +23,7 @@ Architectural decisions made during the build. One file per decision.
 | 2026-06-01 | [[build/decisions/decision-2026-06-01-panel-consolidation\|Panel consolidation: Procurement→Operations, CS→CRM (21→19 panels)]] | decided | Operations, CRM |
 | 2026-06-10 | [[build/decisions/decision-2026-06-10-no-public-registration\|No public self-registration — invite-only, staff-created companies]] | decided | Core / Foundation |
 | 2026-06-10 | [[build/decisions/decision-2026-06-10-all-filament-hybrid-ui\|All-Filament hybrid UI: Filament inside panels, Vue+Inertia outside]] | decided | All |
+| 2026-06-11 | [[build/decisions/decision-2026-06-11-security-contract-hardening\|Security contract hardening: mandatory canAccess(), webhook verification, guest guards, encrypted PII]] | decided | All |
 
 ---
 

@@ -2,7 +2,7 @@
 type: meta
 category: template
 status: stable
-last-reviewed: 2026-06-10
+last-reviewed: 2026-06-11
 color: "#6B7280"
 ---
 
@@ -106,6 +106,8 @@ Listener: `{Name}Listener` — queued, `WithCompanyContext`; behavior + defaults
 | `DealResource` | #1 CRUD resource | list filters: stage, owner |
 | `PipelineBoardPage` | #3 Kanban custom page | Reverb broadcast |
 
+**Access contract (mandatory):** every artifact above gates on `canAccess() = Auth::user()->can('{permission}') && BillingService::hasModule('{module-key}')` per [[architecture/filament-patterns]] #1. Custom pages MUST state it explicitly — Filament does not auto-gate them. Public/portal/unauthenticated surfaces instead declare their guest or scoped-portal guard + signed/single-use token semantics (these are Vue+Inertia per [[architecture/ui-strategy]], not Filament).
+
 ## Permissions                                                          [M]
 `crm.deals.view-any` · `.view` · `.create` · `.update` · `.delete` · `.{custom-verb}`
 Seeded in `PermissionSeeder`.
@@ -159,7 +161,9 @@ tests/Feature/CRM/DealTest.php
 
 **Event payloads** — copied character-exact from the listener contracts in [[architecture/event-bus]]. Never paraphrase a payload.
 
-**Money/phone/encryption** — minor-unit integers + brick/money; E.164; encrypted casts on `text` columns per [[architecture/patterns/encryption]]. Flag encrypted columns with 🔐 in Data Model AND list them in `encrypted-fields` frontmatter.
+**Money/phone/encryption** — minor-unit integers + brick/money; E.164; encrypted casts on `text` columns per [[architecture/patterns/encryption]]. Flag encrypted columns with 🔐 in Data Model AND list them in `encrypted-fields` frontmatter. Any column holding external-person PII (name/email/DOB), national/government IDs, salary/compensation, IBAN/BIC/bank, or provider secrets/tokens MUST be encrypted. A queryable encrypted field (e.g. unique email) gets a deterministic `*_hash` (sha256, indexed) companion column for lookups/uniqueness.
+
+**Security contract** (per [[build/decisions/decision-2026-06-11-security-contract-hardening]]) — every spec must state: (1) the `## Filament` access contract (above); (2) signature **verification as a requirement** — never `*(assumed)*` — for any inbound webhook, naming the mechanism + secret source; (3) a cited rate limiter on exports, bulk ops, public token endpoints, and webhooks; (4) file uploads restate the type-whitelist + max-size + `companies/{id}/` path contract, not just a generic "core.files" delegation; (5) Tiptap/rich-text fields note HTMLPurifier before storage. These are checked at `/flowflex:start` and at review.
 
 ---
 

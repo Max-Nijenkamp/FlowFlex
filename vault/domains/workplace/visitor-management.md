@@ -13,7 +13,7 @@ consumes-events: []
 patterns: [pdf, gdpr, custom-pages]
 tables: [wp_visitors]
 permission-prefix: workplace.visitors
-encrypted-fields: []
+encrypted-fields: ["wp_visitors.name", "wp_visitors.email"]
 last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
@@ -54,7 +54,8 @@ Register and track office visitors: pre-registration, check-in/out, host notific
 | Column | Type | Notes |
 |---|---|---|
 | id, company_id (indexed) | ulid | |
-| name / company_name / email | string | email nullable |
+| 🔐 name / 🔐 email | text | encrypted cast — external visitor PII (email nullable) |
+| company_name | string | |
 | host_employee_id | ulid FK | |
 | expected_at | timestamp | |
 | checked_in_at / checked_out_at | timestamp nullable | |

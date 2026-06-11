@@ -13,8 +13,8 @@ consumes-events: [DSARRequestSubmitted]
 patterns: [gdpr, events]
 tables: [legal_dsar_actions]
 permission-prefix: legal.dsar
-encrypted-fields: []
-last-reviewed: 2026-06-10
+encrypted-fields: ["legal_dsar_actions.notes"]
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -56,7 +56,7 @@ Legal workflow layer over [[domains/core/data-privacy|core.privacy]] DSARs: iden
 | dsar_request_id | ulid FK dsar_requests | core.privacy table |
 | action | string | verified / discovery-run / export-delivered / erasure-run / rectified / rejected |
 | domain | string nullable | per-domain steps |
-| notes | text nullable | required for rejected/rectified |
+| 🔐 notes | text nullable | encrypted cast — may reference data-subject PII; required for rejected/rectified |
 | performed_by | ulid FK users | |
 | performed_at | timestamp | |
 

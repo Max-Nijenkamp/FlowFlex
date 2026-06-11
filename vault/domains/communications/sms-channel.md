@@ -13,8 +13,8 @@ consumes-events: []
 patterns: [encryption, money]
 tables: [comms_sms_config, comms_sms_optouts]
 permission-prefix: comms.sms
-encrypted-fields: ["comms_sms_config.api_key", "comms_sms_config.api_secret"]
-last-reviewed: 2026-06-10
+encrypted-fields: ["comms_sms_config.api_key", "comms_sms_config.api_secret", "comms_sms_config.webhook_secret"]
+last-reviewed: 2026-06-11
 color: "#4ADE80"
 ---
 
@@ -57,7 +57,7 @@ Send and receive SMS via Twilio or Vonage. Inbound SMS lands in the shared inbox
 | provider | string | twilio / vonage |
 | virtual_number_e164 | string | |
 | 🔐 api_key / 🔐 api_secret | text | encrypted |
-| webhook_secret | string | callback verification |
+| 🔐 webhook_secret | text | encrypted cast — callback verification |
 
 ### comms_sms_optouts — id, company_id (indexed), phone_e164 (unique per company), opted_out_at
 

@@ -37,6 +37,8 @@ public static function canAccess(): bool
 
 If `canAccess()` is omitted, the resource is visible to every authenticated user regardless of role or module subscription. This is a security defect and UX defect simultaneously.
 
+**Spec-level requirement** (per [[build/decisions/decision-2026-06-11-security-contract-hardening]]): every module spec's `## Filament` section must declare this access contract for each artifact — `permission + BillingService::hasModule(module-key)`. Custom pages (Kanban, dashboards, builders, kiosks, wizards) are the highest risk: Filament auto-registers their routes but does **not** auto-gate them, so a missing `canAccess()` exposes the URL to any authenticated user. The 2026-06-11 audit ([[build/security-audit-2026-06-11]]) found this missing on ~100+ artifacts across all 31 domains — it is the #1 systemic gap. Verify at `/flowflex:start` and before `/flowflex:done`.
+
 ---
 
 ## 2. $view Property — Non-Static on Custom Pages
