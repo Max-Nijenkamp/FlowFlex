@@ -25,11 +25,12 @@ function submit() {
                 autocomplete="email" placeholder="you@company.com" :invalid="!!form.errors.email" />
         </FormField>
         <FormField label="Password" for="password">
-            <template #corner>
-                <Link href="/forgot-password" class="text-[13px] font-medium text-accent hover:underline">Forgot it?</Link>
-            </template>
             <TextInput id="password" v-model="form.password" type="password" required
                 autocomplete="current-password" placeholder="••••••••••••" />
+            <!-- Below the input so tabbing goes email → password directly. -->
+            <div class="mt-1.5 text-right">
+                <Link href="/forgot-password" class="text-[13px] font-medium text-accent hover:underline">Forgot it?</Link>
+            </div>
         </FormField>
         <CheckboxInput v-model="form.remember" label="Keep me signed in" />
         <BaseButton type="submit" size="lg" class="w-full" :loading="form.processing">

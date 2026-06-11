@@ -214,7 +214,7 @@
     color: #111827;
 }
 
-/* Brand mark above the card (SIMPLE_PAGE_START hook); in-card logo hidden. */
+/* Brand mark above the card (SIMPLE_LAYOUT_START hook); in-card logo hidden. */
 .ff-login-mark-link {
     display: block;
     margin-bottom: 2rem;
@@ -229,6 +229,31 @@
 
 .fi-simple-main .fi-logo {
     display: none;
+}
+
+/* Hooks render at SIMPLE_LAYOUT level (outside the card) — center
+   mark + card + footer as one group, like the public login. */
+.fi-simple-layout {
+    justify-content: center;
+    padding: 4rem 1.5rem;
+}
+
+.fi-simple-main-ctn {
+    flex-grow: 0;
+}
+
+.fi-simple-main {
+    margin-block: 0;
+}
+
+/* Forgot-password link below the password input, right-aligned. */
+.ff-login-forgot {
+    margin-top: 0.125rem;
+    text-align: right;
+}
+
+.ff-login-forgot .fi-link {
+    font-size: 0.8125rem;
 }
 
 .fi-simple-header {
@@ -257,4 +282,21 @@
 
 .dark .fi-simple-main .fi-btn.fi-color-primary {
     background-color: #4f46e5;
+}
+
+
+/* Forms without a Section component: card the schema container so fields
+   don't float pale on the canvas (founder UX rule 2026-06-11). Scoped to
+   .fi-main so auth cards and teleported modals don't double-card. */
+.fi-main .fi-sc-form > .fi-sc:not(:has(.fi-section)) {
+    border-radius: 1rem;
+    border: 1px solid #e7e4dd;
+    background-color: #ffffff;
+    padding: 1.5rem;
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
+}
+
+.dark .fi-main .fi-sc-form > .fi-sc:not(:has(.fi-section)) {
+    border-color: rgb(51 65 85);
+    background-color: rgb(30 41 59);
 }

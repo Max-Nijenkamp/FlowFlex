@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Pages;
 
-use Filament\Auth\Pages\Login;
+use App\Filament\Auth\PanelLogin;
 
 /** Staff console login — same Filament login, clearly labelled. */
-class AdminLogin extends Login
+class AdminLogin extends PanelLogin
 {
     public function getHeading(): string
     {

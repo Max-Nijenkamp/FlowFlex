@@ -16,7 +16,12 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            'auth' => [
+            // Lazy closure — MUST not run eagerly. share() executes inside the
+            // global web group, which also wraps Filament's Livewire update
+            // route. Eager getAllPermissions() there ran before the tenant
+            // team id was set, caching an EMPTY roles relation on the user and
+            // 403ing every later permission check in the same request.
+            'auth' => fn (): array => [
                 'user' => $request->user() !== null ? [
                     'id' => $request->user()->id,
                     'name' => $request->user()->full_name,

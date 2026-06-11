@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('email');
             $table->uuid('token')->unique(); // single-use, 7-day expiry — not hashed
             $table->string('role');
-            $table->foreignUlid('invited_by')->constrained('users')->cascadeOnDelete();
+            // Nullable: staff-provisioned owner invites are sent from /admin where
+            // no tenant user exists yet (core.staff-console).
+            $table->foreignUlid('invited_by')->nullable()->constrained('users')->cascadeOnDelete();
             $table->timestamp('accepted_at')->nullable();
             $table->timestamp('revoked_at')->nullable();
             $table->timestamp('expires_at');

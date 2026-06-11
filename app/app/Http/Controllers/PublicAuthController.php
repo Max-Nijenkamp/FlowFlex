@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class PublicAuthController extends Controller
 {
@@ -19,7 +20,7 @@ class PublicAuthController extends Controller
         return Inertia::render('Auth/Login');
     }
 
-    public function login(Request $request): RedirectResponse
+    public function login(Request $request): SymfonyResponse
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -33,7 +34,10 @@ class PublicAuthController extends Controller
         $request->session()->regenerate(); // session fixation guard (security.md)
         Auth::guard('web')->user()->forceFill(['last_login_at' => now()])->save();
 
-        return redirect()->intended('/app');
+        // The panel is a non-Inertia page: a plain redirect would be followed
+        // by Inertia's XHR and rendered as a modal. location() forces a
+        // full-page visit (409 + X-Inertia-Location for XHR, 302 otherwise).
+        return Inertia::location($request->session()->pull('url.intended', '/app'));
     }
 
     public function logout(Request $request): RedirectResponse

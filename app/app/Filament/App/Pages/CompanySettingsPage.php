@@ -49,7 +49,10 @@ class CompanySettingsPage extends Page
 
     public static function canAccess(): bool
     {
+        // Owner-only: company-wide settings (founder decision 2026-06-11) —
+        // permission alone is not enough.
         return Auth::guard('web')->check()
+            && Auth::guard('web')->user()->hasRole('owner')
             && Auth::guard('web')->user()->can('core.settings.update')
             && app(BillingServiceInterface::class)->hasModule('core.settings');
     }

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Filament\Auth\PanelLogin;
 use App\Http\Middleware\EnsureSubscriptionActive;
 use App\Http\Middleware\RedirectToSetupWizard;
 use App\Http\Middleware\SetCompanyContext;
 use App\Http\Middleware\SetLocale;
 use App\Models\User;
+use App\Support\Filament\PanelSwitchItems;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
@@ -38,7 +40,8 @@ class AppPanelProvider extends PanelProvider
         return $panel
             ->id('app')
             ->path('app')
-            ->login()
+            ->login(PanelLogin::class)
+            ->passwordReset() // forgot-password flow inside the workspace panel
             ->emailVerification() // no portal access without verified email (security.md)
             ->multiFactorAuthentication(AppAuthentication::make()->recoverable()) // self-service TOTP 2FA
             ->profile(isSimple: false)
@@ -56,6 +59,8 @@ class AppPanelProvider extends PanelProvider
             ->font('Inter')
             ->defaultThemeMode(ThemeMode::System)
             ->sidebarCollapsibleOnDesktop()
+            ->userMenuItems(PanelSwitchItems::make('app')) // cross-panel switcher
+            ->globalSearchKeyBindings(['mod+k'])
             ->viteTheme('resources/css/filament/app/theme.css')
             ->databaseNotifications() // bell + inbox (ui-strategy row #10; Reverb later)
             ->databaseNotificationsPolling('30s')
@@ -81,6 +86,6 @@ class AppPanelProvider extends PanelProvider
                 SetLocale::class,        // locale from settings — needs context first
                 EnsureSubscriptionActive::class, // suspended companies blocked
                 RedirectToSetupWizard::class, // owners with incomplete setup → wizard
-            ]);
+            ], isPersistent: true); // Livewire update POSTs must re-run these — deferred tables/actions 403 without tenant context
     }
 }

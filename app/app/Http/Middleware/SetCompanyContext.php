@@ -25,6 +25,13 @@ class SetCompanyContext
             $company = $user->company;
             app(CompanyContext::class)->set($company);
             setPermissionsTeamId($company->id);
+
+            // Anything that touched roles/permissions BEFORE the team id was
+            // set (e.g. shared props in the global web group) cached them
+            // empty — spatie's loadMissing() would keep that empty set for
+            // the whole request. Force a team-scoped reload.
+            $user->unsetRelation('roles');
+            $user->unsetRelation('permissions');
         }
 
         return $next($request);

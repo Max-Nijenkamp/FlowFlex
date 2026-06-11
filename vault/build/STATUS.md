@@ -17,7 +17,7 @@ Per-domain progress. Update `status` frontmatter in module specs — this table 
 | Phase | Domain | Built | Total | Progress |
 |---|---|---|---|---|
 | MVP | Foundation | 8 | 8 | 🟢 100% |
-| MVP | Core Platform | 15 | 15 | 🟢 100% |
+| MVP | Core Platform | 16 | 16 | 🟢 100% |
 | MVP | HR & People | 15 | 15 | 🟢 100% |
 | MVP | Finance & Accounting | 13 | 13 | 🟢 100% |
 | MVP | CRM & Sales | 15 | 15 | 🟢 100% |
@@ -39,10 +39,10 @@ Per-domain progress. Update `status` frontmatter in module specs — this table 
 | Phase 3 | Events Management | 0 | 7 | 🔴 0% |
 | Deferred | (10 domains) | — | — | stub only |
 
-**MVP Total: 66 / 66 modules built** 🎉 MVP GATE: ALL DOMAIN MODULES BUILT (public site = last piece) (Foundation + Core complete; HR/Finance/CRM MVP-gate path built — company can be onboarded, manage employees, send invoices, run a pipeline = SELLABLE)
+**MVP Total: 67 / 67 modules built** 🎉 MVP GATE: ALL DOMAIN MODULES BUILT incl. core.staff-console (staff can now actually onboard companies in /admin) (Foundation + Core complete; HR/Finance/CRM MVP-gate path built — company can be onboarded, manage employees, send invoices, run a pipeline = SELLABLE)
 **Phase 2 Total: 0 / 32 modules built**
 **Phase 3 Total: 0 / 75 modules built**
-**All active: 66 / 173 modules — every Phase 1/2/3 module is fully specced**
+**All active: 67 / 174 modules — every Phase 1/2/3 module is fully specced**
 
 ---
 
@@ -110,6 +110,11 @@ SORT module-key ASC
 | 2026-06-11 | Frontend | domain pages + demo seeds + SEO | ✅ /product/{hr,finance,crm,core} pages (breadcrumb, module grid w/ prices, flows, CTA to all modules + pricing deep-link ?domain= opens that accordion); nav dropdown now lands on domain pages; Features sections link through. Core page synthesized from ModuleCatalog::FREE_CORE (included in base). Seeds: test@test.nl/test1234 as super-admin AND demo-company user w/ owner role (all 211 perms, 59 active modules). SEO: per-page Inertia Head meta, sitemap.xml route, robots.txt (panels disallowed), Inertia prefetch on product/pricing links. Pest 235/235 |
 | 2026-06-11 | Panels | login parity + asset fix follow-up | ✅ Filament auth pages styled as the public login (paper canvas, 420px card w/ entrance, constrained mark, footer strip via SIMPLE_PAGE_END render hook — all 5 themes); /admin labelled 'Staff console'. Pest 235/235 |
 | 2026-06-11 | Platform | docker login fix + auth polish | ✅ test@test.nl login fixed: docker pgsql DB was never seeded AND pgsql rejected 3 self-referencing FKs declared inside Schema::create (sqlite tolerated them) — moved to post-create alters, container migrate:fresh+seed clean, both guards verified. Auth polish: panel logins get the mark above the card (SIMPLE_PAGE_START hook, in-card logo hidden), centered headings, submit button = public-login ink pill (indigo hover, press scale) across 5 themes; customer auth headings centered. Pest 235/235 |
+| 2026-06-11 | Platform | login UX fixes (browser verify) | ✅ 3 browser-found bugs: (1) public login forgot-link moved below password input — tab now goes email→password direct; (2) post-login Inertia modal fixed — `Inertia::location(url.intended)` full-page visit into Filament /app instead of XHR-followed redirect; (3) panel logins: `passwordReset()` enabled on /admin + /app, shared `PanelLogin` puts forgot-link below password (hint removed), brand mark + footer moved SIMPLE_PAGE_* → SIMPLE_LAYOUT_* hooks (mark now truly above card), 5 themes center mark+card+footer as one group. Verified live in docker (DOM order). Pest 235/235, PHPStan 0, Pint clean |
+| 2026-06-11 | Platform | admin MFA contract fix | ✅ /admin login 500 (LogicException): panel MFA enabled on both panels but Admin model lacked HasAppAuthentication contracts + columns — implemented both contracts (encrypted secret/recovery casts), admins migration added, docker migrated. Blind spot closed: first Livewire authenticate() submit tests for AdminLogin + PanelLogin in PanelAuthTest. Gap [[gap-admin-mfa-contract-missing]] (resolved). Pest 237/237, PHPStan 0 |
+| 2026-06-11 | Core | core.staff-console NEW | ✅ Staff console built (gap: /admin was empty after full MVP — never specced). CompanyResource (onboard flow: ProvisionCompanyAction = company + owner role all-perms + free-core + owner invite w/ invited_by NULL; suspend/reactivate; Modules/Invoices/Users relation managers w/ activate/deactivate via context-wrapped BillingService), read-only BillingInvoiceResource, PlatformStatsWidget (companies, revenue this month, outstanding, MRR estimate), 12-mo RevenueChartWidget (PHP date grouping — driver-safe). Also: notifications.data text→jsonb (pgsql bell crash, [[gap-notifications-data-text-pgsql]]); stale spatie permission cache in docker Redis caused tenant 403s — permission:cache-reset fixed; panel switcher in user menu (4 tenant panels, canAccessPanel-gated) + cmd-K global search keybinding. Demo seeder: 3 months billing history. Pest 242/242, PHPStan 0, Pint clean |
+| 2026-06-11 | Core+Platform | staff console v2 + Livewire-403 root cause | ✅ ROOT CAUSE of recurring tenant 403s: Filament authMiddleware NOT persistent → Livewire update POSTs (deferred tables, actions) skipped SetCompanyContext → no team id → can()+hasModule() false → 403 modal on nearly every /app page. Fixed: `isPersistent: true` on all 5 panels + regression test asserting SetCompanyContext in Livewire persistent middleware. Staff console expanded: AdminResource (staff CRUD, self/last-admin delete guard), UserResource (cross-company read-only + verified/2FA/company filters), ActivityResource (cross-company audit trail), SystemHealthWidget (spatie health results), Laravel Pulse set up (config+migrations+viewPulse gate=staff) + Horizon/Pulse nav links in Monitoring group. Pest 247/247, PHPStan 0, Pint clean, docker migrated + health:check run |
+| 2026-06-11 | Core+Platform | TRUE 403 root cause + owner-only + console UX | ✅ 403 FINALLY dead, verified w/ real scripted Livewire update POSTs (200 on data-imports/api-clients/webhooks): HandleInertiaRequests::share() eagerly called getAllPermissions() inside global web group (wraps Filament's Livewire route) BEFORE team id set → spatie cached EMPTY roles for the request. Fix: lazy `auth` share closure + SetCompanyContext unsets stale roles/permissions relations. Owner-only ADR: settings + marketplace pages require hasRole('owner') (+perm +module), tested both ways. Staff console: Invite-user (any company role) + Make-owner actions on company Users tab, RunsInCompanyContext trait, Section-wrapped forms (Company/Onboard/Staff). All 5 themes: bare forms (no Section) auto-carded via .fi-sc-form CSS — no more pale floating fields. Pest 249/249, PHPStan 0 |
 
 ---
 

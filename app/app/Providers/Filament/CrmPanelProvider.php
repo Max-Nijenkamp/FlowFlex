@@ -7,6 +7,7 @@ namespace App\Providers\Filament;
 use App\Http\Middleware\EnsureSubscriptionActive;
 use App\Http\Middleware\SetCompanyContext;
 use App\Http\Middleware\SetLocale;
+use App\Support\Filament\PanelSwitchItems;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
@@ -51,6 +52,8 @@ class CrmPanelProvider extends PanelProvider
             ->font('Inter')
             ->defaultThemeMode(ThemeMode::System)
             ->sidebarCollapsibleOnDesktop()
+            ->userMenuItems(PanelSwitchItems::make('crm')) // cross-panel switcher
+            ->globalSearchKeyBindings(['mod+k'])
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')
             ->viteTheme('resources/css/filament/crm/theme.css')
@@ -74,7 +77,7 @@ class CrmPanelProvider extends PanelProvider
                 SetCompanyContext::class,
                 SetLocale::class,
                 EnsureSubscriptionActive::class,
-            ]);
+            ], isPersistent: true); // Livewire update POSTs must re-run these — deferred tables/actions 403 without tenant context
         // Panel-level access: User::canAccessPanel requires access.crm-panel.
     }
 }

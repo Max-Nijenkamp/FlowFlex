@@ -42,7 +42,10 @@ class ModuleMarketplacePage extends Page
 
     public static function canAccess(): bool
     {
+        // Owner-only: module activation changes the company's bill (founder
+        // decision 2026-06-11) — permission alone is not enough.
         return Auth::guard('web')->check()
+            && Auth::guard('web')->user()->hasRole('owner')
             && Auth::guard('web')->user()->can('core.marketplace.view')
             && app(BillingServiceInterface::class)->hasModule('core.marketplace');
     }

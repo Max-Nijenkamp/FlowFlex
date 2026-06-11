@@ -36,6 +36,7 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | core.invitations | v1-core | foundation.panels, foundation.email, core.rbac | — | — | — | user_invitations |
 | core.billing | v1-core | foundation.panels, foundation.tenancy, foundation.queues, core.settings | core.notifications | ModuleActivated, CompanySubscriptionSuspended | — | module_catalog, company_module_subscriptions, billing_invoices, billing_invoice_lines |
 | core.marketplace | v1-core | core.billing | — | — | — | — |
+| core.staff-console | v1-core | core.billing, core.invitations | — | — | — | — (no new tables) |
 | core.audit | v1-core | foundation.panels, foundation.tenancy | — | — | — | activity_log |
 | core.notifications | v1-core | foundation.panels, foundation.email, foundation.queues | — | — | ModuleActivated, CompanySubscriptionSuspended, DSARRequestSubmitted | notifications, notification_preferences |
 | core.files | v1-core | foundation.tenancy, core.settings | — | — | — | media |

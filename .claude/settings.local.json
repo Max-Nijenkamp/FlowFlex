@@ -237,7 +237,13 @@
       "WebFetch(domain:www.notion.so)",
       "WebFetch(domain:slack.com)",
       "WebFetch(domain:id.atlassian.com)",
-      "Bash(kill %1)"
+      "Bash(kill %1)",
+      "Bash(vendor/bin/pint --dirty)",
+      "Bash(vendor/bin/phpstan analyse *)",
+      "Bash(vendor/bin/pest --parallel)",
+      "Bash(vendor/bin/pest)",
+      "Bash(sed -n '30,75p' /Users/maxnijenkamp/Documents/FlowFlex/app/app/Models/Company.php)",
+      "Bash(sed -n '55,95p' /Users/maxnijenkamp/Documents/FlowFlex/app/database/seeders/LocalDevSeeder.php)"
     ]
   },
   "enabledMcpjsonServers": [

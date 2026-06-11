@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Contracts\BillingServiceInterface;
 use App\Models\Admin;
+use App\Models\BillingInvoice;
 use App\Models\Company;
 use App\Models\CompanyModuleSubscription;
 use App\Models\CRM\Contact;
@@ -23,7 +24,9 @@ use App\Models\HR\Employee;
 use App\Models\HR\LeaveBalance;
 use App\Models\HR\LeaveType;
 use App\Models\User;
+use App\States\BillingInvoice\Paid;
 use App\Support\Services\CompanyContext;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use RuntimeException;
@@ -94,6 +97,24 @@ class LocalDevSeeder extends Seeder
             );
         }
         cache()->forget("company:{$company->id}:modules");
+
+        // --- Staff console demo data: billing history for the dashboard ---
+        $billing = app(BillingServiceInterface::class);
+        foreach ([2, 1, 0] as $monthsAgo) {
+            $invoiceData = $billing->generateMonthlyInvoice(
+                $company->id,
+                CarbonImmutable::now()->subMonths($monthsAgo),
+            );
+
+            // Older invoices paid, current month left open.
+            if ($monthsAgo > 0) {
+                $invoice = BillingInvoice::withoutGlobalScopes()->find($invoiceData->id);
+                if ($invoice !== null && ! $invoice->status->equals(Paid::class)) {
+                    $invoice->status->transitionTo(Paid::class);
+                    $invoice->forceFill(['paid_at' => now()->subMonths($monthsAgo)->endOfMonth()])->save();
+                }
+            }
+        }
 
         // --- HR demo data ---
         $engineering = Department::firstOrCreate(

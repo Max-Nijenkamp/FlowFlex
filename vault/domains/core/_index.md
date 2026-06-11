@@ -26,6 +26,7 @@ Cross-cutting features included with every FlowFlex subscription — always acti
 | [[domains/core/invitation-system\|Invitation System]] | `core.invitations` | planned | v1-core | rbac |
 | [[domains/core/billing-engine\|Billing Engine]] | `core.billing` | planned | v1-core | settings |
 | [[domains/core/module-marketplace\|Module Marketplace]] | `core.marketplace` | planned | v1-core | billing |
+| [[domains/core/staff-console\|Staff Console]] | `core.staff-console` | complete | v1-core | billing, invitations |
 | [[domains/core/audit-log\|Audit Log]] | `core.audit` | planned | v1-core | — |
 | [[domains/core/notifications\|Notifications]] | `core.notifications` | planned | v1-core | — |
 | [[domains/core/file-storage\|File Storage]] | `core.files` | planned | v1-core | settings |

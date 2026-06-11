@@ -8,6 +8,8 @@ use App\Support\Services\CompanyContext;
 use Filament\Support\Facades\FilamentView;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Health\Checks\Checks\DatabaseCheck;
 use Spatie\Health\Checks\Checks\EnvironmentCheck;
@@ -35,17 +37,23 @@ class AppServiceProvider extends ServiceProvider
         // Catch lazy-loading bugs in local dev only (kept lenient in tests + prod).
         Model::preventLazyLoading($this->app->environment('local'));
 
+        // Pulse dashboard: FlowFlex staff only (mirrors Horizon::auth).
+        Gate::define('viewPulse', fn ($user = null): bool => $this->app->environment('local')
+            || Auth::guard('admin')->check());
+
         // Panel auth pages: brand mark above the card (public-login parity).
+        // SIMPLE_LAYOUT_START renders outside fi-simple-main — SIMPLE_PAGE_START
+        // sits inside the card, which put the mark in the container.
         FilamentView::registerRenderHook(
-            PanelsRenderHook::SIMPLE_PAGE_START,
+            PanelsRenderHook::SIMPLE_LAYOUT_START,
             fn (): string => '<a href="'.url('/').'" class="ff-login-mark-link">'
                 .'<img src="'.asset('images/logo/flowflex-icon.svg').'" alt="FlowFlex" class="ff-login-mark" />'
                 .'</a>',
         );
 
-        // Panel auth pages: footer strip matching the public Vue login.
+        // Panel auth pages: footer strip matching the public Vue login (below the card).
         FilamentView::registerRenderHook(
-            PanelsRenderHook::SIMPLE_PAGE_END,
+            PanelsRenderHook::SIMPLE_LAYOUT_END,
             fn (): string => '<div class="ff-login-footer">'
                 .'<a href="'.url('/').'">flowflex.eu</a><span aria-hidden="true">·</span>'
                 .'<a href="'.url('/privacy').'">Privacy</a><span aria-hidden="true">·</span>'

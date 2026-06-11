@@ -33,6 +33,9 @@ All 7 audit gaps resolved at spec level 2026-06-11 (see below). Code-level enfor
 | [[gap-larastan-laravel-boot-crash]] | foundation | Larastan crash — switched gate to plain PHPStan + @property docblocks (ADR) | 2026-06-11 |
 | [[gap-filament-assets-unpublished]] | core | Filament JS assets 404 in browser (suite stayed green) — published + composer hooks | 2026-06-11 |
 | [[gap-pgsql-self-fk-ordering]] | All | Self-FKs in Schema::create break pgsql (sqlite green) — moved to post-create alters | 2026-06-11 |
+| [[gap-admin-mfa-contract-missing]] | foundation | Panel MFA enabled but Admin model lacked HasAppAuthentication — /admin login 500; Livewire submit tests added | 2026-06-11 |
+| [[gap-notifications-data-text-pgsql]] | core | notifications.data text column breaks Filament bell on pgsql (data->>) — jsonb migration | 2026-06-11 |
+| [[gap-staff-console-never-specced]] | core | /admin had zero functionality after full MVP — staff console never specced; core.staff-console specced + built | 2026-06-11 |
 
 ---
 
