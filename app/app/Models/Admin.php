@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Database\Factories\AdminFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,10 +26,15 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  */
-class Admin extends Authenticatable
+class Admin extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<AdminFactory> */
     use HasFactory, HasUlids, Notifiable, SoftDeletes;
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $panel->getId() === 'admin';
+    }
 
     protected $fillable = [
         'name',

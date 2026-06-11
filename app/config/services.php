@@ -22,6 +22,13 @@ return [
 
     'resend' => [
         'key' => env('RESEND_API_KEY'),
+        'webhook_secret' => env('RESEND_WEBHOOK_SECRET'),
+    ],
+
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
     'ses' => [

@@ -179,7 +179,11 @@
       "Bash(echo \"exit=$? bytes=$\\(wc -c </tmp/r2.out\\)\")",
       "Bash(echo \"exit=$? bytes=$\\(wc -c </tmp/p2.out\\)\")",
       "Bash(./vendor/bin/pint --test)",
-      "Bash(./vendor/bin/pint)"
+      "Bash(./vendor/bin/pint)",
+      "Bash(perl -i -pe 's/\\\\$table->morphs\\\\\\('\\\\''tokenable'\\\\''\\\\\\);/\\\\$table->ulidMorphs\\('\\\\''tokenable'\\\\''\\); \\\\/\\\\/ ULID model ids/' database/migrations/*personal_access_tokens*.php)",
+      "Bash(DB_CONNECTION=sqlite DB_DATABASE=:memory: APP_ENV=local php artisan migrate:fresh --seed)",
+      "Bash(perl -0pi -e 's{build:\\\\n      context: \\\\./app\\\\n      dockerfile: \\\\.\\\\./docker/php/Dockerfile}{build:\\\\n      context: ./docker/php\\\\n      dockerfile: Dockerfile}g' docker-compose.yml)",
+      "Bash(./vendor/bin/pint -q)"
     ]
   },
   "enabledMcpjsonServers": [

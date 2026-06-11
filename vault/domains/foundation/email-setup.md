@@ -4,7 +4,7 @@ domain: Foundation
 domain-key: foundation
 panel: (scaffold)
 module-key: foundation.email
-status: planned
+status: complete
 priority: v1-core
 depends-on: [foundation.scaffold, foundation.queues]
 soft-depends: []

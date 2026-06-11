@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Support\Traits\BelongsToCompany;
 use Database\Factories\UserFactory;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property string $id
@@ -30,10 +35,10 @@ use Illuminate\Support\Carbon;
  * @property-read string $full_name
  * @property-read Company $company
  */
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser, HasName
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasUlids, Notifiable, SoftDeletes;
+    use BelongsToCompany, HasApiTokens, HasFactory, HasRoles, HasUlids, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'company_id',
@@ -62,14 +67,20 @@ class User extends Authenticatable
         ];
     }
 
-    /** @return BelongsTo<Company, $this> */
-    public function company(): BelongsTo
-    {
-        return $this->belongsTo(Company::class);
-    }
-
     public function getFullNameAttribute(): string
     {
         return trim("{$this->first_name} {$this->last_name}");
+    }
+
+    public function getFilamentName(): string
+    {
+        return $this->full_name;
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // Tenant users may reach the /app workspace + domain panels (not /admin).
+        // Per-resource gating is handled by canAccess() (filament-patterns #1).
+        return $panel->getId() !== 'admin';
     }
 }
