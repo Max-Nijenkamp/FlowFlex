@@ -100,7 +100,8 @@
             "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
+            "@php artisan filament:assets --ansi"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
@@ -123,6 +124,9 @@
             "@lint",
             "@analyse",
             "@test"
+        ],
+        "post-install-cmd": [
+            "@php artisan filament:assets --ansi"
         ]
     },
     "extra": {

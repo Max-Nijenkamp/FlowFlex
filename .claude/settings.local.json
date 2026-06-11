@@ -236,7 +236,8 @@
       "Bash(npm i *)",
       "WebFetch(domain:www.notion.so)",
       "WebFetch(domain:slack.com)",
-      "WebFetch(domain:id.atlassian.com)"
+      "WebFetch(domain:id.atlassian.com)",
+      "Bash(kill %1)"
     ]
   },
   "enabledMcpjsonServers": [

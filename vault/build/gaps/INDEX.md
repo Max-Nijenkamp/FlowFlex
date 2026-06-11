@@ -31,6 +31,7 @@ All 7 audit gaps resolved at spec level 2026-06-11 (see below). Code-level enfor
 | [[gap-file-upload-contract]] | All | Upload contract omitted — Security notes added to 24 specs | 2026-06-11 |
 | [[gap-ui-row-not-in-table]] | All | UI kinds not in table — ADR + rows 17–19, 3 specs re-cited | 2026-06-11 |
 | [[gap-larastan-laravel-boot-crash]] | foundation | Larastan crash — switched gate to plain PHPStan + @property docblocks (ADR) | 2026-06-11 |
+| [[gap-filament-assets-unpublished]] | core | Filament JS assets 404 in browser (suite stayed green) — published + composer hooks | 2026-06-11 |
 
 ---
 

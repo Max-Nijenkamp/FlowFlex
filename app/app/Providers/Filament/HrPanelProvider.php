@@ -22,7 +22,6 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 /**
@@ -41,10 +40,9 @@ class HrPanelProvider extends PanelProvider
             ->multiFactorAuthentication(AppAuthentication::make()->recoverable()) // self-service TOTP 2FA
             ->profile(isSimple: false)
             ->brandName('FlowFlex — HR & People')
-            ->brandLogo(fn () => new HtmlString(
-                '<img src="'.asset('images/logo/flowflex-logo-dark.svg').'" alt="FlowFlex" class="h-8 dark:hidden" />'
-                .'<img src="'.asset('images/logo/flowflex-logo-light.svg').'" alt="FlowFlex" class="h-8 hidden dark:block" />',
-            ))
+            ->brandLogo(asset('images/logo/flowflex-logo-dark.svg'))
+            ->darkModeBrandLogo(asset('images/logo/flowflex-logo-light.svg'))
+            ->brandLogoHeight('2rem')
             ->favicon(asset('images/logo/flowflex-icon.svg'))
             ->colors([
                 'primary' => Color::Violet,
