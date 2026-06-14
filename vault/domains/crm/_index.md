@@ -4,7 +4,7 @@ domain: CRM & Sales
 domain-key: crm
 panel: crm
 phase: 1
-module-count: 15
+module-count: 16
 status: active
 color: "#4ADE80"
 ---
@@ -116,3 +116,9 @@ SORT priority ASC, module-key ASC
 - Pipeline board = custom Filament page with Reverb broadcast ([[architecture/ui-strategy]] row #3)
 - No separate Lead model — `crm_contacts.lifecycle_stage` (see contacts spec)
 - Custom fields on contacts/accounts via [[architecture/patterns/custom-fields]]
+
+---
+
+## Panel Dashboard + Sweep (2026-06-12)
+
+/crm dashboard widgets shipped: CrmStatsWidget (open pipeline €, won this month, win rate, new leads), WonDealsChartWidget (12-month won revenue). Custom pipelines live ([[build/decisions/decision-2026-06-12-custom-pipelines]]); Organisations (AccountResource) + lifecycle tabs + attachments shipped. Remaining empty-form resources tracked in [[build/gaps/gap-panel-ux-depth-leftovers]].

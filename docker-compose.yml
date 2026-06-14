@@ -115,6 +115,22 @@ services:
     restart: unless-stopped
     networks: [flowflex]
 
+  # Runs the Laravel schedule (health checks every minute feed the status
+  # pages; queue heartbeat keeps QueueCheck green).
+  scheduler:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: flowflex_scheduler
+    working_dir: /var/www
+    environment:
+      <<: *app-env
+    command: ["php", "artisan", "schedule:work"]
+    volumes: ["./app:/var/www"]
+    depends_on: [app, redis, postgres]
+    restart: unless-stopped
+    networks: [flowflex]
+
   reverb:
     build:
       context: ./docker/php

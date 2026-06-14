@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models\HR;
 
 use App\Support\Traits\BelongsToCompany;
+use App\Support\Traits\LogsCompanyActivity;
 use Database\Factories\HR\PayrollEmployeeFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,7 +32,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PayrollEmployee extends Model
 {
     /** @use HasFactory<PayrollEmployeeFactory> */
-    use BelongsToCompany, HasFactory, HasUlids, SoftDeletes;
+    use BelongsToCompany, HasFactory, HasUlids, LogsCompanyActivity, SoftDeletes;
 
     protected $table = 'hr_payroll_employees';
 

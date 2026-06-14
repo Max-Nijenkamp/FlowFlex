@@ -7,7 +7,10 @@ namespace App\Filament\CRM\Resources;
 use App\Contracts\BillingServiceInterface;
 use App\Models\CRM\Segment;
 use BackedEnum;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -32,7 +35,17 @@ class SegmentResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Segment')
+                ->columns(2)
+                ->components([
+                    TextInput::make('name')->required()->maxLength(120),
+                    Select::make('type')
+                        ->options(['dynamic' => 'Dynamic — keeps itself up to date', 'static' => 'Static — fixed member list'])
+                        ->default('dynamic')
+                        ->required(),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table

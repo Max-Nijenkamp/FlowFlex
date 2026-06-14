@@ -14,7 +14,7 @@ patterns: [states, interface-service, events, money]
 tables: [crm_deals, crm_deal_contacts, crm_deal_products]
 permission-prefix: crm.deals
 encrypted-fields: []
-last-reviewed: 2026-06-11
+last-reviewed: 2026-06-12
 color: "#4ADE80"
 ---
 
@@ -297,6 +297,13 @@ tests/Feature/CRM/{DealTest,DealCloseTest}.php
 - Reopen transitions (`won/lost → open`): included *(assumed)* — confirm whether reopening a won deal must void the created invoice stub (currently: no, invoice stays as draft in Finance)
 
 ---
+
+## Implementation Notes
+
+### 2026-06-12 build sync
+- File attachments on deals via spatie/laravel-media-library (`attachments` collection, tenant-scoped paths)
+- Deal form: value entered in euros (stored cents), stage select grouped per pipeline, organisation (account) link
+- Board "New deal" action creates open deals directly in any stage of the active pipeline
 
 ## Related
 

@@ -319,7 +319,8 @@ class {Domain}PanelProvider extends PanelProvider
             ->path('{panel-path}')
             ->colors(['primary' => Color::hex('{hex-color}')])
             ->brandName('FlowFlex — {Domain Name}')
-            ->font('Inter')
+            ->brandLogo(asset('images/logo/flowflex-logo-light.svg')) // light — sidebar is ink in both modes
+            ->font('Instrument Sans') // Switchboard+ body face (brand.md)
             ->darkMode(Feature::Enabled)
             ->sidebarCollapsibleOnDesktop()
             ->authGuard('web')

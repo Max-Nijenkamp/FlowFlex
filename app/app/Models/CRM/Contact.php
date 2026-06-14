@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models\CRM;
 
 use App\Support\Traits\BelongsToCompany;
+use App\Support\Traits\LogsCompanyActivity;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,10 +13,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Scout\Searchable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Contact extends Model
+class Contact extends Model implements HasMedia
 {
-    use BelongsToCompany, HasFactory, HasUlids, Searchable, SoftDeletes;
+    use BelongsToCompany, HasFactory, HasUlids, InteractsWithMedia, LogsCompanyActivity, Searchable, SoftDeletes;
 
     protected $table = 'crm_contacts';
 

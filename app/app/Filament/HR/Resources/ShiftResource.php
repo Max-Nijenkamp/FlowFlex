@@ -8,7 +8,13 @@ use App\Contracts\BillingServiceInterface;
 use App\Models\HR\Employee;
 use App\Models\HR\Shift;
 use BackedEnum;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\TimePicker;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -33,7 +39,29 @@ class ShiftResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Shift')
+                ->columns(2)
+                ->components([
+                    DatePicker::make('date')->required(),
+                    TextInput::make('role')->required()->maxLength(100),
+                    TimePicker::make('start_time')->seconds(false)->required(),
+                    TimePicker::make('end_time')->seconds(false)->required()->after('start_time'),
+                ]),
+            Section::make('Assignment')
+                ->columns(2)
+                ->components([
+                    Select::make('employee_id')->label('Assigned to')
+                        ->options(fn () => Employee::query()->get()->pluck('full_name', 'id'))
+                        ->searchable()
+                        ->nullable()
+                        ->helperText('Leave empty to flag a coverage gap'),
+                    Select::make('status')
+                        ->options(['draft' => 'Draft', 'published' => 'Published', 'cancelled' => 'Cancelled'])
+                        ->default('draft')
+                        ->required(),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -48,6 +76,9 @@ class ShiftResource extends Resource
                 TextColumn::make('start_time'),
                 TextColumn::make('end_time'),
                 TextColumn::make('status')->badge(),
+            ])
+            ->recordActions([
+                EditAction::make(),
             ]);
     }
 

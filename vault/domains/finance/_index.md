@@ -103,3 +103,9 @@ SORT priority ASC, module-key ASC
 - All amounts stored as integers (cents/minor currency units) — never floats ([[build/decisions/decision-2026-06-01-currency-precision]])
 - Currency from [[domains/core/company-settings]] — no per-record currency unless Multi-Currency module active
 - All ledger writes through `LedgerService::post` — posted entries immutable, reversals only
+
+---
+
+## Panel Dashboard (2026-06-12)
+
+/finance dashboard widgets shipped: FinanceStatsWidget (cash position, outstanding AR, overdue count, expenses this month), RevenueExpensesChartWidget (12-month revenue vs expenses, PHP date grouping). All master-data resources (suppliers, tax rates, exchange rates, fixed assets, budgets, forecasts, bills, expenses) gained real forms + create/edit actions in the 2026-06-12 sweep.

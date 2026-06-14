@@ -4,7 +4,7 @@ import FormField from '@/Components/Form/FormField.vue'
 import TextInput from '@/Components/Form/TextInput.vue'
 import AuthLayout from '@/Components/Layout/AuthLayout.vue'
 import BaseButton from '@/Components/UI/BaseButton.vue'
-import { Link, useForm } from '@inertiajs/vue3'
+import { Head, Link, useForm } from '@inertiajs/vue3'
 
 defineOptions({ layout: AuthLayout })
 
@@ -16,10 +16,11 @@ function submit() {
 </script>
 
 <template>
-    <h1 class="text-center text-2xl font-bold tracking-display">Sign in to FlowFlex</h1>
-    <p class="mt-1.5 text-center text-sm text-ink-soft">Welcome back.</p>
+    <Head title="Sign in" />
+    <h1 class="font-display text-[26px] font-bold tracking-[-0.02em]">Sign in to FlowFlex</h1>
+    <p class="mt-1.5 text-[14.5px] text-ink-soft">Welcome back.</p>
 
-    <form class="mt-9 space-y-5" @submit.prevent="submit">
+    <form class="mt-7 space-y-5" @submit.prevent="submit">
         <FormField label="Work email" for="email" :error="form.errors.email">
             <TextInput id="email" v-model="form.email" type="email" required autofocus
                 autocomplete="email" placeholder="you@company.com" :invalid="!!form.errors.email" />
@@ -27,9 +28,11 @@ function submit() {
         <FormField label="Password" for="password">
             <TextInput id="password" v-model="form.password" type="password" required
                 autocomplete="current-password" placeholder="••••••••••••" />
-            <!-- Below the input so tabbing goes email → password directly. -->
+            <!-- Below the input so tabbing goes email → password directly (UX rule). -->
             <div class="mt-1.5 text-right">
-                <Link href="/forgot-password" class="text-[13px] font-medium text-accent hover:underline">Forgot it?</Link>
+                <Link href="/forgot-password" class="text-[12.5px] font-semibold text-accent hover:underline">
+                    Forgot it?
+                </Link>
             </div>
         </FormField>
         <CheckboxInput v-model="form.remember" label="Keep me signed in" />
@@ -38,8 +41,8 @@ function submit() {
         </BaseButton>
     </form>
 
-    <p class="mt-8 text-center text-sm text-ink-faint">
-        New here? FlowFlex workspaces are invite-only —
-        <Link href="/contact" class="text-accent hover:underline">talk to us</Link> to get set up.
+    <p class="mt-7 text-center text-[13px] leading-[1.6] text-ink-faint">
+        New here? FlowFlex workspaces are invite-only —<br>
+        <Link href="/contact" class="font-semibold text-accent hover:underline">talk to us</Link> to get set up.
     </p>
 </template>

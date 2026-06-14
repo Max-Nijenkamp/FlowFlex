@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\HR\Resources;
 
 use App\Contracts\BillingServiceInterface;
+use App\Models\HR\Employee;
 use App\Models\HR\PayrollEmployee;
 use BackedEnum;
 use Filament\Actions\EditAction;
@@ -37,12 +38,18 @@ class PayrollEmployeeResource extends Resource
 
     public static function canCreate(): bool
     {
-        return false; // rows created by the EmployeeHired listener
+        // Normally created by the EmployeeHired listener; manual create covers
+        // imported employees that predate the listener.
+        return Auth::guard('web')->user()?->can('hr.payroll.create') ?? false;
     }
 
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
+            Select::make('employee_id')->label('Employee')
+                ->options(fn () => Employee::query()->get()->pluck('full_name', 'id'))
+                ->searchable()
+                ->required(),
             TextInput::make('salary_raw')->label('Monthly gross (cents)')->numeric()->minValue(0),
             TextInput::make('iban')->label('IBAN'),
             Select::make('pay_type')->options(['salaried' => 'Salaried', 'hourly' => 'Hourly'])->required(),

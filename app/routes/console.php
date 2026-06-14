@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
+use Spatie\Health\Commands\DispatchQueueCheckJobsCommand;
 use Spatie\Health\Commands\RunHealthChecksCommand;
 
 Artisan::command('inspire', function () {
@@ -51,5 +52,11 @@ Schedule::command('flowflex:dsar-deadline-reminders')
 
 // Health checks every minute (feeds /health + SystemStatusPage).
 Schedule::command(RunHealthChecksCommand::class)
+    ->everyMinute()
+    ->withoutOverlapping();
+
+// Queue heartbeat jobs — without these the QueueCheck always reports failed
+// (it measures when a heartbeat job was last PROCESSED on each queue).
+Schedule::command(DispatchQueueCheckJobsCommand::class)
     ->everyMinute()
     ->withoutOverlapping();

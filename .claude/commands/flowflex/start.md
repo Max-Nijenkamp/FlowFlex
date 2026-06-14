@@ -42,6 +42,8 @@ Read `vault/domains/{domain}/_index.md` (nav groups, sibling modules, intra-doma
 - `vault/architecture/patterns/dto-pattern.md`
 - `vault/architecture/patterns/testing-pattern.md`
 - `vault/architecture/module-system.md`
+- `vault/architecture/patterns/ux-states.md` — every screen state is designed (empty/error/hover/steps)
+- `vault/frontend/design-system.md` — Switchboard+ tokens, components, panel skin (any module with UI)
 
 **Then read the files listed in the spec's `patterns:` frontmatter** — map each key through the lookup table in `patterns.md` (e.g. `states` → `vault/architecture/patterns/states.md`).
 

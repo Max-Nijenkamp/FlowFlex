@@ -138,6 +138,16 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
 
     public function canAccessPanel(Panel $panel): bool
     {
+        // Runs inside Filament's Authenticate middleware — BEFORE
+        // SetCompanyContext has set the permission team id. Without this,
+        // the role check below loads an empty role set and every domain
+        // panel 403s. Set the team defensively and drop any stale relation.
+        if (getPermissionsTeamId() !== $this->company_id) {
+            setPermissionsTeamId($this->company_id);
+            $this->unsetRelation('roles');
+            $this->unsetRelation('permissions');
+        }
+
         // /admin is staff-only; /app open to all tenant users; domain panels
         // require the access.{id}-panel permission (granted via roles holding
         // any permission of that domain). Per-resource gating stays canAccess().

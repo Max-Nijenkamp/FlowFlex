@@ -10,8 +10,13 @@ use App\Models\HR\ReviewCycle;
 use App\Services\HR\PerformanceService;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -36,7 +41,19 @@ class ReviewCycleResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Cycle')
+                ->columns(2)
+                ->components([
+                    TextInput::make('name')->required()->maxLength(150),
+                    Select::make('type')
+                        ->options(['annual' => 'Annual', 'bi-annual' => 'Bi-annual', 'quarterly' => 'Quarterly'])
+                        ->default('annual')
+                        ->required(),
+                    DatePicker::make('period_start')->required(),
+                    DatePicker::make('period_end')->required()->after('period_start'),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -51,6 +68,7 @@ class ReviewCycleResource extends Resource
                 TextColumn::make('reviews_count')->counts('reviews')->label('Reviews'),
             ])
             ->recordActions([
+                EditAction::make(),
                 Action::make('activate')
                     ->icon(Heroicon::OutlinedPlay)
                     ->visible(fn (ReviewCycle $r) => (string) $r->status === 'draft'

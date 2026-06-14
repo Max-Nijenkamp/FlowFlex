@@ -67,6 +67,9 @@ Fetch a specific architecture pattern from the vault. Read-only.
 | `custom-fields` or `schemaless` | `vault/architecture/patterns/custom-fields.md` |
 | `gdpr` or `retention` or `data-lifecycle` | `vault/architecture/data-lifecycle.md` |
 | `dev` or `local-dev` or `troubleshooting` | `vault/architecture/local-dev.md` |
+| `ux-states` or `empty-states` or `wizard` | `vault/architecture/patterns/ux-states.md` |
+| `brand` or `switchboard` | `vault/product/brand.md` |
+| `design` or `design-system` or `components` | `vault/frontend/design-system.md` |
 
 ## What This Does
 

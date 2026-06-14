@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Filament\CRM\Resources;
 
 use App\Contracts\BillingServiceInterface;
+use App\Models\CRM\Account;
 use App\Models\CRM\Contact;
 use BackedEnum;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -37,21 +40,42 @@ class ContactResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make('first_name')->required()->maxLength(100),
-            TextInput::make('last_name')->required()->maxLength(100),
-            TextInput::make('email')->email(),
-            TextInput::make('phone')->tel(),
-            TextInput::make('job_title')->maxLength(150),
-            Select::make('lifecycle_stage')
-                ->options([
-                    'lead' => 'Lead', 'mql' => 'MQL', 'sql' => 'SQL',
-                    'opportunity' => 'Opportunity', 'customer' => 'Customer', 'evangelist' => 'Evangelist',
-                ])
-                ->default('lead')
-                ->required(),
-            Select::make('source')
-                ->options(['website' => 'Website', 'referral' => 'Referral', 'linkedin' => 'LinkedIn', 'manual' => 'Manual'])
-                ->default('manual'),
+            Section::make('Person')
+                ->columns(2)
+                ->components([
+                    TextInput::make('first_name')->required()->maxLength(100),
+                    TextInput::make('last_name')->required()->maxLength(100),
+                    TextInput::make('email')->email(),
+                    TextInput::make('phone')->tel(),
+                    TextInput::make('job_title')->maxLength(150),
+                    Select::make('account_id')->label('Organisation')
+                        ->options(fn () => Account::query()->orderBy('name')->pluck('name', 'id'))
+                        ->searchable()
+                        ->nullable(),
+                ]),
+            Section::make('Lifecycle')
+                ->columns(2)
+                ->components([
+                    Select::make('lifecycle_stage')
+                        ->options([
+                            'lead' => 'Lead', 'mql' => 'MQL', 'sql' => 'SQL',
+                            'opportunity' => 'Opportunity', 'customer' => 'Customer', 'evangelist' => 'Evangelist',
+                        ])
+                        ->default('lead')
+                        ->required(),
+                    Select::make('source')
+                        ->options(['website' => 'Website', 'referral' => 'Referral', 'linkedin' => 'LinkedIn', 'manual' => 'Manual'])
+                        ->default('manual'),
+                ]),
+            Section::make('Attachments')
+                ->components([
+                    SpatieMediaLibraryFileUpload::make('attachments')
+                        ->collection('attachments')
+                        ->multiple()
+                        ->downloadable()
+                        ->maxSize(10_240)
+                        ->columnSpanFull(),
+                ]),
         ]);
     }
 
@@ -70,8 +94,12 @@ class ContactResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('lifecycle_stage')->options([
-                    'lead' => 'Lead', 'customer' => 'Customer',
+                    'lead' => 'Lead', 'mql' => 'MQL', 'sql' => 'SQL',
+                    'opportunity' => 'Opportunity', 'customer' => 'Customer', 'evangelist' => 'Evangelist',
                 ]),
+                SelectFilter::make('account_id')->label('Organisation')
+                    ->options(fn () => Account::query()->orderBy('name')->pluck('name', 'id'))
+                    ->searchable(),
             ])
             ->recordActions([EditAction::make()]);
     }

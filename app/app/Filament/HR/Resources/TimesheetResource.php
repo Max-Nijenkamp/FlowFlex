@@ -6,12 +6,17 @@ namespace App\Filament\HR\Resources;
 
 use App\Contracts\BillingServiceInterface;
 use App\Exceptions\HR\CannotApproveOwnRequestException;
+use App\Models\HR\Employee;
 use App\Models\HR\Timesheet;
 use App\Services\HR\TimeService;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -36,7 +41,18 @@ class TimesheetResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Timesheet')
+                ->columns(2)
+                ->components([
+                    Select::make('employee_id')->label('Employee')
+                        ->options(fn () => Employee::query()->get()->pluck('full_name', 'id'))
+                        ->searchable()
+                        ->required(),
+                    DatePicker::make('week_start')->label('Week starting')->required(),
+                    TextInput::make('total_minutes')->label('Total minutes')->numeric()->default(0),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table

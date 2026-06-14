@@ -21,6 +21,17 @@ Route::post('/contact', [MarketingController::class, 'submitContact'])->middlewa
 Route::get('/terms', [MarketingController::class, 'terms'])->name('terms');
 Route::get('/privacy', [MarketingController::class, 'privacy'])->name('privacy');
 
+// Switchboard+ expansion pages (design handoff §14–24).
+Route::get('/modules', [MarketingController::class, 'catalogue'])->name('modules');
+Route::get('/switch-over', [MarketingController::class, 'switchOver'])->name('switch-over');
+Route::get('/trust', [MarketingController::class, 'trust'])->name('trust');
+Route::get('/changelog', [MarketingController::class, 'changelog'])->name('changelog');
+Route::get('/patchwork', [MarketingController::class, 'patchwork'])->name('patchwork');
+Route::get('/customers/{slug}', [MarketingController::class, 'caseStudy'])->name('customers.show');
+Route::get('/status', [MarketingController::class, 'status'])->name('status');
+Route::get('/help', [MarketingController::class, 'helpIndex'])->name('help');
+Route::get('/help/{slug}', [MarketingController::class, 'helpArticle'])->name('help.article');
+
 // Public auth — Vue + Inertia, throttled like Filament logins.
 Route::middleware('throttle:10,1')->group(function (): void {
     Route::get('/login', [PublicAuthController::class, 'showLogin'])->name('login');

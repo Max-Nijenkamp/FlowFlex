@@ -6,6 +6,7 @@ namespace App\Models\HR;
 
 use App\States\HR\Timesheet\TimesheetState;
 use App\Support\Traits\BelongsToCompany;
+use App\Support\Traits\LogsCompanyActivity;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +16,7 @@ use Spatie\ModelStates\HasStates;
 
 class Timesheet extends Model
 {
-    use BelongsToCompany, HasStates, HasUlids, SoftDeletes;
+    use BelongsToCompany, HasStates, HasUlids, LogsCompanyActivity, SoftDeletes;
 
     protected $table = 'hr_timesheets';
 

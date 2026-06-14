@@ -47,12 +47,34 @@ Benefits:
 
 ---
 
-## Sidebar
+## Sidebar (Switchboard+ skin, 2026-06-12)
 
-- Background: `#111827` (Gray-900) — consistent across all panels
+- Background: `#111827` ink — **both light and dark mode**, all panels (shared `resources/css/filament/flowflex-skin.css`)
+- Light wordmark logo always (`->brandLogo(flowflex-logo-light.svg)`)
+- Mono panel label under the logo, e.g. `HR & PEOPLE · /HR` (`--ff-panel-label` per panel theme)
+- Items: 13.5px at 62% white; **active = 2px domain-color left border + 16% domain tint + white text**
+- Nav group labels: 10.5px uppercase, tracking 0.14em, 32% white
 - Collapsible to icon-only on desktop (`sidebarCollapsibleOnDesktop()`)
-- Active indicator: domain primary colour as left-border accent
 - Icons: Heroicons v2 outline (default), solid on active state
+
+## Panel chrome
+
+- Topbar: warm translucent paper (`rgba(251,250,248,0.92)` + blur), 1px warm hairline
+- Content canvas: warm paper `#FBFAF8` (never stock gray); cards white, `#D8D4CA` borders, 12–14px radius
+- Tables: mono 10px uppercase letterspaced headers, warm zebra rows, hover = 5% primary wash, selected = 10% tint + 2px left edge
+- Tabs: 2px primary underline (no pill tabs); count chips mono
+- Pagination: 30px squares, active = panel color
+- Stat widgets: blueprint cells — primary corner tick + mono values
+- Buttons: 9px radius (no pills), instant press-down feedback
+- Body font: Instrument Sans; headings Archivo; data JetBrains Mono
+
+## Spotlight (⌘K / Ctrl+K)
+
+Panel-scoped quick-search palette on every panel (`App\Livewire\Spotlight`, injected via `BODY_END` render hook). Searches the **current panel only**: navigation (resources + pages, `canAccess`-filtered), quick-create actions ("New employee…"), and globally-searchable records via Filament's global search provider. Keyboard: ⌘K/Ctrl+K open · ↑↓ navigate · ↵ open · ESC close. Records appear for resources with `$recordTitleAttribute`/`getGloballySearchableAttributes` — extend coverage per resource as domains mature.
+
+## Screen states
+
+Every empty, error, hover and multi-step state is designed — see [[architecture/patterns/ux-states]] (four kinds of empty, human error copy, hover≠selected, forms >8 fields become validated wizard steps).
 
 ---
 

@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: hr.self-service
 encrypted-fields: []
-last-reviewed: 2026-06-11
+last-reviewed: 2026-06-12
 color: "#4ADE80"
 ---
 
@@ -115,6 +115,11 @@ tests/Feature/HR/{SelfServiceIsolationTest,SelfServiceProfileTest}.php
 ```
 
 ---
+
+## Implementation Notes
+
+### 2026-06-12 build sync
+- My HR dashboard restyled: greeting header + icon stat cards inside Sections (same data contract, deferred load kept)
 
 ## Related
 

@@ -6,18 +6,21 @@ namespace App\Filament\CRM\Resources;
 
 use App\Contracts\BillingServiceInterface;
 use App\Contracts\CRM\DealServiceInterface;
+use App\Models\CRM\Account;
 use App\Models\CRM\Contact;
 use App\Models\CRM\Deal;
-use App\Models\CRM\PipelineStage;
+use App\Models\CRM\Pipeline;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -43,15 +46,47 @@ class DealResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make('name')->required()->maxLength(200),
-            Select::make('stage_id')->label('Stage')
-                ->options(fn () => PipelineStage::query()->orderBy('order')->pluck('name', 'id'))
-                ->required(),
-            TextInput::make('value_cents')->numeric()->required()->label('Value (cents)'),
-            Select::make('contact_id')->label('Contact')
-                ->options(fn () => Contact::query()->get()->pluck('full_name', 'id'))
-                ->nullable(),
-            DatePicker::make('expected_close_date'),
+            Section::make('Deal')
+                ->columns(2)
+                ->components([
+                    TextInput::make('name')->required()->maxLength(200),
+                    Select::make('stage_id')->label('Stage')
+                        ->options(fn (): array => Pipeline::query()
+                            ->with(['stages' => fn ($q) => $q->orderBy('order')])
+                            ->orderByDesc('is_default')->orderBy('order')
+                            ->get()
+                            ->mapWithKeys(fn (Pipeline $p): array => [
+                                $p->name => $p->stages->pluck('name', 'id')->all(),
+                            ])
+                            ->all())
+                        ->required(),
+                    TextInput::make('value_cents')->label('Value (€)')
+                        ->numeric()->required()
+                        ->formatStateUsing(fn ($state): int => $state === null ? 0 : (int) round($state / 100))
+                        ->dehydrateStateUsing(fn ($state): int => (int) round((float) $state * 100)),
+                    DatePicker::make('expected_close_date'),
+                ]),
+            Section::make('Relations')
+                ->columns(2)
+                ->components([
+                    Select::make('contact_id')->label('Contact')
+                        ->options(fn () => Contact::query()->orderBy('last_name')->get()->pluck('full_name', 'id'))
+                        ->searchable()
+                        ->nullable(),
+                    Select::make('account_id')->label('Organisation')
+                        ->options(fn () => Account::query()->orderBy('name')->pluck('name', 'id'))
+                        ->searchable()
+                        ->nullable(),
+                ]),
+            Section::make('Attachments')
+                ->components([
+                    SpatieMediaLibraryFileUpload::make('attachments')
+                        ->collection('attachments')
+                        ->multiple()
+                        ->downloadable()
+                        ->maxSize(10_240)
+                        ->columnSpanFull(),
+                ]),
         ]);
     }
 

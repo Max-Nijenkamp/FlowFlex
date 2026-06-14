@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: hr.org
 encrypted-fields: []
-last-reviewed: 2026-06-11
+last-reviewed: 2026-06-12
 color: "#4ADE80"
 ---
 
@@ -102,6 +102,12 @@ tests/Feature/HR/OrgChartTest.php
 ```
 
 ---
+
+## Implementation Notes
+
+### 2026-06-12 build sync
+- Org chart restyled: avatar cards, vertical connector lines, direct-report badges, Section wrapper with headcount
+- Demo seeder builds a real hierarchy (2 departments, manager chains) so the tree has depth locally
 
 ## Related
 

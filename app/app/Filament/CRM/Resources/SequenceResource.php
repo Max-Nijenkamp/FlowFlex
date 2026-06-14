@@ -7,7 +7,11 @@ namespace App\Filament\CRM\Resources;
 use App\Contracts\BillingServiceInterface;
 use App\Models\CRM\Sequence;
 use BackedEnum;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -32,7 +36,15 @@ class SequenceResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Sequence')
+                ->columns(2)
+                ->components([
+                    TextInput::make('name')->required()->maxLength(120),
+                    Toggle::make('is_active')->label('Active')->default(true)->inline(false),
+                    Hidden::make('owner_id')->default(fn () => Auth::guard('web')->id()),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table

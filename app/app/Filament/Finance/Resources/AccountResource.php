@@ -7,7 +7,12 @@ namespace App\Filament\Finance\Resources;
 use App\Contracts\BillingServiceInterface;
 use App\Models\Finance\Account;
 use BackedEnum;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
@@ -35,12 +40,36 @@ class AccountResource extends Resource
 
     public static function canCreate(): bool
     {
-        return false; // chart created on demand by LedgerService
+        return Auth::guard('web')->check()
+            && Auth::guard('web')->user()->can('finance.ledger.post');
     }
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('GL account')
+                ->columns(2)
+                ->components([
+                    TextInput::make('code')->required()->maxLength(20),
+                    TextInput::make('name')->required()->maxLength(120),
+                    Select::make('type')
+                        ->options([
+                            'asset' => 'Asset',
+                            'liability' => 'Liability',
+                            'equity' => 'Equity',
+                            'revenue' => 'Revenue',
+                            'expense' => 'Expense',
+                        ])
+                        ->required(),
+                    Select::make('parent_account_id')->label('Parent account')
+                        ->options(fn () => Account::query()->orderBy('code')->get()
+                            ->mapWithKeys(fn (Account $a): array => [$a->id => "{$a->code} — {$a->name}"])
+                            ->all())
+                        ->searchable()
+                        ->nullable(),
+                    Toggle::make('is_active')->default(true),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -53,6 +82,9 @@ class AccountResource extends Resource
                 TextColumn::make('name')->searchable(),
                 TextColumn::make('type')->badge(),
                 IconColumn::make('is_active')->boolean(),
+            ])
+            ->recordActions([
+                EditAction::make(),
             ]);
     }
 

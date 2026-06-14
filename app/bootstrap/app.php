@@ -11,6 +11,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -37,9 +38,30 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(append: [
             SetCompanyContextFromToken::class,
         ]);
+
+        // Guests on staff surfaces (Horizon, Pulse, anything under /admin)
+        // belong on the STAFF login, not the customer one. Without this,
+        // Laravel's default falls back to route('login') — the public site.
+        $middleware->redirectGuestsTo(fn (Request $request): string => $request->is('admin', 'admin/*', 'horizon', 'horizon/*', 'pulse', 'pulse/*')
+            ? '/admin/login'
+            : '/login');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
         );
+
+        // Branded 404 for the public site (Switchboard+ "switched off" page).
+        // Panels, Livewire and API keep their own 404 handling.
+        $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+            $internal = $request->is('api/*', 'admin*', 'app*', 'hr*', 'finance*', 'crm*', 'livewire*', 'horizon*', 'pulse*', 'up', 'build/*', 'storage/*');
+
+            if ($internal || ! $request->isMethod('GET') || $request->expectsJson()) {
+                return null;
+            }
+
+            return Inertia\Inertia::render('Marketing/NotFound')
+                ->toResponse($request)
+                ->setStatusCode(404);
+        });
     })->create();

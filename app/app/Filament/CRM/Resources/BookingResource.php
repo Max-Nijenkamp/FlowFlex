@@ -6,8 +6,14 @@ namespace App\Filament\CRM\Resources;
 
 use App\Contracts\BillingServiceInterface;
 use App\Models\CRM\Booking;
+use App\Models\CRM\Contact;
+use App\Models\CRM\MeetingType;
 use BackedEnum;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -32,7 +38,21 @@ class BookingResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Booking')
+                ->columns(2)
+                ->components([
+                    Select::make('meeting_type_id')->label('Meeting type')
+                        ->options(fn () => MeetingType::query()->pluck('name', 'id'))
+                        ->required(),
+                    Select::make('contact_id')->label('Contact')
+                        ->options(fn () => Contact::query()->orderBy('last_name')->get()->pluck('full_name', 'id'))
+                        ->searchable()
+                        ->required(),
+                    DateTimePicker::make('scheduled_at')->label('Scheduled for')->required(),
+                    Hidden::make('assigned_rep_id')->default(fn () => Auth::guard('web')->id()),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table

@@ -6,6 +6,7 @@ namespace App\Models\HR;
 
 use App\States\HR\PayrollRun\PayrollRunState;
 use App\Support\Traits\BelongsToCompany;
+use App\Support\Traits\LogsCompanyActivity;
 use Database\Factories\HR\PayrollRunFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -34,7 +35,7 @@ use Spatie\ModelStates\HasStates;
 class PayrollRun extends Model
 {
     /** @use HasFactory<PayrollRunFactory> */
-    use BelongsToCompany, HasFactory, HasStates, HasUlids, SoftDeletes;
+    use BelongsToCompany, HasFactory, HasStates, HasUlids, LogsCompanyActivity, SoftDeletes;
 
     protected $table = 'hr_payroll_runs';
 

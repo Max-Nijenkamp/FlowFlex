@@ -14,7 +14,7 @@ patterns: [service, money, custom-pages, events]
 tables: [fin_accounts, fin_journal_entries, fin_journal_lines, fin_fiscal_periods]
 permission-prefix: finance.ledger
 encrypted-fields: []
-last-reviewed: 2026-06-11
+last-reviewed: 2026-06-12
 color: "#4ADE80"
 ---
 
@@ -202,6 +202,11 @@ tests/Feature/Finance/{LedgerPostingTest,PeriodLockTest,PayrollPostingTest}.php
 ```
 
 ---
+
+## Implementation Notes
+
+### 2026-06-12 build sync
+- **Deviation (founder override)**: GL accounts are now manually creatable/editable in /finance (code, name, type, parent, active). Spec originally said chart-on-demand only via LedgerService. LedgerService on-demand creation unchanged — both paths coexist.
 
 ## Related
 

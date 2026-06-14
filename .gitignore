@@ -1,0 +1,3 @@
+# claude-flow runtime artefacts (session state, insight queues, stray caches)
+.claude-flow/
+**/.claude-flow/

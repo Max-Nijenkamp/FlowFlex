@@ -33,6 +33,12 @@ class DealRoomResource extends Resource
             && app(BillingServiceInterface::class)->hasModule('crm.deal-rooms');
     }
 
+    // Deal rooms are created from a deal — they carry the deal's branding and link.
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([]);
@@ -43,6 +49,8 @@ class DealRoomResource extends Resource
         return $table
             ->deferLoading() // perceived-performance: paint page, stream rows
             ->modifyQueryUsing(fn ($query) => $query->latest())
+            ->emptyStateHeading('No deal rooms yet')
+            ->emptyStateDescription('Open a deal and share it as a room — the public link, branding and expiry live on the deal.')
             ->columns([
                 TextColumn::make('deal.name')->label('Deal'),
                 TextColumn::make('access_token')->label('Public link')->formatStateUsing(fn (string $state) => url('/room/'.$state))->copyable(),

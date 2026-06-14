@@ -7,34 +7,79 @@
 @source '../../storage/framework/views/*.php';
 @source '../js/**/*.vue';
 
-/* ── FlowFlex public-site design tokens (product/brand.md) ──
-   Ink + paper + one indigo accent. Clean, spacious, confident.
-   No gradients-on-everything, no glassmorphism — editorial SaaS. */
+/* ── FlowFlex "Switchboard+" design tokens (design_handoff README) ──
+   Warm paper, ink, one indigo accent. Archivo display, Instrument Sans
+   body, JetBrains Mono for data/labels/prices. */
 @theme {
+    --font-display: 'Archivo', ui-sans-serif, system-ui, sans-serif;
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
     --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
-    /* Brand */
-    --color-ink: #111827; /* wordmark dark */
-    --color-ink-soft: #4b5563;
-    --color-ink-faint: #9ca3af;
-    --color-paper: #fbfaf8; /* warm off-white — not pure white */
-    --color-paper-deep: #f3f1ec;
-    --color-accent: #4f46e5; /* logo indigo — THE accent, used sparingly */
+    --color-paper: #fbfaf8; /* page background — warm, never pure white */
+    --color-paper-deep: #f4f2ec; /* recessed surfaces */
+    --color-card: #ffffff; /* cards, boards, receipts */
+    --color-ink: #111827; /* headings, footer/nav-dark bg */
+    --color-ink-soft: #4b5563; /* body text */
+    --color-ink-faint: #98a0ab; /* meta text, placeholders */
+    --color-line: #e7e4dd; /* hairlines (warm) */
+    --color-line-strong: #d8d4ca; /* card borders */
+    --color-accent: #4f46e5; /* THE accent — indigo, used sparingly */
+    --color-accent-deep: #4338ca;
     --color-accent-soft: #eef2ff;
-    --color-flow: #38bdf8; /* product sky — UI tint only */
-    --color-line: #e7e4dd; /* warm hairline */
+    --color-flow: #38bdf8; /* sky — secondary highlight inside dark Flow bands only */
+    --color-flow-bg: #0e1320; /* dark Flow band background (NOT the same as ink) */
 
-    --tracking-display: -0.035em;
+    --tracking-display: -0.025em;
 
-    --animate-flow-dash: flow-dash 6s linear infinite;
+    --animate-marquee: ff-marquee 34s linear infinite;
+    --animate-pulse-dash: ff-dash 4.5s linear infinite;
 }
 
-@keyframes flow-dash {
+@keyframes ff-marquee {
     to {
-        stroke-dashoffset: -120;
+        transform: translateX(-50%);
     }
+}
+
+@keyframes ff-dash {
+    to {
+        stroke-dashoffset: -226;
+    }
+}
+
+/* Soft "bloom" treatment — heroes + light feature sections (replaces the
+   earlier graph-paper grid; no grid/graph patterns anywhere). */
+.bg-bloom {
+    background-color: #fbfaf8;
+    background-image:
+        radial-gradient(ellipse 75% 60% at 50% -8%, rgba(79, 70, 229, 0.065), transparent 65%),
+        linear-gradient(180deg, rgba(244, 242, 236, 0.55), rgba(251, 250, 248, 0) 320px);
+}
+
+/* Indigo CTA band overlay — two soft glows (white top-left, sky bottom-right). */
+.bg-bloom-accent {
+    background:
+        radial-gradient(ellipse 55% 90% at 12% -10%, rgba(255, 255, 255, 0.14), transparent 60%),
+        radial-gradient(ellipse 50% 80% at 88% 110%, rgba(56, 189, 248, 0.22), transparent 60%);
+}
+
+/* Receipt sawtooth bottom edge. */
+.receipt-edge {
+    position: relative;
+}
+
+.receipt-edge::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -10px;
+    height: 12px;
+    background:
+        linear-gradient(-45deg, transparent 8px, #fff 0) 0 0 / 16px 100% repeat-x,
+        linear-gradient(45deg, transparent 8px, #fff 0) 8px 0 / 16px 100% repeat-x;
+    filter: drop-shadow(0 2px 2px rgba(17, 24, 39, 0.08));
 }
 
 /* Scroll-reveal — ease-out, start fast end slow (perceived-performance). */
@@ -57,12 +102,9 @@
         transform: none;
         transition: none;
     }
-}
 
-/* Section numbering — editorial, anti-generic. */
-.section-index {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-    color: var(--color-accent);
+    .animate-marquee,
+    .animate-pulse-dash {
+        animation: none;
+    }
 }

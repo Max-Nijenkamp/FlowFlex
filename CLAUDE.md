@@ -89,7 +89,7 @@ vault/
 
 ## FlowFlex Commands
 
-Eight commands. Four fetch from vault (`start`, `status`, `spec`, `patterns`), four write to vault (`sync`, `done`, `bug`, `decision`).
+Nine commands. Four fetch from vault (`start`, `status`, `spec`, `patterns`), four write to vault (`sync`, `done`, `bug`, `decision`), one verifies the running stack (`verify`).
 
 ---
 
@@ -103,7 +103,7 @@ Steps:
 1. **Read the module spec** — `vault/domains/{domain}/{module}.md` (v2 template: carries Dependencies, DTOs, Services, Events, Permissions, Test Checklist, Build Manifest)
 2. **Check dependencies** — from spec `depends-on:` frontmatter; ⚠️ warn on any hard dep whose `status:` is not `complete`; note degraded behavior of unbuilt `soft-depends`
 3. **Read the domain index** — `vault/domains/{domain}/_index.md` (nav groups, sibling modules, intra-domain dependency graph)
-4. **Load architecture patterns** — always read: `architecture/filament-patterns.md`, `architecture/ui-strategy.md`, `architecture/multi-tenancy.md`, `architecture/patterns/belongs-to-company.md`, `architecture/patterns/dto-pattern.md`, `architecture/patterns/testing-pattern.md`, `architecture/module-system.md`. Then read the files mapped from the spec's `patterns:` frontmatter keys (lookup table in `/flowflex:patterns`). If `fires-events`/`consumes-events` non-empty, always read `architecture/event-bus.md` — payloads must match its contracts exactly.
+4. **Load architecture patterns** — always read: `architecture/filament-patterns.md`, `architecture/ui-strategy.md`, `architecture/multi-tenancy.md`, `architecture/patterns/belongs-to-company.md`, `architecture/patterns/dto-pattern.md`, `architecture/patterns/testing-pattern.md`, `architecture/module-system.md`, `architecture/patterns/ux-states.md` (every screen state is designed), and for any module with UI: `frontend/design-system.md` (Switchboard+). Then read the files mapped from the spec's `patterns:` frontmatter keys (lookup table in `/flowflex:patterns`). If `fires-events`/`consumes-events` non-empty, always read `architecture/event-bus.md` — payloads must match its contracts exactly.
 
    **Legacy fallback** (spec without `patterns:` — not yet v2): infer from spec body:
 
@@ -201,6 +201,18 @@ Examples:
 - `/flowflex:patterns gdpr` → read `architecture/data-lifecycle.md`
 - `/flowflex:patterns dev` → read `architecture/local-dev.md`
 - `/flowflex:patterns perceived-performance` → read `architecture/patterns/perceived-performance.md`
+- `/flowflex:patterns ux-states` → read `architecture/patterns/ux-states.md`
+- `/flowflex:patterns design` → read `frontend/design-system.md` (Switchboard+ tokens, components, panel skin)
+- `/flowflex:patterns tenant-context` → read `architecture/patterns/tenant-context-pitfalls.md`
+- `/flowflex:patterns resource-checklist` → read `architecture/patterns/filament-resource-checklist.md`
+
+---
+
+### `/flowflex:verify [panels=...]`
+
+**Live HTTP smoke against docker. Run after every session touching panels, auth, middleware, or migrations.**
+
+Steps (full playbook in `.claude/commands/flowflex/verify.md`): docker up + migrate if needed → real curl login as test@test.nl (expect 409 = Inertia::location success) → page sweep 200s across /app + domain panels → **scripted Livewire `$refresh` POST** (catches the null-team 403 family — `architecture/patterns/tenant-context-pitfalls.md`). Any unexpected status = `/flowflex:bug`, module not done.
 
 ---
 
@@ -300,6 +312,7 @@ Steps:
 |---|---|
 | Starting to build any module | `/flowflex:start {module-key}` |
 | End of any build session | `/flowflex:sync {module-key} status=in-progress` |
+| Session touched panels/auth/middleware/migrations | `/flowflex:verify` |
 | Module fully built and tested | `/flowflex:done {module-key}` |
 | Bug or spec gap discovered | `/flowflex:bug "description" module={key} severity={level}` |
 | Architectural decision made | `/flowflex:decision "title" status=decided` |
@@ -447,7 +460,11 @@ app/
 | GDPR cascades, retention, DSAR | `architecture/data-lifecycle.md` |
 | Custom per-company fields (schemaless attributes) | `architecture/patterns/custom-fields.md` |
 | Perceived performance (skeletons, optimistic UI, motion) | `architecture/patterns/perceived-performance.md` |
+| UX states (empty/error/hover/selected, wizard steps) | `architecture/patterns/ux-states.md` |
+| Switchboard+ design system (tokens, components, panel skin) | `frontend/design-system.md` |
 | Filament patterns (critical, read first) | `architecture/filament-patterns.md` |
+| Tenant-context pitfalls (null-team 403 family) | `architecture/patterns/tenant-context-pitfalls.md` |
+| Filament resource quality checklist (DoD 11–13) | `architecture/patterns/filament-resource-checklist.md` |
 | Per-domain: colors, custom pages, permissions | `architecture/domain-panels.md` |
 | Multi-tenancy, CompanyScope, queue context | `architecture/multi-tenancy.md` |
 | Module activation and BillingService | `architecture/module-system.md` |

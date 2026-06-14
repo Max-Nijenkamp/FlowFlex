@@ -6,6 +6,7 @@ namespace App\Models\HR;
 
 use App\States\HR\LeaveRequest\LeaveRequestState;
 use App\Support\Traits\BelongsToCompany;
+use App\Support\Traits\LogsCompanyActivity;
 use Database\Factories\HR\LeaveRequestFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -34,7 +35,7 @@ use Spatie\ModelStates\HasStates;
 class LeaveRequest extends Model
 {
     /** @use HasFactory<LeaveRequestFactory> */
-    use BelongsToCompany, HasFactory, HasStates, HasUlids, SoftDeletes;
+    use BelongsToCompany, HasFactory, HasStates, HasUlids, LogsCompanyActivity, SoftDeletes;
 
     protected $table = 'hr_leave_requests';
 

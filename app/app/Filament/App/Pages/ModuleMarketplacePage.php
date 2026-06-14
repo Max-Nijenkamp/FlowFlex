@@ -29,6 +29,9 @@ class ModuleMarketplacePage extends Page
     /** Deferred first paint — blade shows a skeleton until wire:init fires. */
     public bool $readyToLoad = false;
 
+    /** Live search over module name / key / domain. */
+    public string $search = '';
+
     public function loadData(): void
     {
         $this->readyToLoad = true;
@@ -57,8 +60,14 @@ class ModuleMarketplacePage extends Page
         $active = $billing->activeModuleKeys();
         $userCount = User::query()->count();
 
+        $term = mb_strtolower(trim($this->search));
+
         return collect(ModuleCatalog::entries())
             ->filter(fn (array $m) => $m['is_active'])
+            ->filter(fn (array $m) => $term === ''
+                || str_contains(mb_strtolower($m['name']), $term)
+                || str_contains(mb_strtolower($m['module_key']), $term)
+                || str_contains(mb_strtolower($m['domain']), $term))
             ->map(fn (array $m) => new MarketplaceModuleData(
                 module_key: $m['module_key'],
                 name: $m['name'],
@@ -76,6 +85,22 @@ class ModuleMarketplacePage extends Page
     public function canManage(): bool
     {
         return Auth::guard('web')->user()->can('core.billing.activate-module');
+    }
+
+    /** Monthly cost preview for the currently active paid modules. */
+    public function getActiveMonthlyCents(): int
+    {
+        $active = app(BillingServiceInterface::class)->activeModuleKeys();
+        $userCount = User::query()->count();
+
+        return collect($active)
+            ->map(fn (string $key): int => ModuleCatalog::priceCents($key) * $userCount)
+            ->sum();
+    }
+
+    public function getActiveCount(): int
+    {
+        return count(app(BillingServiceInterface::class)->activeModuleKeys());
     }
 
     public function activate(string $moduleKey): void

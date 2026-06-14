@@ -92,7 +92,7 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 |---|---|---|---|---|---|---|
 | crm.contacts | v1-core | core.billing, core.rbac | core.import, crm.activities, crm.deals | — | FormSubmissionReceived, EventRegistrationReceived, InvoicePaid | crm_contacts, crm_accounts, crm_contact_accounts |
 | crm.deals | v1-core | crm.contacts, crm.pipeline, core.billing, core.rbac | finance.invoicing, crm.quotes, crm.pricing, crm.activities | DealWon, DealLost | — | crm_deals, crm_deal_contacts, crm_deal_products |
-| crm.pipeline | v1-core | crm.deals, core.billing, core.rbac | — | — | — | crm_pipeline_stages |
+| crm.pipeline | v1-core | crm.deals, core.billing, core.rbac | — | — | — | crm_pipelines, crm_pipeline_stages |
 | crm.activities | v1-core | crm.contacts, core.billing, core.rbac, core.notifications | crm.deals | — | — | crm_activities |
 | crm.quotes | v1-core | crm.deals, core.billing, core.rbac, foundation.queues | crm.pricing, finance.tax, finance.invoicing | — | — | crm_quotes, crm_quote_lines |
 | crm.email | v1 | crm.contacts, crm.activities, core.billing, core.rbac, foundation.queues | crm.deals | — | — | crm_email_connections, crm_emails |

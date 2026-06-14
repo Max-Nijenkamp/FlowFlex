@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: core.settings
 encrypted-fields: []
-last-reviewed: 2026-06-11
+last-reviewed: 2026-06-12
 color: "#4ADE80"
 ---
 
@@ -122,6 +122,11 @@ tests/Feature/Core/CompanySettingsTest.php
 ```
 
 ---
+
+## Implementation Notes
+
+### 2026-06-12 build sync
+- Owner-only access per [[build/decisions/decision-2026-06-11-owner-only-settings-modules]] — hasRole('owner') required on top of permission + module
 
 ## Related
 

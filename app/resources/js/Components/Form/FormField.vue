@@ -5,13 +5,14 @@ defineProps<{ label: string; for?: string; error?: string; hint?: string; option
 <template>
     <div>
         <div class="flex items-baseline justify-between">
-            <label :for="$props.for" class="text-[13px] font-semibold text-ink">
+            <label :for="$props.for" class="text-[13.5px] font-semibold text-ink">
                 {{ label }}
-                <span v-if="optional" class="ml-1 font-normal text-ink-faint">optional</span>
             </label>
-            <slot name="corner" />
+            <slot name="corner">
+                <span v-if="optional" class="text-[12.5px] font-normal text-ink-faint">optional</span>
+            </slot>
         </div>
-        <div class="mt-1.5">
+        <div class="mt-[7px]">
             <slot />
         </div>
         <p v-if="error" class="mt-1.5 flex items-center gap-1.5 text-[13px] text-red-600">

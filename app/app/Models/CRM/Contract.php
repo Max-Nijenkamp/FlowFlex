@@ -6,6 +6,7 @@ namespace App\Models\CRM;
 
 use App\States\CRM\Contract\ContractState;
 use App\Support\Traits\BelongsToCompany;
+use App\Support\Traits\LogsCompanyActivity;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,7 @@ use Spatie\ModelStates\HasStates;
 
 class Contract extends Model
 {
-    use BelongsToCompany, HasStates, HasUlids, SoftDeletes;
+    use BelongsToCompany, HasStates, HasUlids, LogsCompanyActivity, SoftDeletes;
 
     protected $table = 'crm_contracts';
 

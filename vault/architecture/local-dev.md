@@ -188,3 +188,14 @@ Host-side seeds never reach the browser's database. After changing migrations, r
 | `/admin` staff console | admin@flowflex.nl | password | super_admin |
 | All tenant panels | demo@flowflex.nl | password | FlowFlex Demo owner |
 
+---
+
+## Host CLI Quirks (2026-06-12)
+
+- **PHP memory limit**: host php defaults to 128M — pint/phpstan/pest all crash. Always: `php -d memory_limit=1G vendor/bin/pest`, `vendor/bin/phpstan analyse --memory-limit=1G`.
+- **Stale spatie permission cache**: after reseeding the docker DB, run `docker compose exec -T app php artisan permission:cache-reset` — Redis keeps the old permission map and produces phantom 403s.
+- **pgsql vs sqlite blind spots** (suite is sqlite — these only break in the browser):
+  - JSON operators: columns queried with `->>` (e.g. Filament's notifications bell on `data`) must be `jsonb`, not `text`
+  - Self-referencing FKs inside `Schema::create` — declare via post-create `Schema::table` alters
+  - SQL date functions diverge — group dates in PHP (widgets/charts)
+  - After ANY migration change: run the pgsql gate (`docker compose exec -T app php artisan migrate:fresh --seed --force`)

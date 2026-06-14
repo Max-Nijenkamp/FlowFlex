@@ -11,8 +11,11 @@ use App\Exceptions\HR\IncompletePayrollProfileException;
 use App\Models\HR\PayrollRun;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -37,7 +40,15 @@ class PayrollRunResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Payroll run')
+                ->columns(2)
+                ->components([
+                    DatePicker::make('period_start')->label('Period start')->required(),
+                    DatePicker::make('period_end')->label('Period end')->required(),
+                    Hidden::make('created_by')->default(fn () => Auth::guard('web')->id()),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table

@@ -1,221 +1,233 @@
 <script setup lang="ts">
-import AppMock from '@/Components/Marketing/AppMock.vue'
 import MarketingLayout from '@/Components/Layout/MarketingLayout.vue'
-import FlowLine from '@/Components/Marketing/FlowLine.vue'
+import BlueprintCell from '@/Components/Marketing/BlueprintCell.vue'
+import CtaBand from '@/Components/Marketing/CtaBand.vue'
+import FlowBand from '@/Components/Marketing/FlowBand.vue'
+import Kicker from '@/Components/Marketing/Kicker.vue'
+import ModuleTile from '@/Components/Marketing/ModuleTile.vue'
+import Receipt from '@/Components/Marketing/Receipt.vue'
+import ReplacesStrip from '@/Components/Marketing/ReplacesStrip.vue'
+import SectionTag from '@/Components/Marketing/SectionTag.vue'
+import Switchboard from '@/Components/Marketing/Switchboard.vue'
 import Reveal from '@/Components/UI/Reveal.vue'
-import SectionHeading from '@/Components/UI/SectionHeading.vue'
+import { domainColors, domains, euro } from '@/data/marketing'
 import { Head, Link } from '@inertiajs/vue3'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 defineOptions({ layout: MarketingLayout })
 
-const props = defineProps<{
-    domains: { name: string; modules: number }[]
-    module_count: number
-    sample_modules: { key: string; name: string; domain: string }[]
+defineProps<{
+    domains?: { name: string; modules: number }[]
+    module_count?: number
+    sample_modules?: { key: string; name: string; domain: string }[]
 }>()
 
-// Optimistic module toggling in the "flex" demo — pure client state.
-const active = ref<string[]>(props.sample_modules.slice(0, 5).map((m) => m.key))
+// Hero switchboard — optimistic local state, toggles update the total reactively.
+const HERO_USERS = 80
+const boardModules = ref([
+    { key: 'hr.profiles', name: 'Employee profiles', domain: 'hr', cents: 0, on: true },
+    { key: 'hr.leave', name: 'Leave & absence', domain: 'hr', cents: 150, on: true },
+    { key: 'hr.payroll', name: 'Payroll', domain: 'hr', cents: 250, on: false },
+    { key: 'finance.invoicing', name: 'Invoicing', domain: 'finance', cents: 200, on: true },
+    { key: 'finance.expenses', name: 'Expenses', domain: 'finance', cents: 100, on: false },
+    { key: 'crm.pipeline', name: 'Pipeline', domain: 'crm', cents: 150, on: true },
+    { key: 'projects.boards', name: 'Projects & boards', domain: 'projects', cents: 150, on: false },
+])
 
-function toggle(key: string) {
-    active.value = active.value.includes(key)
-        ? active.value.filter((k) => k !== key)
-        : [...active.value, key]
+const boardRows = computed(() => boardModules.value.map((m) => ({
+    key: m.key,
+    name: m.name,
+    color: domainColors[m.domain],
+    price: m.cents === 0 ? 'included' : `${euro(m.cents)}/user`,
+    on: m.on,
+})))
+
+const perUserCents = computed(() => boardModules.value.filter((m) => m.on).reduce((sum, m) => sum + m.cents, 0))
+const monthlyCents = computed(() => perUserCents.value * HERO_USERS)
+
+function toggleBoard(key: string) {
+    const row = boardModules.value.find((m) => m.key === key)
+    if (row) row.on = !row.on
 }
 
-const flows = [
-    { from: 'CRM', event: 'Deal won', to: 'Finance', effect: 'Draft invoice created with the deal value' },
-    { from: 'Finance', event: 'Invoice paid', to: 'CRM', effect: 'Account lifetime value updates' },
-    { from: 'HR', event: 'Offer accepted', to: 'Payroll', effect: 'Salary lands in the next payroll run' },
-    { from: 'HR', event: 'Leave approved', to: 'Scheduling', effect: 'Shifts unassign, coverage gaps flagged' },
+const tiles = [
+    { name: 'Employee profiles', domain: 'hr', price: 'included', on: true },
+    { name: 'Leave & absence', domain: 'hr', price: '€1,50/user', on: true },
+    { name: 'Invoicing', domain: 'finance', price: '€2,00/user', on: true },
+    { name: 'Pipeline', domain: 'crm', price: '€1,50/user', on: true },
+    { name: 'Payroll', domain: 'hr', price: '€2,50/user', on: false },
+    { name: 'Expenses', domain: 'finance', price: '€1,00/user', on: false },
+    { name: 'Tickets', domain: 'support', price: '€1,50/user', on: false },
 ]
+
+// Only hr/finance/crm have live /product/{domain} pages today.
+const linkable = ['hr', 'finance', 'crm']
+const coverage = domains.slice(0, 12)
 </script>
 
 <template>
-    <Head title="">
-        <meta name="description" content="HR, finance, CRM and more on one platform. One login, one database, one bill. Per user, per module — for teams of 50 to 500." />
+    <Head title="Run everything. Pay for what's switched on.">
+        <meta name="description"
+            content="HR, finance, CRM and 70 more modules on one database. Each one is a switch on your billing page — flip it on when you need it, off when you don't." />
     </Head>
-    <!-- ── Hero ── -->
-    <section class="relative overflow-hidden">
-        <div class="mx-auto max-w-6xl px-6 pt-20 pb-20 sm:pt-28">
-            <div class="grid items-center gap-14 lg:grid-cols-[1.1fr_1fr]">
+
+    <!-- Hero -->
+    <section class="bg-bloom relative border-b border-line">
+        <div class="mx-auto max-w-6xl px-6 pt-14 pb-16 md:pt-[84px] md:pb-[92px]">
+            <div class="grid items-center gap-11 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
                 <div>
-                    <p class="section-index">EVERYTHING FLOWS</p>
-                    <h1 class="mt-5 text-5xl sm:text-6xl font-bold tracking-display leading-[1.04] text-balance">
-                        Run the whole company.<br />
-                        <span class="text-accent">Drop the other 12 tools.</span>
+                    <Kicker>Per user · per module</Kicker>
+                    <h1 class="mt-[26px] font-display text-[40px] font-bold leading-[1.02] tracking-[-0.03em] md:text-[62px]">
+                        Run everything.<br>
+                        Pay for what's <span class="[box-shadow:inset_0_-0.16em_0_#C7D2FE]">switched on</span>.
                     </h1>
-                    <p class="mt-7 max-w-xl text-lg leading-relaxed text-ink-soft">
-                        HR, finance, CRM and {{ module_count }} more modules on one platform —
-                        one login, one database, one bill. Activate a module when you need it.
-                        Switch it off when you don't.
+                    <p class="mt-[22px] max-w-[500px] text-base leading-[1.65] text-ink-soft md:text-lg">
+                        HR, finance, CRM and 70 more modules on one database. Each one is a switch on your billing
+                        page — flip it on when you need it, off when you don't.
                     </p>
-                    <div class="mt-9 flex flex-wrap items-center gap-4">
+                    <div class="mt-[34px] flex flex-col items-stretch gap-3.5 sm:flex-row sm:flex-wrap sm:items-center">
                         <Link href="/pricing"
-                            class="rounded-full bg-ink px-7 py-3.5 font-semibold text-white hover:bg-accent transition ease-out duration-150 active:scale-[0.98]">
+                            class="inline-flex items-center justify-center rounded-xl bg-accent px-8 py-4 text-base font-semibold text-white shadow-[0_1px_2px_rgba(79,70,229,0.4),0_8px_20px_-10px_rgba(79,70,229,0.5)] transition ease-out duration-150 hover:bg-accent-deep active:scale-[0.98]">
                             Build your price
                         </Link>
-                        <Link href="/features" class="group font-semibold text-ink">
-                            See what's inside
-                            <span class="inline-block transition-transform ease-out duration-150 group-hover:translate-x-1">→</span>
+                        <Link href="/features"
+                            class="inline-flex items-center justify-center rounded-xl border border-line-strong bg-card px-8 py-4 text-base font-semibold text-ink shadow-[0_1px_2px_rgba(17,24,39,0.04)] transition ease-out duration-150 hover:border-ink-faint active:scale-[0.98]">
+                            See the modules
                         </Link>
                     </div>
-                    <p class="mt-6 text-sm text-ink-faint">For teams of 50–500 · per user, per module · no tiers, no lock-in</p>
+                    <p class="mt-5 font-mono text-xs text-ink-faint">teams of 50–500 · no tiers · no lock-in · data portable</p>
                 </div>
-                <Reveal :delay="150" class="hidden lg:block">
-                    <AppMock />
-                </Reveal>
-            </div>
-        </div>
-        <div class="absolute inset-x-0 bottom-0 h-24 pointer-events-none opacity-70">
-            <FlowLine />
-        </div>
-    </section>
-
-    <!-- ── 01 The problem ── -->
-    <section class="border-t border-line bg-white">
-        <div class="mx-auto max-w-6xl px-6 py-24">
-            <div class="grid gap-14 lg:grid-cols-2 lg:items-start">
-                <Reveal>
-                    <SectionHeading index="01" eyebrow="The problem" title="Your company runs on a patchwork." >
-                        <p class="mt-5 text-ink-soft leading-relaxed">
-                            A 100-person company typically pays for 5 to 15 disconnected tools.
-                            HR lives in one, invoices in another, deals in a third. Every gap between
-                            them is filled with CSV exports, copy-paste and someone's Tuesday afternoon.
-                        </p>
-                    </SectionHeading>
-                </Reveal>
-                <Reveal :delay="120">
-                    <dl class="grid grid-cols-2 gap-px bg-line border border-line">
-                        <div class="bg-white p-7">
-                            <dt class="text-sm text-ink-faint">Typical SaaS tools at 100 people</dt>
-                            <dd class="mt-2 font-mono text-4xl font-bold tracking-tight">5–15</dd>
-                        </div>
-                        <div class="bg-white p-7">
-                            <dt class="text-sm text-ink-faint">Logins your team juggles</dt>
-                            <dd class="mt-2 font-mono text-4xl font-bold tracking-tight">1<span class="text-ink-faint text-2xl"> here</span></dd>
-                        </div>
-                        <div class="bg-white p-7">
-                            <dt class="text-sm text-ink-faint">Integrations to maintain</dt>
-                            <dd class="mt-2 font-mono text-4xl font-bold tracking-tight">0</dd>
-                        </div>
-                        <div class="bg-white p-7">
-                            <dt class="text-sm text-ink-faint">Modules on FlowFlex today</dt>
-                            <dd class="mt-2 font-mono text-4xl font-bold tracking-tight">{{ module_count }}</dd>
-                        </div>
-                    </dl>
-                </Reveal>
+                <Switchboard :rows="boardRows" title="Your modules" :meta="`${HERO_USERS} users`"
+                    :formula="`${euro(perUserCents)}/user × ${HERO_USERS} users`"
+                    :total="`€${Math.round(monthlyCents / 100)}`" total-suffix="/month" @toggle="toggleBoard" />
             </div>
         </div>
     </section>
 
-    <!-- ── 02 Flex: activate what you need ── -->
-    <section class="border-t border-line">
-        <div class="mx-auto max-w-6xl px-6 py-24">
+    <ReplacesStrip />
+
+    <!-- 01 / The patchwork tax -->
+    <section class="border-b border-line bg-card">
+        <div class="mx-auto max-w-6xl px-6 py-[68px] md:py-[104px]">
             <Reveal>
-                <SectionHeading index="02" eyebrow="Flex" title="Activate modules one by one. Pay for exactly that.">
-                    <p class="mt-5 text-ink-soft leading-relaxed">
-                        A 50-person team might start with three modules. At 200 people you might run fifteen.
-                        Try it — tap a module:
-                    </p>
-                </SectionHeading>
+                <SectionTag num="01" label="THE PATCHWORK TAX" />
+                <h2 class="mt-4 max-w-[640px] font-display text-3xl font-bold leading-[1.06] tracking-display md:text-[42px]">
+                    Twelve tools, one company, and nothing talks to anything.
+                </h2>
+                <p class="mt-[22px] max-w-[500px] text-[16.5px] leading-[1.65] text-ink-soft">
+                    Somewhere between 40 and 80 people, the cost of switching, syncing and re-typing quietly outgrows
+                    the cost of the tools themselves.
+                </p>
             </Reveal>
             <Reveal :delay="100">
-                <div class="mt-10 flex flex-wrap gap-2.5">
-                    <button v-for="m in sample_modules" :key="m.key" type="button" @click="toggle(m.key)"
-                        class="rounded-full border px-4 py-2 text-sm font-medium transition ease-out duration-150"
-                        :class="active.includes(m.key)
-                            ? 'border-accent bg-accent text-white'
-                            : 'border-line bg-white text-ink-soft hover:border-ink-faint'">
-                        {{ m.name }}
-                    </button>
+                <div class="mt-[52px] grid gap-px border border-line-strong bg-line-strong md:grid-cols-3">
+                    <BlueprintCell big="5–15" title="Separate tools at 100 people"
+                        body="Each with its own login, its own invoice, its own idea of who your employees are." />
+                    <BlueprintCell big="×5" title="Forms per new hire"
+                        body="HR, payroll, IT, the LMS, the project tool. One person, five data entries, five chances to typo." />
+                    <BlueprintCell big="0" title="Integrations to maintain"
+                        body="One database. There is nothing to glue together, so nothing breaks at 2am." />
                 </div>
-                <p class="mt-6 font-mono text-sm text-ink-faint">
-                    {{ active.length }} active modules · billed per user, per module, per month · change any time
+            </Reveal>
+        </div>
+    </section>
+
+    <!-- 02 / Flex -->
+    <section class="bg-bloom border-b border-line">
+        <div class="mx-auto max-w-6xl px-6 py-[68px] md:py-[104px]">
+            <Reveal>
+                <SectionTag num="02" label="FLEX" />
+                <h2 class="mt-4 max-w-[640px] font-display text-3xl font-bold leading-[1.06] tracking-display md:text-[42px]">
+                    Modules are switches, not sales calls.
+                </h2>
+                <p class="mt-[22px] max-w-[500px] text-[16.5px] leading-[1.65] text-ink-soft">
+                    Flip one on and it's live immediately. Flip it off and billing stops at month-end — your data
+                    stays exactly where it was.
                 </p>
             </Reveal>
-        </div>
-    </section>
-
-    <!-- ── 03 Flow: data moves itself ── -->
-    <section class="border-t border-line bg-ink text-white">
-        <div class="mx-auto max-w-6xl px-6 py-24">
-            <Reveal>
-                <div class="max-w-2xl">
-                    <div class="flex items-center gap-3">
-                        <span class="section-index">03</span>
-                        <span class="h-px w-8 bg-white/20"></span>
-                        <span class="text-xs font-semibold uppercase tracking-[0.2em] text-white/40">Flow</span>
-                    </div>
-                    <h2 class="mt-4 text-3xl sm:text-4xl font-bold tracking-display text-balance">
-                        One database. Data moves between departments on its own.
-                    </h2>
-                    <p class="mt-5 text-white/60 leading-relaxed">
-                        These aren't integrations you configure — they're how the platform works.
-                    </p>
+            <Reveal :delay="100">
+                <div class="mt-[52px] grid grid-cols-2 gap-2.5 md:grid-cols-4 md:gap-3.5">
+                    <ModuleTile v-for="t in tiles" :key="t.name" :name="t.name" :color="domainColors[t.domain]"
+                        :price="t.price" :on="t.on" />
+                    <ModuleTile ghost ghost-label="+ 65 more modules" />
                 </div>
             </Reveal>
-            <div class="mt-12 divide-y divide-white/10 border-y border-white/10">
-                <Reveal v-for="(flow, i) in flows" :key="flow.event" :delay="i * 80">
-                    <div class="grid gap-2 py-6 sm:grid-cols-[140px_200px_1fr] sm:items-baseline">
-                        <span class="font-mono text-xs uppercase tracking-[0.15em] text-flow">{{ flow.from }} → {{ flow.to }}</span>
-                        <span class="font-semibold">{{ flow.event }}</span>
-                        <span class="text-white/60 text-sm leading-relaxed">{{ flow.effect }}</span>
-                    </div>
-                </Reveal>
-            </div>
         </div>
     </section>
 
-    <!-- ── 04 Coverage ── -->
-    <section class="border-t border-line bg-white">
-        <div class="mx-auto max-w-6xl px-6 py-24">
+    <!-- 03 / Flow -->
+    <FlowBand tag="03" />
+
+    <!-- 04 / Coverage -->
+    <section class="border-b border-line bg-card">
+        <div class="mx-auto max-w-6xl px-6 py-[68px] md:py-[104px]">
             <Reveal>
-                <SectionHeading index="04" eyebrow="Coverage" title="Every department, already inside." />
+                <SectionTag num="04" label="COVERAGE" />
+                <h2 class="mt-4 max-w-[640px] font-display text-3xl font-bold leading-[1.06] tracking-display md:text-[42px]">
+                    Every department, already inside.
+                </h2>
             </Reveal>
-            <div class="mt-12 grid gap-px bg-line border border-line sm:grid-cols-2 lg:grid-cols-4">
-                <Reveal v-for="(domain, i) in domains" :key="domain.name" :delay="i * 60">
-                    <Link href="/features" class="group block bg-white p-7 h-full hover:bg-paper transition ease-out duration-200">
-                        <h3 class="font-semibold">{{ domain.name }}</h3>
-                        <p class="mt-1.5 font-mono text-sm text-ink-faint">{{ domain.modules }} modules</p>
-                        <span class="mt-5 inline-block text-sm font-medium text-accent opacity-0 group-hover:opacity-100 transition ease-out duration-200">
-                            Explore →
+            <Reveal :delay="100">
+                <div class="mt-[52px] overflow-hidden rounded-[14px] border border-line-strong bg-card shadow-[0_1px_2px_rgba(17,24,39,0.03)]">
+                    <component :is="linkable.includes(d.key) ? Link : 'div'" v-for="(d, i) in coverage" :key="d.key"
+                        :href="linkable.includes(d.key) ? `/product/${d.key}` : undefined"
+                        class="grid grid-cols-[18px_1fr_84px] items-center gap-2.5 border-b border-line px-4 py-3 text-sm transition ease-out duration-150 last:border-b-0 md:grid-cols-[24px_1fr_110px_90px] md:gap-4 md:px-[22px] md:py-[13px]"
+                        :class="[i % 2 === 0 ? 'bg-[#FAF9F5]' : '', linkable.includes(d.key) && 'hover:bg-accent-soft/40']">
+                        <span class="h-[11px] w-[11px] rounded-[3px]" :style="{ background: domainColors[d.key] }" />
+                        <span class="font-semibold">{{ d.name }}</span>
+                        <span class="whitespace-nowrap font-mono text-[11.5px] text-ink-faint">{{ d.modules }} modules</span>
+                        <span class="hidden whitespace-nowrap text-right font-mono text-[11.5px] md:block"
+                            :class="linkable.includes(d.key) ? 'text-accent' : 'text-ink-faint'">
+                            {{ linkable.includes(d.key) ? 'explore →' : 'soon' }}
                         </span>
-                    </Link>
+                    </component>
+                </div>
+                <p class="mt-4 font-mono text-xs text-ink-faint">+ 4 more departments · all on the same database</p>
+            </Reveal>
+        </div>
+    </section>
+
+    <!-- 05 / Pricing teaser -->
+    <section class="bg-bloom border-b border-line">
+        <div class="mx-auto max-w-6xl px-6 py-[68px] md:py-[104px]">
+            <div class="grid items-center gap-11 lg:grid-cols-[1fr_400px] lg:gap-20">
+                <Reveal>
+                    <SectionTag num="05" label="PRICING" />
+                    <h2 class="mt-4 max-w-[640px] font-display text-3xl font-bold leading-[1.06] tracking-display md:text-[42px]">
+                        Your invoice is a list, not a tier.
+                    </h2>
+                    <p class="mt-[22px] max-w-[500px] text-[16.5px] leading-[1.65] text-ink-soft">
+                        The sum of the modules you switched on, times the people on your team. The per-module price is
+                        identical at 50 users or 500 — you pay for more seats, never a higher tier.
+                    </p>
+                    <div class="mt-[34px]">
+                        <Link href="/pricing"
+                            class="inline-flex items-center justify-center rounded-xl bg-accent px-8 py-4 text-base font-semibold text-white shadow-[0_1px_2px_rgba(79,70,229,0.4),0_8px_20px_-10px_rgba(79,70,229,0.5)] transition ease-out duration-150 hover:bg-accent-deep active:scale-[0.98]">
+                            Build your price
+                        </Link>
+                    </div>
+                </Reveal>
+                <Reveal :delay="100">
+                    <Receipt title="FLOWFLEX · MONTHLY" class="rotate-[0.6deg]">
+                        <div class="h-3.5" />
+                        <div class="mb-1.5 flex justify-between gap-4 whitespace-nowrap border-b border-dashed border-line-strong py-[7px] font-bold text-ink">
+                            <span>module</span><span>/user</span>
+                        </div>
+                        <div class="flex justify-between gap-4 whitespace-nowrap py-[7px] text-ink-soft"><span>Employee profiles</span><span>€0,00</span></div>
+                        <div class="flex justify-between gap-4 whitespace-nowrap py-[7px] text-ink-soft"><span>Leave &amp; absence</span><span>€1,50</span></div>
+                        <div class="flex justify-between gap-4 whitespace-nowrap py-[7px] text-ink-soft"><span>Invoicing</span><span>€2,00</span></div>
+                        <div class="flex justify-between gap-4 whitespace-nowrap py-[7px] text-ink-soft"><span>Pipeline</span><span>€1,50</span></div>
+                        <div class="mt-2 flex justify-between gap-4 whitespace-nowrap border-t border-dashed border-line-strong pt-3.5 pb-[7px] text-base font-bold text-ink">
+                            <span>€5,00 × 80 users</span><span>€400</span>
+                        </div>
+                        <div class="h-2" />
+                        <p class="text-center text-[11px] text-ink-faint">change modules any month · no contracts</p>
+                    </Receipt>
                 </Reveal>
             </div>
         </div>
     </section>
 
-    <!-- ── Trust strip ── -->
-    <section class="border-t border-line">
-        <div class="mx-auto max-w-6xl px-6 py-14">
-            <div class="flex flex-wrap items-center justify-center gap-x-12 gap-y-4 text-sm text-ink-soft">
-                <span>EU-hosted</span><span class="text-line">·</span>
-                <span>GDPR-compliant, DSAR built in</span><span class="text-line">·</span>
-                <span>Two-factor authentication</span><span class="text-line">·</span>
-                <span>Full audit log</span><span class="text-line">·</span>
-                <span>Export your data any day</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- ── Final CTA ── -->
-    <section class="border-t border-line bg-paper-deep">
-        <div class="mx-auto max-w-6xl px-6 py-24 text-center">
-            <Reveal>
-                <h2 class="text-4xl sm:text-5xl font-bold tracking-display text-balance">Everything flows.</h2>
-                <p class="mx-auto mt-5 max-w-md text-ink-soft">
-                    See what your stack would cost on one platform — it takes about a minute.
-                </p>
-                <div class="mt-9">
-                    <Link href="/pricing"
-                        class="rounded-full bg-ink px-8 py-4 font-semibold text-white hover:bg-accent transition ease-out duration-150">
-                        Build your price
-                    </Link>
-                </div>
-            </Reveal>
-        </div>
-    </section>
+    <CtaBand title="Switch on what you need. Nothing else."
+        sub="See what your stack would cost on one platform — it takes about a minute." />
 </template>

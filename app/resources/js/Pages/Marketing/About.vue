@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import MarketingLayout from '@/Components/Layout/MarketingLayout.vue'
+import BlueprintCell from '@/Components/Marketing/BlueprintCell.vue'
+import CtaBand from '@/Components/Marketing/CtaBand.vue'
+import Kicker from '@/Components/Marketing/Kicker.vue'
+import SectionTag from '@/Components/Marketing/SectionTag.vue'
+import Logo from '@/Components/UI/Logo.vue'
 import Reveal from '@/Components/UI/Reveal.vue'
-import { Head, Link } from '@inertiajs/vue3'
+import Switch from '@/Components/UI/Switch.vue'
+import { Head } from '@inertiajs/vue3'
 
 defineOptions({ layout: MarketingLayout })
 
@@ -13,69 +19,101 @@ const values = [
     { name: 'Customer-first', detail: 'Built for department managers and employees, not the IT department.' },
 ]
 
-const isNot = [
+const isIsnt = [
     { is: 'A modular platform you grow into', not: 'An ERP that imposes a process model' },
     { is: 'Built for 50 and for 500 people', not: 'Enterprise-only software' },
     { is: 'Focused — every addition serves Flow or Flex', not: 'A feature factory' },
 ]
+
+const trust = ['EU-hosted', 'GDPR-compliant, DSAR built in', 'Two-factor authentication', 'Full audit log', 'Export your data any day']
 </script>
 
 <template>
     <Head title="About">
-        <meta name="description" content="FlowFlex is the all-in-one workspace for growing companies. Built in Europe, GDPR-first, modular by design." />
+        <meta name="description"
+            content="FlowFlex exists because growing companies shouldn't need fifteen tools to run one business." />
     </Head>
-    <section class="mx-auto max-w-6xl px-6 pt-20 pb-16">
-        <p class="section-index">ABOUT</p>
-        <h1 class="mt-4 max-w-3xl text-4xl sm:text-6xl font-bold tracking-display text-balance">
-            Growing companies shouldn't need fifteen tools to run one business.
-        </h1>
-        <div class="mt-10 max-w-2xl space-y-5 text-lg text-ink-soft leading-relaxed">
-            <p>
-                FlowFlex started with that frustration. Somewhere between 40 and 80 employees,
-                every company hits the same wall: the cost of switching, syncing and re-entering data
-                across a patchwork of tools quietly outgrows the cost of the tools themselves.
-            </p>
-            <p>
-                So we built the alternative — one platform where every operational tool shares one
-                data model, one login and one bill. Modules switch on when you need them and off when
-                you don't. Built in Europe, hosted in Europe, GDPR-compliant from the first line of code.
-            </p>
+
+    <!-- Hero -->
+    <section class="bg-bloom border-b border-line">
+        <div class="mx-auto max-w-6xl px-6 pt-14 pb-14 md:pt-[84px] md:pb-[76px]">
+            <Kicker>About</Kicker>
+            <h1 class="mt-[26px] max-w-[880px] font-display text-[36px] font-bold leading-[1.06] tracking-[-0.03em] md:text-[56px]">
+                Growing companies shouldn't need
+                <span class="[box-shadow:inset_0_-0.16em_0_#C7D2FE]">fifteen tools</span> to run one business.
+            </h1>
+            <div class="mt-9 flex max-w-[640px] flex-col gap-5 text-[16px] leading-[1.7] text-ink-soft md:text-[17.5px]">
+                <p>
+                    FlowFlex started with that frustration. Somewhere between 40 and 80 employees, every company hits
+                    the same wall: the cost of switching, syncing and re-entering data across a patchwork of tools
+                    quietly outgrows the cost of the tools themselves.
+                </p>
+                <p>
+                    So we built the alternative — one platform where every operational tool shares one data model,
+                    one login and one bill. Modules switch on when you need them and off when you don't. Built in
+                    Europe, hosted in Europe, GDPR-compliant from the first line of code.
+                </p>
+            </div>
         </div>
     </section>
 
-    <section class="border-t border-line bg-white">
-        <div class="mx-auto max-w-6xl px-6 py-20">
+    <!-- 01 / Values -->
+    <section class="border-b border-line bg-card">
+        <div class="mx-auto max-w-6xl px-6 py-[68px] md:py-[104px]">
             <Reveal>
-                <h2 class="text-2xl font-bold tracking-display">What we hold ourselves to</h2>
+                <SectionTag num="01" label="VALUES" />
+                <h2 class="mt-4 max-w-[640px] font-display text-3xl font-bold leading-[1.06] tracking-display md:text-[42px]">
+                    What we hold ourselves to.
+                </h2>
             </Reveal>
-            <div class="mt-10 grid gap-px bg-line border border-line sm:grid-cols-2 lg:grid-cols-3">
-                <Reveal v-for="(value, i) in values" :key="value.name" :delay="i * 60">
-                    <div class="bg-white p-7 h-full">
-                        <h3 class="font-semibold">{{ value.name }}</h3>
-                        <p class="mt-2 text-sm text-ink-soft leading-relaxed">{{ value.detail }}</p>
+            <Reveal :delay="100">
+                <div class="mt-[52px] grid gap-px border border-line-strong bg-line-strong sm:grid-cols-2 md:grid-cols-3">
+                    <BlueprintCell v-for="v in values" :key="v.name" :title="v.name" :body="v.detail" />
+                    <div class="flex items-center justify-center bg-card px-7 py-8">
+                        <Logo variant="dark" />
                     </div>
-                </Reveal>
-            </div>
+                </div>
+            </Reveal>
         </div>
     </section>
 
-    <section class="border-t border-line">
-        <div class="mx-auto max-w-6xl px-6 py-20">
+    <!-- 02 / Is / isn't -->
+    <section class="border-b border-line">
+        <div class="mx-auto max-w-6xl px-6 py-[68px] md:py-[104px]">
             <Reveal>
-                <h2 class="text-2xl font-bold tracking-display">What FlowFlex is — and isn't</h2>
+                <SectionTag num="02" label="IS / ISN'T" />
+                <h2 class="mt-4 max-w-[640px] font-display text-3xl font-bold leading-[1.06] tracking-display md:text-[42px]">
+                    What FlowFlex is — and isn't.
+                </h2>
             </Reveal>
-            <div class="mt-10 divide-y divide-line border-y border-line">
-                <div v-for="row in isNot" :key="row.is" class="grid gap-2 py-6 sm:grid-cols-2">
-                    <p class="font-medium">{{ row.is }}</p>
-                    <p class="text-ink-faint line-through decoration-ink-faint/40">{{ row.not }}</p>
+            <Reveal :delay="100">
+                <div class="mt-11 border-t border-line">
+                    <div v-for="row in isIsnt" :key="row.is"
+                        class="grid gap-3 border-b border-line py-[22px] md:grid-cols-2 md:gap-6">
+                        <p class="flex items-baseline gap-3 text-base font-semibold">
+                            <Switch on sm class="relative top-1" />
+                            {{ row.is }}
+                        </p>
+                        <p class="text-[15.5px] text-ink-faint line-through decoration-[rgba(152,160,171,0.5)]">
+                            {{ row.not }}
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="mt-12">
-                <Link href="/contact" class="group font-semibold text-accent">
-                    Talk to the team
-                    <span class="inline-block transition-transform ease-out duration-150 group-hover:translate-x-1">→</span>
-                </Link>
-            </div>
+            </Reveal>
         </div>
     </section>
+
+    <!-- Trust strip -->
+    <section class="bg-bloom border-b border-line">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-9 gap-y-3 px-6 py-16 font-mono text-[12.5px] text-ink-soft">
+            <template v-for="(t, i) in trust" :key="t">
+                <span>{{ t }}</span>
+                <span v-if="i < trust.length - 1" class="text-line-strong">·</span>
+            </template>
+        </div>
+    </section>
+
+    <CtaBand title="Talk to the team."
+        sub="Questions about modules, pricing or switching from your current stack — we reply within one business day."
+        cta="Contact us" href="/contact" />
 </template>

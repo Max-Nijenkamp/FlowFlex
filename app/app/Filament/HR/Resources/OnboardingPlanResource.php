@@ -6,9 +6,15 @@ namespace App\Filament\HR\Resources;
 
 use App\Contracts\BillingServiceInterface;
 use App\Contracts\HR\OnboardingServiceInterface;
+use App\Models\HR\Employee;
 use App\Models\HR\OnboardingPlan;
+use App\Models\HR\OnboardingTemplate;
 use BackedEnum;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -33,14 +39,24 @@ class OnboardingPlanResource extends Resource
             && app(BillingServiceInterface::class)->hasModule('hr.onboarding');
     }
 
-    public static function canCreate(): bool
-    {
-        return false; // plans start via the EmployeeHired listener / service
-    }
-
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Onboarding')
+                ->columns(2)
+                ->components([
+                    Select::make('employee_id')->label('Employee')
+                        ->options(fn () => Employee::query()->get()->pluck('full_name', 'id'))
+                        ->searchable()
+                        ->required()
+                        ->disabled(fn (string $operation): bool => $operation === 'edit'),
+                    Select::make('template_id')->label('Template')
+                        ->options(fn () => OnboardingTemplate::query()->pluck('name', 'id'))
+                        ->required()
+                        ->disabled(fn (string $operation): bool => $operation === 'edit'),
+                    DateTimePicker::make('started_at')->default(now())->required(),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -55,6 +71,9 @@ class OnboardingPlanResource extends Resource
                 TextColumn::make('progress')->label('Progress')
                     ->state(fn (OnboardingPlan $r) => (app(OnboardingServiceInterface::class)->progress($r->id) * 100).'%'),
                 TextColumn::make('completed_at')->dateTime()->placeholder('In progress'),
+            ])
+            ->recordActions([
+                EditAction::make(),
             ]);
     }
 

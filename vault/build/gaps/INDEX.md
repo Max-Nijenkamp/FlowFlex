@@ -14,6 +14,8 @@ Bugs, spec issues, and missing details discovered during build sessions.
 | ID | Severity | Domain | Module | Description | Discovered |
 |---|---|---|---|---|---|
 | [[gap-filament5-plugins-unavailable]] | low | foundation | foundation.scaffold | 2 of 4 Filament plugins still lack v5 (fullcalendar, tiptap — needed Phase 2+); shield + activitylog resolved via custom resources in core.rbac/core.audit | 2026-06-11 |
+| [[gap-panel-ux-depth-leftovers]] | medium | All | crm.pipeline | Leftovers after 2026-06-12 UX sweep: cash-flow restyle, 8 CRM empty forms, broader attachments + global search (spotlight ✅ delivered) | 2026-06-12 |
+| [[gap-switchboard-expansion-spec-missing]] | low | All | frontend | §14–25 pages built in-system with *(assumed)* copy — regenerated design bundle never landed; diff + swap when it arrives | 2026-06-12 |
 
 All 7 audit gaps resolved at spec level 2026-06-11 (see below). Code-level enforcement is carried into each module build via the Definition of Done. Full per-spec worklist: [[build/security-audit-2026-06-11]].
 

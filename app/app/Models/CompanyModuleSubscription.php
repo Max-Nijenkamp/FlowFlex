@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Support\Traits\BelongsToCompany;
+use App\Support\Traits\LogsCompanyActivity;
 use Database\Factories\CompanyModuleSubscriptionFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +23,7 @@ use Illuminate\Support\Carbon;
 class CompanyModuleSubscription extends Model
 {
     /** @use HasFactory<CompanyModuleSubscriptionFactory> */
-    use BelongsToCompany, HasFactory, HasUlids;
+    use BelongsToCompany, HasFactory, HasUlids, LogsCompanyActivity;
 
     protected $fillable = [
         'company_id',

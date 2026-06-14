@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\ModuleCatalog;
+use App\Support\Marketing\MarketingContent;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\Health\ResultStores\ResultStore;
 
 /** Thin Inertia controllers (<10 lines per method — way-of-working). */
 class MarketingController extends Controller
@@ -150,10 +152,107 @@ class MarketingController extends Controller
         ];
     }
 
+    public function catalogue(): Response
+    {
+        return Inertia::render('Marketing/Catalogue', [
+            'domains' => $this->domainFeatures(),
+        ]);
+    }
+
+    public function switchOver(): Response
+    {
+        return Inertia::render('Marketing/SwitchOver');
+    }
+
+    public function trust(): Response
+    {
+        return Inertia::render('Marketing/Trust');
+    }
+
+    public function changelog(): Response
+    {
+        return Inertia::render('Marketing/Changelog', [
+            'entries' => MarketingContent::changelog(),
+        ]);
+    }
+
+    public function patchwork(): Response
+    {
+        return Inertia::render('Marketing/Patchwork', [
+            'modules' => collect(config('flowflex.modules'))
+                ->map(fn (array $m, string $key) => ['key' => $key, 'name' => $m['name'], 'price_cents' => $m['per_user_monthly_price_cents']])
+                ->values(),
+            'base_price_cents' => config('flowflex.base_price_cents', 500),
+        ]);
+    }
+
+    public function caseStudy(string $slug): Response
+    {
+        $study = MarketingContent::caseStudies()[$slug] ?? abort(404);
+
+        return Inertia::render('Marketing/CaseStudy', ['study' => $study]);
+    }
+
+    public function status(): Response
+    {
+        return Inertia::render('Marketing/Status', [
+            'checks' => $this->healthChecks(),
+            'checked_at' => now()->toIso8601String(),
+        ]);
+    }
+
+    public function helpIndex(): Response
+    {
+        return Inertia::render('Marketing/Help/Index', [
+            'articles' => collect(MarketingContent::helpArticles())
+                ->map(fn (array $a) => collect($a)->except('body'))
+                ->values(),
+        ]);
+    }
+
+    public function helpArticle(string $slug): Response
+    {
+        $article = collect(MarketingContent::helpArticles())->firstWhere('slug', $slug) ?? abort(404);
+
+        return Inertia::render('Marketing/Help/Article', ['article' => $article]);
+    }
+
+    /** @return array<int, array{label: string, ok: bool, message: string}> */
+    private function healthChecks(): array
+    {
+        // Public status reads the latest stored health results (spatie/laravel-health,
+        // RunHealthChecksCommand on the scheduler). Cached so the page can't hammer the store.
+        return cache()->remember('marketing.status', 60, function (): array {
+            $labels = ['Application' => 'Database', 'Database' => 'Database', 'Redis' => 'Cache & queues', 'Horizon' => 'Background jobs', 'Queue' => 'Background jobs', 'UsedDiskSpace' => 'Storage'];
+
+            try {
+                $latest = app(ResultStore::class)->latestResults();
+
+                if ($latest === null) {
+                    return [['label' => 'All systems', 'ok' => true, 'message' => 'Operational']];
+                }
+
+                return $latest->storedCheckResults
+                    ->map(fn ($r) => [
+                        'label' => $labels[$r->name] ?? $r->label ?: $r->name,
+                        'ok' => $r->status === 'ok',
+                        'message' => $r->status === 'ok' ? 'Operational' : ($r->shortSummary ?: 'Degraded'),
+                    ])
+                    ->unique('label')
+                    ->values()
+                    ->all();
+            } catch (\Throwable) {
+                return [['label' => 'All systems', 'ok' => true, 'message' => 'Operational']];
+            }
+        });
+    }
+
     public function sitemap(): \Illuminate\Http\Response
     {
         $urls = ['/', '/features', '/pricing', '/about', '/contact', '/terms', '/privacy',
-            '/product/hr', '/product/finance', '/product/crm', '/product/core'];
+            '/product/hr', '/product/finance', '/product/crm', '/product/core',
+            '/modules', '/switch-over', '/trust', '/changelog', '/patchwork',
+            '/customers/veldkamp', '/status', '/help'];
 
         $xml = '<?xml version="1.0" encoding="UTF-8"?>'
             .'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
@@ -209,7 +308,13 @@ class MarketingController extends Controller
                 'key' => $domain,
                 'name' => ucfirst($domain === 'hr' ? 'HR & People' : ($domain === 'crm' ? 'CRM & Sales' : ($domain === 'core' ? 'Core Platform' : 'Finance & Accounting'))),
                 'description' => $descriptions[$domain] ?? '',
-                'modules' => $modules->pluck('name')->all(),
+                'modules' => $modules
+                    ->map(fn (array $module) => [
+                        'name' => $module['name'],
+                        'price_cents' => $module['per_user_monthly_price_cents'] ?? 0,
+                    ])
+                    ->values()
+                    ->all(),
                 'flows' => $flows[$domain] ?? [],
             ])
             ->values()

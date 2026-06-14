@@ -6,6 +6,7 @@ namespace App\Models\Finance;
 
 use App\States\Finance\Expense\ExpenseState;
 use App\Support\Traits\BelongsToCompany;
+use App\Support\Traits\LogsCompanyActivity;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,7 +32,7 @@ use Spatie\ModelStates\HasStates;
  */
 class Expense extends Model
 {
-    use BelongsToCompany, HasFactory, HasStates, HasUlids, SoftDeletes;
+    use BelongsToCompany, HasFactory, HasStates, HasUlids, LogsCompanyActivity, SoftDeletes;
 
     protected $table = 'fin_expenses';
 

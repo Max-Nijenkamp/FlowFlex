@@ -117,4 +117,22 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Markdown Mail Theme
+    |--------------------------------------------------------------------------
+    |
+    | Switchboard+ transactional email theme (design handoff §25):
+    | warm paper, ink, single indigo accent, mono meta lines.
+    | Lives at resources/views/vendor/mail/html/themes/flowflex.css.
+    |
+    */
+
+    'markdown' => [
+        'theme' => 'flowflex',
+        'paths' => [
+            resource_path('views/vendor/mail'),
+        ],
+    ],
+
 ];

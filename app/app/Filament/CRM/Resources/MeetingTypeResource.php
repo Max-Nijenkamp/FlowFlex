@@ -7,7 +7,11 @@ namespace App\Filament\CRM\Resources;
 use App\Contracts\BillingServiceInterface;
 use App\Models\CRM\MeetingType;
 use BackedEnum;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -32,7 +36,25 @@ class MeetingTypeResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Meeting type')
+                ->columns(2)
+                ->components([
+                    TextInput::make('name')->required()->maxLength(120),
+                    TextInput::make('slug')->required()->maxLength(120)
+                        ->helperText('Used in the public booking link'),
+                    TextInput::make('duration_minutes')->label('Duration (minutes)')->numeric()->required()->default(30),
+                    Select::make('location_type')->label('Location')
+                        ->options(['video' => 'Video call', 'phone' => 'Phone', 'in_person' => 'In person'])
+                        ->default('video'),
+                    TextInput::make('video_link')->label('Video link')->url(),
+                    TextInput::make('buffer_minutes')->label('Buffer (minutes)')->numeric()->default(0),
+                    TextInput::make('price_cents')->label('Price (€)')->numeric()
+                        ->formatStateUsing(fn ($state): float => $state === null ? 0.0 : round($state / 100, 2))
+                        ->dehydrateStateUsing(fn ($state): int => (int) round((float) $state * 100)),
+                    Hidden::make('owner_id')->default(fn () => Auth::guard('web')->id()),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table

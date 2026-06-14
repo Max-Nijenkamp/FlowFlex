@@ -38,6 +38,12 @@ class UserResource extends Resource
             && app(BillingServiceInterface::class)->hasModule('core.rbac');
     }
 
+    // Teammates join by invitation only — no direct user creation (invitation-system).
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema->components([]);
@@ -47,6 +53,8 @@ class UserResource extends Resource
     {
         return $table
             ->deferLoading() // perceived-performance: paint page, stream rows
+            ->emptyStateHeading('No teammates yet')
+            ->emptyStateDescription('FlowFlex workspaces are invite-only — send an invitation and your colleague appears here the moment they accept.')
             ->columns([
                 TextColumn::make('full_name')
                     ->label('Name')

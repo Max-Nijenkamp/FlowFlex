@@ -55,6 +55,7 @@ return [
         'finance.currency' => ['name' => 'Multi-Currency', 'domain' => 'finance', 'per_user_monthly_price_cents' => 50], // *(assumed)*
         // CRM & Sales
         'crm.contacts' => ['name' => 'Contacts', 'domain' => 'crm', 'per_user_monthly_price_cents' => 200],
+        'crm.leads' => ['name' => 'Leads', 'domain' => 'crm', 'per_user_monthly_price_cents' => 150], // *(assumed)* — capture + qualify + convert to deal
         'crm.deals' => ['name' => 'Deals', 'domain' => 'crm', 'per_user_monthly_price_cents' => 250],
         'crm.pipeline' => ['name' => 'Pipeline Board', 'domain' => 'crm', 'per_user_monthly_price_cents' => 100],
         'crm.activities' => ['name' => 'Activities', 'domain' => 'crm', 'per_user_monthly_price_cents' => 50],

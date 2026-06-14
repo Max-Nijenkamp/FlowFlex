@@ -6,6 +6,7 @@ namespace App\Models\HR;
 
 use App\States\HR\Employee\EmployeeState;
 use App\Support\Traits\BelongsToCompany;
+use App\Support\Traits\LogsCompanyActivity;
 use Database\Factories\HR\EmployeeFactory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -51,7 +52,7 @@ use Spatie\ModelStates\HasStates;
 class Employee extends Model
 {
     /** @use HasFactory<EmployeeFactory> */
-    use BelongsToCompany, HasFactory, HasStates, HasUlids, Searchable, SoftDeletes;
+    use BelongsToCompany, HasFactory, HasStates, HasUlids, LogsCompanyActivity, Searchable, SoftDeletes;
 
     protected $table = 'hr_employees';
 

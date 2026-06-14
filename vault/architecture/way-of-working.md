@@ -67,6 +67,11 @@ A module is `complete` only when ALL of:
 8. Spec updated: anything that changed during build is reflected back (spec stays truth)
 9. Vault synced: STATUS.md row, module-graph row still accurate
 10. Perceived performance ([[patterns/perceived-performance]]): no spinners — skeleton loaders on every data view; quick actions optimistic where listed; transitions ease-out (start fast, end slow)
+11. Every resource passes the [[patterns/filament-resource-checklist]] — real Section-wrapped form (or documented `canCreate(false)`), create/edit path, badges/filters, global-search attributes on customer-facing entities. *(Added 2026-06-12 — 27 resources shipped unusable because no gate checked this.)*
+12. Panel dashboards have widgets (stats + chart minimum, PHP date grouping) and LocalDevSeeder feeds them realistic demo data — empty dashboards read as broken
+13. Live smoke after every panel-touching session (`/flowflex:verify`): real login, key pages 200, one scripted Livewire POST — the Pest suite has stayed green through multiple browser-breaking bugs ([[patterns/tenant-context-pitfalls]]); GET-only checks are not verification
+14. UX states designed ([[patterns/ux-states]]): every table has a human empty state with an action (override the platform default when the module can say something better); forms >8 fields are wizard steps that validate per step; errors read human, never log-file
+15. Switchboard+ conformance ([[../frontend/design-system|design-system]]): panel artifacts use the shared skin (no per-panel CSS forks, no hardcoded domain colors); any new theme CSS selector verified against rendered Filament 5 markup ([[filament-patterns]] item 16); global-search attributes added so the module's records appear in Spotlight (⌘K)
 
 ---
 

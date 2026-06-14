@@ -5,9 +5,15 @@ declare(strict_types=1);
 namespace App\Filament\HR\Resources;
 
 use App\Contracts\BillingServiceInterface;
+use App\Models\HR\Employee;
 use App\Models\HR\Feedback;
+use App\Models\HR\ReviewGoal;
 use BackedEnum;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -32,7 +38,37 @@ class FeedbackResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Who')
+                ->columns(2)
+                ->components([
+                    Select::make('from_employee_id')->label('From')
+                        ->options(fn () => Employee::query()->get()->pluck('full_name', 'id'))
+                        ->searchable()
+                        ->required(),
+                    Select::make('to_employee_id')->label('To')
+                        ->options(fn () => Employee::query()->get()->pluck('full_name', 'id'))
+                        ->searchable()
+                        ->required()
+                        ->different('from_employee_id'),
+                ]),
+            Section::make('Feedback')
+                ->columns(2)
+                ->components([
+                    Select::make('type')
+                        ->options(['praise' => 'Praise', 'constructive' => 'Constructive', 'coaching-note' => 'Coaching note'])
+                        ->required(),
+                    Select::make('visibility')
+                        ->options(['public' => 'Public', 'private' => 'Private', 'manager-chain' => 'Manager chain'])
+                        ->required(),
+                    Textarea::make('message')->required()->maxLength(2000)->columnSpanFull(),
+                    Select::make('related_goal_id')->label('Related goal')
+                        ->options(fn () => ReviewGoal::query()->pluck('title', 'id'))
+                        ->searchable()
+                        ->nullable()
+                        ->columnSpanFull(),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -45,6 +81,9 @@ class FeedbackResource extends Resource
                 TextColumn::make('message')->limit(60),
                 TextColumn::make('visibility')->badge(),
                 TextColumn::make('created_at')->dateTime(),
+            ])
+            ->recordActions([
+                EditAction::make(),
             ]);
     }
 

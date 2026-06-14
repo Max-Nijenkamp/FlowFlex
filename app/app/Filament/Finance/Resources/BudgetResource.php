@@ -9,8 +9,12 @@ use App\Contracts\Finance\BudgetServiceInterface;
 use App\Models\Finance\Budget;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -33,9 +37,37 @@ class BudgetResource extends Resource
             && app(BillingServiceInterface::class)->hasModule('finance.budgets');
     }
 
+    public static function canCreate(): bool
+    {
+        return Auth::guard('web')->check()
+            && Auth::guard('web')->user()->can('finance.budgets.create');
+    }
+
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Budget')
+                ->columns(2)
+                ->components([
+                    TextInput::make('name')->required()->maxLength(120),
+                    TextInput::make('fiscal_year')
+                        ->numeric()->integer()->minValue(2000)->maxValue(2100)
+                        ->default(now()->year)
+                        ->required(),
+                    Select::make('scope_type')
+                        ->options([
+                            'company' => 'Company',
+                            'department' => 'Department',
+                        ])
+                        ->default('company')
+                        ->required()
+                        ->live(),
+                    TextInput::make('scope_id')->label('Department ID')
+                        ->nullable()
+                        ->visible(fn (callable $get): bool => $get('scope_type') === 'department')
+                        ->helperText('ULID of the department this budget is scoped to'),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -51,6 +83,9 @@ class BudgetResource extends Resource
                 TextColumn::make('lines_count')->counts('lines')->label('Lines'),
             ])
             ->recordActions([
+                EditAction::make()
+                    ->visible(fn (Budget $r) => $r->status === 'draft'
+                        && Auth::guard('web')->user()->can('finance.budgets.update')),
                 Action::make('approve')
                     ->icon(Heroicon::OutlinedCheck)->color('success')
                     ->visible(fn (Budget $r) => $r->status === 'draft'

@@ -7,11 +7,16 @@ namespace App\Filament\HR\Resources;
 use App\Contracts\BillingServiceInterface;
 use App\Models\HR\Applicant;
 use BackedEnum;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use UnitEnum;
 
@@ -23,6 +28,8 @@ class ApplicantResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Recruitment';
 
+    protected static ?string $recordTitleAttribute = 'last_name';
+
     public static function canAccess(): bool
     {
         return Auth::guard('web')->check()
@@ -30,9 +37,41 @@ class ApplicantResource extends Resource
             && app(BillingServiceInterface::class)->hasModule('hr.recruitment');
     }
 
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        /** @var Applicant $record */
+        return $record->full_name;
+    }
+
+    /** @return list<string> */
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['first_name', 'last_name', 'email'];
+    }
+
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Applicant')
+                ->columns(2)
+                ->components([
+                    TextInput::make('first_name')->required()->maxLength(100),
+                    TextInput::make('last_name')->required()->maxLength(100),
+                    TextInput::make('email')->email()->required(),
+                    TextInput::make('phone')->tel(),
+                ]),
+            Section::make('Application')
+                ->columns(2)
+                ->components([
+                    Select::make('requisition_id')->label('Role')
+                        ->relationship('requisition', 'title')
+                        ->searchable()->preload()
+                        ->required(),
+                    Select::make('source')
+                        ->options(['careers' => 'Careers site', 'referral' => 'Referral', 'manual' => 'Manual'])
+                        ->nullable(),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -46,6 +85,9 @@ class ApplicantResource extends Resource
                 TextColumn::make('requisition.title')->label('Role'),
                 TextColumn::make('status')->badge(),
                 TextColumn::make('source')->placeholder('—'),
+            ])
+            ->recordActions([
+                EditAction::make(),
             ]);
     }
 

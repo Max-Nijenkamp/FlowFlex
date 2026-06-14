@@ -6,6 +6,7 @@ namespace App\Models\Finance;
 
 use App\States\Finance\Invoice\InvoiceState;
 use App\Support\Traits\BelongsToCompany;
+use App\Support\Traits\LogsCompanyActivity;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -35,7 +36,7 @@ use Spatie\ModelStates\HasStates;
  */
 class Invoice extends Model
 {
-    use BelongsToCompany, HasFactory, HasStates, HasUlids, SoftDeletes;
+    use BelongsToCompany, HasFactory, HasStates, HasUlids, LogsCompanyActivity, SoftDeletes;
 
     protected $table = 'fin_invoices';
 

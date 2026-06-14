@@ -99,3 +99,48 @@ FlowFlex speaks like a capable colleague who respects the user's time.
 **Rules**: Never stretch, rotate, recolour. Never recreate in CSS. Minimum 120px wide for wordmark, 24px for icon-only.
 
 **Status (2026-06-11)**: all SVGs created and live — public site header/footer (dark/light), auth pages (icon mark), all 5 Filament panels via native brandLogo APIs, favicon on site + panels.
+
+**Panel rule (2026-06-12)**: panel sidebars are ink `#111827` in both light and dark mode — panels always use the **light** wordmark (`->brandLogo(flowflex-logo-light.svg)`).
+
+---
+
+## Visual Identity — "Switchboard+" (2026-06-12)
+
+The design system across public site, auth and panel skins. Source of truth for implementation detail: `design_handoff_flowflex_site/README.md` + ADR [[../build/decisions/decision-2026-06-12-switchboard-plus-design-system|Switchboard+]]. The idea: the per-user-per-module business model made visible — **modules are literal switches, invoices are receipts, stats live in blueprint cells, cross-domain flow is a dark band with pulse lines.**
+
+### Typography
+
+| Role | Face | Usage |
+|---|---|---|
+| Display | **Archivo** (500–800) | Headings, wordmark contexts; tracking −0.025 to −0.03em |
+| Body | **Instrument Sans** (400–700) | All body text, also the Filament panel font |
+| Data | **JetBrains Mono** (400–700) | Prices, labels, table headers, kickers, meta lines |
+
+### Palette (CSS tokens in `resources/css/app.css`)
+
+| Token | Hex | Role |
+|---|---|---|
+| `paper` | `#FBFAF8` | Page background — warm, never pure white |
+| `paper-deep` | `#F4F2EC` | Recessed surfaces |
+| `card` | `#FFFFFF` | Cards, boards, receipts |
+| `ink` | `#111827` | Headings, footer/nav-dark/sidebar bg |
+| `ink-soft` / `ink-faint` | `#4B5563` / `#98A0AB` | Body / meta text |
+| `line` / `line-strong` | `#E7E4DD` / `#D8D4CA` | Hairlines / card borders |
+| `accent` | `#4F46E5` | THE accent — indigo, used sparingly |
+| `accent-soft` | `#EEF2FF` | Tints, ON-state chips |
+| `flow` | `#38BDF8` | Sky — secondary highlight inside dark Flow bands only |
+| `flow-bg` | `#0E1320` | Dark Flow band background (NOT the same as ink) |
+
+Domain colors (17, functional): see panel table in [[ux-principles]] — rendered as 10–11px squares with 3px radius, never circles on light surfaces.
+
+### Backgrounds — bloom, not grids (2026-06-12)
+
+No graph-paper/grid textures anywhere. Light heroes/sections use the **bloom**: soft indigo radial at top + paper-deep fade (`.bg-bloom`). Indigo CTA bands use two glows — white top-left, sky bottom-right (`.bg-bloom-accent`).
+
+### Signature components
+
+Switch (38×22 pill, the system's signature control), Kicker (mono uppercase chip + 8px indigo square), Switchboard (zebra rows + ink total strip), Blueprint stat cell (indigo corner tick + mono number), Module tile (ON/OFF state pill; OFF = dashed), Receipt (mono, sawtooth bottom edge), dark Flow band (glowing nodes + route labels), Replaces strip (strikethrough marquee). Vue implementations in `resources/js/Components/Marketing/`.
+
+### Buttons
+
+Primary = indigo + glow shadow · dark = ink (staff surfaces use ink, customer surfaces indigo) · outline = white + line-strong border. Radii 10px (12 lg / 8 sm) — no pills. Press feedback `active:scale-[0.98]` always.

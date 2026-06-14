@@ -5,9 +5,15 @@ declare(strict_types=1);
 namespace App\Filament\CRM\Resources;
 
 use App\Contracts\BillingServiceInterface;
+use App\Models\CRM\Account;
 use App\Models\CRM\Contract;
 use BackedEnum;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
@@ -32,7 +38,27 @@ class ContractResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Contract')
+                ->columns(2)
+                ->components([
+                    Select::make('account_id')->label('Organisation')
+                        ->options(fn () => Account::query()->orderBy('name')->pluck('name', 'id'))
+                        ->searchable()
+                        ->required(),
+                    TextInput::make('title')->required()->maxLength(160),
+                    TextInput::make('value_cents')->label('Value (€)')->numeric()->required()
+                        ->formatStateUsing(fn ($state): float => $state === null ? 0.0 : round($state / 100, 2))
+                        ->dehydrateStateUsing(fn ($state): int => (int) round((float) $state * 100)),
+                    Select::make('billing_interval')->label('Billing')
+                        ->options(['one-off' => 'One-off', 'monthly' => 'Monthly', 'yearly' => 'Yearly'])
+                        ->default('one-off'),
+                    DatePicker::make('start_date')->required(),
+                    DatePicker::make('end_date')->required(),
+                    Toggle::make('auto_renew')->label('Auto-renew')->inline(false),
+                    TextInput::make('notice_period_days')->label('Notice period (days)')->numeric(),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table

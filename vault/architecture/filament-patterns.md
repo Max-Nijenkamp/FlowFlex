@@ -110,7 +110,8 @@ class HrPanelProvider extends PanelProvider
             ->path('hr')
             ->colors(['primary' => Color::hex('#7C3AED')])
             ->brandName('FlowFlex — HR & People')
-            ->font('Inter')
+            ->brandLogo(asset('images/logo/flowflex-logo-light.svg')) // light — sidebar is ink in both modes
+            ->font('Instrument Sans') // Switchboard+ body face (brand.md)
             ->darkMode(Feature::Enabled)
             ->sidebarCollapsibleOnDesktop()
             ->authGuard('web')
@@ -143,7 +144,22 @@ Registered in `bootstrap/providers.php`.
 
 ## 6. Theme CSS and Vite Registration
 
-Each panel needs its own Tailwind CSS theme file at `resources/css/filament/{panel}/theme.css`.
+Each panel needs its own Tailwind CSS theme file at `resources/css/filament/{panel}/theme.css` — since 2026-06-12 these are **thin**: Google-fonts import (must stay the first statement), the vendor theme import, the shared **Switchboard+ skin**, the panel's `@source` globs, and a mono sidebar label:
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Archivo:...&family=Instrument+Sans:...&family=JetBrains+Mono:...&display=swap');
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+@import '../flowflex-skin.css';
+
+@source '../../../../app/Filament/HR/**/*';
+@source '../../../../resources/views/filament/hr/**/*';
+
+.fi-sidebar-header {
+    --ff-panel-label: 'HR & PEOPLE · /HR';
+}
+```
+
+All visual rules live ONCE in `resources/css/filament/flowflex-skin.css` (ink sidebar, domain-color active item, mono table headers, paper canvas, tabs/pagination/badges, empty states, wizard steps, spotlight, login). The panel accent rides on Filament's `--primary-*` variables — never hardcode a domain color in the skin.
 
 Register in `vite.config.js`:
 
@@ -231,8 +247,52 @@ Tailwind utilities — they won't exist in the compiled theme.
 
 ## 13. Auth Page Skin (Login Parity)
 
-Panel auth pages (simple layout) are skinned to match the public Vue login: warm paper
-canvas, centred 420px card, ease-out entrance, footer strip injected via the
-`SIMPLE_PAGE_END` render hook (AppServiceProvider). /admin login is a custom
-`AdminLogin` page labelled "Staff console". Shared snippet lives in all 5 theme.css files.
+Panel auth pages (simple layout) match the public Vue login: bloom background (no
+grids), centred 420px card (20px radius, line-strong border), ease-out entrance,
+brand mark above the card (`SIMPLE_LAYOUT_START` hook) + mono footer strip
+(`SIMPLE_LAYOUT_END` hook, AppServiceProvider). The forgot-password link sits
+**below** the password input (`PanelLogin::getPasswordFormComponent` →
+`belowContent`) so tabbing goes email → password directly. Buttons: customer
+panels **indigo**, staff console **ink** + mono `/ADMIN` badge next to the heading
+(admin/theme.css overrides). Shared rules live in `flowflex-skin.css`.
+
+Guests on staff surfaces (`/admin*`, `/horizon*`, `/pulse*`) redirect to
+`/admin/login`, not the customer login — `redirectGuestsTo` in `bootstrap/app.php`.
+
+**`url.intended` is guard-scoped (2026-06-12 bug pair).** Laravel stores ONE
+intended URL per session: a guest visit to `/admin` followed by a customer
+login redirected the customer to `/admin` → bounced to the staff login (and
+the mirror image hijacked staff logins to `/app`). Fix:
+`App\Http\Responses\GuardScopedLoginResponse` (bound to Filament's
+`LoginResponse` contract — honors intended only when its path matches the
+panel's guard) + the same prefix filter in `PublicAuthController::login`.
+Regression tests in `PanelAuthTest`. Symptom signature: "login on X redirects
+me to Y's login" — check the intended URL before suspecting guards.
+
+## 14. Spotlight (⌘K / Ctrl+K)
+
+`App\Livewire\Spotlight` + `resources/views/livewire/spotlight.blade.php`, injected
+on every authenticated panel page via the `BODY_END` render hook. Panel-scoped:
+navigation (resources + pages, `canAccess`-filtered), quick-create actions, and
+record results via `$panel->getGlobalSearchProvider()`. The component restores
+panel context with `Filament::setCurrentPanel()` because Livewire update requests
+don't run panel routing. Styling = `.ff-spotlight-*` classes in the skin (plain CSS —
+livewire views aren't scanned by panel themes, see item 12). Panels no longer set
+`globalSearchKeyBindings` — Spotlight owns mod+k.
+
+## 15. UX-State Defaults
+
+`Table::configureUsing()` in AppServiceProvider sets human empty-state copy
+platform-wide; skin styles empty states (panel-tint icon + corner tick), selected
+rows (10% tint + 2px edge ≠ hover 5% wash) and wizard steps. Full rules:
+[[architecture/patterns/ux-states]]. Forms >8 fields use a `Wizard` — steps
+validate on Next, never all-at-the-end.
+
+## 16. Skin Selectors Are Verified Against Rendered Markup
+
+Filament 5 class names differ from v3 docs (`fi-sidebar-item-btn` not
+`…-item-button`; topbar is `nav.fi-topbar` inside `.fi-topbar-ctn`; active
+pagination = `.fi-pagination-item.fi-active`). When extending the skin, verify
+against rendered HTML or `vendor/filament/*/resources/views` — a selector that
+matches nothing fails silently.
 

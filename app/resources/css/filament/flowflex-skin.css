@@ -1,0 +1,1110 @@
+/* ════════════════════════════════════════════════════════════════
+   FlowFlex Filament skin — "Switchboard+" (design_handoff README §12–13)
+   Shared by every panel theme; the panel accent rides on Filament's
+   native --primary-* variables, so one file serves all domains.
+   Dark sidebar #111827 (all panels, per ux-principles.md), warm paper
+   content, mono table headers, domain-color active nav item.
+   Selectors verified against rendered Filament 5 markup (fi-sidebar-item-btn,
+   nav.fi-topbar, fi-pagination-item.fi-active…) — 2026-06-12.
+   ════════════════════════════════════════════════════════════════ */
+
+/* (Google fonts @import lives in each panel theme.css so it stays the
+   first statement of the compiled sheet.) */
+
+/* ── Type ─────────────────────────────────────────────────────── */
+.fi-header-heading,
+.fi-section-header-heading,
+.fi-modal-heading,
+.fi-wi-widget-heading {
+    font-family: 'Archivo', ui-sans-serif, sans-serif;
+    letter-spacing: -0.02em;
+}
+
+/* ── Canvas: warm paper, never stock gray ─────────────────────── */
+.fi-body {
+    background-color: #fbfaf8;
+}
+
+.dark .fi-body {
+    background-color: rgb(15 23 42);
+}
+
+/* ── Layout: full-height 248px ink sidebar, topbar right of it ──
+   Filament renders the topbar ABOVE the sidebar/main row; the design wants
+   the sidebar to own the full left edge. Pin the sidebar to the viewport
+   and push the topbar (and only the topbar) right of it on desktop. */
+@media (min-width: 1024px) {
+    .fi-sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0;
+        height: 100dvh !important;
+        width: 248px;
+        z-index: 35;
+    }
+
+    .fi-topbar-ctn,
+    .fi-main-ctn {
+        margin-inline-start: 248px;
+        transition: margin-inline-start 0.2s cubic-bezier(0, 0, 0.2, 1);
+    }
+
+    /* Collapsed icon rail (~4.5rem) — keep topbar + content aligned via :has(). */
+    .fi-body:has(.fi-sidebar:not(.fi-sidebar-open)) .fi-topbar-ctn,
+    .fi-body:has(.fi-sidebar:not(.fi-sidebar-open)) .fi-main-ctn {
+        margin-inline-start: 4.5rem;
+    }
+
+    /* Filament hides the sidebar header when the topbar carries the brand —
+       our brand lives HERE. Force it visible. */
+    .fi-sidebar-header-ctn,
+    .fi-sidebar-header {
+        display: flex !important;
+    }
+
+    .fi-sidebar-header {
+        align-items: center;
+        width: 100%;
+        padding: 1rem 1.25rem 0.875rem;
+    }
+
+    .fi-body:has(.fi-sidebar:not(.fi-sidebar-open)) .fi-sidebar {
+        width: 4.5rem;
+    }
+}
+
+/* Brand at the head of the sidebar (SIDEBAR_LOGO_BEFORE hook). */
+.ff-side-brand {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0.25rem 0.5rem;
+}
+
+.ff-side-brand img {
+    height: 1.75rem;
+    width: auto;
+}
+
+.fi-sidebar:not(.fi-sidebar-open) .ff-side-brand img {
+    height: 1.5rem;
+}
+
+/* ── Sidebar: ink #111827 in both modes ───────────────────────── */
+.fi-sidebar {
+    background-color: #111827;
+    border-inline-end: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fi-sidebar-header {
+    position: relative;
+    background-color: #111827;
+    box-shadow: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* The sidebar is ink in light mode too — always show the light logo. */
+.fi-sidebar-header .fi-logo-dark {
+    display: none;
+}
+
+.fi-sidebar-header .fi-logo-light {
+    display: flex;
+}
+
+/* Mono panel label under the logo — content set per panel theme. */
+.fi-sidebar-header::after {
+    content: var(--ff-panel-label, '');
+    display: block;
+    position: absolute;
+    bottom: 0.3rem;
+    inset-inline-start: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: rgba(255, 255, 255, 0.38);
+    pointer-events: none;
+}
+
+.fi-sidebar-nav {
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.fi-sidebar-item-btn {
+    border-radius: 0.5rem;
+    border-inline-start: 2px solid transparent;
+    transition: background-color 0.15s cubic-bezier(0, 0, 0.2, 1), color 0.15s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.fi-sidebar-item-label {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.fi-sidebar-item-icon {
+    color: rgba(255, 255, 255, 0.62);
+    opacity: 0.85;
+}
+
+.fi-sidebar-item-btn:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.fi-sidebar-item-btn:hover .fi-sidebar-item-label,
+.fi-sidebar-item-btn:hover .fi-sidebar-item-icon {
+    color: #ffffff;
+}
+
+/* Active item = 2px domain-color left border + 16% tint + white text. */
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn,
+.fi-sidebar-item.fi-sidebar-item-has-active-child-items > .fi-sidebar-item-btn {
+    background-color: color-mix(in srgb, var(--primary-500) 16%, transparent);
+    border-inline-start-color: var(--primary-500);
+    border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn .fi-sidebar-item-label {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn .fi-sidebar-item-icon {
+    color: color-mix(in srgb, var(--primary-300) 90%, white);
+    opacity: 1;
+}
+
+.fi-sidebar-group-label {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.32);
+}
+
+.fi-sidebar-group-btn {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.fi-sidebar-group-btn:hover {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Sidebar badges keep readable on ink. */
+.fi-sidebar-item-badge-ctn .fi-badge {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* ── Sidebar footer: panel-switcher chips + user card (design §12) ── */
+.ff-side-foot-wrp {
+    padding: 0 1.25rem 0.25rem;
+}
+
+.ff-panels-label {
+    padding: 1rem 0.125rem 0.375rem;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.32);
+}
+
+.ff-panels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-bottom: 0.875rem;
+}
+
+.ff-panel-chip {
+    width: 30px;
+    height: 26px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.55);
+    transition: background-color 0.15s cubic-bezier(0, 0, 0.2, 1), color 0.15s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.ff-panel-chip:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+}
+
+.ff-panel-chip.on {
+    outline: 1.5px solid var(--primary-500);
+    background: color-mix(in srgb, var(--primary-500) 25%, transparent);
+    color: #ffffff;
+}
+
+.ff-side-foot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.875rem 0.125rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ff-side-ava {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-500);
+    color: #ffffff;
+    font-family: 'Archivo', ui-sans-serif, sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+.ff-side-id .nm {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.ff-side-id .co {
+    display: block;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+/* Collapsed sidebar: footer would overflow the 4.5rem rail. */
+.fi-sidebar:not(.fi-sidebar-open) .ff-side-foot-wrp {
+    display: none;
+}
+
+/* ── Topbar: 60px paper bar — crumb left, search + bell + avatar right ── */
+nav.fi-topbar {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    height: 60px;
+    padding-inline: 1.75rem;
+    backdrop-filter: blur(8px);
+    background-color: rgba(251, 250, 248, 0.92);
+    border-bottom: 1px solid #e7e4dd;
+    box-shadow: none;
+}
+
+.dark nav.fi-topbar {
+    background-color: rgba(15, 23, 42, 0.85);
+    border-bottom-color: rgb(51 65 85);
+}
+
+.fi-topbar-start {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.fi-topbar-start .ff-topbar-crumb {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fi-topbar-end {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    margin-inline-start: auto;
+    flex: none;
+}
+
+/* The sidebar carries the brand — never show a second logo in the topbar. */
+.fi-topbar .fi-logo,
+.fi-topbar-logo-ctn {
+    display: none;
+}
+
+/* Our ff-side-brand hook is the one logo; hide Filament's native sidebar logo
+   so the header doesn't show two wordmarks side by side. */
+.fi-sidebar-header-logo-ctn,
+.fi-sidebar-header > .fi-logo,
+.fi-sidebar-header > a:not(.ff-side-brand) {
+    display: none !important;
+}
+
+/* Spotlight owns search — hide Filament's native global search field. */
+.fi-global-search-ctn,
+.fi-global-search {
+    display: none;
+}
+
+/* Sidebar collapse toggles: quiet, borderless — chrome, not content. */
+.fi-topbar-collapse-sidebar-btn-ctn .fi-icon-btn,
+.fi-topbar-open-sidebar-btn,
+.fi-topbar-close-sidebar-btn,
+.fi-topbar-open-collapse-sidebar-btn,
+.fi-topbar-close-collapse-sidebar-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    color: #98a0ab;
+}
+
+.fi-topbar-collapse-sidebar-btn-ctn .fi-icon-btn:hover,
+.fi-topbar-open-collapse-sidebar-btn:hover,
+.fi-topbar-close-collapse-sidebar-btn:hover {
+    color: #111827;
+    background: rgba(17, 24, 39, 0.05);
+}
+
+.fi-topbar .fi-icon-btn,
+.fi-topbar .fi-dropdown-trigger .fi-icon-btn {
+    border-radius: 0.5625rem;
+}
+
+/* One crumb line lives in the topbar (TopbarCrumb hook); hide the
+   page-header duplicates so headings sit clean like the design. */
+.fi-header .fi-breadcrumbs {
+    display: none;
+}
+
+.ff-topbar-crumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #98a0ab;
+    white-space: nowrap;
+}
+
+.ff-topbar-crumb .sep {
+    color: #d8d4ca;
+}
+
+.ff-topbar-crumb .here {
+    color: #111827;
+    font-weight: 600;
+}
+
+.dark .ff-topbar-crumb .here {
+    color: #ffffff;
+}
+
+/* Right-side topbar icon buttons: bordered 34px cards (design §12). */
+.fi-topbar-end .fi-icon-btn {
+    width: 34px;
+    height: 34px;
+    border: 1px solid #d8d4ca;
+    background: #ffffff;
+    border-radius: 0.5625rem;
+    color: #4b5563;
+}
+
+.dark .fi-topbar-end .fi-icon-btn {
+    border-color: rgb(51 65 85);
+    background: rgb(30 41 59);
+    color: rgb(148 163 184);
+}
+
+/* User-menu avatar: 30px, crisp ring. */
+.fi-topbar .fi-user-menu-trigger .fi-avatar {
+    width: 30px;
+    height: 30px;
+    box-shadow: 0 0 0 2px #ffffff, 0 1px 3px rgba(17, 24, 39, 0.2);
+}
+
+/* 320px search trigger with ⌘K hint — opens Spotlight (design §12 topbar). */
+.ff-topbar-search {
+    display: none;
+    align-items: center;
+    gap: 9px;
+    width: 320px;
+    border: 1px solid #d8d4ca;
+    background: #ffffff;
+    border-radius: 9px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #98a0ab;
+    cursor: pointer;
+    text-align: start;
+    transition: border-color 0.15s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@media (min-width: 768px) {
+    .ff-topbar-search {
+        display: flex;
+    }
+}
+
+.ff-topbar-search:hover {
+    border-color: #98a0ab;
+}
+
+.ff-topbar-search svg {
+    width: 13px;
+    height: 13px;
+    flex: none;
+}
+
+.ff-topbar-search .ph {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ff-topbar-search .kbd {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    border: 1px solid #e7e4dd;
+    border-radius: 4px;
+    padding: 1px 5px;
+}
+
+.dark .ff-topbar-search {
+    background: rgb(30 41 59);
+    border-color: rgb(51 65 85);
+}
+
+/* Notification bell: unread badge becomes the design's ping dot. */
+.fi-topbar-database-notifications-btn {
+    position: relative;
+}
+
+.fi-topbar-database-notifications-btn .fi-badge {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    min-width: 9px;
+    width: 9px;
+    height: 9px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--primary-500);
+    border: 2px solid #fbfaf8;
+    font-size: 0;
+}
+
+/* ── Cards / sections / widgets ───────────────────────────────── */
+.fi-section,
+.fi-wi-widget,
+.fi-ta-ctn {
+    border-radius: 0.875rem;
+    border-color: #d8d4ca;
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
+}
+
+.dark .fi-section,
+.dark .fi-wi-widget,
+.dark .fi-ta-ctn {
+    border-color: rgb(51 65 85);
+}
+
+/* Stat widget = blueprint cell: primary corner tick + mono value. */
+.fi-wi-stats-overview-stat {
+    position: relative;
+}
+
+.fi-wi-stats-overview-stat::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    inset-inline-start: -1px;
+    width: 12px;
+    height: 12px;
+    border-top: 2px solid var(--primary-500);
+    border-inline-start: 2px solid var(--primary-500);
+    pointer-events: none;
+}
+
+.fi-wi-stats-overview-stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: -0.04em;
+}
+
+.fi-wi-stats-overview-stat-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #98a0ab;
+}
+
+/* ── Buttons: 9px radius (not pills), press feedback ──────────── */
+.fi-btn {
+    border-radius: 0.5625rem;
+    transition: transform 0.05s ease-out, background-color 0.15s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.fi-btn:active {
+    transform: scale(0.97);
+}
+
+/* ── Inputs: 10px radius, accent focus ring ───────────────────── */
+.fi-input-wrp,
+.fi-select-input {
+    border-radius: 0.625rem;
+}
+
+.fi-input-wrp:focus-within {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-500) 15%, transparent);
+}
+
+/* ── Tabs: 2px primary underline, mono count chips ────────────── */
+.fi-tabs {
+    border-bottom: 1px solid #e7e4dd;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    gap: 0.25rem;
+}
+
+.dark .fi-tabs {
+    border-bottom-color: rgb(51 65 85);
+}
+
+.fi-tabs-item {
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #98a0ab;
+    background: transparent;
+}
+
+.fi-tabs-item:hover {
+    color: #4b5563;
+    background: transparent;
+}
+
+.fi-tabs-item.fi-active {
+    color: #111827;
+    border-bottom-color: var(--primary-500);
+    background: transparent;
+}
+
+.dark .fi-tabs-item.fi-active {
+    color: #ffffff;
+}
+
+.fi-tabs-item .fi-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    border-radius: 5px;
+}
+
+/* ── Tables: mono editorial headers, warm zebra rows ──────────── */
+.fi-ta-header-cell,
+.fi-ta-header-cell-sort-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #98a0ab;
+}
+
+.fi-ta-row:nth-child(odd) {
+    background-color: #faf9f5;
+}
+
+.dark .fi-ta-row:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.fi-ta-row:hover {
+    background-color: color-mix(in srgb, var(--primary-500) 5%, transparent);
+}
+
+.fi-ta-cell {
+    font-size: 13.5px;
+}
+
+/* ── Badges: pills ────────────────────────────────────────────── */
+.fi-badge {
+    border-radius: 9999px;
+}
+
+/* ── Pagination: 30px squares, active = panel color ───────────── */
+.fi-pagination-item {
+    border-radius: 0.5rem;
+    border: 1px solid #d8d4ca;
+    background-color: #ffffff;
+    min-width: 1.875rem;
+    height: 1.875rem;
+}
+
+.dark .fi-pagination-item {
+    border-color: rgb(51 65 85);
+    background-color: rgb(30 41 59);
+}
+
+.fi-pagination-item-label {
+    font-weight: 600;
+    font-size: 12.5px;
+}
+
+.fi-pagination-item.fi-active {
+    background-color: var(--primary-500);
+    border-color: var(--primary-500);
+}
+
+.fi-pagination-item.fi-active .fi-pagination-item-label {
+    color: #ffffff;
+}
+
+/* ── Dropdowns / user menu ────────────────────────────────────── */
+.fi-dropdown-panel {
+    border-radius: 0.875rem;
+    border: 1px solid #d8d4ca;
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 16px 40px -12px rgba(17, 24, 39, 0.18);
+}
+
+.dark .fi-dropdown-panel {
+    border-color: rgb(51 65 85);
+}
+
+.fi-dropdown-header {
+    font-weight: 600;
+}
+
+/* ── Modals ───────────────────────────────────────────────────── */
+.fi-modal-window {
+    border-radius: 1.25rem;
+}
+
+.fi-header-heading {
+    letter-spacing: -0.025em;
+}
+
+/* ── Perceived performance (architecture/patterns/perceived-performance.md)
+   Start fast, end slow: entrances ease out; exits are near-instant. ── */
+.fi-modal-window,
+.fi-dropdown-panel,
+.fi-slide-over-window {
+    animation: ff-enter 0.18s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@keyframes ff-enter {
+    from { opacity: 0; transform: translateY(4px) scale(0.99); }
+    to { opacity: 1; transform: none; }
+}
+
+.fi-ta-row {
+    animation: ff-row-in 0.25s cubic-bezier(0, 0, 0.2, 1) backwards;
+}
+
+.fi-ta-row:nth-child(1) { animation-delay: 0ms; }
+.fi-ta-row:nth-child(2) { animation-delay: 25ms; }
+.fi-ta-row:nth-child(3) { animation-delay: 50ms; }
+.fi-ta-row:nth-child(4) { animation-delay: 75ms; }
+.fi-ta-row:nth-child(5) { animation-delay: 100ms; }
+.fi-ta-row:nth-child(n + 6) { animation-delay: 120ms; }
+
+@keyframes ff-row-in {
+    from { opacity: 0; transform: translateY(3px); }
+    to { opacity: 1; transform: none; }
+}
+
+[wire\:loading\.delay] .fi-ta-content {
+    opacity: 0.6;
+    transition: opacity 0.15s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fi-modal-window,
+    .fi-dropdown-panel,
+    .fi-slide-over-window,
+    .fi-ta-row {
+        animation: none;
+    }
+}
+
+/* ── Panel login — same door as the public Vue login ──────────── */
+.fi-simple-layout {
+    background-color: #fbfaf8;
+    background-image:
+        radial-gradient(ellipse 75% 60% at 50% -8%, rgba(79, 70, 229, 0.065), transparent 65%),
+        linear-gradient(180deg, rgba(244, 242, 236, 0.55), rgba(251, 250, 248, 0) 320px);
+    justify-content: center;
+    padding: 4rem 1.5rem;
+}
+
+.dark .fi-simple-layout {
+    background-color: rgb(15 23 42);
+    background-image: none;
+}
+
+.fi-simple-main-ctn {
+    flex-grow: 0;
+}
+
+.fi-simple-main {
+    margin-block: 0;
+    max-width: 420px;
+    border-radius: 1.25rem;
+    border: 1px solid #d8d4ca;
+    background-color: #ffffff;
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 28px 56px -32px rgba(17, 24, 39, 0.16);
+    animation: ff-card-in 0.3s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.dark .fi-simple-main {
+    border-color: rgb(51 65 85);
+    background-color: rgb(30 41 59);
+}
+
+@keyframes ff-card-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fi-simple-main { animation: none; }
+}
+
+.fi-simple-main .fi-logo {
+    display: none;
+}
+
+.fi-simple-header {
+    text-align: center;
+}
+
+.fi-simple-header-heading {
+    font-family: 'Archivo', ui-sans-serif, sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+}
+
+.fi-simple-header-subheading {
+    font-size: 0.90625rem;
+}
+
+/* Brand mark above the card (SIMPLE_LAYOUT_START hook). */
+.ff-login-mark-link {
+    display: block;
+    margin-bottom: 2rem;
+}
+
+.ff-login-mark {
+    display: block;
+    height: 2.5rem;
+    width: 2.5rem;
+    margin-inline: auto;
+}
+
+/* Footer strip injected via render hook. */
+.ff-login-footer {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6875rem;
+    color: #98a0ab;
+}
+
+.ff-login-footer a {
+    transition: color 0.15s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.ff-login-footer a:hover {
+    color: #111827;
+}
+
+/* Forgot-password link sits BELOW the password input (UX rule —
+   tabbing goes email → password without passing the link). */
+.ff-login-forgot {
+    margin-top: 0.125rem;
+    text-align: right;
+}
+
+.ff-login-forgot .fi-link {
+    font-size: 0.8125rem;
+}
+
+/* Customer panels sign in with the indigo accent; the staff console
+   overrides this to ink in admin/theme.css (staff = ink rule). */
+.fi-simple-main .fi-btn.fi-color-primary {
+    width: 100%;
+    border-radius: 0.75rem;
+    background-color: #4f46e5;
+    padding-block: 0.875rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(79, 70, 229, 0.4), 0 8px 20px -10px rgba(79, 70, 229, 0.5);
+    transition: background-color 0.15s cubic-bezier(0, 0, 0.2, 1), transform 0.05s ease-out;
+}
+
+.fi-simple-main .fi-btn.fi-color-primary:hover {
+    background-color: #4338ca;
+}
+
+.fi-simple-main .fi-btn.fi-color-primary:active {
+    transform: scale(0.98);
+}
+
+/* ── Forms without a Section: card the schema container ───────── */
+.fi-main .fi-sc-form > .fi-sc:not(:has(.fi-section)) {
+    border-radius: 0.875rem;
+    border: 1px solid #d8d4ca;
+    background-color: #ffffff;
+    padding: 1.5rem;
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04);
+}
+
+.dark .fi-main .fi-sc-form > .fi-sc:not(:has(.fi-section)) {
+    border-color: rgb(51 65 85);
+    background-color: rgb(30 41 59);
+}
+
+/* ── Infolists (employee profile etc.): mono labels, calm values ── */
+.fi-in-entry-wrp-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #98a0ab;
+}
+
+.fi-in-entry-wrp-content {
+    font-size: 14px;
+}
+
+/* ── UX states (architecture/patterns/ux-states.md) ───────────── */
+
+/* Empty states: first impression, not a dead end — icon bg gets the
+   panel tint + blueprint corner tick, heading reads display-size. */
+.fi-ta-empty-state {
+    padding: 3.5rem 1.5rem;
+}
+
+.fi-ta-empty-state-icon-bg {
+    position: relative;
+    background-color: color-mix(in srgb, var(--primary-500) 9%, transparent);
+    border-radius: 0.875rem;
+}
+
+.fi-ta-empty-state-icon-bg::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    inset-inline-start: -1px;
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid var(--primary-500);
+    border-inline-start: 2px solid var(--primary-500);
+}
+
+.fi-ta-empty-state-icon-bg .fi-icon {
+    color: var(--primary-500);
+}
+
+.fi-ta-empty-state-heading {
+    font-family: 'Archivo', ui-sans-serif, sans-serif;
+    letter-spacing: -0.02em;
+}
+
+.fi-ta-empty-state-description {
+    color: #98a0ab;
+}
+
+/* Bulk-selection indicator bar: primary tint (design §13 "1 selected"). */
+.fi-ta-selection-indicator {
+    background-color: color-mix(in srgb, var(--primary-500) 8%, transparent);
+    color: color-mix(in srgb, var(--primary-600) 90%, black);
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+/* Selected ≠ hover: selection is a clear primary-tinted state with a
+   left accent; hover stays the lighter 5% wash. */
+.fi-ta-row.fi-selected,
+.fi-ta-row.fi-selected:nth-child(odd) {
+    background-color: color-mix(in srgb, var(--primary-500) 10%, transparent);
+    box-shadow: inset 2px 0 0 var(--primary-500);
+}
+
+.fi-ta-row.fi-selected:hover {
+    background-color: color-mix(in srgb, var(--primary-500) 14%, transparent);
+}
+
+/* Wizard steps: chunked forms with mono step numbers; the active step
+   carries the panel color, completed steps confirm themselves. */
+.fi-sc-wizard-header-step-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+}
+
+.fi-sc-wizard-header-step-icon-ctn {
+    border-radius: 0.625rem;
+}
+
+.fi-sc-wizard-header-step-label {
+    font-weight: 600;
+    font-size: 13.5px;
+}
+
+.fi-sc-wizard-header-step-description {
+    font-size: 12px;
+    color: #98a0ab;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   Spotlight — panel-scoped quick search (⌘K / Ctrl+K)
+   Livewire component injected via BODY_END render hook; plain CSS
+   classes because livewire views aren't scanned by panel themes.
+   ════════════════════════════════════════════════════════════════ */
+.ff-spotlight-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(17, 24, 39, 0.45);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 14vh 1.5rem 1.5rem;
+}
+
+.ff-spotlight {
+    width: 100%;
+    max-width: 560px;
+    border-radius: 1rem;
+    border: 1px solid #d8d4ca;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 40px 80px -24px rgba(17, 24, 39, 0.45);
+    overflow: hidden;
+    animation: ff-enter 0.18s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.dark .ff-spotlight {
+    border-color: rgb(51 65 85);
+    background: rgb(30 41 59);
+}
+
+.ff-spotlight-input-wrp {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    border-bottom: 1px solid #e7e4dd;
+}
+
+.dark .ff-spotlight-input-wrp {
+    border-bottom-color: rgb(51 65 85);
+}
+
+.ff-spotlight-input-wrp svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    color: #98a0ab;
+    flex: none;
+}
+
+.ff-spotlight-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: 'Instrument Sans', ui-sans-serif, sans-serif;
+    font-size: 15px;
+    color: #111827;
+}
+
+.dark .ff-spotlight-input {
+    color: #ffffff;
+}
+
+.ff-spotlight-input::placeholder {
+    color: #98a0ab;
+}
+
+.ff-spotlight-kbd {
+    flex: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #98a0ab;
+    border: 1px solid #e7e4dd;
+    border-radius: 4px;
+    padding: 1px 6px;
+}
+
+.ff-spotlight-results {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.ff-spotlight-group {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #98a0ab;
+    padding: 0.625rem 0.75rem 0.25rem;
+}
+
+.ff-spotlight-result {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    text-align: start;
+    border-radius: 0.5rem;
+    padding: 0.5625rem 0.75rem;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #111827;
+}
+
+.dark .ff-spotlight-result {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.ff-spotlight-result .sub {
+    font-size: 12px;
+    color: #98a0ab;
+    font-weight: 400;
+}
+
+.ff-spotlight-result.is-active,
+.ff-spotlight-result:hover {
+    background: color-mix(in srgb, var(--primary-500) 9%, transparent);
+}
+
+.ff-spotlight-result .chip {
+    flex: none;
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+    background: var(--primary-500);
+}
+
+.ff-spotlight-empty {
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 13.5px;
+    color: #98a0ab;
+}
+
+.ff-spotlight-foot {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 1.25rem;
+    border-top: 1px solid #e7e4dd;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #98a0ab;
+}
+
+.dark .ff-spotlight-foot {
+    border-top-color: rgb(51 65 85);
+}

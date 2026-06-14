@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Filament\Auth\EditProfile;
 use App\Http\Middleware\EnsureSubscriptionActive;
 use App\Http\Middleware\SetCompanyContext;
 use App\Http\Middleware\SetLocale;
-use App\Support\Filament\PanelSwitchItems;
-use Filament\Auth\MultiFactor\App\AppAuthentication;
+use App\Support\Filament\AppAuthenticationWithQrFix as AppAuthentication;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -39,9 +39,9 @@ class CrmPanelProvider extends PanelProvider
             ->authGuard('web')
             ->emailVerification() // no portal access without verified email (security.md)
             ->multiFactorAuthentication(AppAuthentication::make()->recoverable()) // self-service TOTP 2FA
-            ->profile(isSimple: false)
+            ->profile(EditProfile::class, isSimple: false)
             ->brandName('FlowFlex — CRM & Sales')
-            ->brandLogo(asset('images/logo/flowflex-logo-dark.svg'))
+            ->brandLogo(asset('images/logo/flowflex-logo-light.svg')) // light wordmark — sidebar is ink in both modes
             ->darkModeBrandLogo(asset('images/logo/flowflex-logo-light.svg'))
             ->brandLogoHeight('2rem')
             ->favicon(asset('images/logo/flowflex-icon.svg'))
@@ -49,11 +49,9 @@ class CrmPanelProvider extends PanelProvider
                 'primary' => Color::Sky,
                 'gray' => Color::Slate,
             ])
-            ->font('Inter')
+            ->font('Instrument Sans')
             ->defaultThemeMode(ThemeMode::System)
             ->sidebarCollapsibleOnDesktop()
-            ->userMenuItems(PanelSwitchItems::make('crm')) // cross-panel switcher
-            ->globalSearchKeyBindings(['mod+k'])
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')
             ->viteTheme('resources/css/filament/crm/theme.css')

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Filament\Admin\Pages\AdminLogin;
-use Filament\Auth\MultiFactor\App\AppAuthentication;
+use App\Support\Filament\AppAuthenticationWithQrFix as AppAuthentication;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -45,7 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ->authGuard('admin')
             ->authPasswordBroker('admins')
             ->brandName('FlowFlex Staff')
-            ->brandLogo(asset('images/logo/flowflex-logo-dark.svg'))
+            ->brandLogo(asset('images/logo/flowflex-logo-light.svg')) // light wordmark — sidebar is ink in both modes
             ->darkModeBrandLogo(asset('images/logo/flowflex-logo-light.svg'))
             ->brandLogoHeight('2rem')
             ->favicon(asset('images/logo/flowflex-icon.svg'))
@@ -53,7 +53,7 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Indigo,
                 'gray' => Color::Slate,
             ])
-            ->font('Inter')
+            ->font('Instrument Sans')
             ->defaultThemeMode(ThemeMode::System)
             ->sidebarCollapsibleOnDesktop()
             ->viteTheme('resources/css/filament/admin/theme.css')

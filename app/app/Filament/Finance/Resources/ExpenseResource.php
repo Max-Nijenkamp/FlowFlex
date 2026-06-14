@@ -8,11 +8,17 @@ use App\Contracts\BillingServiceInterface;
 use App\Contracts\Finance\ExpenseServiceInterface;
 use App\Exceptions\Finance\CannotApproveOwnExpenseException;
 use App\Models\Finance\Expense;
+use App\Models\Finance\ExpenseCategory;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
@@ -36,9 +42,31 @@ class ExpenseResource extends Resource
             && app(BillingServiceInterface::class)->hasModule('finance.expenses');
     }
 
+    public static function canCreate(): bool
+    {
+        return Auth::guard('web')->check()
+            && Auth::guard('web')->user()->can('finance.expenses.create');
+    }
+
+    /** Submitter (user_id) and over-limit flag are set by ExpenseService::submit. */
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return $schema->components([
+            Section::make('Expense')
+                ->columns(2)
+                ->components([
+                    Select::make('category_id')->label('Category')
+                        ->options(fn () => ExpenseCategory::query()->orderBy('name')->pluck('name', 'id'))
+                        ->required(),
+                    TextInput::make('amount_cents')->label('Amount (cents)')
+                        ->numeric()->integer()->minValue(1)->required(),
+                    DatePicker::make('expense_date')->required()->default(now())
+                        ->maxDate(now()),
+                    TextInput::make('merchant')->required()->maxLength(200),
+                    Textarea::make('description')->nullable()->maxLength(2000)
+                        ->columnSpanFull(),
+                ]),
+        ]);
     }
 
     public static function table(Table $table): Table
@@ -61,6 +89,8 @@ class ExpenseResource extends Resource
                 IconColumn::make('is_over_limit')->boolean()->label('Over limit'),
             ])
             ->recordActions([
+                EditAction::make()
+                    ->visible(fn (Expense $r) => (string) $r->status === 'draft'),
                 Action::make('approve')
                     ->icon(Heroicon::OutlinedCheck)->color('success')
                     ->visible(fn (Expense $r) => (string) $r->status === 'submitted'

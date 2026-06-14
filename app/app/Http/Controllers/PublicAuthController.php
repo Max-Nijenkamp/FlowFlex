@@ -37,7 +37,17 @@ class PublicAuthController extends Controller
         // The panel is a non-Inertia page: a plain redirect would be followed
         // by Inertia's XHR and rendered as a modal. location() forces a
         // full-page visit (409 + X-Inertia-Location for XHR, 302 otherwise).
-        return Inertia::location($request->session()->pull('url.intended', '/app'));
+        // Guard scope: a stale staff url.intended (guest visit to /admin)
+        // must never hijack a customer login — same rule as
+        // GuardScopedLoginResponse on the panel side.
+        $intended = (string) $request->session()->pull('url.intended', '/app');
+        $path = '/'.ltrim((string) parse_url($intended, PHP_URL_PATH), '/');
+
+        if (preg_match('#^/(admin|horizon|pulse)(/|$)#', $path)) {
+            $intended = '/app';
+        }
+
+        return Inertia::location($intended);
     }
 
     public function logout(Request $request): RedirectResponse

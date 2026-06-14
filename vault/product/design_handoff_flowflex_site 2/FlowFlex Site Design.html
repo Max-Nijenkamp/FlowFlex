@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowFlex — Site Design (Switchboard+)</title>
+<link rel="icon" href="assets/flowflex-icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="system/ff.css">
+<link rel="stylesheet" href="panel/panel.css">
+<style>
+  body { margin: 0; }
+  .measure-pen { position: absolute; top: 0; left: -100000px; visibility: hidden; pointer-events: none; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="directions/data.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="lib/design-canvas.jsx"></script>
+<script type="text/babel" src="system/shared.jsx"></script>
+<script type="text/babel" src="pages/home.jsx"></script>
+<script type="text/babel" src="pages/pricing.jsx"></script>
+<script type="text/babel" src="pages/product.jsx"></script>
+<script type="text/babel" src="pages/company.jsx"></script>
+<script type="text/babel" src="pages/auth.jsx"></script>
+<script type="text/babel" src="pages/extras-public.jsx"></script>
+<script type="text/babel" src="pages/extras-app.jsx"></script>
+<script type="text/babel" src="pages/extras2-public.jsx"></script>
+<script type="text/babel" src="pages/extras2-app.jsx"></script>
+<script type="text/babel" src="panel/panel.jsx"></script>
+<script type="text/babel">
+// fixed = artboard uses its own intrinsic size (auth/panel frames)
+// comp is resolved lazily from window — external babel scripts load async.
+const BOARDS = [
+  { section: 'marketing', id: 'home',     label: 'Home · 1440',          width: 1440, comp: 'HomeDesktop' },
+  { section: 'marketing', id: 'pricing',  label: 'Pricing · 1440',       width: 1440, comp: 'PricingDesktop' },
+  { section: 'marketing', id: 'product',  label: 'Product · 1440',       width: 1440, comp: 'ProductDesktop' },
+  { section: 'marketing', id: 'domain',   label: 'Domain — HR · 1440',   width: 1440, comp: 'DomainDesktop' },
+  { section: 'marketing', id: 'about',    label: 'About · 1440',         width: 1440, comp: 'AboutDesktop' },
+  { section: 'marketing', id: 'contact',  label: 'Contact · 1440',       width: 1440, comp: 'ContactDesktop' },
+  { section: 'marketing', id: 'legal',    label: 'Terms · 1440',         width: 1440, comp: 'LegalDesktop' },
+  { section: 'mobile',    id: 'home-m',   label: 'Home · 390',           width: 390,  comp: 'HomeMobile' },
+  { section: 'mobile',    id: 'pricing-m',label: 'Pricing · 390',        width: 390,  comp: 'PricingMobile' },
+  { section: 'auth',      id: 'login',    label: 'Customer login',       width: 1440, height: 900, comp: 'LoginCustomer' },
+  { section: 'auth',      id: 'admin',    label: 'Admin login (staff)',  width: 1440, height: 900, comp: 'LoginAdmin' },
+  { section: 'auth',      id: 'invite',   label: 'Invite registration',  width: 1440, height: 900, comp: 'InviteRegister' },
+  { section: 'auth',      id: 'forgot',   label: 'Forgot password',      width: 1440, height: 900, comp: 'ForgotPassword' },
+  { section: 'panel',     id: 'dash',     label: 'HR dashboard · /hr',   width: 1440, height: 960, comp: 'PanelDashboard' },
+  { section: 'panel',     id: 'crud',     label: 'Employees CRUD · /hr', width: 1440, height: 960, comp: 'PanelCrud' },
+  { section: 'extras',    id: 'modules',  label: 'Module catalogue · 1440',  width: 1440, comp: 'ModulesIndexPage' },
+  { section: 'extras',    id: 'switch',   label: 'Switch over · 1440',       width: 1440, comp: 'SwitchOverPage' },
+  { section: 'extras',    id: 'trust',    label: 'Trust & security · 1440',  width: 1440, comp: 'TrustPage' },
+  { section: 'extras',    id: 'changelog',label: 'Changelog · 1440',         width: 1440, comp: 'ChangelogPage' },
+  { section: 'extras',    id: 'notfound', label: '404',                      width: 1440, height: 760, comp: 'NotFoundPage' },
+  { section: 'extras',    id: 'wizard',   label: 'First-run wizard · step 2', width: 1440, height: 900, comp: 'OnboardingWizard' },
+  { section: 'extras',    id: 'billing',  label: 'Billing & modules · /app', width: 1440, height: 960, comp: 'BillingSettings' },
+  { section: 'extras2',   id: 'calc',      label: 'Patchwork tax calculator · 1440', width: 1440, comp: 'PatchworkCalcPage' },
+  { section: 'extras2',   id: 'casestudy', label: 'Case study · 1440',              width: 1440, comp: 'CaseStudyPage' },
+  { section: 'extras2',   id: 'status',    label: 'Status page · 1440',             width: 1440, comp: 'StatusPage' },
+  { section: 'extras2',   id: 'help',      label: 'Help center · 1440',             width: 1440, comp: 'HelpCenterPage' },
+  { section: 'extras2',   id: 'emails',    label: 'Transactional emails × 4',       width: 1360, comp: 'EmailTemplates' },
+  { section: 'extras2',   id: 'profile',   label: 'Employee profile · /hr',         width: 1440, height: 960, comp: 'EmployeeProfile' },
+  { section: 'extras2',   id: 'cmdk',      label: 'Command palette · ⌘K',           width: 1440, height: 900, comp: 'CommandPalette' },
+  { section: 'extras2',   id: 'emptystate',label: 'Empty state — module just on · /support', width: 1440, height: 960, comp: 'EmptyStateTickets' },
+];
+
+const SECTIONS = [
+  { id: 'marketing', title: 'Public site — desktop', subtitle: 'Switchboard+ system · Archivo + Instrument Sans + JetBrains Mono · warm paper, indigo accent, dark Flow bands' },
+  { id: 'mobile', title: 'Public site — mobile', subtitle: '390px · same system, stacked' },
+  { id: 'auth', title: 'Auth', subtitle: 'Customer + staff sign-in, invite-accept, reset — split brand panel with animated flow lines' },
+  { id: 'panel', title: 'Filament panels — brand skin', subtitle: 'HR & people (/hr, violet) · ink sidebar, warm paper, mono data, switch language carried into the product' },
+  { id: 'extras', title: 'Proposed additions', subtitle: 'Module catalogue · Switch-over (migration) · Trust & security · Changelog · 404 · First-run wizard · Billing switchboard (/app)' },
+  { id: 'extras2', title: 'More additions', subtitle: 'Patchwork-tax calculator · Case study · Status · Help center · Transactional emails · Employee record · ⌘K palette · Fresh-module empty state' },
+];
+
+function App() {
+  const [ready, setReady] = React.useState(BOARDS.every((b) => typeof window[b.comp] === 'function'));
+  const [heights, setHeights] = React.useState(null);
+  const penRef = React.useRef(null);
+  const need = BOARDS.filter((b) => !b.height);
+
+  // Wait for all page scripts (loaded async by Babel) to register components.
+  React.useEffect(() => {
+    if (ready) return;
+    const iv = setInterval(() => {
+      if (BOARDS.every((b) => typeof window[b.comp] === 'function')) {
+        clearInterval(iv);
+        setReady(true);
+      }
+    }, 60);
+    return () => clearInterval(iv);
+  }, [ready]);
+
+  React.useEffect(() => {
+    if (!ready || heights) return;
+    let cancelled = false;
+    const measure = () => {
+      if (cancelled || !penRef.current) return;
+      const h = {};
+      penRef.current.querySelectorAll('[data-measure]').forEach((el) => {
+        h[el.dataset.measure] = Math.ceil(el.getBoundingClientRect().height);
+      });
+      setHeights(h);
+    };
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => setTimeout(measure, 120));
+    } else {
+      setTimeout(measure, 600);
+    }
+    return () => { cancelled = true; };
+  }, [ready, heights]);
+
+  if (!ready) return <div></div>;
+
+  if (!heights) {
+    return (
+      <div className="measure-pen" ref={penRef}>
+        {need.map(({ id, width, comp }) => {
+          const C = window[comp];
+          return (
+            <div key={id} data-measure={id} style={{ width }}>
+              <C></C>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  return (
+    <DesignCanvas>
+      {SECTIONS.map((s) => (
+        <DCSection key={s.id} id={s.id} title={s.title} subtitle={s.subtitle}>
+          {BOARDS.filter((b) => b.section === s.id).map(({ id, label, width, height, comp }) => {
+            const C = window[comp];
+            return (
+              <DCArtboard key={id} id={id} label={label} width={width} height={height || heights[id] || 4000}>
+                <C></C>
+              </DCArtboard>
+            );
+          })}
+        </DCSection>
+      ))}
+    </DesignCanvas>
+  );
+}
+
+const __reactRoot = ReactDOM.createRoot(document.getElementById('root'));
+
+// Dev helper: window.__renderPage('home') renders one page full-width; null restores canvas.
+window.__renderPage = (id) => {
+  const b = BOARDS.find((x) => x.id === id);
+  if (!b) { __reactRoot.render(<App></App>); return; }
+  const C = window[b.comp];
+  __reactRoot.render(
+    <div style={{ display: 'flex', justifyContent: 'center', background: '#888' }}>
+      <div style={{ width: b.width, flex: 'none' }}><C></C></div>
+    </div>
+  );
+};
+
+__reactRoot.render(<App></App>);
+</script>
+</body>
+</html>

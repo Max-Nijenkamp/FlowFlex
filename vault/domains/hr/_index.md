@@ -100,3 +100,9 @@ SORT priority ASC, module-key ASC
 - [[architecture/patterns/interface-service]] — `EmployeeService`, `LeaveService`, `PayrollService`
 - [[architecture/patterns/encryption]] — national ID, DOB, salary, IBAN, DEI attributes
 - [[architecture/packages]] — `spatie/laravel-model-states`, `saade/filament-fullcalendar`
+
+---
+
+## Panel Dashboard (2026-06-12)
+
+/hr dashboard widgets shipped: HrStatsWidget (headcount, on leave today, pending leave, open roles), HeadcountChartWidget (12-month line, PHP date grouping), PendingLeaveWidget (approval queue table).

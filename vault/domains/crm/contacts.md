@@ -14,7 +14,7 @@ patterns: [service, search, custom-fields]
 tables: [crm_contacts, crm_accounts, crm_contact_accounts]
 permission-prefix: crm.contacts
 encrypted-fields: []
-last-reviewed: 2026-06-11
+last-reviewed: 2026-06-12
 color: "#4ADE80"
 ---
 
@@ -200,6 +200,13 @@ tests/Feature/CRM/{ContactTest,ContactDuplicateTest,ContactListenersTest}.php
 ```
 
 ---
+
+## Implementation Notes
+
+### 2026-06-12 build sync
+- `AccountResource` (Organisations) shipped in /crm: CRUD + contacts/deals counts + lifetime value + attachments
+- ContactResource: lifecycle tabs (All / Leads / Opportunities / Customers), organisation link + filter, attachments collection
+- Contact + Account implement HasMedia (`attachments`)
 
 ## Related
 

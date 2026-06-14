@@ -14,7 +14,7 @@ patterns: [custom-pages]
 tables: []
 permission-prefix: core.marketplace
 encrypted-fields: []
-last-reviewed: 2026-06-11
+last-reviewed: 2026-06-12
 color: "#4ADE80"
 ---
 
@@ -98,6 +98,12 @@ tests/Feature/Core/MarketplaceTest.php
 ```
 
 ---
+
+## Implementation Notes
+
+### 2026-06-12 build sync
+- Live search (name / key / domain, 300ms debounce) + collapsible Section per domain + active-count/€-month toolbar
+- Owner-only access per [[build/decisions/decision-2026-06-11-owner-only-settings-modules]] — permission alone insufficient
 
 ## Related
 

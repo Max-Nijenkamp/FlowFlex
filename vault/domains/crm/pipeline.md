@@ -11,10 +11,10 @@ soft-depends: []
 fires-events: []
 consumes-events: []
 patterns: [custom-pages, websockets]
-tables: [crm_pipeline_stages]
+tables: [crm_pipelines, crm_pipeline_stages]
 permission-prefix: crm.pipeline
 encrypted-fields: []
-last-reviewed: 2026-06-11
+last-reviewed: 2026-06-12
 color: "#4ADE80"
 ---
 
@@ -51,11 +51,22 @@ Visual Kanban board with deal cards grouped by stage. Drag-and-drop stage change
 
 ## Data Model
 
+### crm_pipelines *(added 2026-06-12 — [[build/decisions/decision-2026-06-12-custom-pipelines|ADR custom pipelines]])*
+
+| Column | Type | Constraints | Notes |
+|---|---|---|---|
+| id, company_id (indexed) | ulid | | |
+| name | string | not null | e.g. "Sales pipeline", "Partnerships" |
+| is_default | boolean | default false | opens first on the board |
+| order | int | default 0 | switcher order |
+| deleted_at | timestamp | nullable | pipeline with dealed stages cannot be deleted |
+
 ### crm_pipeline_stages
 
 | Column | Type | Constraints | Notes |
 |---|---|---|---|
 | id, company_id (indexed) | ulid | | |
+| pipeline_id | ulid | FK crm_pipelines, cascade | added 2026-06-12; backfilled to default pipeline |
 | name | string | not null | unique `(company_id, name)` |
 | order | int | not null | board column order |
 | probability_default | decimal(5,2) | not null | applied on stage entry |

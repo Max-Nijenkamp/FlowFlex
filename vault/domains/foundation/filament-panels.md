@@ -80,7 +80,7 @@ class AppPanelProvider extends PanelProvider
             ->id('app')
             ->path('app')
             ->colors(['primary' => Color::Slate])
-            ->font('Inter')
+            ->font('Instrument Sans') // Switchboard+ body face (brand.md)
             ->darkMode(Feature::Enabled)
             ->sidebarCollapsibleOnDesktop()
             ->authGuard('web')

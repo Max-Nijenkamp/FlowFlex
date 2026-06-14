@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Filament\App\Widgets\SwitchboardWidget;
+use App\Filament\App\Widgets\WorkspaceActivityWidget;
+use App\Filament\App\Widgets\WorkspaceStatsWidget;
+use App\Filament\Auth\EditProfile;
 use App\Filament\Auth\PanelLogin;
 use App\Http\Middleware\EnsureSubscriptionActive;
 use App\Http\Middleware\RedirectToSetupWizard;
 use App\Http\Middleware\SetCompanyContext;
 use App\Http\Middleware\SetLocale;
 use App\Models\User;
-use App\Support\Filament\PanelSwitchItems;
-use Filament\Auth\MultiFactor\App\AppAuthentication;
+use App\Support\Filament\AppAuthenticationWithQrFix as AppAuthentication;
 use Filament\Enums\ThemeMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -44,11 +47,11 @@ class AppPanelProvider extends PanelProvider
             ->passwordReset() // forgot-password flow inside the workspace panel
             ->emailVerification() // no portal access without verified email (security.md)
             ->multiFactorAuthentication(AppAuthentication::make()->recoverable()) // self-service TOTP 2FA
-            ->profile(isSimple: false)
+            ->profile(EditProfile::class, isSimple: false)
             ->authGuard('web')
             ->authPasswordBroker('users')
             ->brandName('FlowFlex')
-            ->brandLogo(asset('images/logo/flowflex-logo-dark.svg'))
+            ->brandLogo(asset('images/logo/flowflex-logo-light.svg')) // light wordmark — sidebar is ink in both modes
             ->darkModeBrandLogo(asset('images/logo/flowflex-logo-light.svg'))
             ->brandLogoHeight('2rem')
             ->favicon(asset('images/logo/flowflex-icon.svg'))
@@ -56,11 +59,9 @@ class AppPanelProvider extends PanelProvider
                 'primary' => Color::hex('#38BDF8'), // FlowFlex sky
                 'gray' => Color::Slate,
             ])
-            ->font('Inter')
+            ->font('Instrument Sans')
             ->defaultThemeMode(ThemeMode::System)
             ->sidebarCollapsibleOnDesktop()
-            ->userMenuItems(PanelSwitchItems::make('app')) // cross-panel switcher
-            ->globalSearchKeyBindings(['mod+k'])
             ->viteTheme('resources/css/filament/app/theme.css')
             ->databaseNotifications() // bell + inbox (ui-strategy row #10; Reverb later)
             ->databaseNotificationsPolling('30s')
@@ -68,7 +69,12 @@ class AppPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\Filament\App\Pages')
             ->pages([Dashboard::class])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'App\Filament\App\Widgets')
-            ->widgets([AccountWidget::class])
+            ->widgets([
+                WorkspaceStatsWidget::class,
+                SwitchboardWidget::class,
+                WorkspaceActivityWidget::class,
+                AccountWidget::class,
+            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

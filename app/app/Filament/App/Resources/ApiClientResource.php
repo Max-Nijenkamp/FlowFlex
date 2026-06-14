@@ -70,7 +70,7 @@ class ApiClientResource extends Resource
             ->headerActions([
                 Action::make('create')
                     ->label('Create token')
-                    ->visible(fn () => Auth::guard('web')->user()->can('core.api.create'))
+                    ->visible(fn () => Auth::guard('web')->user()->can('core.api.manage'))
                     ->schema([
                         TextInput::make('name')->required()->maxLength(100),
                         CheckboxList::make('abilities')
@@ -93,7 +93,7 @@ class ApiClientResource extends Resource
                     ->color('danger')
                     ->icon(Heroicon::OutlinedTrash)
                     ->requiresConfirmation()
-                    ->visible(fn () => Auth::guard('web')->user()->can('core.api.revoke'))
+                    ->visible(fn () => Auth::guard('web')->user()->can('core.api.manage'))
                     ->action(function (PersonalAccessToken $record): void {
                         RevokeApiTokenAction::run((string) $record->getKey());
                         Notification::make()->success()->title('Token revoked')->send();

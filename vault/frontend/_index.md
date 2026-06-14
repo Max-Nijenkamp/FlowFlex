@@ -6,7 +6,13 @@ color: "#FBBF24"
 
 # Public Frontend — Vue 3 + Inertia
 
-> **Build status (2026-06-11, revamped same day)**: v1 SHIPPED + full design revamp. Brand-true design system per [[../product/brand]]: ink #111827 / warm paper #FBFAF8 / single indigo accent #4F46E5, editorial numbered sections, mono accents for figures, animated flow-line motif, scroll-reveal (ease-out, reduced-motion safe). Logo SVGs created at the brand.md paths (icon = flow-loop F; favicon = SVG, PNG deferred — no image tooling in env). Pages: home (problem stats, interactive flex demo, dark Flow section w/ real event chains, coverage grid), pricing ("build your invoice" live calculator + fair-print FAQ), product (per-domain stories + what-flows lists), about (values + is/isn't), contact (split layout), legal. Auth = split-screen AuthLayout (dark brand panel). Copy follows brand voice: sentence case, no exclamation marks, "you/your". Blog + portals = Phase 2. **Pass 2 (same day)**: shared form component library (`Components/Form/` + BaseButton/Accordion), @tailwindcss/forms class strategy, pricing domain accordions, nav product dropdown, handcrafted AppMock hero visual, Filament panel brand skin + logo/favicon on all panels.
+> **Design system**: [[design-system|Switchboard+ reference]] — tokens, component library, panel skin, motion, copy rules. Read it before touching any UI.
+
+> **Update (2026-06-12, pass 2)**: graph-paper grid replaced everywhere by the **bloom** treatment — `.bg-bloom` (indigo radial + paper-deep fade) on light heroes/sections + auth form side, `.bg-bloom-accent` (white + sky glows) on indigo CTA bands; no grid textures remain. Public login forgot-link moved below the password input (tab order). Panel side same session: shared Filament skin rebuilt against verified Filament 5 selectors, Spotlight ⌘K/Ctrl+K palette, UX-state defaults — see [[../architecture/filament-patterns]] items 6, 13–16 and [[../architecture/patterns/ux-states]].
+>
+> **Build status (2026-06-12 — Switchboard+ redesign)**: Full visual redesign implemented from the `design_handoff_flowflex_site/` bundle (high-fidelity spec, copy final). Design system "Switchboard+": modules as literal switches, receipts as invoices, blueprint stat cells, dark Flow bands with animated pulse lines. Type: Archivo display / Instrument Sans body / JetBrains Mono data (Google Fonts in `app.blade.php`). New tokens in `app.css` (`--color-card`, `--color-line-strong`, `--color-flow-bg`, marquee + pulse-dash keyframes, `.bg-graph`, `.receipt-edge`). Shared components in `Components/Marketing/` (Kicker, SectionTag, Switchboard, BlueprintCell, ModuleTile, Receipt, FlowBand, ReplacesStrip, CtaBand, DomainPill, LegalPage) + `Components/UI/Switch.vue`; static content data in `resources/js/data/marketing.ts`. All marketing pages rebuilt to the per-screen specs; Pricing kept its server props + reactive calculator; Contact kept useForm + honeypot. Auth: split shell (dark `#0E1320` panel, radial indigo glow, 3 animated SVG flow pulses) for Login/InviteRegister, centered variant for Forgot/Reset (`AuthLayout` `split` prop). Filament: shared `resources/css/filament/flowflex-skin.css` imported by all 5 panel themes — ink sidebar in both modes, domain-color active nav item (2px left border + 16% tint), mono table headers + zebra rows, paper canvas, indigo customer login button / ink staff button; providers switched to light logo + Instrument Sans.
+>
+> **Previous status (2026-06-11, superseded)**: v1 SHIPPED + full design revamp. Brand-true design system per [[../product/brand]]: ink #111827 / warm paper #FBFAF8 / single indigo accent #4F46E5, editorial numbered sections, mono accents for figures, animated flow-line motif, scroll-reveal (ease-out, reduced-motion safe). Logo SVGs created at the brand.md paths (icon = flow-loop F; favicon = SVG, PNG deferred — no image tooling in env). Pages: home (problem stats, interactive flex demo, dark Flow section w/ real event chains, coverage grid), pricing ("build your invoice" live calculator + fair-print FAQ), product (per-domain stories + what-flows lists), about (values + is/isn't), contact (split layout), legal. Auth = split-screen AuthLayout (dark brand panel). Copy follows brand voice: sentence case, no exclamation marks, "you/your". Blog + portals = Phase 2. **Pass 2 (same day)**: shared form component library (`Components/Form/` + BaseButton/Accordion), @tailwindcss/forms class strategy, pricing domain accordions, nav product dropdown, handcrafted AppMock hero visual, Filament panel brand skin + logo/favicon on all panels.
 
 The public-facing side of FlowFlex. Separate from Filament panels — custom design, SEO, external users.
 
@@ -45,6 +51,15 @@ The public-facing side of FlowFlex. Separate from Filament panels — custom des
 | `/contact` | `Pages/Marketing/Contact.vue` | Contact form |
 | `/terms` | `Pages/Marketing/Terms.vue` | Terms of service |
 | `/privacy` | `Pages/Marketing/Privacy.vue` | Privacy policy |
+| `/modules` | `Pages/Marketing/Catalogue.vue` | Full module catalogue per domain + upcoming pills (§14) |
+| `/switch-over` | `Pages/Marketing/SwitchOver.vue` | Migration pitch: 3-step plan, tool→module mapping (§15) |
+| `/trust` | `Pages/Marketing/Trust.vue` | Security/GDPR page: blueprint cells + ops notes (§16) |
+| `/changelog` | `Pages/Marketing/Changelog.vue` | Shipped log; entries from `Support/Marketing/MarketingContent` (§17) |
+| `/patchwork` | `Pages/Marketing/Patchwork.vue` | Interactive patchwork-vs-FlowFlex cost calculator (§21) |
+| `/customers/{slug}` | `Pages/Marketing/CaseStudy.vue` | Case study template; content in MarketingContent (Veldkamp sample) (§22) |
+| `/status` | `Pages/Marketing/Status.vue` | Public status from spatie/laravel-health latest results, 60s cache (§23) |
+| `/help`, `/help/{slug}` | `Pages/Marketing/Help/*` | Help center: client-side search index + article pages (§24) |
+| any 404 (public GET) | `Pages/Marketing/NotFound.vue` | "This page is switched off" — wired in `bootstrap/app.php` (§18) |
 
 ### Auth Pages
 

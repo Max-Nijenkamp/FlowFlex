@@ -7,7 +7,7 @@ defineProps<{ options: { value: string; label: string }[]; placeholder?: string 
 <template>
     <div class="relative">
         <select v-model="model" v-bind="$attrs"
-            class="form-select block h-11 w-full appearance-none rounded-xl border border-line bg-white px-3.5 pr-10 text-[15px] shadow-[inset_0_1px_2px_rgba(17,24,39,0.03)] transition ease-out duration-150 hover:border-ink-faint/60 focus:border-accent focus:outline-none focus:ring-[3px] focus:ring-accent/15"
+            class="form-select block h-[46px] w-full appearance-none rounded-[10px] border border-line-strong bg-card px-3.5 pr-10 text-[15px] shadow-[0_1px_2px_rgba(17,24,39,0.03)] transition ease-out duration-150 hover:border-ink-faint/60 focus:border-accent focus:outline-none focus:ring-[3px] focus:ring-accent/15"
             :class="model === '' ? 'text-ink-faint' : 'text-ink'">
             <option v-if="placeholder" value="" disabled>{{ placeholder }}</option>
             <option v-for="option in options" :key="option.value" :value="option.value">{{ option.label }}</option>

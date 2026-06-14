@@ -6,6 +6,7 @@ namespace App\Models\Finance;
 
 use App\States\Finance\Bill\BillState;
 use App\Support\Traits\BelongsToCompany;
+use App\Support\Traits\LogsCompanyActivity;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,7 +16,7 @@ use Spatie\ModelStates\HasStates;
 
 class Bill extends Model
 {
-    use BelongsToCompany, HasStates, HasUlids, SoftDeletes;
+    use BelongsToCompany, HasStates, HasUlids, LogsCompanyActivity, SoftDeletes;
 
     protected $table = 'fin_bills';
 
