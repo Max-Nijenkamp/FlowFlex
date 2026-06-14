@@ -91,6 +91,7 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | module-key | priority | deps | soft | fires | consumes | tables |
 |---|---|---|---|---|---|---|
 | crm.contacts | v1-core | core.billing, core.rbac | core.import, crm.activities, crm.deals | — | FormSubmissionReceived, EventRegistrationReceived, InvoicePaid | crm_contacts, crm_accounts, crm_contact_accounts |
+| crm.leads | v1 | core.billing, core.rbac | crm.contacts, crm.deals, crm.pipeline | — | — | crm_leads |
 | crm.deals | v1-core | crm.contacts, crm.pipeline, core.billing, core.rbac | finance.invoicing, crm.quotes, crm.pricing, crm.activities | DealWon, DealLost | — | crm_deals, crm_deal_contacts, crm_deal_products |
 | crm.pipeline | v1-core | crm.deals, core.billing, core.rbac | — | — | — | crm_pipelines, crm_pipeline_stages |
 | crm.activities | v1-core | crm.contacts, core.billing, core.rbac, core.notifications | crm.deals | — | — | crm_activities |
