@@ -203,6 +203,7 @@ Examples:
 - `/flowflex:patterns perceived-performance` → read `architecture/patterns/perceived-performance.md`
 - `/flowflex:patterns ux-states` → read `architecture/patterns/ux-states.md`
 - `/flowflex:patterns design` → read `frontend/design-system.md` (Switchboard+ tokens, components, panel skin)
+- `/flowflex:patterns panel-chrome` → read `architecture/patterns/filament-panel-chrome.md` (render hooks, full-height sidebar, spotlight)
 - `/flowflex:patterns tenant-context` → read `architecture/patterns/tenant-context-pitfalls.md`
 - `/flowflex:patterns resource-checklist` → read `architecture/patterns/filament-resource-checklist.md`
 
@@ -462,6 +463,7 @@ app/
 | Perceived performance (skeletons, optimistic UI, motion) | `architecture/patterns/perceived-performance.md` |
 | UX states (empty/error/hover/selected, wizard steps) | `architecture/patterns/ux-states.md` |
 | Switchboard+ design system (tokens, components, panel skin) | `frontend/design-system.md` |
+| Filament panel chrome (sidebar/topbar render hooks, full-height layout) | `architecture/patterns/filament-panel-chrome.md` |
 | Filament patterns (critical, read first) | `architecture/filament-patterns.md` |
 | Tenant-context pitfalls (null-team 403 family) | `architecture/patterns/tenant-context-pitfalls.md` |
 | Filament resource quality checklist (DoD 11–13) | `architecture/patterns/filament-resource-checklist.md` |

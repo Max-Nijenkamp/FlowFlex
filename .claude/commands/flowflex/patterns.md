@@ -70,6 +70,7 @@ Fetch a specific architecture pattern from the vault. Read-only.
 | `ux-states` or `empty-states` or `wizard` | `vault/architecture/patterns/ux-states.md` |
 | `brand` or `switchboard` | `vault/product/brand.md` |
 | `design` or `design-system` or `components` | `vault/frontend/design-system.md` |
+| `panel-chrome` or `sidebar` or `topbar` or `spotlight` | `vault/architecture/patterns/filament-panel-chrome.md` |
 
 ## What This Does
 

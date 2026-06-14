@@ -98,6 +98,23 @@ Schema::create('hr_employees', function (Blueprint $table) {
 
 ---
 
+## Audit logging — `LogsCompanyActivity` (business records)
+
+Business-record models (things a user creates/edits: employees, invoices, deals, leads, contracts…) add a fourth trait so changes feed the audit log / Recent-activity widgets:
+
+```php
+use App\Support\Traits\LogsCompanyActivity;
+
+class Deal extends Model
+{
+    use BelongsToCompany, HasUlids, LogsCompanyActivity, SoftDeletes;
+}
+```
+
+`LogsCompanyActivity` (`app/Support/Traits/`) wraps spatie/activitylog with `logFillable()->logOnlyDirty()->dontLogEmptyChanges()` and sets the **log name to the table's domain prefix** (`hr_employees → "hr"`) so feeds color by domain. spatie v5 namespace gotcha — it imports `Spatie\Activitylog\Models\Concerns\LogsActivity` + `Spatie\Activitylog\Support\LogOptions` (NOT `Traits\…`, NOT root `LogOptions`); wrong paths throw FatalError at model load. The fluent method is `dontLogEmptyChanges()` (not `dontSubmitEmptyLogs()`). Skip the trait for append-only/event-sourced rows and pure pivots.
+
+---
+
 ## Common Mistakes
 
 **Missing the trait**: model has `company_id` in the table but no `BelongsToCompany`. Scope not applied. Queries return records from all companies. Critical data leak.

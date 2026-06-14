@@ -15,7 +15,7 @@ Everything to get a working dev environment and stay unblocked: .env spec, Docke
 
 ## Docker Services (local)
 
-`docker compose up` — eight services. Container name prefix `flowflex_`.
+`docker compose up` — nine services. Container name prefix `flowflex_`.
 
 | Service | Image | Host port | Purpose |
 |---|---|---|---|
@@ -26,7 +26,10 @@ Everything to get a working dev environment and stay unblocked: .env spec, Docke
 | `meilisearch` | getmeili/meilisearch:v1 | 7700 | full-text search |
 | `mailpit` | axllent/mailpit | 8025 (UI), 1025 (SMTP) | email capture |
 | `horizon` | same as app | — | queue worker (`php artisan horizon`) |
+| `scheduler` | same as app | — | `php artisan schedule:work` — runs the Laravel schedule (added 2026-06-14) |
 | `reverb` | same as app | proxied via nginx | WebSocket server (`php artisan reverb:start`) |
+
+**The `scheduler` container is required for the health/status pages.** Health checks (`RunHealthChecksCommand`) and the queue heartbeat (`DispatchQueueCheckJobsCommand`) run on the scheduler every minute; without it the SystemStatusPage / public `/status` show stale or failing checks. The **QueueCheck specifically needs the heartbeat dispatcher scheduled** — it measures when a heartbeat job was last *processed* per queue, so `RunHealthChecks` alone reports `Queue: failed` forever. Both are in `routes/console.php`.
 
 Dashboards: app `localhost:8080` · Horizon `/horizon` · Pulse `/pulse` · Telescope `/telescope` (dev only) · Mailpit `localhost:8025` · Meilisearch `localhost:7700`.
 
@@ -154,6 +157,10 @@ npm run dev                                            # Vite (host machine)
 | Filament page blank | static `$view` property (Filament 4 style) | instance property — [[architecture/filament-patterns]] #2 |
 | Resource invisible in nav | `canAccess()` false (module not active for demo company) or namespace mismatch in `discoverResources` | activate module via marketplace seeder; check namespace |
 | Vite theme changes ignored | panel theme css not registered in `vite.config.js` | add to `input:` array — [[architecture/filament-patterns]] #6 |
+| **PHP edit gives a 500 / stale parse error in browser but `php -l` is clean** | opcache in the `app` container caches the old bytecode | `docker exec flowflex_app php artisan optimize:clear` (or `docker compose restart app`). Edits land on disk via volume mount; opcache is what's stale |
+| **Skin/CSS change "doesn't apply"** | served `theme-*.css` is the old build hash, or browser cached it | rebuild (`npm run build`), `optimize:clear`, hard-refresh (⌘⇧R); compare `public/build/assets/theme-*` hash to the page's `<link>` |
+| **`/status` or SystemStatusPage shows failed/stale checks** | `scheduler` container down, or QueueCheck has no heartbeat | `docker compose up -d scheduler`; confirm `DispatchQueueCheckJobsCommand` is scheduled |
+| Filament health `Queue: failed` despite Horizon up | QueueCheck needs heartbeat jobs *processed*, not just RunHealthChecks | schedule `DispatchQueueCheckJobsCommand` every minute |
 | Port 5432/6379/7700 conflict | host service already running | stop host service or remap compose ports |
 
 ---
