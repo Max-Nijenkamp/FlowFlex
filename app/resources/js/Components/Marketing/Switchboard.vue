@@ -30,7 +30,7 @@ defineEmits<{ toggle: [key: string] }>()
         </div>
         <div>
             <div v-for="(r, i) in rows" :key="r.key"
-                class="grid grid-cols-[1fr_auto_auto] items-center gap-4 border-b border-line px-[22px] py-[13px]"
+                class="grid grid-cols-[1fr_auto_auto] items-center gap-4 border-b border-line px-[22px] py-[13px] transition-colors duration-150 ease-out hover:bg-accent-soft/50"
                 :class="i % 2 === 0 ? 'bg-[#FAF9F5]' : ''">
                 <span class="flex items-center gap-2.5 whitespace-nowrap text-sm font-semibold"
                     :class="!r.on && 'opacity-45'">

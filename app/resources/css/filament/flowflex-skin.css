@@ -309,91 +309,14 @@ nav.fi-topbar {
     gap: 0.75rem;
 }
 
-.fi-topbar-start .ff-topbar-crumb {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.fi-topbar-end {
-    display: flex;
-    align-items: center;
-    gap: 0.875rem;
-    margin-inline-start: auto;
-    flex: none;
-}
-
-/* The sidebar carries the brand — never show a second logo in the topbar. */
+/* The sidebar carries the brand + Spotlight owns search — kill Filament's
+   native duplicates (topbar logo, sidebar's own logo, global-search field). */
 .fi-topbar .fi-logo,
-.fi-topbar-logo-ctn {
-    display: none;
-}
-
-/* Our ff-side-brand hook is the one logo; hide Filament's native sidebar logo
-   so the header doesn't show two wordmarks side by side. */
+.fi-topbar-logo-ctn,
 .fi-sidebar-header-logo-ctn,
-.fi-sidebar-header > .fi-logo,
-.fi-sidebar-header > a:not(.ff-side-brand) {
+.fi-global-search,
+.fi-global-search-ctn {
     display: none !important;
-}
-
-/* Spotlight owns search — hide Filament's native global search field. */
-.fi-global-search-ctn,
-.fi-global-search {
-    display: none;
-}
-
-/* Sidebar collapse toggles: quiet, borderless — chrome, not content. */
-.fi-topbar-collapse-sidebar-btn-ctn .fi-icon-btn,
-.fi-topbar-open-sidebar-btn,
-.fi-topbar-close-sidebar-btn,
-.fi-topbar-open-collapse-sidebar-btn,
-.fi-topbar-close-collapse-sidebar-btn {
-    width: 30px;
-    height: 30px;
-    border: none;
-    background: transparent;
-    color: #98a0ab;
-}
-
-.fi-topbar-collapse-sidebar-btn-ctn .fi-icon-btn:hover,
-.fi-topbar-open-collapse-sidebar-btn:hover,
-.fi-topbar-close-collapse-sidebar-btn:hover {
-    color: #111827;
-    background: rgba(17, 24, 39, 0.05);
-}
-
-.fi-topbar .fi-icon-btn,
-.fi-topbar .fi-dropdown-trigger .fi-icon-btn {
-    border-radius: 0.5625rem;
-}
-
-/* One crumb line lives in the topbar (TopbarCrumb hook); hide the
-   page-header duplicates so headings sit clean like the design. */
-.fi-header .fi-breadcrumbs {
-    display: none;
-}
-
-.ff-topbar-crumb {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #98a0ab;
-    white-space: nowrap;
-}
-
-.ff-topbar-crumb .sep {
-    color: #d8d4ca;
-}
-
-.ff-topbar-crumb .here {
-    color: #111827;
-    font-weight: 600;
-}
-
-.dark .ff-topbar-crumb .here {
-    color: #ffffff;
 }
 
 /* Right-side topbar icon buttons: bordered 34px cards (design §12). */

@@ -126,6 +126,22 @@ class LocalDevSeeder extends Seeder
         $engineering = Department::firstOrCreate(
             ['company_id' => $company->id, 'name' => 'Engineering'],
         );
+
+        // The demo owner IS an employee — so My HR / self-service works on login.
+        $ownerEmployee = Employee::firstOrCreate(
+            ['company_id' => $company->id, 'email' => 'demo@flowflex.nl'],
+            [
+                'user_id' => $ownerUser->id,
+                'employee_number' => 'EMP-001',
+                'first_name' => 'Demo',
+                'last_name' => 'Owner',
+                'job_title' => 'Founder & CEO',
+                'hire_date' => now()->subYears(2),
+                'employment_type' => 'full-time',
+                'department_id' => $engineering->id,
+            ],
+        );
+        $ownerEmployee->forceFill(['user_id' => $ownerUser->id])->save();
         $employees = collect([
             ['Sanne', 'de Vries', 'sanne@flowflex-demo.nl', 'Engineering Manager'],
             ['Tim', 'Bakker', 'tim@flowflex-demo.nl', 'Software Engineer'],
@@ -207,12 +223,21 @@ class LocalDevSeeder extends Seeder
                 ['first_name' => $first, 'last_name' => $last, 'source' => 'website'],
             );
         }
-        foreach ($employees as $employee) {
+        foreach ($employees->push($ownerEmployee) as $employee) {
             LeaveBalance::firstOrCreate(
                 ['company_id' => $company->id, 'employee_id' => $employee->id, 'leave_type_id' => $annual->id, 'year' => now()->year],
                 ['allocated_days' => 25],
             );
         }
+
+        // Owner's own leave history — so My HR shows a real balance + request.
+        LeaveRequest::firstOrCreate(
+            ['company_id' => $company->id, 'employee_id' => $ownerEmployee->id, 'start_date' => now()->subMonth()->toDateString()],
+            [
+                'leave_type_id' => $annual->id, 'end_date' => now()->subMonth()->addDays(4)->toDateString(),
+                'days_requested' => 5, 'status' => 'approved', 'approved_at' => now()->subMonths(2), 'note' => 'Spring break',
+            ],
+        );
 
         // --- Finance demo data ---
         $customer = Customer::firstOrCreate(

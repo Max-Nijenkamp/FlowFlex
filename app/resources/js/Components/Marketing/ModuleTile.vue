@@ -12,15 +12,17 @@ withDefaults(defineProps<{
 
 <template>
     <div v-if="ghost"
-        class="flex min-h-[108px] items-center justify-center rounded-xl border border-dashed border-line-strong text-[13.5px] font-medium text-ink-faint">
+        class="flex min-h-[108px] items-center justify-center rounded-xl border border-dashed border-line-strong text-[13.5px] font-medium text-ink-faint transition duration-200 ease-out hover:border-accent/50 hover:text-accent">
         {{ ghostLabel }}
     </div>
-    <div v-else class="rounded-xl" :class="[
+    <div v-else class="group rounded-xl transition duration-200 ease-out hover:-translate-y-1" :class="[
         desc ? 'p-[22px]' : 'p-[18px]',
-        on ? 'border border-line-strong bg-card shadow-[0_1px_2px_rgba(17,24,39,0.03)]' : 'border border-dashed border-line-strong bg-transparent',
+        on
+            ? 'border border-line-strong bg-card shadow-[0_1px_2px_rgba(17,24,39,0.03)] hover:border-accent/50 hover:shadow-[0_14px_30px_-16px_rgba(17,24,39,0.25)]'
+            : 'border border-dashed border-line-strong bg-transparent hover:border-ink-faint/70 hover:bg-card/60',
     ]">
         <div class="flex items-center justify-between">
-            <span class="flex h-[22px] w-[22px] items-center justify-center rounded-md"
+            <span class="flex h-[22px] w-[22px] items-center justify-center rounded-md transition-transform duration-200 ease-out group-hover:scale-110"
                 :style="{ background: on ? color : '#E3E0D8' }">
                 <span class="h-2 w-2 rounded-[2px] bg-white" />
             </span>

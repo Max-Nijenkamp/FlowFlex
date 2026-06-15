@@ -6,7 +6,6 @@ namespace App\Providers;
 
 use App\Http\Responses\GuardScopedLoginResponse;
 use App\Support\Filament\SidebarFooter;
-use App\Support\Filament\TopbarCrumb;
 use App\Support\Services\CompanyContext;
 use Filament\Auth\Http\Responses\Contracts\LoginResponse as LoginResponseContract;
 use Filament\Facades\Filament;
@@ -84,13 +83,6 @@ class AppServiceProvider extends ServiceProvider
         FilamentView::registerRenderHook(
             PanelsRenderHook::SIDEBAR_FOOTER,
             fn (): string => SidebarFooter::render(),
-        );
-
-        // Topbar: panel crumb on the left (design §12 — page-level breadcrumbs
-        // are hidden by the skin; this is the one crumb line).
-        FilamentView::registerRenderHook(
-            PanelsRenderHook::TOPBAR_START,
-            fn (): string => TopbarCrumb::render(),
         );
 
         // Topbar: 320px search trigger with ⌘K hint — opens the Spotlight.
