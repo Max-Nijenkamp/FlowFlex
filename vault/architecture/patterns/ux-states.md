@@ -3,7 +3,7 @@ type: architecture
 category: pattern
 pattern-key: ux-states
 status: stable
-last-reviewed: 2026-06-12
+last-reviewed: 2026-07-02
 color: "#A78BFA"
 ---
 
@@ -40,6 +40,8 @@ Hard rules:
 - Pattern: *what happened* + *what it means* + *what to do*. "Couldn't save. Check your connection and try again." (brand.md voice table is the source of truth.)
 - Timeouts: optimistic UI keeps stale content visible at 60% opacity (`wire:loading.delay`) — no spinner walls; if an action times out, say so and offer retry.
 - Validation errors name the field in plain words: "Email address is missing." — never "Invalid input."
+- Full-page HTTP errors (403/404/419/429/500/503) and in-panel Livewire component crashes have their own designed surfaces — copy, actions and layout in [[error-pages]]. Same voice: what happened + what it means + what to do, never a stack trace.
+- Concurrent-edit conflicts surface the "This record was changed by someone else" notification with a **Reload record** action — never a silent merge. Mechanism in [[optimistic-locking]].
 
 ## 3. Hover, Selected, Pressed — three different states
 

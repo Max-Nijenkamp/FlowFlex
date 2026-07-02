@@ -3,7 +3,7 @@ type: architecture
 category: patterns
 pattern-key: policy
 status: stable
-last-reviewed: 2026-06-10
+last-reviewed: 2026-07-02
 color: "#A78BFA"
 ---
 
@@ -100,16 +100,60 @@ public static function canCreate(): bool
 
 public static function canEdit(Model $record): bool
 {
-    return Auth::user()->can('hr.employees.update');
+    return Auth::user()->can('hr.employees.update')
+        && BillingService::hasModule('hr.employees');
 }
 
 public static function canDelete(Model $record): bool
 {
-    return Auth::user()->can('hr.employees.delete');
+    return Auth::user()->can('hr.employees.delete')
+        && BillingService::hasModule('hr.employees');
 }
 ```
 
-`canAccess()` controls whether the resource appears in the sidebar. The individual `can*()` methods control whether buttons and forms appear.
+`canAccess()` controls whether the resource appears in the sidebar. The individual `can*()` methods control whether buttons and forms appear. **Every gate carries the `hasModule()` check** — permission alone is never sufficient. *(Corrected 2026-07-02: `canEdit`/`canDelete` previously omitted the module check that `canViewAny`/`canCreate` include.)*
+
+---
+
+## Record-Level Ownership Scoping
+
+"See only mine" (a rep sees their own deals; a manager sees the whole company) is done by **query scoping**, not per-record Policy classes — consistent with the "why not Policies" stance above. A base `view`/`view-any` permission is narrowed to owned/assigned records in the resource's `getEloquentQuery()`; a companion `view-all` permission bypasses the narrowing:
+
+```php
+public static function getEloquentQuery(): Builder
+{
+    $query = parent::getEloquentQuery();
+
+    // Managers with view-all see the whole company; everyone else sees own + assigned
+    if (! Auth::user()->can('crm.deals.view-all')) {
+        $query->whereOwnedBy(Auth::user()); // scope: created_by = user OR assigned_to = user
+    }
+
+    return $query;
+}
+```
+
+| Permission | Table scope effect |
+|---|---|
+| `crm.deals.view` | own + assigned deals only (`whereOwnedBy`) |
+| `crm.deals.view-all` | whole company (scope bypassed — manager visibility) |
+
+`delete`/`update` follow the **same scope by default**: a user who cannot see a record via the scope cannot edit or delete it either (the record never enters their query). This is query scoping applied once in `getEloquentQuery()` — not a Policy class per model, and not a per-record check scattered across gates.
+
+---
+
+## Gating Custom Action Buttons
+
+Every custom action button (approve / export / send / void) is **double-gated**: it declares `visible()` against the acting user's permission **and** that permission comes from the module spec's Permissions table (one verb per command, per [[_meta/spec-template]]):
+
+```php
+Action::make('void')
+    ->visible(fn () => auth()->user()->can('finance.invoices.void'))
+    ->requiresConfirmation()
+    ->action(fn (Invoice $record) => VoidInvoice::run($record));
+```
+
+An action with no matching row in the spec's Permissions table is a spec gap — log it before shipping the button.
 
 ---
 

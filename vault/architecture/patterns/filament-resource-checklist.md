@@ -20,11 +20,12 @@ color: "#A78BFA"
 6. **canAccess()** — permission + `hasModule()`. Never removed, never weakened (ADR 2026-06-11).
 7. **Table quality** — status columns as badges with colors, money via `->money('EUR', divideBy: 100)`, relevant filters, `deferLoading()`, searchable key columns.
 8. **Global search** — customer-facing entities (employees, contacts, deals, invoices, organisations…) define `getGloballySearchableAttributes()` so ⌘K finds them.
+9. **Stale-record guard** — edit forms carry the optimistic-lock guard (hidden `_loaded_at` + `ChecksStaleRecords`) per [[architecture/patterns/optimistic-locking]]. Skip for read-only / `canCreate(): false` flow-owned resources.
 
 ## Per-panel checklist (first module that opens a panel)
 
-9. **Dashboard widgets** — minimum trio: StatsOverview (4 stats), one ChartWidget (12-month, **PHP date grouping — never SQL date functions**, sqlite + pgsql must both run it), optionally one TableWidget (actionable queue). All with `canView()` permission guards.
-10. **Demo seeder section** — LocalDevSeeder gets a realistic block for the FlowFlex Demo company: enough rows that every widget shows a curve and every table has content. Empty dashboards read as broken.
+10. **Dashboard widgets** — minimum trio: StatsOverview (4 stats), one ChartWidget (12-month, **PHP date grouping — never SQL date functions**, sqlite + pgsql must both run it), optionally one TableWidget (actionable queue). All with `canView()` permission guards.
+11. **Demo seeder section** — LocalDevSeeder gets a realistic block for the FlowFlex Demo company: enough rows that every widget shows a curve and every table has content. Empty dashboards read as broken.
 
 ## Verification
 

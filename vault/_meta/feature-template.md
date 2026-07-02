@@ -3,7 +3,7 @@ type: meta
 category: template
 status: stable
 color: "#6B7280"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Feature Note Template
@@ -53,6 +53,19 @@ transitions if it has one.
 - Consumes: `<Event>` from `<domain.module>` → <effect>
 - Feeds: `<Event>` → consumed by `<domain.module>`
 - Shared entity: <reference data owned elsewhere>
+
+## Test Checklist
+
+<!-- mandatory per decision-2026-07-02-spec-template-v3-exploded-format -->
+### Unit
+- [ ] <pure logic: calculators, validation rules, DTO edge cases>
+
+### Feature (Pest)
+- [ ] <end-to-end through the service/action, real sqlite, happy + failure path>
+
+### Livewire
+<!-- only when Kind is simple-resource | custom-page | widget; omit for background/public-vue -->
+- [ ] <form validation / action behaviour / canAccess via pest-plugin-livewire>
 
 ## Unknowns
 

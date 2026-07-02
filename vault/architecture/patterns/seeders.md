@@ -3,7 +3,7 @@ type: architecture
 category: patterns
 pattern-key: seeding
 status: stable
-last-reviewed: 2026-06-10
+last-reviewed: 2026-07-02
 color: "#A78BFA"
 ---
 
@@ -183,6 +183,30 @@ class LocalDevSeeder extends Seeder
     }
 }
 ```
+
+---
+
+## Per-Domain Demo Blocks
+
+`LocalDevSeeder` stays the **single orchestrator** (one entry point, one demo company + owner), but its body is composed of **per-domain demo blocks** so domain workers add demo data without stepping on each other — either methods on the seeder (`->seedHrDemo()`, `->seedCrmDemo()`) or invokable `Database\Seeders\Demo\{Domain}DemoSeeder` classes *(assumed)*:
+
+```php
+public function run(): void
+{
+    if (! app()->environment('local')) return;
+
+    [$company, $owner] = $this->seedCoreDemo(); // admin, company, owner, free modules
+
+    $this->seedHrDemo($company);
+    $this->seedCrmDemo($company);
+    // ...one block per active domain
+}
+```
+
+Rules:
+- Each block is **self-contained** — activates its own module subscriptions and creates its own records; no cross-block ordering assumptions beyond the shared `$company`/`$owner`.
+- Every block must feed **every dashboard widget a realistic curve** (spread dates, mixed statuses, non-flat totals) so panels don't read as broken — cross-ref [[filament-resource-checklist]] item 10.
+- **New module = extend its domain demo block in the same session** — a module that ships with no demo data is not done.
 
 ---
 

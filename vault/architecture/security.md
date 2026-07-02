@@ -3,7 +3,7 @@ type: architecture
 category: security
 pattern-key: security
 status: stable
-last-reviewed: 2026-06-10
+last-reviewed: 2026-07-02
 color: "#A78BFA"
 ---
 
@@ -44,8 +44,10 @@ Comprehensive security model for a multi-tenant SaaS. Every layer: authenticatio
 **API tokens:**
 - Sanctum tokens hashed in `personal_access_tokens.token` — plain token never stored
 - Tokens shown once at creation; no mechanism to retrieve the plain token again
-- Token expiry: optional, set at creation; default: no expiry (suitable for integration tokens)
+- Token expiry: **default 90 days** *(assumed)*, overridable at creation; an expiry-warning notification fires 14 days out via `core.notifications`
 - All tokens scoped to ability list — no wildcard tokens except for company owners
+- **Rotation**: `POST /api/v1/auth/tokens/{id}/rotate` issues a replacement with the same abilities and revokes the original after a **7-day grace overlap** (zero-downtime rotation). See [[architecture/api-design]].
+- **Explicit company binding**: a personal access token is bound to the issuing user's `company_id` at creation. The API middleware sets the permission team context from the **token's** company, not the user's current company — a user who belongs to two companies uses one token per company. Tokens are revoked on company detach/offboarding. See [[architecture/multi-tenancy]].
 
 ---
 
@@ -75,11 +77,54 @@ RateLimiter::for('password-reset', fn (Request $r) =>
 RateLimiter::for('exports', fn (Request $r) =>
     Limit::perHour(5)->by($r->user()?->company_id)
 );
+
+// Default throttle for Filament/Livewire actions — see Panel Action Throttling
+RateLimiter::for('panel-action', fn (Request $r) =>
+    Limit::perMinute(30)->by($r->user()->id)
+);
+
+// Per-company API quota — layered on top of the per-token 'api'/'api-write' limits
+RateLimiter::for('api-company', fn (Request $r) =>
+    Limit::perMinute(1000)->by($r->user()?->company_id) // (assumed — tune with real traffic)
+);
 ```
 
 Rate limit state stored in Redis. All rate limiters return `429 Too Many Requests` with `Retry-After` on breach.
 
-**Filament panel rate limiting:** the Filament login form applies the `login` rate limiter. Custom forms with sensitive actions (bulk delete, data export) apply the `api-write` limiter.
+**Per-company API quota (`api-company`):** the API stack applies `api-company` (1000 req/min per `company_id` *(assumed — tune with real traffic)*) **in addition to** the per-token `api`/`api-write` limits, so one tenant's many-token script cannot starve other tenants. On breach: `429` + `Retry-After`, with quota state in `X-RateLimit-Company-Limit` / `X-RateLimit-Company-Remaining` headers. See [[architecture/api-design]].
+
+---
+
+## Panel Action Throttling
+
+Any Filament/Livewire action that (a) sends outbound comms, (b) mutates money or inventory, (c) generates files/PDFs, or (d) calls an external API **must** name a rate limiter. The default is `panel-action` — **30/min per user** (defined above). Livewire feature tests never hit `RouteServiceProvider` route middleware, so the action throttles itself inside its own `->action()` closure via `RateLimiter::attempt()`, surfacing a friendly Notification on breach rather than a 429:
+
+```php
+use Illuminate\Support\Facades\RateLimiter;
+use Filament\Notifications\Notification;
+
+Action::make('send')
+    ->action(function (Invoice $record) {
+        $ok = RateLimiter::attempt(
+            key: 'panel-action:send-invoice:' . auth()->id(),
+            maxAttempts: 30,             // per-action override of the 30/min default
+            callback: fn () => SendInvoice::run($record),
+            decaySeconds: 60,
+        );
+
+        if (! $ok) {
+            Notification::make()
+                ->title('Too many attempts')
+                ->body('Please wait a moment before sending again.')
+                ->danger()
+                ->send();
+        }
+    });
+```
+
+Per-action overrides: bump `maxAttempts`/`decaySeconds` for cheaper actions, or point at a stricter named limiter for expensive ones (bulk PDF, external sync). The module's `security.md` **cites the limiter** for every matching action exactly as it does for exports/webhooks.
+
+**Filament panel rate limiting:** the Filament login form applies the `login` rate limiter. Custom forms with sensitive actions (bulk delete, data export) apply the `api-write` limiter; individual actions in categories (a)–(d) above apply `panel-action`.
 
 ---
 
@@ -434,6 +479,8 @@ Every new module must pass before merging:
 - [ ] No raw `DB::` queries without explicit `company_id` filter
 - [ ] No `withoutGlobalScope()` outside `/admin` panel
 - [ ] Rate limiter applied to expensive or sensitive endpoints
+- [ ] `panel-action` limiter cited in `security.md` for every Filament/Livewire action that sends comms, mutates money/inventory, generates files, or calls an external API
+- [ ] Stale-record guard on every edit surface — optimistic `updated_at` check per [[architecture/patterns/optimistic-locking]]
 - [ ] Stripe webhooks verified before processing
 - [ ] Tenant isolation test: company A cannot see company B's data
 - [ ] Auth events (login/logout/failed) logged to audit log

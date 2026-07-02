@@ -3,7 +3,7 @@ type: architecture
 category: quality
 pattern-key: errors
 status: stable
-last-reviewed: 2026-06-10
+last-reviewed: 2026-07-02
 color: "#A78BFA"
 ---
 
@@ -42,6 +42,11 @@ class ModuleNotActiveException extends \RuntimeException
 
 // app/Exceptions/Core/MissingCompanyContextException.php
 class MissingCompanyContextException extends \RuntimeException {}
+
+// app/Exceptions/StaleRecordException.php — platform-level (not per-domain)
+// Thrown when an optimistic-lock stale-check fails on save. Maps to 409.
+// Full mechanism + conflict UX: [[architecture/patterns/optimistic-locking]].
+class StaleRecordException extends \RuntimeException {}
 ```
 
 **Rule**: throw a specific exception, never a generic `\Exception('something went wrong')`. Specific exceptions allow the handler to produce the correct response.
@@ -97,6 +102,11 @@ private function renderApiException(Request $request, Throwable $e): JsonRespons
         $e instanceof ModuleNotActiveException => response()->json([
             'message' => $e->getMessage(),
         ], 403),
+
+        // Optimistic-lock conflict — [[architecture/patterns/optimistic-locking]]
+        $e instanceof StaleRecordException => response()->json([
+            'message' => 'This record was changed by someone else. Reload and try again.',
+        ], 409),
 
         // Everything else in production: generic 500
         app()->environment('production') => response()->json([
@@ -168,7 +178,7 @@ Configure Livewire to handle errors gracefully:
 
 ## HTTP Error Pages
 
-Custom Blade views for HTTP error codes (rendered by Inertia for Vue pages):
+Designs, per-code copy and actions (403 / 404 / 419 / 429 / 500 / 503) plus Livewire crash recovery are specified in [[architecture/patterns/error-pages]]. Custom Blade views for HTTP error codes (rendered by Inertia for Vue pages):
 
 ```
 resources/views/errors/

@@ -59,31 +59,37 @@ For complex multi-step builds (full domain), use `sparc:orchestrator` to coordin
 
 ```
 vault/
-├── _index.md                # Entry point — start here
+├── 00-index/
+│   ├── MOC.md               # Vault map of content — start here
+│   └── status-board.md      # Live build-status dashboard (replaces build/STATUS.md)
 ├── _meta/
 │   ├── graph-config.md      # Obsidian graph setup
-│   ├── spec-template.md     # Module spec template v2 (FROZEN) + frontmatter schema
-│   └── module-graph.md      # Whole-vault dependency table (one row per module)
+│   ├── spec-template.md     # Module spec template v3 (FROZEN) — exploded-folder contract
+│   ├── feature-template.md  # Per-feature note skeleton (incl. Test Checklist)
+│   ├── module-graph.md      # Whole-vault dependency table (one row per module)
+│   └── artifact-registry.md # Generated module → Filament artifact map
 ├── product/                 # Brand, positioning, pricing (sky blue #38BDF8)
 ├── architecture/            # Stack, patterns, packages (purple #A78BFA)
-│   ├── ui-strategy.md       # WHICH UI TECH FOR WHICH SCREEN — decision table
+│   ├── ui-strategy.md       # WHICH UI TECH FOR WHICH SCREEN — decision table + tweak taxonomy
 │   ├── way-of-working.md    # Definition of done, quality gates, deviation protocol
 │   └── patterns/            # One file per pattern concern
 ├── frontend/                # Vue+Inertia public site (amber #FBBF24)
 ├── domains/                 # Domain specs (green #4ADE80)
 │   ├── _overview.md         # All domains with phase/priority
 │   └── {domain}/
-│       ├── _index.md        # Domain overview + module list
-│       └── {module}.md      # Module spec (v2 template)
+│       ├── _index.md        # Domain overview + module list (rich style)
+│       ├── _opportunities.md# Opportunity radar (feature-gap research)
+│       └── {module}/        # Exploded module folder (v3 template):
+│           ├── _module.md   #   hub: identity, deps, manifest, rollup test checklist
+│           ├── architecture.md # services, state machines, Filament Artifacts, Concurrency
+│           ├── data-model.md · api.md · security.md
+│           └── features/*.md#   vertical slices, each with own Test Checklist
+├── decisions/               # ADR log (top-level; INDEX.md + decision-*.md)
 └── build/                   # Build tracking (orange #F97316)
-    ├── ROADMAP.md           # Milestones M0–M5 to v1, with exit gates
-    ├── BUILD-ORDER.md       # Exact module build sequence
-    ├── STATUS.md            # Progress dashboard
-    ├── gaps/INDEX.md        # Open bugs + spec gaps
-    └── decisions/INDEX.md   # ADR log
+    └── gaps/INDEX.md        # Open bugs + spec gaps
 ```
 
-**Color rules**: every `build/` file needs `color: "#F97316"`. Every `domains/` file needs `color: "#4ADE80"`.
+**Color rules**: every `build/` and `decisions/` file needs `color: "#F97316"`. Every `domains/` file needs `color: "#4ADE80"`.
 
 ---
 
@@ -100,7 +106,7 @@ Nine commands. Four fetch from vault (`start`, `status`, `spec`, `patterns`), fo
 Example: `/flowflex:start hr.leave`
 
 Steps:
-1. **Read the module spec** — `vault/domains/{domain}/{module}.md` (v2 template: carries Dependencies, DTOs, Services, Events, Permissions, Test Checklist, Build Manifest)
+1. **Read the module spec folder** — `vault/domains/{domain}/{module}/` (v3 exploded template: `_module.md` hub + `architecture.md` + `data-model.md` + `api.md` + `security.md` + `features/*.md`)
 2. **Check dependencies** — from spec `depends-on:` frontmatter; ⚠️ warn on any hard dep whose `status:` is not `complete`; note degraded behavior of unbuilt `soft-depends`
 3. **Read the domain index** — `vault/domains/{domain}/_index.md` (nav groups, sibling modules, intra-domain dependency graph)
 4. **Load architecture patterns** — always read: `architecture/filament-patterns.md`, `architecture/ui-strategy.md`, `architecture/multi-tenancy.md`, `architecture/patterns/belongs-to-company.md`, `architecture/patterns/dto-pattern.md`, `architecture/patterns/testing-pattern.md`, `architecture/module-system.md`, `architecture/patterns/ux-states.md` (every screen state is designed), and for any module with UI: `frontend/design-system.md` (Switchboard+). Then read the files mapped from the spec's `patterns:` frontmatter keys (lookup table in `/flowflex:patterns`). If `fires-events`/`consumes-events` non-empty, always read `architecture/event-bus.md` — payloads must match its contracts exactly.
@@ -143,7 +149,7 @@ Steps:
 **Check current build state. Read-only.**
 
 Steps:
-1. **Read `vault/build/STATUS.md`** — show the progress table as-is
+1. **Read `vault/00-index/status-board.md`** — show the progress table as-is
 2. **If `priority=v1-core|v1|p2|p3`**: filter modules by `priority:` frontmatter (via specs or `_meta/module-graph.md`) — `priority=v1-core` shows what blocks the v1 gate
 3. **If `domain=name`**: read `vault/domains/{domain}/_index.md` and list each module with its current `status:` frontmatter value:
    ```
@@ -156,7 +162,7 @@ Steps:
    ```
 4. **If `full`**: additionally show:
    - Open gaps from `vault/build/gaps/INDEX.md` (open ones only)
-   - Recent decisions from `vault/build/decisions/INDEX.md` (last 5)
+   - Recent decisions from `vault/decisions/INDEX.md` (last 5)
 5. **If no args**: show the full STATUS.md progress table only
 
 ---
@@ -168,9 +174,9 @@ Steps:
 Example: `/flowflex:spec finance.invoicing`
 
 Steps:
-1. Parse domain from module key (e.g. `finance.invoicing` → domain `finance`, file `invoicing.md`)
-2. Read `vault/domains/{domain}/{module-name}.md`
-3. Display the full spec — header line with priority/deps/events from frontmatter, then all v2 sections present (Dependencies, Core Features, Data Model, State Machine, DTOs, Services & Actions, Events, Filament, Permissions, Test Checklist, Build Manifest, Related)
+1. Parse domain from module key (e.g. `finance.invoicing` → domain `finance`, folder `invoicing/`)
+2. Read `vault/domains/{domain}/{module-name}/` — `_module.md` first, then `architecture.md`, `data-model.md`, `api.md`, `security.md`
+3. Display the spec — header line with priority/deps from `_module.md`, then the key sections (Dependencies, Core Features, Data Model, State Machine, DTOs, Filament Artifacts, Concurrency, Permissions, Test Checklist, Build Manifest, Related)
 
 Use when you need a quick reference mid-build without starting a full `/flowflex:start` briefing.
 
@@ -206,6 +212,10 @@ Examples:
 - `/flowflex:patterns panel-chrome` → read `architecture/patterns/filament-panel-chrome.md` (render hooks, full-height sidebar, spotlight)
 - `/flowflex:patterns tenant-context` → read `architecture/patterns/tenant-context-pitfalls.md`
 - `/flowflex:patterns resource-checklist` → read `architecture/patterns/filament-resource-checklist.md`
+- `/flowflex:patterns locking` → read `architecture/patterns/optimistic-locking.md` (concurrent edits, stale-write prevention)
+- `/flowflex:patterns error-pages` → read `architecture/patterns/error-pages.md` (403/404/500 design, Livewire-crash recovery)
+- `/flowflex:patterns page-blueprints` → read `architecture/patterns/page-blueprints.md` (per-kind custom page composition)
+- `/flowflex:patterns custom-page-checklist` → read `architecture/patterns/custom-page-checklist.md` (custom page DoD gate)
 
 ---
 
@@ -224,10 +234,10 @@ Steps (full playbook in `.claude/commands/flowflex/verify.md`): docker up + migr
 Example: `/flowflex:sync hr.leave status=in-progress`
 
 Steps:
-1. **Update module spec frontmatter** at `vault/domains/{domain}/{module}.md`:
-   - Set `status:` to the provided value (`in-progress` or `complete`)
-   - If spec content was corrected during the session (data model, deps, events): update the affected sections, set `last-reviewed:` to today, and mirror the change in the module's `_meta/module-graph.md` row (frontmatter is source of truth)
-2. **Update `vault/build/STATUS.md`**:
+1. **Update module hub frontmatter** at `vault/domains/{domain}/{module}/_module.md`:
+   - Set `build-status:` to the provided value (`in-progress` or `complete`)
+   - If spec content was corrected during the session (data model, deps, events): update the affected file in the module folder, set `updated:` to today, and mirror the change in the module's `_meta/module-graph.md` row
+2. **Update `vault/00-index/status-board.md`**:
    - If `complete`: increment the Built count for that domain row
    - Add a row to Recent Sessions table: `| {date} | {domain} | {module} | {brief note} |`
 3. **Create gap files** if any bugs or spec issues were found during this session:
@@ -235,9 +245,9 @@ Steps:
    - Required frontmatter: `type: gap`, `severity: high|medium|low`, `category: spec|architecture|feature|bug|data-model`, `status: open`, `domain: {domain-key}`, `color: "#F97316"`, `discovered: YYYY-MM-DD`, `discovered-in: {module-key}`
    - Add row to `vault/build/gaps/INDEX.md`
 4. **Create ADR files** if architectural decisions were made during this session:
-   - File: `vault/build/decisions/decision-{YYYY-MM-DD}-{slug}.md`
+   - File: `vault/decisions/decision-{YYYY-MM-DD}-{slug}.md`
    - Required frontmatter: `type: adr`, `date: YYYY-MM-DD`, `status: decided|proposed`, `domain: {domain or "All"}`, `color: "#F97316"`
-   - Add row to `vault/build/decisions/INDEX.md`
+   - Add row to `vault/decisions/INDEX.md`
 
 ---
 
@@ -250,8 +260,8 @@ Example: `/flowflex:done hr.leave`
 Steps:
 1. **Hard-dependency gate**: refuse completion if any `depends-on:` module is not `status: complete`
 2. **Definition-of-done checklist** (full version in `architecture/way-of-working.md`): Build Manifest files all exist, spec Test Checklist all covered by passing tests, quality gates green (Pint/Larastan/Pest), `migrate:fresh --seed` clean, `canAccess()` everywhere, events match `fires-events:`, no open high-severity gap, spec updated to match reality
-3. Set `status: complete` in `vault/domains/{domain}/{module}.md` frontmatter
-4. Read `vault/build/STATUS.md`, increment Built count for the domain row
+3. Set `build-status: complete` in `vault/domains/{domain}/{module}/_module.md` frontmatter
+4. Read `vault/00-index/status-board.md`, increment Built count for the domain row
 5. Update the `% progress` for the domain: `Built / Total × 100`
 6. Add row to Recent Sessions: `| {date} | {domain} | {module} | ✅ Complete |`
 7. If any gaps were found, run `/flowflex:bug` first, then mark done
@@ -291,7 +301,7 @@ Steps:
 Example: `/flowflex:decision "Use Actions not Service for simple leave approval" status=decided`
 
 Steps:
-1. Create `vault/build/decisions/decision-{YYYY-MM-DD}-{slug}.md`:
+1. Create `vault/decisions/decision-{YYYY-MM-DD}-{slug}.md`:
    ```yaml
    ---
    type: adr
@@ -302,8 +312,8 @@ Steps:
    ---
    ```
    Body: Context, Options Considered, Decision, Consequences, Related links
-2. Add row to `vault/build/decisions/INDEX.md`:
-   `| {date} | [[path\|Title]] | decided | {domain} |`
+2. Add row to `vault/decisions/INDEX.md` (newest first):
+   `| {date} | [[decisions/decision-...\|Title]] | decided |`
 
 ---
 
@@ -325,39 +335,30 @@ Steps:
 
 ## Key Conventions
 
-### Module Spec Frontmatter v2 (exact format)
+### Module Spec Format (v3 — exploded folder)
+Every module is a folder `vault/domains/{domain}/{module}/`. `_module.md` hub frontmatter:
 ```yaml
 ---
+domain: hr                   # domain-key
+module: profiles             # module slug
 type: module
-domain: HR & People          # display name
-domain-key: hr               # folder name
-panel: hr
-module-key: hr.profiles
-status: planned              # planned | in-progress | complete
-priority: v1-core            # v1-core | v1 | p2 | p3
-depends-on: []               # hard deps (module-keys, build-blocking, incl. core.billing/core.rbac)
-soft-depends: []             # optional integrations (degrade gracefully)
-fires-events: []             # event class names, match event-bus.md
-consumes-events: []
-patterns: []                 # /flowflex:patterns concern keys to load at /flowflex:start
-tables: []                   # tables this module owns
-permission-prefix: hr.profiles
-encrypted-fields: []         # ["table.column"]
-last-reviewed: YYYY-MM-DD
+build-status: planned        # planned | in-progress | complete
+status: wip                  # unverified | wip | stable
 color: "#4ADE80"
+updated: YYYY-MM-DD
 ---
 ```
-Full schema rules + section skeleton: `vault/_meta/spec-template.md` (**frozen** — changing it requires an ADR + backfill).
+Hub body carries `## Module-key` (bold-label style: Priority / Panel / Permission prefix / Tables), Dependencies, Core Features, Build Manifest, rollup Test Checklist (first two lines: tenant isolation + module gating), Cross-Domain Edges, Related. `architecture.md` carries `## Filament Artifacts` (every artifact cites its ui-strategy row; backend-only modules state "None" explicitly) and mandatory `## Concurrency` (optimistic/pessimistic/document-lock/n-a per write path). `security.md` carries `## Permissions` (verb per state transition + command). Every `features/*.md` has its own `## Test Checklist` (Unit / Feature / Livewire).
 
-### Module Spec Sections (v2 template)
-Mandatory: Purpose, Dependencies, Core Features, Data Model, DTOs, Services & Actions, Filament, Permissions, Test Checklist, Build Manifest, Related. When applicable (omit otherwise): State Machine, Events, Jobs & Scheduling, Caching, Search & Realtime, Open Questions.
+Full contract: `vault/_meta/spec-template.md` (**frozen** — changing it requires an ADR + backfill; v3 per `decisions/decision-2026-07-02-spec-template-v3-exploded-format.md`).
 
-**`*(assumed)*` convention**: any spec detail invented without a documented source carries the inline marker `*(assumed)*`. At build time it's an authoritative default, overridable via ADR. Design-affecting assumptions also go in `## Open Questions`; build-blocking unknowns become gap files.
+**`*(assumed)*` convention**: any spec detail invented without a documented source carries the inline marker `*(assumed)*`. At build time it's an authoritative default, overridable via ADR. Design-affecting assumptions also go in `unknowns.md`; build-blocking unknowns become gap files.
 
 ### File Naming
-- Module specs: `{module-name}.md` (kebab-case, matches module key suffix)
-- Gap files: `gap-{slug}.md`
-- ADR files: `decision-{YYYY-MM-DD}-{slug}.md`
+- Module spec folders: `{module-name}/` (kebab-case, matches module key suffix; hub file `_module.md`)
+- Feature notes: `{module-name}/features/{feature-slug}.md`
+- Gap files: `gap-{slug}.md` (in `build/gaps/`)
+- ADR files: `decision-{YYYY-MM-DD}-{slug}.md` (in `decisions/`)
 - Domain indexes: `_index.md` (not `INDEX.md`)
 
 ### Code Conventions
@@ -467,6 +468,10 @@ app/
 | Filament patterns (critical, read first) | `architecture/filament-patterns.md` |
 | Tenant-context pitfalls (null-team 403 family) | `architecture/patterns/tenant-context-pitfalls.md` |
 | Filament resource quality checklist (DoD 11–13) | `architecture/patterns/filament-resource-checklist.md` |
+| Custom page quality checklist | `architecture/patterns/custom-page-checklist.md` |
+| Per-kind custom page blueprints (Kanban, Calendar, Inbox…) | `architecture/patterns/page-blueprints.md` |
+| Concurrent edits / optimistic locking | `architecture/patterns/optimistic-locking.md` |
+| Error pages (403/404/500 design, Livewire-crash recovery) | `architecture/patterns/error-pages.md` |
 | Per-domain: colors, custom pages, permissions | `architecture/domain-panels.md` |
 | Multi-tenancy, CompanyScope, queue context | `architecture/multi-tenancy.md` |
 | Module activation and BillingService | `architecture/module-system.md` |

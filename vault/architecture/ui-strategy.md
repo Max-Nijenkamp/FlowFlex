@@ -3,7 +3,7 @@ type: architecture
 category: filament
 pattern-key: ui
 status: stable
-last-reviewed: 2026-06-10
+last-reviewed: 2026-07-02
 color: "#A78BFA"
 ---
 
@@ -49,6 +49,27 @@ The single decision table for "what tech do I build this screen with". Every mod
 | 18 | Heat-map / matrix grid (color-coded cells) | **Custom Filament Page** | Page + Blade/CSS grid (+ apexcharts heatmap if charted) | None | `lms.skills-matrix` |
 | 19 | Spatial / floor map (positioned hotspots over an image) | **Custom Filament Page** + Alpine | Page + absolute-positioned divs over floor image, click-to-act | Polling 30s (live occupancy) | `workplace.desk-booking` |
 
+Rows **3–11 and 17–19 are custom pages** — each must cite its kind in [[architecture/patterns/page-blueprints]] and pass [[architecture/patterns/custom-page-checklist]] before its module is `complete`.
+
+---
+
+## Resource Tweak Taxonomy
+
+Rows 1–2 (base Filament resources) may carry **named tweaks** — controlled modifications a spec attaches to a standard resource. A spec cites tweaks *by name* in its `## Filament Artifacts` table; this table is the closed vocabulary.
+
+| Tweak | What it is | Reference |
+|---|---|---|
+| `view-page-tabs` | View page infolist split into tabs (Overview / Timeline / Files…) | Row #2 |
+| `relation-manager-timeline` | An activity/related-records relation manager rendered as a timeline tab | Row #2 · [[architecture/patterns/page-blueprints#Inbox / Chat / Conversation]] for bubble styling cues |
+| `kanban-sub-view` | A board-view toggle inside a resource (e.g. `ApplicantResource`) — the board itself follows [[architecture/patterns/page-blueprints#Kanban]] | Row #3 blueprint for the board part |
+| `pdf-preview-panel` | Inline PDF render pane on a view/edit page (invoices, quotes) | [[architecture/packages]] spatie/laravel-pdf |
+| `custom-header-actions` | Non-CRUD verbs as header actions (approve / send / void) — **each needs its own permission**, and a rate limiter where its category applies | [[decisions/decision-2026-07-02-rate-limit-and-token-hardening]] |
+| `state-badge-column` | model-states badge column + a transition action group | [[architecture/patterns/states]] |
+| `read-only-flow-owned` | Resource is read-only because another flow owns writes — `canCreate(): false` + a comment naming the owning service | [[architecture/patterns/filament-resource-checklist]] #1 |
+| `inline-relation-repeater` | Line-items repeater on the form (invoice / quote lines) | Row #1 |
+
+**Rule** — a modification not in this table is one of two things: it's actually a *custom page* (cite a [[architecture/patterns/page-blueprints]] kind instead), or it's a genuinely new tweak (add a row here via ADR first). No unnamed tweaks in specs.
+
 ---
 
 ## Realtime: Broadcast vs Poll Rule
@@ -69,7 +90,7 @@ Never poll under 15s — use Reverb instead. Never broadcast what a 30s poll cov
 ## Hard Rules
 
 - Every Filament resource and custom page: `canAccess()` with permission + `BillingService::hasModule()` — no exceptions ([[architecture/filament-patterns]] #1)
-- Custom pages follow [[architecture/patterns/custom-pages]] — instance `$view`, `getSlug(?Panel $panel = null)`, Blade wrapped in `<x-filament-panels::page>`
+- Custom pages follow [[architecture/patterns/custom-pages]] — instance `$view`, `getSlug(?Panel $panel = null)`, Blade wrapped in `<x-filament-panels::page>` — and must match a [[architecture/patterns/page-blueprints]] kind and pass [[architecture/patterns/custom-page-checklist]]
 - Vue pages never receive Eloquent models — DTOs via `spatie/laravel-data`, types via `typescript:transform` ([[architecture/patterns/dto-pattern]])
 - A module spec may NOT introduce a UI kind outside this table. Need a new kind → ADR first, then add the row here.
 
@@ -79,6 +100,8 @@ Never poll under 15s — use Reverb instead. Never broadcast what a 30s poll cov
 
 - [[build/decisions/decision-2026-06-10-all-filament-hybrid-ui]]
 - [[architecture/patterns/custom-pages]]
+- [[architecture/patterns/page-blueprints]]
+- [[architecture/patterns/custom-page-checklist]]
 - [[architecture/filament-patterns]]
 - [[architecture/websockets]]
 - [[frontend/_index]]

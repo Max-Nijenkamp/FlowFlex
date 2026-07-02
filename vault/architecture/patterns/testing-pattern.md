@@ -3,7 +3,7 @@ type: architecture
 category: patterns
 pattern-key: testing
 status: stable
-last-reviewed: 2026-06-10
+last-reviewed: 2026-07-02
 color: "#A78BFA"
 ---
 
@@ -28,9 +28,15 @@ The 80% line-coverage target applies to **app code that contains decisions**:
 | Migrations, providers, config | ❌ no | `migrate:fresh --seed` in CI is the test |
 | Framework + Filament internals | ❌ never | testing the framework is waste |
 
-**Per-module floor** (regardless of %): every box in the spec's `## Test Checklist`, always including tenant-isolation + module-gating. A module with 90% coverage but no tenant-isolation test fails the definition of done ([[architecture/way-of-working]]).
+**Per-module floor** (regardless of %): every box in the spec's `## Test Checklist`, always including tenant-isolation + module-gating. A module with 90% coverage but no tenant-isolation test fails the definition of done ([[architecture/way-of-working]]). Modules with shared editable records also add a **stale-write case** — recipe in [[architecture/patterns/optimistic-locking]].
 
 **Intentionally not tested**: Filament table column formatting, navigation/icon config, Blade markup, third-party package behavior, getters with no logic.
+
+---
+
+## Per-Feature Test Checklists
+
+Under the v3 exploded-spec format ([[decisions/decision-2026-07-02-spec-template-v3-exploded-format]]), **every `features/*.md` carries its own `## Test Checklist`** with `### Unit`, `### Feature`, and (when the feature has UI) `### Livewire` subsections — the depth lives with the feature, per [[_meta/feature-template]]. The `_module.md` keeps a **rollup** checklist that references the per-feature ones; its first two lines are always tenant-isolation + module-gating, which remain **module-level floors** regardless of feature breakdown.
 
 ---
 
@@ -366,4 +372,18 @@ The suite runs on sqlite :memory:. Two classes of failure stay invisible:
    235 tests stayed green ([[../../build/gaps/gap-filament-assets-unpublished]]).
 
 Mitigations: the pgsql gate below + the browser verify before any release.
+
+---
+
+## Browser Smoke Tests (Playwright)
+
+Per [[decisions/decision-2026-07-02-browser-test-convention]], a thin Playwright smoke suite closes the "assets/JS broken while Pest stays green" gap that Livewire feature tests structurally cannot catch (they never execute browser JavaScript).
+
+- **Location**: `tests/Browser/{Panel}/*.spec.ts`, run against the docker stack seeded by `LocalDevSeeder`.
+- **Per-panel floor**: one spec per active panel — log in as the demo owner (`test@test.nl`), assert the shell renders (sidebar, topbar), sweep every nav item asserting a Filament root element exists (not merely HTTP 200), and assert **zero uncaught console errors** across the sweep.
+- **Per-custom-page floor**: every custom page gets **one** kind-specific interaction (Kanban: drag a card; Calendar: switch view; Wizard: advance a step; Inbox: select a conversation; Dashboard: widgets render data) — expectations from [[architecture/patterns/page-blueprints]].
+- **Selectors by role**: query by ARIA role/accessible name, not brittle CSS/id selectors.
+- **No arbitrary sleeps**: rely on Playwright auto-waiting + `expect` polling; never `waitForTimeout`.
+- **Trace on retry**: `trace: 'on-first-retry'` so failures are debuggable without re-running.
+- **CI triggers**: runs on any PR touching `app/Filament`, `resources/`, or `package.json`/`vite.config.*`; full sweep nightly. **Not coverage-counted** — a behavior floor, same principle as Livewire tests.
 

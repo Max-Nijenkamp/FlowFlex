@@ -2,175 +2,195 @@
 type: meta
 category: template
 status: stable
-last-reviewed: 2026-06-11
+last-reviewed: 2026-07-02
 color: "#6B7280"
 ---
 
-# Module Spec Template v2
+# Module Spec Template v3 — Exploded Folder
 
-The canonical template for all 173 module specs. **Frozen** — changes require an ADR + backfill of already-rewritten specs. Read this plus the two golden specs ([[domains/crm/deals/_module]], [[domains/hr/leave-management/_module]]) before writing or rewriting any spec.
+The canonical contract for all 172 module specs. **Frozen** — changes require an ADR + backfill. v3 authorised by [[../decisions/decision-2026-07-02-spec-template-v3-exploded-format]]; supersedes the monolithic v2 (2026-06-11). Golden spec: [[../domains/crm/deals/_module|crm.deals]].
 
-**Core rule**: rewrites are *enrichment + restructure, never regeneration*. Migrate existing Data Model / Features / Filament content verbatim, then add the missing layers.
-
----
-
-## Frontmatter Schema (v2)
-
-```yaml
----
-type: module
-domain: CRM & Sales              # display name
-domain-key: crm                  # folder name under vault/domains/
-panel: crm                       # Filament panel slug hosting this module
-module-key: crm.deals
-status: planned                  # planned | in-progress | complete
-priority: v1-core                # v1-core | v1 | p2 | p3
-depends-on: [crm.contacts, core.billing, core.rbac]   # hard deps, build-blocking
-soft-depends: [finance.invoicing]                      # optional integrations
-fires-events: [DealWon, DealLost]                      # event class names, [] if none
-consumes-events: [QuoteAccepted]                       # [] if none
-patterns: [states, interface-service, custom-pages]   # /flowflex:patterns keys to read
-tables: [crm_deals, crm_deal_contacts]                 # tables this module owns
-permission-prefix: crm.deals                           # full list in ## Permissions
-encrypted-fields: []                                   # ["table.column"], [] if none
-last-reviewed: 2026-06-10
-color: "#4ADE80"
----
-```
-
-Field rules:
-- `depends-on` / `soft-depends`: values must be existing `module-key`s. List `core.billing` + `core.rbac` explicitly on every gated module — zero ambiguity beats brevity. Hard = cannot build/run without it. Soft = integration that degrades gracefully (state the degraded behavior in `## Dependencies`).
-- `patterns`: exact concern keys from the `/flowflex:patterns` lookup. The always-read set (filament-patterns, multi-tenancy, belongs-to-company, dto-pattern, testing-pattern, module-system) is implied — never listed.
-- `fires-events` / `consumes-events`: must match [[architecture/event-bus]] map exactly.
-- `priority`: `v1-core` = blocks the v1 sellable gate; `v1` = ships in v1; `p2` / `p3` = phase.
+**Core rule (unchanged from v2)**: rewrites are *enrichment + restructure, never regeneration*. Migrate existing content verbatim, then add missing layers. Deleting prior content requires a gap file explaining why.
 
 ---
 
-## Section Skeleton
+## The Exploded Folder
 
-`[M]` mandatory. `[A]` only when applicable — **omit entirely otherwise**, no empty placeholder sections.
+Every module is a folder `vault/domains/{domain}/{module}/`:
+
+| File | Role | Mandatory headings |
+|---|---|---|
+| `_module.md` | Hub: identity, deps, features list, build manifest, **rollup** test checklist | `## Module-key`, `## Dependencies`, `## Core Features`, `## Build Manifest`, `## Test Checklist`, `## Cross-Domain Edges` (when any), `## Related` |
+| `architecture.md` | Services/Actions, state machines, **Filament artifacts**, **concurrency** | `## Services & Actions`, `## Filament Artifacts` (or explicit None line), `## Concurrency`, `## State Machine` [A] |
+| `data-model.md` | Tables, columns, indexes, ERD | one `### {table}` per owned table, `**Indexes:**` line |
+| `api.md` | DTOs, REST endpoints, events fired/consumed | `## DTOs`, `## Events` [A], `## Endpoints` [A] |
+| `security.md` | Permissions, rate limiters, encryption, guards | `## Permissions`, `## Rate Limiting` [A], `## Encrypted Fields` [A] |
+| `features/{slug}.md` | One vertical slice each — see [[feature-template]] | per feature template, **incl. `## Test Checklist`** |
+| `decisions.md` / `unknowns.md` | Module-local decisions, open questions | free-form |
+
+`[A]` = only when applicable — omit entirely otherwise, no empty placeholder sections.
+
+---
+
+## `_module.md` Skeleton
 
 ````markdown
+---
+domain: crm
+module: deals
+type: module
+build-status: planned        # planned | in-progress | complete
+status: wip                  # unverified | wip | stable
+color: "#4ADE80"
+updated: YYYY-MM-DD
+---
+
 # {Module Name}
 
-{1–2 paragraphs: what it does, who uses it, what it displaces.}        [M]
+{1–2 paragraphs: what it does, who uses it, what it displaces.}
 
-## Dependencies                                                         [M]
+## Module-key
+
+`crm.deals`
+
+**Priority:** v1-core            <!-- v1-core | v1 | p2 | p3 -->
+**Panel:** crm
+**Permission prefix:** `crm.deals`
+**Tables:** `crm_deals`, `crm_deal_contacts`
+
+## Dependencies
+
 | Type | Module | Why |
 |---|---|---|
-| Hard | [[domains/crm/contacts/_module\|crm.contacts]] | Deals attach to contacts |
-| Soft | [[domains/finance/invoicing/_module\|finance.invoicing]] | DealWon → invoice stub; without it, event fires with no consumer |
+| Hard | [[../../core/billing-engine/_module|core.billing]] | Module gating |
+| Hard | [[../../core/rbac/_module|core.rbac]] | Permissions |
+| Soft | [[../../finance/invoicing/_module|finance.invoicing]] | {degraded behavior stated} |
 
-## Core Features                                                        [M]
-- {existing list preserved, enriched to acceptance-level specificity}
+## Core Features
 
-## Data Model                                                           [M]
-### {table_name}
-| Column | Type | Constraints | Notes |
-|---|---|---|---|
-| id | ulid | PK | |
-| company_id | ulid | not null, FK companies, indexed | BelongsToCompany |
-| 🔐 national_id | text | nullable | encrypted cast |
-**Indexes:** `(company_id, status)`, `(company_id, created_at)`
-{mermaid ERD kept when >1 table}
+- {acceptance-level bullets; link `[[./features/{slug}|Feature]]` notes}
 
-## State Machine                                                        [A]
-Column: `status` — spatie/laravel-model-states, base `{Model}State`
-| State | Transitions to | Triggered by (permission) | Side effects |
-|---|---|---|---|
-Initial: `draft`. Terminal: `won`, `lost`. Transitions audited via activitylog.
+## Build Manifest
 
-## DTOs                                                                 [M]
-### Create{Model}Data (input)
-| Field | Type | Validation |
-|---|---|---|
-Cross-field rules + custom messages below the table.
-### {Model}Data (output) — field list
+```
+{exact file list — migrations, models, states, data, services, events, filament, factories, tests}
+```
 
-## Services & Actions                                                   [M]
-{Interface→Service or Action per hybrid-service ADR; one line per method:}
-`approve(ApproveLeaveData $data): LeaveRequestData` — throws `OverlappingLeaveException`
+## Test Checklist
 
-## Events                                                               [A]
-### Fires: {EventName}
-| Payload field | Type | Notes |
-|---|---|---|
-| company_id | string | always first |
-### Consumes: {EventName} (from {module-key})
-Listener: `{Name}Listener` — queued, `WithCompanyContext`; behavior + defaults per [[architecture/event-bus]] contract.
-
-## Filament                                                             [M]
-**Nav group:** {group}
-| Artifact | Kind ([[architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `DealResource` | #1 CRUD resource | list filters: stage, owner |
-| `PipelineBoardPage` | #3 Kanban custom page | Reverb broadcast |
-
-**Access contract (mandatory):** every artifact above gates on `canAccess() = Auth::user()->can('{permission}') && BillingService::hasModule('{module-key}')` per [[architecture/filament-patterns]] #1. Custom pages MUST state it explicitly — Filament does not auto-gate them. Public/portal/unauthenticated surfaces instead declare their guest or scoped-portal guard + signed/single-use token semantics (these are Vue+Inertia per [[architecture/ui-strategy]], not Filament).
-
-## Permissions                                                          [M]
-`crm.deals.view-any` · `.view` · `.create` · `.update` · `.delete` · `.{custom-verb}`
-Seeded in `PermissionSeeder`.
-
-## Jobs & Scheduling                                                    [A]
-| Job / Command | Queue | Schedule | Idempotency |
-|---|---|---|---|
-
-## Caching                                                              [A]
-| Key | TTL | Invalidated by |
-|---|---|---|
-
-## Search & Realtime                                                    [A]
-Scout/Meilisearch: {searchable fields} — or omit line.
-Realtime: {polling 30s | Reverb broadcast on channel X} per ui-strategy rule.
-
-## Test Checklist                                                       [M]
 - [ ] Tenant isolation: {module-specific scenario}
-- [ ] Module gating: resources hidden when `{module-key}` inactive
-- [ ] {3–8 feature cases incl. edge cases}
+- [ ] Module gating: artifacts hidden when `{module-key}` inactive
+- [ ] {rollup of the highest-value cases — details live per feature}
 
-## Build Manifest                                                       [M]
-```
-database/migrations/xxxx_create_crm_deals_table.php
-app/Models/CRM/Deal.php
-app/States/CRM/Deal/{DealState,Open,Won,Lost}.php
-app/Data/CRM/{CreateDealData,DealData}.php
-app/Services/CRM/DealService.php  (+ Contracts/CRM/DealServiceInterface.php + Providers/CRM binding)
-app/Events/CRM/DealWon.php
-app/Filament/CRM/Resources/DealResource.php
-database/factories/CRM/DealFactory.php
-tests/Feature/CRM/DealTest.php
-```
+## Cross-Domain Edges
 
-## Open Questions                                                       [A]
-- {assumptions that materially affect design — see convention below}
+| Direction | Event / API | Counterpart | Notes |
+|---|---|---|---|
 
-## Related                                                              [M]
-{wikilinks — must be a superset of depends-on + soft-depends}
+## Related
+
+{wikilinks — superset of all deps}
 ````
+
+**This is the single metadata style** (bold-label). Table-style and inline-bullet hubs are migrated to it — content preserved, only shape changes. `## What it does` sections become the intro paragraph + `## Core Features`.
+
+**Rollup Test Checklist rule:** first two lines are always tenant isolation + module gating. Remaining lines summarise; per-feature detail lives in each `features/*.md` checklist.
 
 ---
 
-## Conventions
+## `architecture.md` — Filament Artifacts + Concurrency (both mandatory)
 
-**`*(assumed)*` marker** — any detail invented during spec writing that is not derivable from architecture docs or the v1 spec (a validation max, a default value, a field) gets the inline marker: `due_date defaults to +14 days *(assumed)*`. At build time the marker means: authoritative default, overridable with an ADR. Design-affecting assumptions also go in `## Open Questions`; build-blocking unknowns become gap files via `/flowflex:bug`, not spec text.
+````markdown
+## Filament Artifacts
 
-**Size targets** — v1-core/v1 specs 6–12 KB; p2/p3 specs 4–8 KB (fewer applicable sections). A spec may never shrink below its v1 byte size.
+**Nav group:** {group}
 
-**Verbatim migration** — Data Model column lists, mermaid ERDs, feature lists, and Filament artifact lists from the v1 spec are carried over unchanged, then extended. Deleting v1 content requires a gap file explaining why.
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `DealResource` | #1 CRUD resource | tweaks: view-page-tabs, state-badge-column | list filters: stage, owner |
+| `PipelineBoardPage` | #3 Kanban custom page | [[../../../architecture/patterns/page-blueprints#Kanban]] | Reverb broadcast |
 
-**Event payloads** — copied character-exact from the listener contracts in [[architecture/event-bus]]. Never paraphrase a payload.
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('{permission}') && BillingService::hasModule('{module-key}')`
+per [[../../../architecture/filament-patterns]] #1. Custom pages MUST state it explicitly — Filament
+does not auto-gate them. Public/portal surfaces declare their guest or scoped-portal guard +
+signed/single-use token semantics instead (Vue+Inertia per ui-strategy, not Filament).
+````
 
-**Money/phone/encryption** — minor-unit integers + brick/money; E.164; encrypted casts on `text` columns per [[architecture/patterns/encryption]]. Flag encrypted columns with 🔐 in Data Model AND list them in `encrypted-fields` frontmatter. Any column holding external-person PII (name/email/DOB), national/government IDs, salary/compensation, IBAN/BIC/bank, or provider secrets/tokens MUST be encrypted. A queryable encrypted field (e.g. unique email) gets a deterministic `*_hash` (sha256, indexed) companion column for lookups/uniqueness.
+- Custom pages (ui-strategy rows 3–11, 17–19) cite their kind blueprint in [[../architecture/patterns/page-blueprints]] and satisfy [[../architecture/patterns/custom-page-checklist]].
+- Resources cite named tweaks from the ui-strategy **Resource Tweak Taxonomy** and satisfy [[../architecture/patterns/filament-resource-checklist]].
+- **Backend-only module?** State it explicitly: `**Filament Artifacts:** None (backend module — {one-line reason}).` Absence of the section is a spec defect.
 
-**Security contract** (per [[build/decisions/decision-2026-06-11-security-contract-hardening]]) — every spec must state: (1) the `## Filament` access contract (above); (2) signature **verification as a requirement** — never `*(assumed)*` — for any inbound webhook, naming the mechanism + secret source; (3) a cited rate limiter on exports, bulk ops, public token endpoints, and webhooks; (4) file uploads restate the type-whitelist + max-size + `companies/{id}/` path contract, not just a generic "core.files" delegation; (5) Tiptap/rich-text fields note HTMLPurifier before storage. These are checked at `/flowflex:start` and at review.
+````markdown
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Deal CRUD (form, API) | Optimistic | `updated_at` stale-check → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Stage transition | Pessimistic | `DB::transaction` + `lockForUpdate` per [[../../../architecture/patterns/states]] |
+````
+
+Tiers per [[../decisions/decision-2026-07-02-optimistic-locking-standard]]: **optimistic** (default, all CRUD) · **pessimistic** (state transitions, money, inventory/capacity) · **document locks** (DMS only) · **n/a** (read-only/derived modules — state the reason).
+
+---
+
+## `security.md` — Permissions
+
+````markdown
+## Permissions
+
+| Permission | Grants |
+|---|---|
+| `crm.deals.view-any` | List page |
+| `crm.deals.view` | View own/assigned records (`view-all` variant where manager scope exists) |
+| `crm.deals.create` / `.update` / `.delete` | CRUD |
+| `crm.deals.close` | Won/Lost transition |
+
+Seeded in `PermissionSeeder`.
+````
+
+**Verb-per-command rule:** every state transition and every command action (approve, export, send, void, run, …) has its own permission — cross-checked against the `## State Machine` "Triggered by (permission)" column and any action buttons in `## Filament Artifacts`. Ownership scoping (`view` vs `view-all`) per [[../architecture/patterns/policy]].
+
+---
+
+## Per-Feature Test Checklists
+
+Every `features/*.md` ends with (skeleton in [[feature-template]]):
+
+````markdown
+## Test Checklist
+
+### Unit
+- [ ] {pure logic: calculators, rules, DTO validation}
+
+### Feature (Pest)
+- [ ] {end-to-end through service/action, real sqlite}
+
+### Livewire        <!-- only when the feature has UI -->
+- [ ] {form validation / action / canAccess / table behavior via pest-plugin-livewire}
+````
+
+The module rollup references, never duplicates, these. Tenant isolation + module gating stay module-level (rollup) unless a feature has its own isolation nuance.
+
+---
+
+## Conventions (carried from v2, still binding)
+
+**`*(assumed)*` marker** — any invented detail not derivable from architecture docs gets the inline marker. Authoritative default at build time, overridable by ADR. Design-affecting assumptions also go in `unknowns.md`; build-blocking unknowns become gap files.
+
+**Verbatim migration** — data model columns, ERDs, feature lists, Filament artifact lists carry over unchanged when restructuring, then extend.
+
+**Event payloads** — character-exact from [[../architecture/event-bus]] listener contracts. Never paraphrase.
+
+**Money/phone/encryption** — minor-unit integers + brick/money; E.164; encrypted casts on `text` columns; 🔐 flag in data-model.md + `## Encrypted Fields` list in security.md. Queryable encrypted fields get a deterministic `*_hash` companion.
+
+**Security contract** (per [[../decisions/decision-2026-06-11-security-contract-hardening]] + [[../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]) — every spec states: (1) the Filament access contract; (2) webhook signature verification as a requirement, never `*(assumed)*`; (3) a **cited, named rate limiter** on exports, bulk ops, public token endpoints, webhooks, **and panel actions that send comms / mutate money or inventory / generate files / call external APIs** (`panel-action` default); (4) upload contracts restated (type whitelist, max size, `companies/{id}/` path); (5) HTMLPurifier on rich text.
 
 ---
 
 ## Related
 
-- [[domains/crm/deals/_module]] — golden spec
-- [[domains/hr/leave-management/_module]] — golden spec
-- [[architecture/ui-strategy]]
-- [[architecture/event-bus]]
-- [[_meta/module-graph]]
+- [[../domains/crm/deals/_module]] — golden spec
+- [[feature-template]] · [[module-graph]] · [[artifact-registry]]
+- [[../architecture/ui-strategy]] · [[../architecture/patterns/page-blueprints]] · [[../architecture/patterns/custom-page-checklist]] · [[../architecture/patterns/optimistic-locking]]
+- [[../decisions/decision-2026-07-02-spec-template-v3-exploded-format]]

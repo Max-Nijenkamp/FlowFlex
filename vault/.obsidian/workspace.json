@@ -178,6 +178,8 @@
   },
   "active": "cc91f2af4b84a66c",
   "lastOpenFiles": [
+    "glossary.md",
+    "_audit/AUDIT.md",
     "_index.md",
     "build/ROADMAP.md",
     "build/BUILD-ORDER.md",
@@ -211,8 +213,6 @@
     "domains/events/events.md",
     "architecture/data-model.md",
     "domains/workplace/workplace-analytics.md",
-    "domains/workplace/maintenance.md",
-    "domains/workplace/visitor-management.md",
-    "domains/workplace/desk-booking.md"
+    "domains/workplace/maintenance.md"
   ]
 }

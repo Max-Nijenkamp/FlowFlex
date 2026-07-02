@@ -3,7 +3,7 @@ type: architecture
 category: api
 pattern-key: api
 status: stable
-last-reviewed: 2026-06-10
+last-reviewed: 2026-07-02
 color: "#A78BFA"
 ---
 
@@ -18,13 +18,15 @@ REST API at `/api/v1/`. Sanctum-authenticated, thin-controller. Shares the same 
 ```
 POST /api/v1/auth/token
 Body: { email, password, device_name }
-Response: { token: "1|abc...", expires_at: null }
+Response: { token: "1|abc...", expires_at: "2026-09-30T14:00:00Z" }   # 90-day default
 
 All other requests:
 Authorization: Bearer 1|abc...
 ```
 
 Tokens carry abilities (scopes). A read-only token cannot POST to mutation endpoints. Verified via `$request->user()->tokenCan('hr:write')`.
+
+**Expiry & rotation**: new tokens default to **90-day expiry** *(assumed)*, returned as `expires_at` in the create response. Rotate before expiry via `POST /api/v1/auth/tokens/{id}/rotate` — a replacement with the same abilities is issued and the original is revoked after a **7-day grace overlap** (zero-downtime). A token is **bound to the issuing user's `company_id`** at creation; the middleware sets the permission team context from the token's company, and tokens are revoked on company detach/offboarding. See [[architecture/security]].
 
 ---
 
@@ -79,6 +81,14 @@ Under 10 lines per method. No business logic, no model access, no validation —
 
 // Not found — 404
 { "message": "No query results for model [Employee]." }
+
+// Stale write — 409 Conflict (optimistic locking)
+{
+  "type": "https://flowflex.nl/problems/stale-record",
+  "title": "Record was modified",
+  "status": 409,
+  "detail": "This record changed since you loaded it. Reload and retry."
+}
 ```
 
 ---
@@ -94,10 +104,13 @@ Defined in `RouteServiceProvider`:
 | `POST /api/v1/*` (write) | 60 requests | 1 min per token |
 | `DELETE /api/v1/*` | 30 requests | 1 min per token |
 | `POST /api/v1/*/export` | 5 requests | 1 hour per token |
+| **All `/api/v1/*`** (per-company layer) | 1000 requests *(assumed)* | 1 min per `company_id` |
 
-Headers on every response: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`.
+The per-company layer (`api-company` limiter) sits **on top of** the per-token limits so one tenant's many-token script cannot starve other tenants. See [[architecture/security]].
 
-Exceeding the limit returns `429 Too Many Requests` with `Retry-After` header.
+Headers on every response: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`, plus `X-RateLimit-Company-Limit` / `X-RateLimit-Company-Remaining` for the per-company quota.
+
+Exceeding either limit returns `429 Too Many Requests` with `Retry-After` header.
 
 ---
 
@@ -121,6 +134,7 @@ Exceeding the limit returns `429 Too Many Requests` with `Retry-After` header.
 # Auth
 POST   /api/v1/auth/token
 POST   /api/v1/auth/logout
+POST   /api/v1/auth/tokens/{id}/rotate  — issue replacement (same abilities), revoke original after 7-day grace
 DELETE /api/v1/auth/tokens/{id}     — revoke specific token
 
 # Company
@@ -180,6 +194,12 @@ DELETE /api/v1/webhooks/{id}
 ```
 
 Signed with `X-FlowFlex-Signature: sha256={hmac}`. Recipients verify with `hash_equals()`.
+
+---
+
+## Concurrency (Optimistic Locking)
+
+`PATCH`/`PUT` update endpoints accept a `loaded_at` field carrying the record's `updated_at` at read time. If the stored record has changed since then, the write is rejected with **`409 Conflict`** and a problem body (shown above) — the first write survives, the second writer must reload and retry. This is the API surface of the platform-wide optimistic-locking standard; full mechanism in [[architecture/patterns/optimistic-locking]].
 
 ---
 

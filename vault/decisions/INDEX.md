@@ -1,7 +1,7 @@
 ---
 type: decision-index
 color: "#F97316"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Decision Log
@@ -11,6 +11,10 @@ Architectural decisions, one file per decision. Moved from `build/decisions/` to
 
 | Date | Decision | Status |
 |---|---|---|
+| 2026-07-02 | [[decisions/decision-2026-07-02-optimistic-locking-standard\|Optimistic locking — platform standard for concurrent edits]] | decided |
+| 2026-07-02 | [[decisions/decision-2026-07-02-spec-template-v3-exploded-format\|Spec template v3 — exploded format, per-feature test checklists, concurrency notes]] | decided |
+| 2026-07-02 | [[decisions/decision-2026-07-02-browser-test-convention\|Browser test convention — automated Playwright smoke suite]] | decided |
+| 2026-07-02 | [[decisions/decision-2026-07-02-rate-limit-and-token-hardening\|Rate-limit & token hardening — action throttles, company quotas, Sanctum rotation]] | decided |
 | 2026-06-20 | [[decisions/decision-2026-06-20-full-mapping-conventions\|Full-mapping conventions (data ownership, RBAC, per-feature UI, relations)]] | decided |
 | 2026-06-20 | [[decisions/decision-2026-06-20-cross-domain-write-resolutions\|Cross-domain write resolutions (projections + domain-local erasure)]] | decided |
 | 2026-06-20 | [[decisions/decision-2026-06-20-app-project-removed\|App project removed — vault is now a greenfield blueprint]] | decided |
