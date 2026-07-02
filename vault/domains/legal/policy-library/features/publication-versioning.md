@@ -41,6 +41,20 @@ Publish a policy to its audience; a changed body bumps the version and resets ac
 - Feeds: publish event triggers audience notification + fresh ack requirement.
 - Shared entity: `hr` departments/employees (owned by hr.profiles).
 
+## Test Checklist
+
+### Unit
+- [ ] Publish with unchanged body keeps the version; changed body bumps `version++`
+
+### Feature (Pest)
+- [ ] Version bump resets existing acknowledgements (re-ack required)
+- [ ] Publish notifies exactly the resolved audience (all vs scoped departments) via core.notifications
+- [ ] Concurrent publish bumps the version once (row lock; second publisher rejected)
+
+### Livewire
+- [ ] Publish modal previews recipient count + reset warning; confirm publishes
+- [ ] Denied without `legal.policies.publish`
+
 ## Unknowns
 
 - `*(assumed)*` reset-all-acks on any version bump — [[../unknowns]].

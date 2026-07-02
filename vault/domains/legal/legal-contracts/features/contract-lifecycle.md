@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Contract Lifecycle
@@ -41,6 +41,25 @@ State machine + scheduled transitions + renewal/notice alerting across a contrac
 - Consumes: nothing.
 - Feeds: renewal/overdue notifications via `core.notifications`.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Notice deadline math: `renewal_date − notice_period_days` computed correctly across month boundaries
+- [ ] Urgency bucketing (overdue · ≤30d · ≤90d) assigns each contract to exactly one band
+- [ ] `alerted_levels` guard treats 90 and 30 as independent once-flags
+
+### Feature (Pest)
+- [ ] Lifecycle command activates `signed` contracts on start date and expires `active` past end date with no renewal
+- [ ] Notice-deadline alert fires once per level (re-running command same day does not re-alert)
+- [ ] Renew resets `alerted_levels`, sets new dates, keeps state `active`, and writes an audit entry
+- [ ] Terminate requires a reason; missing reason rejected
+- [ ] Concurrent transition uses `lockForUpdate` — second writer sees re-read state, no double transition
+
+### Livewire
+- [ ] `ContractLifecyclePage` renders urgency-grouped queue and gates on `legal.contracts.view-any`
+- [ ] Slide-over sign/renew/terminate actions gate on `sign-off` / `renew` / `terminate` permissions
+- [ ] `ContractRenewalWidget` hidden when module inactive
 
 ## Unknowns
 

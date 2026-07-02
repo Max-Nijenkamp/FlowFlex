@@ -40,6 +40,20 @@ Trigger export/erasure — but delegate the actual work to core.privacy's jobs. 
 - Feeds: nothing downstream — terminal fulfilment.
 - Shared entity: `dsar_requests` + PersonalDataRegistry (owned by core.privacy).
 
+## Test Checklist
+
+### Unit
+- [ ] Deadline countdown derives from core.privacy `due_at`
+
+### Feature (Pest)
+- [ ] Trigger export dispatches the core.privacy job (faked) — no local export logic runs
+- [ ] Job completion appends `export-delivered` / `erasure-run` action exactly once
+- [ ] Trigger blocked while identity unverified
+
+### Livewire
+- [ ] Export/erasure buttons disabled until verified; job status renders; failed job shows retry
+- [ ] Denied without `legal.dsar.process`
+
 ## Unknowns
 
 - `*(assumed)*` erasure runs via PersonalDataRegistry jobs (v1 `DSARErasureRequested` event dropped) — [[../unknowns]].

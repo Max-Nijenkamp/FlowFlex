@@ -40,6 +40,19 @@ Registry-driven view of every table where the data subject appears, sourced from
 - Feeds: discovery result scopes the [[./fulfilment-delegation|fulfilment]] step.
 - Shared entity: `PersonalDataRegistry` (owned by core.privacy).
 
+## Test Checklist
+
+### Unit
+- [ ] Discovery result maps registry entries to domain/table rows for the subject email
+
+### Feature (Pest)
+- [ ] `discovery(requestId)` returns only registry tables holding the subject + appends `discovery-run` action
+- [ ] Discovery never writes any scanned table (read-only assertion)
+
+### Livewire
+- [ ] Run-discovery populates the table; registry-unavailable shows error state with retry
+- [ ] Denied without `legal.dsar.process`
+
 ## Unknowns
 
 - Registry coverage completeness depends on core.privacy — see core.privacy spec.

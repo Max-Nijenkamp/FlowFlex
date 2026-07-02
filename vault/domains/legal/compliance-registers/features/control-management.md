@@ -42,6 +42,21 @@ The requirement/control register per framework: status, evidence, and policy lin
 - Feeds: control statuses drive readiness + gap report.
 - Shared entity: `legal_policies` (owned by legal.policies).
 
+## Test Checklist
+
+### Unit
+- [ ] `SetControlStatusData` rejects compliant/partial without an evidence note
+- [ ] Control reference uniqueness enforced per framework, not globally
+
+### Feature (Pest)
+- [ ] Setting status to compliant with evidence note persists + attaches media
+- [ ] Gap report returns only non-compliant controls for the active company
+- [ ] Policy link resolves read-only to `legal.policies` record
+
+### Livewire
+- [ ] Status filter + gap filter narrow the `ControlResource` table
+- [ ] Save without evidence on compliant shows the validation error ("Evidence note required")
+
 ## Unknowns
 
 - `*(assumed)*` evidence required for compliant/partial; cross-framework mapping absent — [[../unknowns]].

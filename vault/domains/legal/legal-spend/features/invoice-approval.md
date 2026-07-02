@@ -41,6 +41,20 @@ Approve (or reject) counsel invoices before they count toward spend; approver mu
 - Feeds: approved status unlocks spend/variance; manual reference to finance.ap.
 - Shared entity: `users` (platform).
 
+## Test Checklist
+
+### Unit
+- [ ] Status transitions limited to `pending → approved | rejected`
+
+### Feature (Pest)
+- [ ] Approver = submitter is rejected (separation of duties)
+- [ ] Rejection requires a reason; approved expense may link a `fin_bill_id` without writing finance tables
+- [ ] Concurrent approve/reject of the same expense resolves to one outcome (transition lock)
+
+### Livewire
+- [ ] Approval queue lists only pending expenses; bulk approve flips selected rows
+- [ ] Self-approval shows "Approver cannot be the submitter"; denied without `legal.spend.approve`
+
 ## Unknowns
 
 - `*(assumed)*` no amount thresholds / multi-step approval; manual AP link — [[../unknowns]].

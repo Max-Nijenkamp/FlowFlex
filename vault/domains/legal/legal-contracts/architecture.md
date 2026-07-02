@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Legal Contracts — Architecture
@@ -47,6 +47,33 @@ stateDiagram-v2
 | Job / Command | Queue | Schedule | Idempotency |
 |---|---|---|---|
 | `LegalContractLifecycleCommand` | notifications | daily 05:45 | `alerted_levels` / obligation `alerted` guards |
+
+## Filament Artifacts
+
+**Nav group:** Contracts
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `LegalContractResource` | #1 CRUD resource | tweaks: view-page-tabs, state-badge-column, custom-header-actions (sign-off / renew / terminate) | list filters: type, status, renewal window; obligations as a relation-manager tab ([[./features/obligation-tracking]]) |
+| `ContractLifecyclePage` *(assumed)* | #3 custom page | [[../../../architecture/patterns/page-blueprints#Kanban]] — read-only queue grouped by urgency (overdue · ≤30d · ≤90d), no drag reorder | "Renewals & Lifecycle" at `/legal/contracts/lifecycle`; slide-over sign/renew/terminate ([[./features/contract-lifecycle]]) |
+| `ContractRenewalWidget` | #6 dashboard widget | [[../../../architecture/patterns/page-blueprints#Dashboard]] | upcoming renewals/notice deadlines; polling 30–60s |
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('legal.contracts.view-any') && BillingService::hasModule('legal.contracts')`
+per [[../../../architecture/filament-patterns]] #1. `ContractLifecyclePage` is a custom page and MUST state this
+explicitly — Filament does not auto-gate custom pages. The roadmap external signer surface (`/sign/{token}`,
+[[./features/e-signature]]) is Vue+Inertia per [[../../../architecture/ui-strategy]] with a scoped guest/portal guard
+and a single-use signed token, not a Filament artifact.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Contract CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Obligation CRUD (relation manager) | Optimistic | `updated_at` stale-check ([[../../../architecture/patterns/optimistic-locking]]) |
+| Status transition (sign / renew / terminate / scheduled activate / expire) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read, validate, write per [[../../../architecture/patterns/states]] |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Patterns
 

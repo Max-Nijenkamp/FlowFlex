@@ -70,7 +70,8 @@
               "title": "Bookmarks"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -178,9 +179,17 @@
   },
   "active": "cc91f2af4b84a66c",
   "lastOpenFiles": [
+    "00-index/MOC.md",
+    "domains/analytics/dashboards/security.md.tmp.32676.82ecc1d9c6f8",
+    "domains/analytics/dashboards/_module.md.tmp.32676.62e356779d45",
+    "00-index/status-board.md",
+    "_archive/BUILD-ORDER.md",
+    "_archive/ROADMAP.md",
+    "_index.md",
+    "domains/legal/legal-contracts/_module.md.tmp.32676.bbfdfa1110df",
+    "security/data-ownership.md",
     "glossary.md",
     "_audit/AUDIT.md",
-    "_index.md",
     "build/ROADMAP.md",
     "build/BUILD-ORDER.md",
     "domains/hr/dei-metrics.md.tmp.40560.2439442b59fe",
@@ -190,9 +199,6 @@
     "domains/hr/employee-self-service.md.tmp.40560.56c5d14fd966",
     "domains/hr/org-chart.md.tmp.40560.855731cfdae2",
     "domains/hr/employee-profiles.md.tmp.40560.0ba6f7497635",
-    "domains/core/health-monitoring.md.tmp.40560.0b7391a41259",
-    "domains/core/data-privacy.md.tmp.40560.35b6c5e65ecc",
-    "domains/core/setup-wizard.md.tmp.40560.191f99c1a3c1",
     "architecture/patterns/custom-fields.md",
     "architecture/data-lifecycle.md",
     "architecture/local-dev.md",
@@ -208,11 +214,6 @@
     "domains/events/venues.md",
     "domains/events/sponsors.md",
     "domains/events/speakers.md",
-    "domains/events/tickets.md",
-    "domains/events/registrations.md",
-    "domains/events/events.md",
-    "architecture/data-model.md",
-    "domains/workplace/workplace-analytics.md",
-    "domains/workplace/maintenance.md"
+    "domains/events/tickets.md"
   ]
 }

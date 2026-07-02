@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Matter Management — Security
@@ -20,7 +20,22 @@ updated: 2026-06-20
 
 ## Permissions
 
-`legal.matters.view-any` · `legal.matters.create` · `legal.matters.update` · `legal.matters.close`
+| Permission | Grants |
+|---|---|
+| `legal.matters.view-any` | List page (still filtered by confidentiality gate) |
+| `legal.matters.view` | View a single matter (subject to confidentiality gate) |
+| `legal.matters.create` | Open a matter |
+| `legal.matters.update` | Edit matter, timeline events, confidentiality/access-list |
+| `legal.matters.delete` | Soft-delete a matter |
+| `legal.matters.change-status` *(assumed)* | Activate / put on hold / resume transitions |
+| `legal.matters.close` | Close transition |
+
+Verb-per-transition: `change-status` covers `open→active`, `active→on_hold`, `on_hold→active`; `close` covers
+`active→closed` (both in the [[./architecture]] state machine). Seeded in `PermissionSeeder`.
+
+## Rate Limiting
+
+- Matter-document upload panel action (Media Library file write) applies the named `panel-action` rate limiter per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
 
 ## Upload hardening (medium — per [[../../../build/security-audit-2026-06-11]])
 

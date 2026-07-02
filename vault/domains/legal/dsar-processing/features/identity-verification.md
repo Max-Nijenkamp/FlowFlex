@@ -40,6 +40,20 @@ Verify the data subject before any DSAR fulfilment; blocks core.privacy processi
 - Feeds: verified state unblocks core.privacy fulfilment.
 - Shared entity: `dsar_requests` (owned by core.privacy).
 
+## Test Checklist
+
+### Unit
+- [ ] `VerifyIdentityData` requires a method + completed checklist before verify
+
+### Feature (Pest)
+- [ ] Verify appends a `verified` action (encrypted notes) and lifts the gate
+- [ ] Fulfilment blocked while unverified when module active; concurrent double-verify records one action (row lock)
+- [ ] Gate hook no-ops when module inactive
+
+### Livewire
+- [ ] Verification step shows blocked banner while unverified; unlocks fulfilment on confirm
+- [ ] Denied without `legal.dsar.verify`
+
 ## Unknowns
 
 - `*(assumed)*` verification methods; gate scope when module deactivated mid-request — [[../unknowns]].

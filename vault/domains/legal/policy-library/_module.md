@@ -65,7 +65,8 @@ tests/Feature/Legal/{PolicyTest,PolicyAckTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see company B policies or acknowledgements
+- [ ] Module gating: artifacts hidden when `legal.policies` inactive
 - [ ] Publish notifies audience; department audience scoped correctly
 - [ ] New version resets acknowledgements; ack unique per version
 - [ ] Reminder targets unacknowledged only

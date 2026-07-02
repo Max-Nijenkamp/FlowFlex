@@ -8,7 +8,7 @@ module-count: 6
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Legal & Compliance — MOC
@@ -45,14 +45,14 @@ graph TD
 
 ## Modules
 
-| Module | Key | Priority | Build status | Depends on (intra-domain) |
-|---|---|---|---|---|
-| [[legal-contracts/_module\|Legal Contracts]] | `legal.contracts` | p3 | planned | — (anchor) |
-| [[matter-management/_module\|Matter Management]] | `legal.matters` | p3 | planned | — |
-| [[legal-spend/_module\|Legal Spend]] | `legal.spend` | p3 | planned | matters |
-| [[policy-library/_module\|Policy Library]] | `legal.policies` | p3 | planned | — |
-| [[compliance-registers/_module\|Compliance Registers]] | `legal.compliance` | p3 | planned | policies (soft) |
-| [[dsar-processing/_module\|DSAR Processing]] | `legal.dsar` | p3 | planned | — (core.privacy layer) |
+| Module | Key | Priority | Build status | Kind highlights | Depends on (intra-domain) |
+|---|---|---|---|---|---|
+| [[legal-contracts/_module\|Legal Contracts]] | `legal.contracts` | p3 | planned | resource + lifecycle queue custom-page + renewal widget | — (anchor) |
+| [[matter-management/_module\|Matter Management]] | `legal.matters` | p3 | planned | resource + matter timeline (detail tabs) | — |
+| [[legal-spend/_module\|Legal Spend]] | `legal.spend` | p3 | planned | resource + approval queue + spend dashboard | matters |
+| [[policy-library/_module\|Policy Library]] | `legal.policies` | p3 | planned | resource + ack matrix (heat-map) + self-service gallery | — |
+| [[compliance-registers/_module\|Compliance Registers]] | `legal.compliance` | p3 | planned | resources + readiness dashboard | policies (soft) |
+| [[dsar-processing/_module\|DSAR Processing]] | `legal.dsar` | p3 | planned | fulfilment wizard + extended DSAR resource (timeline) | — (core.privacy layer) |
 
 Build order: contracts → matters → spend; policies → compliance; dsar (independent, core.privacy layer).
 

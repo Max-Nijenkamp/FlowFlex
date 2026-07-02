@@ -66,7 +66,8 @@ tests/Feature/Legal/LegalDsarTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see company B DSAR actions or requests
+- [ ] Module gating: artifacts hidden when `legal.dsar` inactive
 - [ ] `DSARRequestSubmitted` creates review task/action
 - [ ] Processing blocked until verified (gate hook)
 - [ ] Discovery lists registry tables for subject

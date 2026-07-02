@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Matter Records
@@ -41,6 +41,24 @@ The core matter entity: type, status, internal owner, external counsel, priority
 - Consumes: nothing.
 - Feeds: matter list read by legal.spend (expenses attach to matters).
 - Shared entity: `users` (platform).
+
+## Test Checklist
+
+### Unit
+- [ ] Matter `type` accepts only the allowed set (litigation/advisory/dispute/IP)
+- [ ] Priority + risk level accept only low/medium/high
+- [ ] Invalid status transition (e.g. `closed → active`) rejected by the state machine
+
+### Feature (Pest)
+- [ ] Create matter persists owner, external counsel free-text, classification
+- [ ] Close action drives `active → closed` and sets `closed_at`
+- [ ] Company A cannot read/list company B matters (CompanyScope)
+- [ ] Spend-summary panel present only when `legal.spend` active; hidden otherwise
+
+### Livewire
+- [ ] `MatterResource` form validates required fields and transition guards
+- [ ] Status/close header actions gate on `change-status` / `close` permissions
+- [ ] `canAccess()` false when module inactive or permission missing
 
 ## Unknowns
 

@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Legal Spend
@@ -63,7 +63,9 @@ tests/Feature/Legal/LegalSpendTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating + matter-confidentiality inheritance
+- [ ] Tenant isolation: company A cannot see/create/approve company B expenses or budgets
+- [ ] Module gating: artifacts hidden when `legal.spend` inactive
+- [ ] Matter-confidentiality inheritance: confidential-matter spend hidden from non-listed users
 - [ ] Duplicate vendor invoice rejected
 - [ ] Only approved expenses count in spend/variance (brick/money)
 - [ ] Approver ≠ submitter

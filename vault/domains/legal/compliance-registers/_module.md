@@ -68,7 +68,8 @@ tests/Feature/Legal/ComplianceTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see company B frameworks, controls, or tasks
+- [ ] Module gating: artifacts hidden when `legal.compliance` inactive
 - [ ] Readiness % excludes n/a controls
 - [ ] Compliant status requires evidence note
 - [ ] Recurring task completion spawns next occurrence once

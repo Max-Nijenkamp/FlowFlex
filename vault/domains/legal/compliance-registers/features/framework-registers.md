@@ -40,6 +40,20 @@ Named compliance frameworks (GDPR, ISO 27001, SOC 2, custom) that group controls
 - Feeds: frameworks group controls consumed by the [[./audit-readiness-dashboard|dashboard]].
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Readiness % excludes not-applicable controls from numerator and denominator
+- [ ] Readiness returns 0 (not division error) for a framework with only n/a controls
+
+### Feature (Pest)
+- [ ] Creating a custom framework persists name + description scoped to company
+- [ ] GDPR seeder creates framework + control set once (idempotent on re-run)
+
+### Livewire
+- [ ] `FrameworkResource` list renders with control count + readiness badge
+- [ ] Create form validates required name; `canAccess` denied without `legal.compliance.view-any`
+
 ## Unknowns
 
 - `*(assumed)*` GDPR seed content — [[../unknowns]].

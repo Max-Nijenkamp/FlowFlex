@@ -42,6 +42,20 @@ Draft and maintain a policy: title, category, rich-text body, effective date, an
 - Feeds: published policies drive acknowledgements.
 - Shared entity: `hr` departments (owned by hr.profiles).
 
+## Test Checklist
+
+### Unit
+- [ ] Body is purified on save — script tags stripped by htmlpurifier
+- [ ] `review_date` in the past flags the policy review-due
+
+### Feature (Pest)
+- [ ] Draft policy invisible to employee self-service until published
+- [ ] Compliance-control link resolves read-only; audience departments read from hr.profiles
+
+### Livewire
+- [ ] `PolicyResource` form validates title/category; Tiptap body persists purified
+- [ ] Denied without `legal.policies.create`
+
 ## Unknowns
 
 - `*(assumed)*` multi-language not modelled — [[../unknowns]].

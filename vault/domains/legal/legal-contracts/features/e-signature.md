@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # E-signature
@@ -39,6 +39,22 @@ Capture a signed contract. v1 = manual signed-PDF upload; native/embedded e-sign
 - Consumes: nothing.
 - Feeds: signature completion is what unblocks the [[./contract-lifecycle|lifecycle]] to `signed`.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Upload validator accepts only PDF mime + within size cap; rejects others
+- [ ] `signed_at` set to upload timestamp on successful sign-off
+
+### Feature (Pest)
+- [ ] Sign-off upload with `legal.contracts.sign-off` transitions `in_review → signed` and stores media under `companies/{id}/`
+- [ ] Upload without `sign-off` permission is refused and state unchanged
+- [ ] Non-PDF upload rejected; contract stays `in_review`
+- [ ] Roadmap: public `/sign/{token}` rejects expired/invalid single-use token *(assumed — roadmap)*
+
+### Livewire
+- [ ] Internal sign action modal validates PDF-only and confirms before transition
+- [ ] Action hidden when module inactive or user lacks `sign-off`
 
 ## Unknowns
 

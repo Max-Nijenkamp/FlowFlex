@@ -41,6 +41,21 @@ Set budgets per matter or per period; compare against approved actuals with an o
 - Feeds: variance surfaced on matter spend summaries.
 - Shared entity: `legal_matters` (owned by legal.matters).
 
+## Test Checklist
+
+### Unit
+- [ ] Variance = approved actual − budget, computed via brick/money (no float math)
+- [ ] Null-matter budget applies to the period, not a matter
+
+### Feature (Pest)
+- [ ] Only approved expenses count toward actuals; pending/rejected excluded
+- [ ] Over-budget flag raised when actual exceeds budget for matter/period
+- [ ] Vendor breakdown aggregates per firm for the active company only
+
+### Livewire
+- [ ] `LegalSpendDashboardPage` renders KPI tiles + charts; budget edit denied without `legal.spend.manage-budgets`
+- [ ] Report export cites the `exports` limiter
+
 ## Unknowns
 
 - `*(assumed)*` single-currency variance — [[../unknowns]].

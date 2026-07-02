@@ -40,6 +40,20 @@ Append-only per-domain action trail plus documented rejection (e.g. legal-hold e
 - Feeds: the action log is the audit evidence for the whole DSAR.
 - Shared entity: `dsar_requests` (owned by core.privacy).
 
+## Test Checklist
+
+### Unit
+- [ ] `RecordDsarActionData` rejects `rejected`/`rectified` actions without notes
+
+### Feature (Pest)
+- [ ] Every workflow step appends its action row; rows are never updated or deleted (append-only assertion)
+- [ ] `DSARRequestSubmitted` listener seeds the initial review action (queued, `WithCompanyContext`)
+- [ ] Rejection stores encrypted notes; plaintext absent from DB dump
+
+### Livewire
+- [ ] Action timeline renders deadline-sorted; reject without reason shows "A reason is required to reject"
+- [ ] Reject denied without `legal.dsar.reject`
+
 ## Unknowns
 
 - `*(assumed)*` rectification/portability documented as manual actions — [[../unknowns]].

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Obligation Tracking
@@ -39,6 +39,22 @@ Track deliverables and payment milestones tied to a contract, with due dates and
 - Consumes: nothing.
 - Feeds: overdue-obligation notifications via `core.notifications`.
 - Shared entity: `users` (platform).
+
+## Test Checklist
+
+### Unit
+- [ ] Overdue rule flips `open` obligations past `due_date` to `overdue`; `done` obligations untouched
+- [ ] `alerted` guard prevents a second overdue alert for the same obligation
+
+### Feature (Pest)
+- [ ] Add obligation to a contract persists with responsible user and `open` status
+- [ ] Lifecycle command fires a single overdue notification per obligation via `core.notifications`
+- [ ] Mark done closes the obligation and stops further overdue evaluation
+- [ ] Company A cannot add/read company B obligations (CompanyScope via parent contract)
+
+### Livewire
+- [ ] Obligations relation-manager add form validates required fields and gates on `legal.contracts.update`
+- [ ] Overdue filter returns only overdue rows within tenant scope
 
 ## Unknowns
 

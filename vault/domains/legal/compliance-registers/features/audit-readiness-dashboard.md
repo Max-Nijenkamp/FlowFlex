@@ -40,6 +40,19 @@ At-a-glance % compliance per framework and a gap list of non-compliant controls.
 - Feeds: audit-prep view; export pack is a candidate opportunity.
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Readiness aggregation matches `ComplianceService::readiness` per framework
+
+### Feature (Pest)
+- [ ] Dashboard aggregates only the active company's frameworks/controls
+- [ ] Gap list groups non-compliant controls by framework with owner
+
+### Livewire
+- [ ] `ComplianceDashboardPage` renders readiness tiles + gap panel; `canAccess` denied without permission
+- [ ] Framework switch refreshes gauge + gap list; one failed widget shows its error card without blanking the page
+
 ## Unknowns
 
 - Auditor export pack (PDF) not yet specified — [[../unknowns]] + [[../_opportunities]].

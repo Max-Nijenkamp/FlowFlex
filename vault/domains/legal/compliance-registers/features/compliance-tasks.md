@@ -40,6 +40,21 @@ Recurring obligations tied to a control (e.g. annual review, quarterly audit) wi
 - Feeds: overdue reminders via `core.notifications`.
 - Shared entity: `users` (platform).
 
+## Test Checklist
+
+### Unit
+- [ ] Next-occurrence date = due + frequency for monthly/quarterly/annual
+- [ ] Frequency `once`/null spawns no successor
+
+### Feature (Pest)
+- [ ] Completing a recurring task spawns exactly one successor (concurrent double-complete rejected via row lock)
+- [ ] Reminder command notifies assignee once per 7d/overdue window (`reminded` guard)
+- [ ] Completed task without frequency ends the chain
+
+### Livewire
+- [ ] Complete action on the tasks tab marks done + shows the spawned successor
+- [ ] Overdue/mine filters narrow the table; denied without `legal.compliance.manage-tasks`
+
 ## Unknowns
 
 - Recurrence anchored to completion date vs original due date — assumed completion+frequency ([[../unknowns]]).

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Expense Records
@@ -40,6 +40,20 @@ Individual legal cost lines: matter, vendor (law firm), amount, date, category, 
 - Consumes: nothing.
 - Feeds: approved rows feed [[./budget-vs-actual|variance]] + matter spend summary.
 - Shared entity: `legal_matters` (owned by legal.matters).
+
+## Test Checklist
+
+### Unit
+- [ ] Amount stored in cents; `expense_date > today` rejected
+- [ ] Duplicate `(company_id, vendor, invoice_reference)` rejected
+
+### Feature (Pest)
+- [ ] Matter picker limited to `MatterService::accessibleFor` (confidential matters excluded)
+- [ ] New expense starts `pending` and is excluded from spend until approved
+
+### Livewire
+- [ ] Duplicate vendor invoice shows "This vendor invoice is already recorded."
+- [ ] Create denied without `legal.spend.create`
 
 ## Unknowns
 

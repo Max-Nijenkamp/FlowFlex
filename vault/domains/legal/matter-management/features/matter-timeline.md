@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Matter Timeline
@@ -39,6 +39,22 @@ Key events and deadlines on a matter, with a 7-day deadline alert.
 - Consumes: nothing.
 - Feeds: deadline notifications via `core.notifications`.
 - Shared entity: `users` (platform).
+
+## Test Checklist
+
+### Unit
+- [ ] Deadline alert window computes 7 days before `event_date`
+- [ ] `alerted` guard prevents a second alert for the same event
+- [ ] Non-deadline events are never alerted
+
+### Feature (Pest)
+- [ ] `MatterDeadlineAlertCommand` alerts a deadline event once at 7d out via `core.notifications`
+- [ ] Re-running the command same day does not re-alert
+- [ ] Timeline events inherit the parent matter's confidentiality scope (hidden to non-listed users)
+
+### Livewire
+- [ ] Timeline relation-manager add form validates required title + event_date, gates on `legal.matters.update`
+- [ ] Deadline events render a countdown chip as they approach
 
 ## Unknowns
 

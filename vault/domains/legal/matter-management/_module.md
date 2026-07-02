@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Matter Management
@@ -64,7 +64,8 @@ tests/Feature/Legal/{MatterTest,MatterConfidentialityTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see/edit/close company B matters or events
+- [ ] Module gating: artifacts hidden when `legal.matters` inactive
 - [ ] Confidential matter invisible to non-listed users incl. view-any
 - [ ] Deadline alert once at 7d
 - [ ] Status transitions per machine

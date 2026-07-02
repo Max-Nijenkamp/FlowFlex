@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Confidential Access
@@ -39,6 +39,21 @@ A second access layer on top of CompanyScope: confidential matters are visible o
 - Consumes: nothing.
 - Feeds: `accessibleFor` scope consumed by legal.spend for expense visibility.
 - Shared entity: `users` (platform).
+
+## Test Checklist
+
+### Unit
+- [ ] `accessibleFor` builder excludes confidential matters when user is neither owner nor in `access_list`
+- [ ] Owner and `access_list` members are always included regardless of `view-any`
+
+### Feature (Pest)
+- [ ] `view-any` holder NOT on the access list cannot see/open a confidential matter (list + direct fetch)
+- [ ] Owner sees their confidential matter; adding a user to `access_list` grants visibility
+- [ ] `legal.spend` expense visibility inherits the same scope (confidential-matter expenses hidden)
+
+### Livewire
+- [ ] Confidentiality toggle reveals the access-list multiselect; lock badge shows on restricted list rows
+- [ ] Editing confidentiality requires `legal.matters.update` AND existing access to the matter
 
 ## Unknowns
 

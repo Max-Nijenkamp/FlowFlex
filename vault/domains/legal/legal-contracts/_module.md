@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Legal Contracts
@@ -69,7 +69,8 @@ tests/Feature/Legal/{LegalContractTest,ContractLifecycleTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see/edit/sign/renew company B contracts or obligations
+- [ ] Module gating: artifacts hidden when `legal.contracts` inactive
 - [ ] Lifecycle command: activate/expire/alerts once per level
 - [ ] Notice deadline math (renewal − notice days)
 - [ ] Sign requires PDF; terminate requires reason

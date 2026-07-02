@@ -41,6 +41,20 @@ Track which employees have acknowledged each policy version; reminders and a sel
 - Feeds: acknowledgement status read by legal.compliance as control evidence.
 - Shared entity: `hr_employees` (owned by hr.profiles).
 
+## Test Checklist
+
+### Unit
+- [ ] Ack uniqueness enforced per `(policy_id, employee_id, version)`
+
+### Feature (Pest)
+- [ ] Employee can acknowledge only their own record (`acknowledge-own` scope)
+- [ ] Reminder command targets only unacknowledged audience members, weekly
+- [ ] Matrix aggregates acknowledged/pending per policy × employee for the active company only
+
+### Livewire
+- [ ] Self-service acknowledge flips the cell + disappears from "to read" list
+- [ ] Matrix export cites the `exports` limiter; matrix denied without `legal.policies.view-any`
+
 ## Unknowns
 
 - `*(assumed)*` weekly reminder cadence — [[../unknowns]].

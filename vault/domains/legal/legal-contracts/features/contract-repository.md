@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Contract Repository
@@ -41,6 +41,23 @@ Central CRUD store of every contract: title, counterparty, type, value, dates, r
 - Consumes: nothing.
 - Feeds: contract summaries read by [[../../matter-management/_module|legal.matters]] and [[../../legal-spend/_module|legal.spend]].
 - Shared entity: `crm_accounts` / `ops_suppliers` as counterparty reference (owned elsewhere).
+
+## Test Checklist
+
+### Unit
+- [ ] `end_date` must be after `start_date` (validation rule rejects equal/earlier)
+- [ ] `value_cents` round-trips through brick/money (no float drift); currency stored ISO-4217
+- [ ] Contract `type` accepts only the allowed set (NDA/MSA/vendor/employment/lease/partnership)
+
+### Feature (Pest)
+- [ ] Create contract with counterparty free-text + optional `crm_account_id` link persists as read-only reference (no write to crm tables)
+- [ ] Company A cannot read/list company B contracts (CompanyScope)
+- [ ] Signed-PDF upload rejects non-PDF and over-cap files; stores under `companies/{id}/`
+
+### Livewire
+- [ ] `LegalContractResource` create/edit form validates end-before-start and required fields
+- [ ] List filters (type / status / renewal window) return scoped rows
+- [ ] `canAccess()` false when `legal.contracts` module inactive or permission missing
 
 ## Unknowns
 
