@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # MetricRegistry
@@ -41,6 +41,18 @@ The infrastructure that lets Analytics read every other domain's numbers **witho
 - Consumes: registration calls from **every active domain** (CRM, Finance, HR, Projects, …) — each supplies its own metric closures.
 - Feeds: metric definitions to [[dashboard-builder]] (picker), [[widget-rendering]] (resolution), and `analytics.kpis` / `analytics.data-views`.
 - Shared entity: none persisted; metric *keys* are the shared vocabulary.
+
+## Test Checklist
+
+### Unit
+- [ ] `register($key, MetricDefinition)` stores the definition; duplicate key handling defined (last-wins or throw) *(assumed)*.
+- [ ] `available()` filters out metrics whose owning module returns false from `hasModule(...)`.
+- [ ] Metric keys follow `{domain}.{metric}` shape validation.
+
+### Feature (Pest)
+- [ ] A registered metric closure runs under the owning domain's `CompanyContext` and returns only that company's numbers (tenant isolation across the registry boundary).
+- [ ] Deactivating a module removes its metrics from `available()` end-to-end (picker + resolution).
+- [ ] Resolving an unregistered key yields the "metric unavailable" path, never a raw query error.
 
 ## Unknowns
 

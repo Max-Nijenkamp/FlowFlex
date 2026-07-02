@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Custom Dashboards
@@ -73,12 +73,14 @@ tests/Feature/Analytics/{DashboardBuilderTest,MetricRegistryTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see/open company B dashboards or widgets
+- [ ] Module gating: dashboard artifacts hidden when `analytics.dashboards` inactive
 - [ ] Widget metric must exist in registry AND its module active — else rejected/hidden
 - [ ] Private dashboard invisible to others; shared visible read-only
 - [ ] Deactivating a module hides its widgets (no errors)
 - [ ] Widget data cached; date range recomputes
 - [ ] Templates seed working dashboards
+- [ ] Stale-write: concurrent edit of a shared dashboard surfaces the conflict notification (optimistic)
 
 ---
 

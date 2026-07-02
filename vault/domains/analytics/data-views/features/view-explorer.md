@@ -41,6 +41,20 @@ The gallery + render surface: pick an available cross-domain view, set a date ra
 - Feeds: aggregate rows to [[drill-down]]; result sets to [[view-export]].
 - Shared entity: none persisted.
 
+## Test Checklist
+
+### Unit
+- [ ] `DataViewResult` shapes columns/rows + drill targets per view contract
+
+### Feature (Pest)
+- [ ] `run(DateRange)` resolves via source domains' read paths under `CompanyContext` — company A never sees B aggregates
+- [ ] Result cached per `(view, range)`; range change recomputes
+- [ ] Gallery lists only views whose `requiredModules()` are all active
+
+### Livewire
+- [ ] `DataViewsPage` renders gallery + selected view chart/table; no-source-modules empty state shows activation hint
+- [ ] Denied without `analytics.data-views.view-any`
+
 ## Unknowns
 
 - Whether gallery + render are one page or two — *(assumed one)*. See [[../unknowns]].

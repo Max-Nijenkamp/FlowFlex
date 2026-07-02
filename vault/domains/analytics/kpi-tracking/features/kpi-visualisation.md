@@ -41,6 +41,19 @@ The KPI dashboard: gauges for target-vs-actual and trend lines across periods.
 - Feeds: nothing downstream. A KPI gauge can also appear as a dashboard widget (via a KPI-gauge widget type in [[../../dashboards/_module|dashboards]]).
 - Shared entity: metric keys (read-only).
 
+## Test Checklist
+
+### Unit
+- [ ] Gauge status colour maps to the status band; trend series ordered by period
+
+### Feature (Pest)
+- [ ] Dashboard reads only the active company's KPIs + snapshots
+- [ ] Live current value resolves via `MetricRegistry` for metric-sourced KPIs
+
+### Livewire
+- [ ] `KpiDashboardPage` renders gauge grid + category filter; empty state CTA when no KPIs
+- [ ] Denied without `analytics.kpis.view-any`; one failed chart shows its error card without blanking the page
+
 ## Unknowns
 
 - Whether the KPI dashboard is a distinct page or a seeded dashboard template — *(assumed: distinct custom page)*. See [[../unknowns]].

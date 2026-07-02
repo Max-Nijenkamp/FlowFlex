@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Saved Reports
@@ -41,6 +41,22 @@ The library of saved report definitions: list, re-run, export, and schedule.
 - Consumes: definitions from [[report-composer]]; execution from [[report-runner]].
 - Feeds: a saved report reference to [[../../scheduled-exports/_module|analytics.exports]] (as a `source_type: report`).
 - Shared entity: source keys (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] A saved report re-run with unchanged data produces identical output (deterministic ordering).
+
+### Feature (Pest)
+- [ ] List shows only the current company's saved reports (tenant isolation).
+- [ ] Run on a now-inactive source surfaces the "source unavailable" notice, no query executes.
+- [ ] "Schedule" row action hands a `source_type: report` reference to `analytics.exports` (no cross-domain write).
+- [ ] Soft-delete hides the report from the list and from schedulable sources.
+
+### Livewire
+- [ ] `canAccess()` false without `analytics.reports.view-any` or when module inactive.
+- [ ] Row actions gate per verb: edit/delete on `create`, run on `run`, export on `export`.
+- [ ] Export row action is throttled by the `exports` limiter.
 
 ## Unknowns
 

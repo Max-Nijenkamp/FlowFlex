@@ -43,6 +43,20 @@ Create and manage KPIs: name, category, source (metric or manual), target, unit,
 - Feeds: definitions to [[snapshot-capture]] and [[kpi-visualisation]].
 - Shared entity: metric keys (owned by source domains, referenced read-only).
 
+## Test Checklist
+
+### Unit
+- [ ] Metric key validated against `MetricRegistry` on save; unregistered/inactive keys rejected
+- [ ] Manual-source KPI requires no metric key
+
+### Feature (Pest)
+- [ ] CRUD persists definitions (soft delete); metric picker offers only active-module keys
+- [ ] Company A cannot read/edit company B KPI definitions
+
+### Livewire
+- [ ] `KpiResource` form toggles metric-key picker vs manual; invalid key shows inline validation
+- [ ] Create/edit/delete denied without `analytics.kpis.manage`
+
 ## Unknowns
 
 - Per-KPI status band vs global ±5% — see [[../unknowns]].

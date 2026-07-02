@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Report Builder
@@ -69,12 +69,13 @@ tests/Feature/Analytics/{ReportBuilderTest,ReportIsolationTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation: report never returns other-company rows (the critical test)
-- [ ] Module gating; inactive-module sources hidden
+- [ ] Tenant isolation: report never returns other-company rows (`ReportIsolationTest` — the critical test)
+- [ ] Module gating: builder + resource hidden when `analytics.reports` inactive; inactive-module sources hidden
 - [ ] Non-whitelisted column rejected (incl. encrypted fields)
 - [ ] Aggregations + AND/OR filters correct over fixtures
-- [ ] Preview capped at 100 rows; export chunked + throttled
+- [ ] Preview capped at 100 rows; export chunked + throttled via the `exports` limiter
 - [ ] Saved report re-runs identically
+- [ ] Stale-write: concurrent edit of a saved report definition surfaces the conflict notification (optimistic)
 
 ---
 

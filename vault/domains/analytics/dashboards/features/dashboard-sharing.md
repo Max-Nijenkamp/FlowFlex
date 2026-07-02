@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Dashboard Sharing
@@ -40,6 +40,20 @@ Share a dashboard read-only with the team, or keep it private — intra-company 
 - Consumes: dashboards from [[dashboard-builder]]; rendered widgets from [[widget-rendering]].
 - Feeds: nothing downstream — a shared dashboard is also a schedulable source for [[../../scheduled-exports/_module|analytics.exports]].
 - Shared entity: same-company users (audience), owner user (by id).
+
+## Test Checklist
+
+### Unit
+- [ ] Visibility rule: `is_shared=false` → owner-only; `is_shared=true` → same-company `view-any` holders, read-only.
+
+### Feature (Pest)
+- [ ] Owner toggles share on → same-company user with `view-any` can now open it read-only.
+- [ ] Shared dashboard is never visible cross-company (scoped to `company_id`).
+- [ ] Non-owner cannot edit widgets/layout of a shared dashboard.
+
+### Livewire
+- [ ] Share toggle requires `analytics.dashboards.manage-shared`; blocked otherwise.
+- [ ] Non-owner opening a shared dashboard sees a read-only canvas (no edit affordances).
 
 ## Unknowns
 

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # KPI Tracking — Architecture
@@ -49,12 +49,25 @@ None fired as domain events. Threshold breach is delivered via the **notificatio
 
 **Nav group:** KPIs
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `KpiResource` | simple-resource | define KPIs, manual value entry |
-| `KpiDashboardPage` | custom-page (dashboard) | gauges + trend lines (apex charts) |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `KpiResource` | #1 CRUD resource | tweaks: `custom-header-actions` (record manual value) *(assumed)* | define KPIs; manual-source KPIs get a "record value" action gated by `record-values` |
+| `KpiDashboardPage` | #6 Dashboard custom page | [[../../../architecture/patterns/page-blueprints#Dashboard]] | gauges + trend lines (apex charts); satisfies [[../../../architecture/patterns/custom-page-checklist]] |
 
-**Access contract:** `canAccess() = Auth::user()->can('analytics.kpis.view-any') && BillingService::hasModule('analytics.kpis')` per [[../../../architecture/filament-patterns]] #1 — custom pages state it explicitly.
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('analytics.kpis.view-any') && BillingService::hasModule('analytics.kpis')`
+per [[../../../architecture/filament-patterns]] #1. `KpiDashboardPage` is a custom page — Filament does not auto-gate custom pages, so it MUST declare `canAccess()` explicitly. Public/portal surfaces would declare a guest or scoped-portal guard instead (Vue+Inertia per [[../../../architecture/ui-strategy]]); Analytics has none.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| KPI definition CRUD + manual actual entry (`RecordManualValueData`) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` conflict notification with Reload action ([[../../../architecture/patterns/optimistic-locking]]) |
+| Snapshot capture (`KpiSnapshotService::capture`) | Atomic | Idempotent upsert on unique `(kpi_id, period)` + `bi_kpi_snapshots.alerted` once-guard — a re-run or concurrent capture cannot double-write a snapshot or double-fire the below-threshold alert |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]]. The scheduled snapshot capture is not ordinary CRUD; its unique-key upsert + `alerted` once-guard is the atomic guard that makes it safe under retries and overlapping runs.
 
 ---
 

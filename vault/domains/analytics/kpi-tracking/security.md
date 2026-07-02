@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # KPI Tracking — Security
@@ -21,6 +21,14 @@ See also [[../../../security/tenancy-isolation]], [[../../../security/authn-auth
 | `analytics.kpis.view-any` | View KPIs + KPI dashboard |
 | `analytics.kpis.manage` | Create / edit / delete KPI definitions |
 | `analytics.kpis.record-values` | Enter manual actuals for a manual-source KPI |
+
+Seeded in `PermissionSeeder`. **Verb-per-command:** `record-values` (the manual-value command) is distinct from `manage` (definition CRUD). KPI status bands and threshold breaches are computed/automated, not user commands, so they need no permission of their own; the alert dispatch is authorised by the scheduler, not a user.
+
+---
+
+## Rate Limiting
+
+No user-triggered file-generating, comms, money, or external-API action originates in this module, so no `panel-action`/`exports` limiter is attached here. The one outbound side effect — the below-threshold alert — is dispatched through `core.notifications`, whose own throttling governs delivery, and is additionally bounded by the `bi_kpi_snapshots.alerted` once-per-period guard (never more than one alert per KPI per period). Manual value entry is an ordinary scoped write. *(assumed — no rate-limited surface in v1)*
 
 ---
 

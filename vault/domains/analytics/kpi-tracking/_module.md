@@ -70,11 +70,13 @@ tests/Feature/Analytics/KpiTrackingTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see/edit company B KPIs or snapshots
+- [ ] Module gating: KPI resource + dashboard hidden when `analytics.kpis` inactive
 - [ ] Snapshot capture idempotent per period; metric-sourced values match registry fixture
 - [ ] Status bands at ±5% boundaries
-- [ ] Below-threshold alert fires once per period
+- [ ] Below-threshold alert fires once per period (`alerted` once-guard)
 - [ ] Manual KPI requires manual entry; no auto value
+- [ ] Metric-sourced KPI rejects an unregistered / inactive-module metric key
 
 ---
 

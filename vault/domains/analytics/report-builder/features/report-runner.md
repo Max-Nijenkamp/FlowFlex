@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Report Runner
@@ -40,6 +40,19 @@ Executes a report definition into rows - CompanyScope-safe, Eloquent-only - for 
 - Consumes: definitions from [[saved-reports]] / [[report-composer]]; source models via [[source-registry]].
 - Feeds: rows to the composer preview; files to a download / to [[../../scheduled-exports/_module|analytics.exports]] when scheduled.
 - Shared entity: source models (owned by source domains, read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Query composition uses Eloquent only (no raw SQL) and always applies `CompanyScope`.
+- [ ] Aggregations count/sum/avg/min/max compute correctly per grouped column over fixtures.
+- [ ] A non-whitelisted column in the definition is refused at run time, not just at save.
+
+### Feature (Pest)
+- [ ] `run($report, 100)` returns only the current company's rows — cross-company rows never appear (the isolation guarantee).
+- [ ] `run($report, null)` via `ExportReportJob` chunks large result sets and writes the file under `companies/{id}/exports/`.
+- [ ] `ExportReportJob` runs under `WithCompanyContext`; a report on a now-inactive source cannot run.
+- [ ] Export throttled by the `exports` limiter (5/hr per company).
 
 ## Unknowns
 

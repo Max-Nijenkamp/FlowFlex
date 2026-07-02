@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Widget Rendering
@@ -40,6 +40,21 @@ Resolves each placed widget's metric into cached data and draws it — stat card
 - Consumes: metric definitions from [[metric-registry]]; widget config from [[dashboard-builder]].
 - Feeds: rendered widgets to [[dashboard-sharing]] (shared read-only view).
 - Shared entity: metric keys (owned by source domains, read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Cache key composes as `company:{id}:bi:widget:{widget}:{range}`; a range change yields a distinct key.
+- [ ] Unregistered/inactive metric resolves to the "metric unavailable" state, not an exception.
+
+### Feature (Pest)
+- [ ] `WidgetDataService::resolve` returns cached data on second call within TTL (no re-aggregation).
+- [ ] Manual refresh / date-range change re-resolves and rewrites the cache entry.
+- [ ] Each widget type (stat/line/bar/pie/table/gauge) resolves to its expected payload shape.
+
+### Livewire
+- [ ] Rendered widget inherits the dashboard's `analytics.dashboards.view-any` gate; no separate permission.
+- [ ] Loading state shows a skeleton card (not a spinner); empty result shows "no data for this range".
 
 ## Unknowns
 

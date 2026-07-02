@@ -42,6 +42,19 @@ The scheduled job that freezes each KPI's actual for the period, plus the manual
 - Feeds: snapshots to [[kpi-visualisation]]; breach signal to [[threshold-alerts]].
 - Shared entity: metric keys (read-only).
 
+## Test Checklist
+
+### Unit
+- [ ] Period label derivation (monthly 1st / quarterly) correct across year boundary
+
+### Feature (Pest)
+- [ ] Capture upserts one snapshot per `(kpi, period_label)` — re-run is idempotent
+- [ ] Metric-sourced actual resolves under the owning domain's `CompanyContext`; manual KPI skipped until entered
+- [ ] Manual entry writes the actual for the chosen period; requires `analytics.kpis.record-values`
+
+### Livewire
+- [ ] Record-value modal validates period + value; denied without permission
+
 ## Unknowns
 
 - Missing-manual-value nudge — see [[../unknowns]].

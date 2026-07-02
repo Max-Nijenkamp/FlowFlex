@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Dashboard Builder
@@ -42,6 +42,22 @@ Drag-and-drop canvas where a user composes a dashboard from widgets, each bound 
 - Consumes: metric definitions from [[metric-registry]] (which every active domain populates).
 - Feeds: dashboards into [[dashboard-sharing]] and [[widget-rendering]]; a saved dashboard is a schedulable source for `analytics.exports`.
 - Shared entity: none owned elsewhere; metric keys reference other domains' registered metrics.
+
+## Test Checklist
+
+### Unit
+- [ ] `data_source` JSON validation: unregistered `metric_key` rejected; inactive-module metric rejected; filter outside `allowed_filters` rejected.
+- [ ] Layout persistence maps grid positions to `bi_dashboards.layout` / `bi_widgets.position` correctly.
+
+### Feature (Pest)
+- [ ] Create dashboard → add widget with a valid registered metric → widget persists and resolves.
+- [ ] Add widget with an unregistered/inactive metric → save fails with validation error, no widget row written.
+- [ ] Change dashboard date range → every widget re-resolves against the new range.
+
+### Livewire
+- [ ] `canAccess()` false without `analytics.dashboards.view-any` or when module inactive.
+- [ ] Editing requires `analytics.dashboards.update-own`; a non-owner cannot mutate layout/widgets.
+- [ ] Drag/resize optimistic update persists; concurrent edit surfaces the stale-record conflict notification.
 
 ## Unknowns
 

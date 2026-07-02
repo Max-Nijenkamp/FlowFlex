@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Source Registry
@@ -40,6 +40,18 @@ The whitelist of reportable entities: each domain registers a source with only i
 - Consumes: registration from every reporting-enabled domain; `hasModule` from [[../../../core/billing-engine/_module|core.billing]].
 - Feeds: source + column vocabulary to [[report-composer]] and [[report-runner]].
 - Shared entity: none persisted; source keys are the shared vocabulary.
+
+## Test Checklist
+
+### Unit
+- [ ] `register($key, SourceDefinition)` stores entity + `whitelisted_columns` + filterable/aggregatable sets.
+- [ ] An encrypted/sensitive column can never be added to `whitelisted_columns` (guarded, not just convention).
+- [ ] `available()` filters out sources whose owning module returns false from `hasModule(...)`.
+
+### Feature (Pest)
+- [ ] A registered source resolves under the owning domain's `CompanyScope`; the runner reads only whitelisted columns.
+- [ ] Deactivating a module removes its source from the picker and blocks running saved reports on it.
+- [ ] Requesting an unregistered source key fails cleanly (no arbitrary table access).
 
 ## Unknowns
 

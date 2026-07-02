@@ -41,6 +41,16 @@ The scheduled run loop that generates each due export and emails it — exactly 
 - Feeds: log rows to [[delivery-log]]; email via [[../../foundation/email-setup/_module|foundation.email]] on [[../../foundation/queue-workers/_module|foundation.queues]].
 - Shared entity: recipient users (by id).
 
+## Test Checklist
+
+### Unit
+- [ ] Due selection: `next_run_at <= now` in company TZ, active only
+
+### Feature (Pest)
+- [ ] Run generates the artifact, stores under `companies/{id}/exports/`, mails via foundation.email (faked)
+- [ ] `next_run_at` advanced in the same transaction as the log write — overlapping runs never double-send
+- [ ] One schedule's failure is logged and does not halt the remaining schedules
+
 ## Unknowns
 
 - Run cadence precision + failure-notification to owner — see [[../unknowns]].

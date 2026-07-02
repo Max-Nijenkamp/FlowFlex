@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Report Builder — Architecture
@@ -42,12 +42,26 @@ None fired, none consumed. Reports resolve on demand; export is a queued job, no
 
 **Nav group:** Reports
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `ReportBuilderPage` | custom-page (report builder) | source/column/filter/grouping pickers + live preview |
-| `ReportResource` | simple-resource | saved reports, run + export row actions |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `ReportBuilderPage` | #9 Report builder custom page | [[../../../architecture/patterns/page-blueprints#Report Builder / Query UI]] | source/column/filter/grouping pickers + live preview; Export action names the `exports` limiter; satisfies [[../../../architecture/patterns/custom-page-checklist]] |
+| `ReportResource` | #1 CRUD resource | tweaks: `custom-header-actions` (run, export) | saved reports; run + export row actions each carry their own permission |
 
-**Access contract:** `canAccess() = Auth::user()->can('analytics.reports.view-any') && BillingService::hasModule('analytics.reports')` per [[../../../architecture/filament-patterns]] #1 — custom pages state it explicitly.
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('analytics.reports.view-any') && BillingService::hasModule('analytics.reports')`
+per [[../../../architecture/filament-patterns]] #1. `ReportBuilderPage` is a custom page — Filament does not auto-gate custom pages, so it MUST declare `canAccess()` explicitly. Public/portal surfaces would declare a guest or scoped-portal guard instead (Vue+Inertia per [[../../../architecture/ui-strategy]]); Analytics has none.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Report definition CRUD (source, columns, filters, grouping) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` conflict notification with Reload action ([[../../../architecture/patterns/optimistic-locking]]) |
+| Report run / preview (`ReportRunner::run`) | n/a | Read-only — composes a CompanyScope Eloquent query, writes nothing |
+| Report export (`ExportReportJob`) | n/a | Read-only — chunked read of whitelisted source columns; produces a file, mutates no domain table |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]]. Only the saved `bi_reports` definition is editable; runs and exports read source data and never mutate it.
 
 ---
 

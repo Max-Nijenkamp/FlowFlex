@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Scheduled Exports — Architecture
@@ -51,11 +51,23 @@ None fired, none consumed. Generation is schedule-driven, not event-driven.
 
 **Nav group:** Reports
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `ScheduledExportResource` | simple-resource | manage schedules, pause/resume, delivery-log relation |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `ScheduledExportResource` | #1 CRUD resource | tweaks: custom-header-actions (pause/resume), relation-manager-timeline (delivery log, read-only) | manage schedules; next-run column |
 
-**Access contract:** `canAccess() = Auth::user()->can('analytics.exports.view-any') && BillingService::hasModule('analytics.exports')` per [[../../../architecture/filament-patterns]] #1.
+**Access contract (mandatory):** `canAccess() = Auth::user()->can('analytics.exports.view-any') && BillingService::hasModule('analytics.exports')` per [[../../../architecture/filament-patterns]] #1.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Schedule CRUD (form) | Optimistic | `updated_at` stale-check → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Run dispatch (`next_run_at` advance) | Pessimistic | Cursor advanced in the same transaction as the `bi_export_log` write ([[./decisions]]) — no double sends |
+| Delivery log | n/a | Append-only, written by the run command |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

@@ -70,7 +70,8 @@ tests/Feature/Analytics/ScheduledExportTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see company B schedules, logs, or export files
+- [ ] Module gating: artifacts hidden when `analytics.exports` inactive
 - [ ] Due schedule generates + mails + advances `next_run_at` once (re-run = no double)
 - [ ] Failure logged, schedule continues next cycle
 - [ ] Timezone-aware send time (TZ fixture)

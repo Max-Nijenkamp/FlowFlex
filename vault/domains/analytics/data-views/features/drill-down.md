@@ -41,6 +41,19 @@ Click an aggregate cell to expand it into the underlying records — the "why is
 - Feeds: nothing downstream (terminal detail view).
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Drill key round-trips: aggregate row → `drillDown($key, $range)` scope
+
+### Feature (Pest)
+- [ ] Drill records reconcile with the aggregate value (sum/count invariant)
+- [ ] Drill reads run under `CompanyContext` — no cross-company records
+
+### Livewire
+- [ ] Slide-over opens with records on aggregate click; zero-row aggregate shows "no records"
+- [ ] Denied without `analytics.data-views.view-any`
+
 ## Unknowns
 
 - Single vs multi-level drill — *(assumed single)*. See [[../unknowns]].

@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Custom Dashboards — Security
@@ -21,7 +21,16 @@ See also [[../../../security/tenancy-isolation]], [[../../../security/authn-auth
 | `analytics.dashboards.view-any` | View dashboards (own + shared) |
 | `analytics.dashboards.create` | Create a new dashboard |
 | `analytics.dashboards.update-own` | Edit / add widgets to a dashboard you own |
+| `analytics.dashboards.delete-own` | Delete a dashboard you own *(assumed)* |
 | `analytics.dashboards.manage-shared` | Toggle sharing / manage team-shared dashboards |
+
+Seeded in `PermissionSeeder`. **Verb-per-command:** the share toggle is a distinct command gated by `manage-shared` (not folded into `update-own`); ownership scoping (`update-own`/`delete-own` vs the shared audience) per [[../../../architecture/patterns/policy]].
+
+---
+
+## Rate Limiting
+
+No rate-limited actions in this module: widgets are read-only cached resolutions and dashboards generate no files, comms, or money/inventory mutations. Report/export generation lives in [[../../scheduled-exports/_module|analytics.exports]] and [[../../report-builder/_module|analytics.reports]], which cite the `exports` limiter. If a future "export this dashboard" action is added it MUST cite the `exports` limiter (5/hr per company) per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]. *(assumed — no such action in v1)*
 
 ---
 

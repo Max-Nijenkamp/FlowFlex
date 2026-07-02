@@ -41,6 +41,16 @@ Notify the KPI owner when a KPI's captured actual falls below target — once pe
 - Feeds: `NotificationService::notify(...)` → [[../../core/notifications/_module|core.notifications]] writes its own tables.
 - Shared entity: recipient users (referenced by id).
 
+## Test Checklist
+
+### Unit
+- [ ] `KpiService::status()` bands on/below/above correctly at the boundary value
+
+### Feature (Pest)
+- [ ] Below-target capture dispatches one alert via `NotificationService` (faked); `alerted` once-guard blocks repeats in the period
+- [ ] On-target capture dispatches nothing; manual KPI alerts only after value entry
+- [ ] Analytics never writes notification tables (arch/data-ownership assertion)
+
 ## Unknowns
 
 - Recipients beyond the owner, channel, and escalation on sustained breach — see [[../unknowns]].

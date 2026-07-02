@@ -8,7 +8,7 @@ module-count: 5
 status: active
 build-status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Analytics & BI — MOC
@@ -21,13 +21,13 @@ Analytics is a **pure read-consumer**: it owns only its own `bi_*` tables and re
 
 ## Modules
 
-| Module | Key | Owns tables | Depends on (intra-domain) |
-|---|---|---|---|
-| [[dashboards/_module\|Custom Dashboards]] | `analytics.dashboards` | `bi_dashboards`, `bi_widgets` | — (anchor: ships MetricRegistry) |
-| [[report-builder/_module\|Report Builder]] | `analytics.reports` | `bi_reports` | — |
-| [[kpi-tracking/_module\|KPI Tracking]] | `analytics.kpis` | `bi_kpis`, `bi_kpi_snapshots` | dashboards |
-| [[data-views/_module\|Cross-Domain Data Views]] | `analytics.data-views` | — (none) | dashboards |
-| [[scheduled-exports/_module\|Scheduled Exports]] | `analytics.exports` | `bi_export_schedules`, `bi_export_log` | reports (+ dashboards soft) |
+| Module | Key | Owns tables | Kind highlights | Depends on (intra-domain) |
+|---|---|---|---|---|
+| [[dashboards/_module\|Custom Dashboards]] | `analytics.dashboards` | `bi_dashboards`, `bi_widgets` | dashboard builder custom-page (#6) | — (anchor: ships MetricRegistry) |
+| [[report-builder/_module\|Report Builder]] | `analytics.reports` | `bi_reports` | report builder custom-page (#9) + resource | — |
+| [[kpi-tracking/_module\|KPI Tracking]] | `analytics.kpis` | `bi_kpis`, `bi_kpi_snapshots` | resource + gauge dashboard (#6) | dashboards |
+| [[data-views/_module\|Cross-Domain Data Views]] | `analytics.data-views` | — (none) | gallery (#17) + per-view report render (#9) | dashboards |
+| [[scheduled-exports/_module\|Scheduled Exports]] | `analytics.exports` | `bi_export_schedules`, `bi_export_log` | resource + delivery-log relation | reports (+ dashboards soft) |
 
 ---
 

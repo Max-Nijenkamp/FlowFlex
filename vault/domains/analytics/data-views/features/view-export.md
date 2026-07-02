@@ -40,6 +40,18 @@ Export a resolved cross-domain view's aggregate data to Excel.
 - Feeds: nothing (terminal). Not the same as `analytics.exports` (scheduled/recurring) — this is on-demand.
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Export payload mirrors the active `DataViewResult` (columns, rows, range)
+
+### Feature (Pest)
+- [ ] Large set queues the Excel job; file lands under `companies/{id}/exports/`
+- [ ] Export cites + respects the `exports` rate limiter (limit hit → 429/notification, no file)
+
+### Livewire
+- [ ] Export button hidden without `analytics.data-views.export`; progress toast + download link on completion
+
 ## Unknowns
 
 - Excel only vs +PDF — *(assumed Excel)*. See [[../unknowns]].

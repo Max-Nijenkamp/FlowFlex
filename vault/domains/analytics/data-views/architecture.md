@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Cross-Domain Data Views — Architecture
@@ -43,12 +43,20 @@ None fired, none consumed. Views resolve on demand.
 
 **Nav group:** Data Views
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `DataViewsPage` | custom-page (gallery) | available views, module-filtered |
-| Per-view render | custom-page (report) | charts + drill-down table + export, inside the same page |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `DataViewsPage` | #17 Gallery / directory | [[../../../architecture/patterns/page-blueprints#Gallery / Directory]] | available views as cards, module-filtered |
+| Per-view render | #9 Report builder / query UI | [[../../../architecture/patterns/page-blueprints#Report Builder / Query UI]] — result pane + drill-down; builder rail reduced to date-range (views are shipped, not user-built) | charts + drill-down table + export, inside the same page |
 
-**Access contract:** `canAccess() = Auth::user()->can('analytics.data-views.view-any') && BillingService::hasModule('analytics.data-views')` per [[../../../architecture/filament-patterns]] #1 — custom pages state it explicitly.
+**Access contract (mandatory):** `canAccess() = Auth::user()->can('analytics.data-views.view-any') && BillingService::hasModule('analytics.data-views')` per [[../../../architecture/filament-patterns]] #1 — custom pages state it explicitly.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| — | n/a | Read-only module: views aggregate other domains' read paths; no writes beyond cache entries. Nothing to stale-check ([[../../../decisions/decision-2026-07-02-optimistic-locking-standard]]) |
 
 ---
 

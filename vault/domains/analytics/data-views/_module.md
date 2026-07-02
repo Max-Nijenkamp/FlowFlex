@@ -64,7 +64,7 @@ tests/Feature/Analytics/DataViewsTest.php
 ## Test Checklist
 
 - [ ] Tenant isolation: every shipped view returns only current-company aggregates (per-view test)
-- [ ] View hidden when any `requiredModules()` entry is inactive
+- [ ] Module gating: page hidden when `analytics.data-views` inactive; view hidden when any `requiredModules()` entry is inactive
 - [ ] Drill-down rows reconcile with the aggregate
 - [ ] Revenue-per-rep + project-profitability math over fixtures
 - [ ] Indexed queries (no full scans on fixtures — explain check *(assumed: manual)*)

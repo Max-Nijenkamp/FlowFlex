@@ -43,6 +43,20 @@ Create, edit, pause, and resume export schedules; pick source, frequency, recipi
 - Feeds: due schedules to [[recurring-generation]].
 - Shared entity: recipient users (referenced by id).
 
+## Test Checklist
+
+### Unit
+- [ ] `next_run_at` computed in the company timezone per frequency
+- [ ] Recipients validated: min 1, all company users; `source_id` must exist + be accessible
+
+### Feature (Pest)
+- [ ] Pause sets `is_active` false and the run loop skips it; resume recomputes `next_run_at`
+- [ ] Company A cannot schedule exports of company B sources
+
+### Livewire
+- [ ] Form validates source picker (module-filtered) + recipients; inline errors on inaccessible source
+- [ ] Manage actions denied without `analytics.exports.manage`
+
 ## Unknowns
 
 - External recipients + attach-vs-link threshold — see [[../unknowns]].

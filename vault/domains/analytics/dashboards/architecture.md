@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Custom Dashboards — Architecture
@@ -40,12 +40,25 @@ None fired, none consumed. Analytics reacts to nothing; it reads on demand via t
 
 **Nav group:** Dashboards
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `DashboardBuilderPage` | #6 dashboard custom page | drag-drop grid (Livewire + Alpine), widget picker filtered by active modules |
-| `DashboardResource` | #1 CRUD resource | list/manage dashboards, share toggle |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `DashboardBuilderPage` | #6 Dashboard custom page | [[../../../architecture/patterns/page-blueprints#Dashboard]] (+ drag-drop grid builder extension *(assumed)*) | drag-drop grid (Livewire + Alpine), widget picker filtered by active modules; satisfies [[../../../architecture/patterns/custom-page-checklist]] |
+| `DashboardResource` | #1 CRUD resource | tweaks: `custom-header-actions` (share toggle) *(assumed)* | list/manage dashboards, share/private badge column |
 
-**Access contract:** every artifact gates on `canAccess() = Auth::user()->can('analytics.dashboards.view-any') && BillingService::hasModule('analytics.dashboards')` per [[../../../architecture/filament-patterns]] #1 — custom pages state it explicitly.
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('analytics.dashboards.view-any') && BillingService::hasModule('analytics.dashboards')`
+per [[../../../architecture/filament-patterns]] #1. `DashboardBuilderPage` is a custom page — Filament does not auto-gate custom pages, so it MUST declare `canAccess()` explicitly. Public/portal surfaces would declare a guest or scoped-portal guard instead (Vue+Inertia per [[../../../architecture/ui-strategy]]); Analytics has none.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Dashboard + widget CRUD (builder: layout, widget add/remove/resize, share toggle) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` "record changed" conflict notification with Reload action ([[../../../architecture/patterns/optimistic-locking]]) |
+| Widget data resolution (`WidgetDataService::resolve`) | n/a | Read-only — resolves cached metric closures, writes nothing |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]]. The builder is the only shared editable surface here; a shared dashboard edited concurrently by owner + `manage-shared` holder is exactly the stale-write case the optimistic tier covers.
 
 ---
 

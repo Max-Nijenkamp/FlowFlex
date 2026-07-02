@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Report Composer
@@ -40,6 +40,23 @@ The no-code builder canvas: pick a source, choose columns, add filters + groupin
 - Consumes: sources from [[source-registry]].
 - Feeds: definitions to [[saved-reports]]; run requests to [[report-runner]].
 - Shared entity: source keys (owned by source domains, referenced).
+
+## Test Checklist
+
+### Unit
+- [ ] Column selection rejects any column not in the source's `whitelisted_columns` (incl. encrypted fields).
+- [ ] Filter builder validates operator against field type; AND/OR grouping serialises correctly.
+- [ ] `CreateReportData` validation rejects an unavailable/inactive source.
+
+### Feature (Pest)
+- [ ] Choose source → toggle columns → add filter/grouping → preview returns expected rows over fixtures.
+- [ ] Save persists the definition to `bi_reports`, registry-validated; a tampered non-whitelisted column is rejected on write.
+- [ ] Preview capped at 100 rows.
+
+### Livewire
+- [ ] `canAccess()` false without `analytics.reports.view-any` or when module inactive.
+- [ ] Save requires `analytics.reports.create`; preview requires `analytics.reports.run`.
+- [ ] Changing an input re-runs the preview (debounced) and shows a skeleton, not a spinner.
 
 ## Unknowns
 

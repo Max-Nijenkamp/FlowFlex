@@ -40,6 +40,19 @@ The history of each schedule's runs — success/failure, timestamp, file, and er
 - Feeds: nothing downstream (terminal history).
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Prune date guard removes only rows older than 90 days
+
+### Feature (Pest)
+- [ ] Each run appends one log row (status, file_path or error); rows never updated
+- [ ] File download is tenant-scoped — company A cannot fetch company B export files
+
+### Livewire
+- [ ] Log relation renders status badges + file links; failure rows show the error reason
+- [ ] Denied without `analytics.exports.view-any`
+
 ## Unknowns
 
 - Retention window + whether failures notify the owner — see [[../unknowns]].

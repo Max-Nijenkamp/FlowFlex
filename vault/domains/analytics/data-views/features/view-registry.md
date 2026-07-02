@@ -41,6 +41,15 @@ The catalogue of shipped `DataView` classes, filtered to the views whose source 
 - Feeds: available view list to [[view-explorer]]; view classes to [[drill-down]] and [[view-export]].
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] `available()` filters out any view with one inactive `requiredModules()` entry
+
+### Feature (Pest)
+- [ ] Registered views appear for a company with all source modules active; disappear on deactivation
+- [ ] Registry exposes only shipped classes — no user-authored query path (arch assertion)
+
 ## Unknowns
 
 - `*(assumed)*` — plain singleton registry, no Interface→Service binding for v1.
