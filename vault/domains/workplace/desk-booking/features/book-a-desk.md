@@ -42,6 +42,22 @@ Reserve a desk for a date from the floor map, enforcing dual-uniqueness and book
 - Feeds: bookings read by [[../../workplace-analytics/_module|Workplace Analytics]] (occupancy).
 - Shared entity: `hr_employees` — owned by [[../../../hr/employee-profiles/_module|hr.profiles]], read-only.
 
+## Test Checklist
+
+### Unit
+- [ ] Booking-window rules: date is future, ≤ max advance (14 *(assumed)*), ≤ max consecutive (5 *(assumed)*).
+- [ ] `BookDeskData` rejects a non-bookable desk.
+
+### Feature (Pest)
+- [ ] Happy path books a free desk for a date; recurrence expands to weekday rows *(assumed)*.
+- [ ] Desk-per-date uniqueness `(desk_id, booking_date)` rejects a second booking.
+- [ ] Employee-per-date uniqueness `(employee_id, booking_date)` rejects a second desk ("You already have a desk booked for this date.").
+- [ ] **Concurrent booking**: two simultaneous `book()` calls for the same desk/date — exactly one succeeds, the other is rejected by the unique index under lock ([[../architecture#Concurrency]]).
+
+### Livewire
+- [ ] Book modal opens from a free hotspot; optimistic marker flip to "mine", reconciled by polling.
+- [ ] `canAccess` false without `workplace.desks.book`; book action hidden.
+
 ## Related
 
 - [[../_module|Desk Booking]] · [[floor-map]] · [[check-in-release]] · [[../api]]

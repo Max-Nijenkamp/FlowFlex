@@ -43,6 +43,20 @@ See where teammates are sitting on a given day, plus a "my bookings" list.
 > [!warning] UNVERIFIED
 > Whether an employee can opt out of appearing in the team view (privacy) is undecided — see [[../unknowns]].
 
+## Test Checklist
+
+### Unit
+- [ ] Same-day filter: only bookings for the selected date are listed (no history, no future).
+
+### Feature (Pest)
+- [ ] Team view lists colleagues booked that day, scoped to the acting company only.
+- [ ] "My bookings" lists only the acting employee's upcoming bookings.
+- [ ] Company A cannot see company B colleagues in the team view (tenant isolation).
+
+### Livewire
+- [ ] Switching date updates the colleague list + highlights their desk markers.
+- [ ] View gated on `workplace.desks.view-any`.
+
 ## Related
 
 - [[../_module|Desk Booking]] · [[floor-map]] · [[../security]]

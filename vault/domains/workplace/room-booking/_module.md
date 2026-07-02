@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Room Booking
@@ -14,13 +14,12 @@ Book meeting rooms with an availability calendar, recurring bookings, and confli
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `workplace.rooms` |
-| priority | p3 |
-| panel | workplace |
-| permission-prefix | `workplace.rooms` |
-| tables | `wp_rooms`, `wp_room_bookings` |
+`workplace.rooms`
+
+**Priority:** p3  
+**Panel:** workplace  
+**Permission prefix:** `workplace.rooms`  
+**Tables:** `wp_rooms`, `wp_room_bookings`
 
 ## Dependencies
 
@@ -63,8 +62,9 @@ tests/Feature/Workplace/{RoomBookingTest,RoomConflictTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
-- [ ] Overlap rejected incl. concurrent attempts (transaction).
+- [ ] Tenant isolation: company A cannot see, book, or cancel company B's rooms/bookings
+- [ ] Module gating: `RoomResource` + `RoomBookingPage` hidden when `workplace.rooms` inactive
+- [ ] Overlap rejected incl. concurrent attempts (pessimistic transaction — see [[architecture#Concurrency]]).
 - [ ] Recurrence materialises; conflicting occurrences skipped + reported.
 - [ ] No-show release at start+15m, once.
 - [ ] Cancel frees the slot.

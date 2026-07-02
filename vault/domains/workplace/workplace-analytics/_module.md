@@ -56,7 +56,8 @@ tests/Feature/Workplace/WorkplaceAnalyticsTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: metrics aggregate only the active company's data
+- [ ] Module gating: dashboard + widgets hidden when `workplace.analytics` inactive
 - [ ] Utilisation + no-show math over fixtures.
 - [ ] Weekday attendance distribution.
 - [ ] Soft sections hidden when their module is inactive.

@@ -40,6 +40,20 @@ Visual desk layout over a floor image, showing availability for a chosen date.
 - Feeds: desk inventory + positions read by [[../../workplace-analytics/_module|Workplace Analytics]].
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Availability colour mapping: free / booked / mine / released for a desk on the selected date.
+
+### Feature (Pest)
+- [ ] Desks render from `wp_desks.position { x, y }` scoped to the acting company.
+- [ ] Selecting a date recomputes each desk's availability state correctly.
+- [ ] Desk position/attribute edit persists via `DeskResource`.
+
+### Livewire
+- [ ] Empty state (no desks / no floor image) shows the "upload a floor plan" CTA.
+- [ ] View gated on `workplace.desks.view-any`; desk edit on `workplace.desks.manage`.
+
 ## Related
 
 - [[../_module|Desk Booking]] · [[book-a-desk]] · [[../data-model]]

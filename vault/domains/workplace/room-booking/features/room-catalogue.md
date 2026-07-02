@@ -40,6 +40,20 @@ Manage the set of bookable meeting rooms — name, location, capacity, amenities
 - Feeds: room records read by [[../../workplace-analytics/_module|Workplace Analytics]] (utilisation).
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Room name unique per company; amenity set validates against the allowed list.
+
+### Feature (Pest)
+- [ ] Create / edit a room persists amenities + capacity.
+- [ ] `is_bookable = false` removes the room from the booking calendar without deleting history.
+- [ ] Optimistic stale-check: a second editor saving a room changed underneath them gets the conflict notification ([[../architecture#Concurrency]]).
+
+### Livewire
+- [ ] `RoomResource` table renders amenity badges + bookable toggle; inline toggle persists.
+- [ ] Create/edit gated on `workplace.rooms.manage`; view on `workplace.rooms.view-any`.
+
 ## Related
 
 - [[../_module|Room Booking]] · [[book-a-room]] · [[../data-model]]

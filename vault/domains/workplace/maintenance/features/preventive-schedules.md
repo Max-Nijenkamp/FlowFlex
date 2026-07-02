@@ -41,6 +41,19 @@ Recurring maintenance tasks that auto-create requests when due.
 - Feeds: preventive vs reactive split read by [[../../workplace-analytics/_module|Workplace Analytics]].
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] `next_due_at` advance per frequency (weekly/monthly/quarterly)
+
+### Feature (Pest)
+- [ ] Daily command creates exactly one request per due schedule (re-run idempotent, cursor transactional)
+- [ ] Inactive schedule skipped; generated request carries `schedule_id`
+
+### Livewire
+- [ ] Schedule form validates; active toggle works
+- [ ] Denied without `workplace.maintenance.manage-schedules`
+
 ## Related
 
 - [[../_module|Facility Maintenance]] · [[report-request]] · [[../architecture]]

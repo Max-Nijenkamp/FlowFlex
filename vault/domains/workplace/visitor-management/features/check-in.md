@@ -44,6 +44,22 @@ Visitor signs in at a kiosk (or reception), gets a badge, the host is notified, 
 - Feeds: host arrival notification; a `VisitorArrived` cross-domain event is *(assumed)* / undecided ([[../unknowns]]).
 - Shared entity: `hr_employees` (host) — owned by [[../../../hr/employee-profiles/_module|hr.profiles]], read-only.
 
+## Test Checklist
+
+### Unit
+- [ ] Declaration gate: when the NDA toggle is on, check-in is blocked until `declaration_accepted_at` is stamped.
+- [ ] Badge-number assignment is unique within the company/day.
+
+### Feature (Pest)
+- [ ] Check-in assigns a badge, stamps `checked_in_at`, dispatches `GenerateVisitorBadgeJob`, notifies the host (in-app + `VisitorArrivedMail`).
+- [ ] Walk-in check-in without pre-registration works.
+- [ ] **Concurrent check-in**: two kiosk submissions for the same expected visitor produce a single check-in / badge, not two (row guard, [[../architecture#Concurrency]]).
+- [ ] Check-out stamps `checked_out_at`.
+
+### Livewire
+- [ ] `VisitorKioskPage` requires `workplace.visitors.kiosk`; lookup + check-in are rate-limited (device/IP + panel-action).
+- [ ] No match shows the walk-in fallback; declaration-required / rate-limited surfaces the correct toast.
+
 ## Related
 
 - [[../_module|Visitor Management]] · [[pre-registration]] · [[visitor-log]] · [[../security]]

@@ -8,7 +8,7 @@ module-count: 5
 status: wip
 build-status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Workplace & Facility
@@ -33,13 +33,13 @@ All 5 modules are exploded folder specs (`<slug>/_module.md` + architecture / da
 
 ## Modules
 
-| Module | Key | Priority | Build status | Tables | Depends on (intra-domain) |
-|---|---|---|---|---|---|
-| [[room-booking/_module\|Room Booking]] | `workplace.rooms` | p3 | planned | `wp_rooms`, `wp_room_bookings` | — (anchor) |
-| [[desk-booking/_module\|Desk Booking]] | `workplace.desks` | p3 | planned | `wp_desks`, `wp_desk_bookings` | — |
-| [[visitor-management/_module\|Visitor Management]] | `workplace.visitors` | p3 | planned | `wp_visitors` 🔐 | — |
-| [[maintenance/_module\|Facility Maintenance]] | `workplace.maintenance` | p3 | planned | `wp_maintenance_requests`, `wp_maintenance_schedules` | — |
-| [[workplace-analytics/_module\|Workplace Analytics]] | `workplace.analytics` | p3 | planned | *(none — read-only)* | rooms (hard); desks/visitors/maintenance (soft) |
+| Module | Key | Priority | Build status | Kind highlights | Tables | Depends on (intra-domain) |
+|---|---|---|---|---|---|---|
+| [[room-booking/_module\|Room Booking]] | `workplace.rooms` | p3 | planned | resource + booking calendar (#4) | `wp_rooms`, `wp_room_bookings` | — (anchor) |
+| [[desk-booking/_module\|Desk Booking]] | `workplace.desks` | p3 | planned | resource + floor map (#19) | `wp_desks`, `wp_desk_bookings` | — |
+| [[visitor-management/_module\|Visitor Management]] | `workplace.visitors` | p3 | planned | resource + kiosk check-in page | `wp_visitors` 🔐 | — |
+| [[maintenance/_module\|Facility Maintenance]] | `workplace.maintenance` | p3 | planned | resources + state-machine queue tabs | `wp_maintenance_requests`, `wp_maintenance_schedules` | — |
+| [[workplace-analytics/_module\|Workplace Analytics]] | `workplace.analytics` | p3 | planned | dashboard (#6) + soft widgets | *(none — read-only)* | rooms (hard); desks/visitors/maintenance (soft) |
 
 🔐 = holds encrypted external-person PII (`wp_visitors.name`, `wp_visitors.email`). See [[../../security/encryption]].
 

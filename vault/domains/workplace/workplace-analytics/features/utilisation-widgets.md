@@ -41,6 +41,17 @@ The individual stat/chart fragments that compose the dashboard.
 - Feeds: nothing.
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Booking-rate / no-show / occupancy % math over fixtures (no float-money involved; percentages rounded once)
+
+### Feature (Pest)
+- [ ] Soft widgets (`VisitorVolumeWidget`, `MaintenanceWidget`) hidden when their source module inactive
+
+### Livewire
+- [ ] Each widget renders headline stat + chart; zero series shows "no data" state, not a broken chart
+
 ## Related
 
 - [[../_module|Workplace Analytics]] · [[utilisation-dashboard]] · [[../api]]

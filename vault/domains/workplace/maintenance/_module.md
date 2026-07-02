@@ -59,7 +59,8 @@ tests/Feature/Workplace/MaintenanceTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot see company B requests or schedules
+- [ ] Module gating: artifacts hidden when `workplace.maintenance` inactive
 - [ ] Reporter sees own requests; staff sees all.
 - [ ] Transitions per machine; resolve notifies reporter.
 - [ ] Schedule run creates request once + advances `next_due_at`.

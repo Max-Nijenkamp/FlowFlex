@@ -43,6 +43,17 @@ Flag requests that miss their priority-based resolution target.
 - Feeds: SLA-breach metrics read by [[../../workplace-analytics/_module|Workplace Analytics]].
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Overdue computation: request past its priority target without resolution flags overdue; resolved requests never flag
+
+### Feature (Pest)
+- [ ] Overdue tab returns only breached, still-open requests for the active company
+
+### Livewire
+- [ ] Overdue badge renders on breached rows; "all on track" empty state when none
+
 ## Related
 
 - [[../_module|Facility Maintenance]] · [[assignment-workflow]] · [[../unknowns]]

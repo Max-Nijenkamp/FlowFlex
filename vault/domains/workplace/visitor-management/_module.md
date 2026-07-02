@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Visitor Management
@@ -14,14 +14,13 @@ Register and track office visitors: pre-registration, check-in/out, host notific
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `workplace.visitors` |
-| priority | p3 |
-| panel | workplace |
-| permission-prefix | `workplace.visitors` |
-| tables | `wp_visitors` |
-| encrypted-fields | `wp_visitors.name`, `wp_visitors.email` |
+`workplace.visitors`
+
+**Priority:** p3  
+**Panel:** workplace  
+**Permission prefix:** `workplace.visitors`  
+**Tables:** `wp_visitors`  
+**Encrypted fields:** `wp_visitors.name`, `wp_visitors.email` 🔐 (external-person PII)
 
 ## Dependencies
 
@@ -64,7 +63,8 @@ tests/Feature/Workplace/VisitorTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot see or check in company B's visitors
+- [ ] Module gating: `VisitorResource` + `VisitorKioskPage` hidden when `workplace.visitors` inactive
 - [ ] Check-in assigns badge + notifies host (in-app + mail).
 - [ ] Declaration required when enabled (no check-in without).
 - [ ] Walk-in check-in without pre-registration works.

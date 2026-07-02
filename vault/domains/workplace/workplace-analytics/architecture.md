@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Workplace Analytics — Architecture
@@ -45,13 +45,15 @@ None fired or consumed.
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Analytics
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `WorkplaceDashboardPage` | Analytics | Dashboard page + apex charts | export action |
-| `RoomUtilisationWidget` | — | Widget | booking/no-show/peak |
-| `DeskOccupancyWidget` | — | Widget | occupancy %, weekday distribution |
-| `VisitorVolumeWidget` | — | Widget (soft) | hidden if visitors inactive |
-| `MaintenanceWidget` | — | Widget (soft) | hidden if maintenance inactive |
+| `WorkplaceDashboardPage` | #6 Dashboard | [[../../../architecture/patterns/page-blueprints#Dashboard]] | export action cites `exports` limiter |
+| `RoomUtilisationWidget` | #6 widget | blueprint-cell stat + apex chart | booking/no-show/peak |
+| `DeskOccupancyWidget` | #6 widget | blueprint-cell stat + apex chart | occupancy %, weekday distribution |
+| `VisitorVolumeWidget` | #6 widget (soft) | apex chart | hidden if visitors inactive |
+| `MaintenanceWidget` | #6 widget (soft) | apex chart | hidden if maintenance inactive |
 
 ### Access contract
 
@@ -62,6 +64,12 @@ public static function canAccess(): bool
         && BillingService::hasModule('workplace.analytics');
 }
 ```
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| — | n/a | Read-only module — writes nothing beyond cache entries; nothing to stale-check ([[../../../decisions/decision-2026-07-02-optimistic-locking-standard]]) |
 
 ## Search & Realtime
 

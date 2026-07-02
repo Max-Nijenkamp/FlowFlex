@@ -40,6 +40,20 @@ Claim a booked desk by checking in; auto-release unclaimed desks so walk-ins can
 - Feeds: no-show / occupancy stats read by [[../../workplace-analytics/_module|Workplace Analytics]].
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Release predicate: today's `booked` desks with no `checked_in_at` at the 11:00 cutoff *(assumed)*.
+
+### Feature (Pest)
+- [ ] Check-in stamps `checked_in_at`; a checked-in desk is never auto-released.
+- [ ] `ReleaseDeskNoShowsCommand` releases only no-shows for today, once (idempotent re-run makes no change).
+- [ ] A released desk becomes bookable again the same day.
+
+### Livewire
+- [ ] "Check in" action gated to the owner (`workplace.desks.book`).
+- [ ] Already-released / already-checked-in shows the correct toast, no double stamp.
+
 ## Related
 
 - [[../_module|Desk Booking]] · [[book-a-desk]] · [[../architecture]]

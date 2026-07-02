@@ -41,6 +41,19 @@ Any user logs a facility issue with location, category, priority, and photos.
 - Feeds: request volume read by [[../../workplace-analytics/_module|Workplace Analytics]].
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] `ReportMaintenanceData` validates category/priority; photo MIME whitelist (jpg/png/webp) + size cap
+
+### Feature (Pest)
+- [ ] Submit creates a `reported` request; photos land under `companies/{id}/maintenance/`
+- [ ] Reporter sees only own requests; `view-any` sees all (ownership scope)
+
+### Livewire
+- [ ] Create form validates + uploads; oversized/wrong-MIME photo rejected with human copy
+- [ ] Log denied without `workplace.maintenance.report`
+
 ## Related
 
 - [[../_module|Facility Maintenance]] - [[assignment-workflow]] - [[../api]]

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Facility Maintenance — Architecture
@@ -45,10 +45,12 @@ None fired or consumed *(assumed)*. A `MaintenanceReported` / `MaintenanceResolv
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Maintenance
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `MaintenanceRequestResource` | Maintenance | Standard CRUD resource | queue tabs (open/assigned/overdue); assign/resolve actions |
-| `MaintenanceScheduleResource` | Maintenance | Standard CRUD resource | preventive schedules |
+| `MaintenanceRequestResource` | #1 CRUD resource | tweaks: state-badge-column (status), custom-header-actions (assign / resolve / reopen) | queue tabs (open/assigned/overdue); before/after photos |
+| `MaintenanceScheduleResource` | #1 CRUD resource | tweaks: custom-header-actions (pause/resume *(assumed)*) | preventive schedules; next-due column |
 
 ### Access contract
 
@@ -59,6 +61,16 @@ public static function canAccess(): bool
         && BillingService::hasModule('workplace.maintenance');
 }
 ```
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Request / schedule CRUD | Optimistic | `updated_at` stale-check → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Status transitions (assign / resolve / close / reopen) | Pessimistic | `DB::transaction()` + `lockForUpdate()` per [[../../../architecture/patterns/states]] — no double-assign or double-notify |
+| Schedule due-run (`next_due_at`) | Pessimistic | Cursor advanced transactionally — one request per due date |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## File Uploads
 

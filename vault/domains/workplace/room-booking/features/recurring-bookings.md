@@ -41,6 +41,21 @@ Book a room on a repeating schedule (daily/weekly), materialised into individual
 - Feeds: occurrences read by [[../../workplace-analytics/_module|Workplace Analytics]].
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Recurrence expansion: `daily`/`weekly` + `until` yields the correct occurrence dates, capped at 6 months *(assumed)*.
+- [ ] Occurrences share one `recurrence_group` id.
+
+### Feature (Pest)
+- [ ] Series materialises: non-conflicting occurrences created; conflicting ones **skipped and reported** (not fatal).
+- [ ] **Concurrent recurrence**: a parallel single booking that collides with one occurrence causes only that occurrence to skip — the rest of the series still commits (pessimistic per-window lock, [[../architecture#Concurrency]]).
+- [ ] Each occurrence is independently cancellable / check-in-able.
+
+### Livewire
+- [ ] Recurrence sub-form validates frequency + end date; post-submit summary lists created vs skipped.
+- [ ] `canAccess` false without `workplace.rooms.book`.
+
 ## Related
 
 - [[../_module|Room Booking]] · [[book-a-room]] · [[../decisions]]

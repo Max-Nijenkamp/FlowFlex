@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Room Booking — Security
@@ -15,9 +15,20 @@ updated: 2026-06-20
 | Permission | Grants |
 |---|---|
 | `workplace.rooms.view-any` | View rooms + booking calendar |
-| `workplace.rooms.book` | Book a room (all users) |
+| `workplace.rooms.book` | Book a room, check in / cancel own booking (all users) |
 | `workplace.rooms.manage` | CRUD rooms, edit any booking |
 | `workplace.rooms.cancel-any` | Cancel another user's booking |
+
+**Verb / transition → permission** (per the frozen [[../../../_meta/spec-template]] verb-per-command rule):
+
+| Command / transition | Permission |
+|---|---|
+| Book (create `confirmed`) | `workplace.rooms.book` |
+| Check-in (stamp `checked_in_at`) | `workplace.rooms.book` (own booking) |
+| Cancel own booking | `workplace.rooms.book` |
+| Cancel another user's booking | `workplace.rooms.cancel-any` |
+| No-show release (`confirmed → released`) | system command — no user permission (`ReleaseNoShowsCommand`) |
+| Room CRUD | `workplace.rooms.manage` |
 
 See [[../../../security/authn-authz]].
 
@@ -32,6 +43,10 @@ public static function canAccess(): bool
 ```
 
 Cancelling another user's booking requires `workplace.rooms.cancel-any`; owners can always cancel their own.
+
+## Rate Limiting
+
+- The **Book** action on `RoomBookingPage` sends a confirmation notification (and an `.ics` invite *(assumed)*) — a comms-dispatching panel action, so it carries the named `panel-action` rate limiter per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]. Prevents booking-spam / notification flooding.
 
 ## Tenant Isolation
 

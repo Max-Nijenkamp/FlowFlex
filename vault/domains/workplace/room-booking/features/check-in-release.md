@@ -41,6 +41,20 @@ Confirm attendance to hold a booked room; auto-release the room when nobody chec
 - Feeds: no-show rate read by [[../../workplace-analytics/_module|Workplace Analytics]].
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Release predicate: `confirmed` + `now > start_at + 15m` + no `checked_in_at` *(assumed cutoff)*.
+
+### Feature (Pest)
+- [ ] Check-in stamps `checked_in_at`; a checked-in booking is never auto-released.
+- [ ] `ReleaseNoShowsCommand` releases only past-cutoff no-shows, once (idempotent re-run makes no change).
+- [ ] Cancel sets `status = cancelled` and returns the slot to the available pool.
+
+### Livewire
+- [ ] "Check in" action gated to the owner (`workplace.rooms.book`); cancel-any requires `workplace.rooms.cancel-any`.
+- [ ] Already-checked-in / already-past shows the correct toast, no double stamp.
+
 ## Related
 
 - [[../_module|Room Booking]] · [[book-a-room]] · [[../architecture]]

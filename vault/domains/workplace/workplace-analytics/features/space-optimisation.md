@@ -40,6 +40,17 @@ Surface underused rooms and desks to inform facility planning decisions.
 - Feeds: nothing.
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Threshold comparison flags only rooms/desks below utilisation for the range
+
+### Feature (Pest)
+- [ ] Ranked list reads via owning modules' read models — company-scoped
+
+### Livewire
+- [ ] "Space is well used" empty state when nothing under threshold; item links to the room/desk record
+
 ## Related
 
 - [[../_module|Workplace Analytics]] · [[utilisation-dashboard]] · [[../unknowns]]

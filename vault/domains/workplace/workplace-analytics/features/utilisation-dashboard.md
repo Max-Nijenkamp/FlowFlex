@@ -40,6 +40,19 @@ The facility-planning dashboard: room + desk utilisation, occupancy trends, visi
 - Feeds: nothing.
 - Shared entity: none (reads projections, owns none).
 
+## Test Checklist
+
+### Unit
+- [ ] `WorkplaceMetricsData` composes sections per active modules (soft sections absent when inactive)
+
+### Feature (Pest)
+- [ ] Metrics aggregate only the active company's bookings/visits/requests
+- [ ] Range change recomputes; cache key varies per `(company, from, to)`
+
+### Livewire
+- [ ] `WorkplaceDashboardPage` renders widget grid; soft widgets absent when module off
+- [ ] Denied without `workplace.analytics.view-any`; one failed widget shows its error card without blanking the page
+
 ## Related
 
 - [[../_module|Workplace Analytics]] · [[utilisation-widgets]] · [[export-report]] · [[../architecture]]

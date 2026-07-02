@@ -39,6 +39,18 @@ Automatically delete external-visitor PII after the retention window.
 > [!warning] UNVERIFIED
 > The 12-month window is *(assumed)* pending legal input; whether purge is soft (redact PII, keep aggregate counts) or hard delete is undecided — see [[../unknowns]] and [[../../../../architecture/data-lifecycle]].
 
+## Test Checklist
+
+### Unit
+- [ ] Retention predicate: a visit older than 12 months *(assumed)* is in-scope; a fresh one is not.
+
+### Feature (Pest)
+- [ ] `PurgeVisitorsCommand` deletes out-of-window rows and leaves in-window rows untouched.
+- [ ] Idempotent: a second run purges nothing further (already-purged rows skipped).
+- [ ] Purge is `company_id`-scoped — never crosses tenants.
+
+<!-- no Livewire: background console command, no UI -->
+
 ## Related
 
 - [[../_module|Visitor Management]] · [[../../../../architecture/data-lifecycle]] · [[../security]]

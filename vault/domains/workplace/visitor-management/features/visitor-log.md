@@ -40,6 +40,19 @@ The audit record of who visited, when, and who they saw — for security and com
 - Feeds: visitor-volume trends read by [[../../workplace-analytics/_module|Workplace Analytics]].
 - Shared entity: `hr_employees` (host) — owned by [[../../../hr/employee-profiles/_module|hr.profiles]], read-only.
 
+## Test Checklist
+
+### Unit
+- [ ] Date-range/host/company filters compose correctly
+
+### Feature (Pest)
+- [ ] Log returns only the active company's visits; decrypted PII only for authorised staff
+- [ ] Export requires `workplace.visitors.manage` + cites the `exports` limiter
+
+### Livewire
+- [ ] Filtered table renders in/out times + badge; empty state for a range with no visits
+- [ ] Denied without `workplace.visitors.view-any`
+
 ## Related
 
 - [[../_module|Visitor Management]] · [[check-in]] · [[gdpr-purge]] · [[../security]]

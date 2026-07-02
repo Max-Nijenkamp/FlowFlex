@@ -42,6 +42,22 @@ Reserve a meeting room in a chosen time slot from the availability calendar, wit
 - Feeds: bookings read by [[../../workplace-analytics/_module|Workplace Analytics]]. A `RoomBooked` cross-domain event is *(assumed)* / undecided ([[../unknowns]]).
 - Shared entity: `hr_employees` (organiser/attendees) — owned by [[../../../hr/employee-profiles/_module|hr.profiles]], read-only.
 
+## Test Checklist
+
+### Unit
+- [ ] Window validation: `end_at` after `start_at`, duration ≤ 8h *(assumed)*, bookable room only.
+- [ ] `BookRoomData` DTO rejects a non-bookable / archived room.
+
+### Feature (Pest)
+- [ ] Happy path: valid slot creates a `confirmed` booking + dispatches the confirmation notification.
+- [ ] Overlap on `(room_id, start_at, end_at)` throws `RoomUnavailableException`, no row written.
+- [ ] **Concurrent booking**: two simultaneous `book()` calls for the same room/slot — exactly one succeeds, the other gets `RoomUnavailableException` (pessimistic lock, see [[../architecture#Concurrency]]).
+- [ ] Capacity / amenity filter narrows the bookable room set.
+
+### Livewire
+- [ ] Booking modal validates required fields; conflict surfaces the "Room is already booked for this time." toast + retry.
+- [ ] `canAccess` false without `workplace.rooms.book`; book action hidden.
+
 ## Related
 
 - [[../_module|Room Booking]] · [[recurring-bookings]] · [[check-in-release]] · [[../api]]

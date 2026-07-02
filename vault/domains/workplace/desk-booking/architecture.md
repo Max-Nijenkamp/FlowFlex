@@ -53,20 +53,26 @@ None fired or consumed. See [[unknowns]] for the open `DeskBooked` question. Pla
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Desks
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `DeskResource` | Desks | Standard CRUD resource | map position fields (x/y) |
-| `DeskBookingPage` | Desks | Spatial / floor-map custom page | floor map, date picker, click-to-book, team view; polling 60s |
+| `DeskResource` | #1 CRUD resource | — | map position fields (x/y), zone, floor, equipment, bookable |
+| `DeskBookingPage` | #19 Spatial / floor-map custom page | [[../../../architecture/patterns/page-blueprints#Spatial / Floor Map]] | floor image + positioned hotspots, date picker, click-to-book, team view tab; polling 60s *(assumed — blueprint default is 30s live occupancy)* |
 
-### Access contract
+**Access contract (mandatory):** every artifact above gates on
+`canAccess() = Auth::user()->can('workplace.desks.view-any') && BillingService::hasModule('workplace.desks')`
+per [[../../../architecture/filament-patterns]] #1 — `DeskBookingPage` (custom page) states it explicitly. The click-to-book hotspot action carries its own `workplace.desks.book` permission and names a `panel-action` rate limiter, per the Spatial blueprint (book = capacity/slot decrement — see [[security#Rate Limiting]]). `DeskBookingPage` satisfies [[../../../architecture/patterns/custom-page-checklist]].
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('workplace.desks.view-any')
-        && BillingService::hasModule('workplace.desks');
-}
-```
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Desk CRUD (`DeskResource` form, positions) | Optimistic | `updated_at` stale-check on save → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Book a desk (`DeskBookingService::book`) | Pessimistic | `DB::transaction()` + both DB unique indexes `(desk_id, booking_date)` and `(employee_id, booking_date)` asserted under lock; violation → friendly rule message |
+| Check-in / cancel / release | Optimistic | status guard on the single booking row |
+
+Desk booking is a slot/capacity-decrement with dual uniqueness → **pessimistic** per [[../../decisions/decision-2026-07-02-optimistic-locking-standard|concurrency standard]] (the transaction + unique-index assertion documented under *Booking Rules* above). Desk-catalogue and floor-map position edits use the optimistic default.
 
 ## Search & Realtime
 

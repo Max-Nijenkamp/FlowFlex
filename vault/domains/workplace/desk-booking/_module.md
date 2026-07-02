@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Desk Booking
@@ -14,13 +14,12 @@ Hot-desk reservation for hybrid workplaces. Employees book desks by date; a floo
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `workplace.desks` |
-| priority | p3 |
-| panel | workplace |
-| permission-prefix | `workplace.desks` |
-| tables | `wp_desks`, `wp_desk_bookings` |
+`workplace.desks`
+
+**Priority:** p3  
+**Panel:** workplace  
+**Permission prefix:** `workplace.desks`  
+**Tables:** `wp_desks`, `wp_desk_bookings`
 
 ## Dependencies
 
@@ -59,8 +58,9 @@ tests/Feature/Workplace/DeskBookingTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
-- [ ] Double-booking (desk/date + employee/date) rejected, concurrent-safe.
+- [ ] Tenant isolation: company A cannot see or book company B's desks/bookings
+- [ ] Module gating: `DeskResource` + `DeskBookingPage` hidden when `workplace.desks` inactive
+- [ ] Double-booking (desk/date + employee/date) rejected, concurrent-safe (pessimistic — see [[architecture#Concurrency]]).
 - [ ] Advance + consecutive-day rules enforced.
 - [ ] No-show release at cutoff once.
 - [ ] Team view shows same-day colleagues only.

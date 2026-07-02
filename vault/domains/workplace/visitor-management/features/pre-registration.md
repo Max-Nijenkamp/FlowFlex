@@ -41,6 +41,19 @@ A host registers an expected visitor with a date/time before they arrive.
 - Feeds: expected-visitor rows drive the kiosk lookup ([[check-in]]).
 - Shared entity: `hr_employees` (host) — owned by [[../../../hr/employee-profiles/_module|hr.profiles]], read-only.
 
+## Test Checklist
+
+### Unit
+- [ ] `PreRegisterVisitorData` validates name/expected_at; email optional
+
+### Feature (Pest)
+- [ ] Pre-register stores encrypted `name`/`email` (plaintext absent from DB dump) + dispatches confirmation mail (faked)
+- [ ] Re-register from history copies visitor fields with a new `expected_at`
+- [ ] Host resolves read-only from hr.profiles
+
+### Livewire
+- [ ] Create form validates; denied without `workplace.visitors.pre-register`
+
 ## Related
 
 - [[../_module|Visitor Management]] · [[check-in]] · [[../api]]

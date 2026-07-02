@@ -40,6 +40,17 @@ Download the workplace metrics for a date range as a report file.
 - Feeds: nothing.
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Export payload mirrors `WorkplaceMetricsData` for the selected range (active sections only)
+
+### Feature (Pest)
+- [ ] Export throttled per user (limit hit → friendly notification, no file); file tenant-scoped
+
+### Livewire
+- [ ] Export button generates + downloads; repeated clicks throttled with human copy
+
 ## Related
 
 - [[../_module|Workplace Analytics]] · [[utilisation-dashboard]] · [[../security]]

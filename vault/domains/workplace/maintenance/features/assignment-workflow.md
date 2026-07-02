@@ -42,6 +42,20 @@ Route a request through the status machine: assign, progress, resolve, close.
 - Feeds: resolution-time metrics read by [[../../workplace-analytics/_module|Workplace Analytics]]. A `MaintenanceResolved` event is *(assumed)* / undecided ([[../unknowns]]).
 - Shared entity: `hr_employees` (assignee) — owned by [[../../../hr/employee-profiles/_module|hr.profiles]], read-only.
 
+## Test Checklist
+
+### Unit
+- [ ] Illegal transitions rejected (`reported → resolved` etc.); auto-close guard fires at 7 days
+
+### Feature (Pest)
+- [ ] Assign transitions + notifies assignee once (transition lock — concurrent double-assign rejected)
+- [ ] Resolve notifies reporter + prompts after-photo; reopen returns to `reported`
+- [ ] Assign requires `workplace.maintenance.assign`; resolve requires `.resolve`
+
+### Livewire
+- [ ] Action buttons render only for legal transitions + permitted users
+- [ ] Invalid transition shows human error copy, not exception text
+
 ## Related
 
 - [[../_module|Facility Maintenance]] · [[report-request]] · [[sla-tracking]] · [[../architecture]]

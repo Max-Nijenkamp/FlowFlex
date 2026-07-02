@@ -54,22 +54,27 @@ None fired or consumed. A `RoomBooked` cross-domain event (feed to comms/calenda
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Meeting Rooms
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `RoomResource` | Meeting Rooms | Standard CRUD resource | amenities, bookable toggle |
-| `RoomBookingPage` | Meeting Rooms | Calendar custom page (fullcalendar) | room filter, booking form; polling 30s |
+| `RoomResource` | #1 CRUD resource | — | amenities, `is_bookable` toggle; list filters: capacity, amenities |
+| `RoomBookingPage` | #4 Calendar custom page | [[../../../architecture/patterns/page-blueprints#Calendar]] | `saade/filament-fullcalendar`; room filter, slot booking form; polling 30s |
 
-See [[../../../architecture/filament-patterns]] and [[../../../architecture/ui-strategy]].
+**Access contract (mandatory):** every artifact above gates on
+`canAccess() = Auth::user()->can('workplace.rooms.view-any') && BillingService::hasModule('workplace.rooms')`
+per [[../../../architecture/filament-patterns]] #1 — `RoomBookingPage` (custom page) states it explicitly, Filament does not auto-gate custom pages. Booking + cancel actions on the calendar carry their own permissions (`workplace.rooms.book`, `workplace.rooms.cancel-any`) and the book action names a `panel-action` rate limiter (sends a confirmation notification — see [[security#Rate Limiting]]). `RoomBookingPage` satisfies [[../../../architecture/patterns/custom-page-checklist]].
 
-### Access contract
+## Concurrency
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('workplace.rooms.view-any')
-        && BillingService::hasModule('workplace.rooms');
-}
-```
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Room CRUD (`RoomResource` form) | Optimistic | `updated_at` stale-check on save → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Booking overlap (`RoomBookingService::book`) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the room's bookings in the window; overlap → `RoomUnavailableException` |
+| Recurrence materialisation | Pessimistic | same transaction as the series insert; conflicting occurrences skipped + reported |
+| Check-in / cancel / release | Optimistic | status guard on the single booking row |
+
+Booking overlap is the slot/capacity-decrement case → **pessimistic** per [[../../decisions/decision-2026-07-02-optimistic-locking-standard|concurrency standard]] (the transaction-based overlap rejection documented in `RoomBookingService::book` above). Ordinary room-catalogue edits use the optimistic default.
 
 ## Search & Realtime
 

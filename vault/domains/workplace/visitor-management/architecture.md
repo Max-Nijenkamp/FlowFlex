@@ -50,20 +50,25 @@ None fired or consumed *(assumed)*. A `VisitorArrived` cross-domain event is an 
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Visitors
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `VisitorResource` | Visitors | Standard CRUD resource | pre-register, check-in/out actions, log filters |
-| `VisitorKioskPage` | Visitors | Custom page (kiosk) | self-service check-in, kiosk role only, rate-limited |
+| `VisitorResource` | #1 CRUD resource | tweaks: custom-header-actions (pre-register, check-in / check-out) | log filters (date range, host, company); export |
+| `VisitorKioskPage` | custom page (kiosk) *(no exact ui-strategy row — bespoke full-screen check-in page; blueprint gap, see QUESTIONS)* | [[../../../architecture/patterns/custom-page-checklist]] | self-service check-in, kiosk role only, rate-limited |
 
-### Access contract
+**Access contract (mandatory):** every artifact above gates on
+`canAccess() = Auth::user()->can('workplace.visitors.view-any') && BillingService::hasModule('workplace.visitors')`
+per [[../../../architecture/filament-patterns]] #1. `VisitorKioskPage` (custom page) states it explicitly and additionally requires `workplace.visitors.kiosk` — it runs on a dedicated kiosk device session, never a public route. Check-in / lookup / pre-registration actions dispatch comms (host ping + visitor mail) and are **rate-limited** (`panel-action` + kiosk device/IP limiter — see [[security#Rate Limiting]]). Any optional public-vue reception tablet uses a scoped-portal guard (Vue+Inertia per [[../../../architecture/ui-strategy]]), not Filament.
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('workplace.visitors.view-any')
-        && BillingService::hasModule('workplace.visitors');
-}
-```
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Pre-registration + visitor record CRUD | Optimistic | `updated_at` stale-check on save → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Kiosk check-in / check-out | Optimistic | status-timestamp guard on the single `wp_visitors` row (no capacity/slot contention — a badge is per-visit) |
+
+Visitor records are ordinary shared-editable CRUD → **optimistic** default per [[../../decisions/decision-2026-07-02-optimistic-locking-standard|concurrency standard]]. No pessimistic path: there is no capacity or money mutation here.
 
 ## Encryption
 

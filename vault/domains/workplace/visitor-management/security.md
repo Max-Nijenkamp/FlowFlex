@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Visitor Management — Security
@@ -18,6 +18,16 @@ updated: 2026-06-20
 | `workplace.visitors.pre-register` | Register an expected visitor (all users) |
 | `workplace.visitors.manage` | Full CRUD, check-in/out on behalf, log export |
 | `workplace.visitors.kiosk` | Kiosk self-service check-in (kiosk role only) |
+
+**Verb / lifecycle step → permission** (per the frozen [[../../../_meta/spec-template]] verb-per-command rule):
+
+| Command / lifecycle step | Permission |
+|---|---|
+| Pre-register an expected visitor | `workplace.visitors.pre-register` |
+| Kiosk self check-in (assign badge, notify host) | `workplace.visitors.kiosk` |
+| Check-in / check-out on behalf | `workplace.visitors.manage` |
+| Log export | `workplace.visitors.manage` |
+| PII purge (`PurgeVisitorsCommand`) | system command — no user permission |
 
 See [[../../../security/authn-authz]].
 
@@ -41,6 +51,7 @@ The kiosk page gates on `workplace.visitors.kiosk`.
 ## Rate Limiting
 
 - **Kiosk check-in + lookup** actions are **rate-limited** per device session / IP (security audit 2026-06-11, medium). Prevents enumeration of expected visitors via the lookup field.
+- **Pre-registration + check-in** dispatch comms (visitor confirmation mail, host arrival mail + in-app ping), so these panel actions additionally carry the named `panel-action` rate limiter per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]. Prevents mail/notification flooding.
 
 ## Tenant Isolation
 

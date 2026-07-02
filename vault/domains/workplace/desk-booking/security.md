@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Desk Booking — Security
@@ -14,9 +14,19 @@ updated: 2026-06-20
 
 | Permission | Grants |
 |---|---|
-| `workplace.desks.view-any` | View desks + floor map |
-| `workplace.desks.book` | Book a desk (all users) |
+| `workplace.desks.view-any` | View desks + floor map + team view |
+| `workplace.desks.book` | Book a desk, check in / cancel own booking (all users) |
 | `workplace.desks.manage` | CRUD desks, edit any booking |
+
+**Verb / transition → permission** (per the frozen [[../../../_meta/spec-template]] verb-per-command rule):
+
+| Command / transition | Permission |
+|---|---|
+| Book a desk (create `booked`) | `workplace.desks.book` |
+| Check-in (stamp `checked_in_at`) | `workplace.desks.book` (own booking) |
+| Cancel own booking | `workplace.desks.book` |
+| No-show release (`booked → released`) | system command — no user permission (`ReleaseDeskNoShowsCommand`) |
+| Desk CRUD / edit any booking | `workplace.desks.manage` |
 
 See [[../../../security/authn-authz]].
 
@@ -29,6 +39,10 @@ public static function canAccess(): bool
         && BillingService::hasModule('workplace.desks');
 }
 ```
+
+## Rate Limiting
+
+- The click-to-book hotspot action on `DeskBookingPage` is a capacity/slot-decrement panel action, so it names the `panel-action` rate limiter per the Spatial blueprint ([[../../../architecture/patterns/page-blueprints#Spatial / Floor Map]]) and [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]. Prevents rapid book/cancel churn on shared desks.
 
 ## Tenant Isolation
 
