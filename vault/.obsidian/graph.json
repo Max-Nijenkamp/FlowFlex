@@ -6,7 +6,218 @@
   "hideUnresolved": true,
   "showOrphans": false,
   "collapse-color-groups": true,
-  "colorGroups": [],
+  "colorGroups": [
+    {
+      "query": "path:domains/hr/",
+      "color": {
+        "a": 1,
+        "rgb": 9133302
+      }
+    },
+    {
+      "query": "path:domains/finance/",
+      "color": {
+        "a": 1,
+        "rgb": 1096065
+      }
+    },
+    {
+      "query": "path:domains/crm/",
+      "color": {
+        "a": 1,
+        "rgb": 16007006
+      }
+    },
+    {
+      "query": "path:domains/projects/",
+      "color": {
+        "a": 1,
+        "rgb": 6514417
+      }
+    },
+    {
+      "query": "path:domains/communications/",
+      "color": {
+        "a": 1,
+        "rgb": 3900150
+      }
+    },
+    {
+      "query": "path:domains/support/",
+      "color": {
+        "a": 1,
+        "rgb": 15357964
+      }
+    },
+    {
+      "query": "path:domains/dms/",
+      "color": {
+        "a": 1,
+        "rgb": 6583435
+      }
+    },
+    {
+      "query": "path:domains/marketing/",
+      "color": {
+        "a": 1,
+        "rgb": 15485081
+      }
+    },
+    {
+      "query": "path:domains/operations/",
+      "color": {
+        "a": 1,
+        "rgb": 16486972
+      }
+    },
+    {
+      "query": "path:domains/analytics/",
+      "color": {
+        "a": 1,
+        "rgb": 165063
+      }
+    },
+    {
+      "query": "path:domains/it/",
+      "color": {
+        "a": 1,
+        "rgb": 440020
+      }
+    },
+    {
+      "query": "path:domains/legal/",
+      "color": {
+        "a": 1,
+        "rgb": 16096779
+      }
+    },
+    {
+      "query": "path:domains/ecommerce/",
+      "color": {
+        "a": 1,
+        "rgb": 1357990
+      }
+    },
+    {
+      "query": "path:domains/lms/",
+      "color": {
+        "a": 1,
+        "rgb": 2278750
+      }
+    },
+    {
+      "query": "path:domains/ai/",
+      "color": {
+        "a": 1,
+        "rgb": 8490232
+      }
+    },
+    {
+      "query": "path:domains/workplace/",
+      "color": {
+        "a": 1,
+        "rgb": 8702998
+      }
+    },
+    {
+      "query": "path:domains/events/",
+      "color": {
+        "a": 1,
+        "rgb": 16478597
+      }
+    },
+    {
+      "query": "path:domains/customer-success/",
+      "color": {
+        "a": 1,
+        "rgb": 14753096
+      }
+    },
+    {
+      "query": "path:domains/procurement/",
+      "color": {
+        "a": 1,
+        "rgb": 12730636
+      }
+    },
+    {
+      "query": "path:domains/core/",
+      "color": {
+        "a": 1,
+        "rgb": 9741240
+      }
+    },
+    {
+      "query": "path:domains/foundation/",
+      "color": {
+        "a": 1,
+        "rgb": 3359061
+      }
+    },
+    {
+      "query": "path:domains/",
+      "color": {
+        "a": 1,
+        "rgb": 4906624
+      }
+    },
+    {
+      "query": "path:product/",
+      "color": {
+        "a": 1,
+        "rgb": 3718648
+      }
+    },
+    {
+      "query": "path:architecture/",
+      "color": {
+        "a": 1,
+        "rgb": 10980346
+      }
+    },
+    {
+      "query": "path:frontend/",
+      "color": {
+        "a": 1,
+        "rgb": 16498468
+      }
+    },
+    {
+      "query": "path:decisions/",
+      "color": {
+        "a": 1,
+        "rgb": 16347926
+      }
+    },
+    {
+      "query": "path:build/",
+      "color": {
+        "a": 1,
+        "rgb": 16347926
+      }
+    },
+    {
+      "query": "path:security/",
+      "color": {
+        "a": 1,
+        "rgb": 15680580
+      }
+    },
+    {
+      "query": "path:_meta/",
+      "color": {
+        "a": 1,
+        "rgb": 7041664
+      }
+    },
+    {
+      "query": "path:00-index/",
+      "color": {
+        "a": 1,
+        "rgb": 7041664
+      }
+    }
+  ],
   "collapse-display": false,
   "showArrow": false,
   "textFadeMultiplier": -1,
@@ -17,6 +228,6 @@
   "repelStrength": 20,
   "linkStrength": 0.0104166666666667,
   "linkDistance": 30,
-  "scale": 0.0078125,
+  "scale": 0.010952991388875781,
   "close": true
 }

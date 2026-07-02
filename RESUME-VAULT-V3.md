@@ -106,6 +106,10 @@ Groups: W1 revenue = crm, finance, ecommerce, marketing, events · W2 people = h
 
 Worker prompt core: research commonly-requested SME features per domain (competitor complaint threads, G2/Capterra reviews, "missing feature" asks for the displaced tools named in each `_index.md`), **filter to features implementable with already-chosen packages** (CLAUDE.md Tech Stack list). Output: append a dated section `## 2026-07 refresh — package-fit candidates` to each domain's `vault/domains/{domain}/_opportunities.md` following that file's existing house format (sourced links, UNVERIFIED marker). Each candidate row: feature, who asks for it, package that covers it, target module. High-confidence spec holes additionally become `vault/build/gaps/gap-feature-{slug}.md` + INDEX row. W3/W4 also answer: does FlowFlex need a POS/kiosk ui-strategy row? If yes → draft ADR `decision-{date}-pos-kiosk-ui-row.md` as `proposed`.
 
+## Graph coloring (DONE 2026-07-02 — verify only)
+
+Per-domain Obsidian graph color groups are seeded in `vault/.obsidian/graph.json` (21 domain path-queries + section fallbacks; order matters — domain queries before `path:domains/`). Documented in `vault/_meta/graph-config.md` ("Step 2 — Color Groups"). Colors = Switchboard+ domain set from `frontend/design-system.md` (analytics → `#0284C7`, support → `#EA580C` swapped to avoid section-color clashes). **Verify:** `grep -c "path:domains/" vault/.obsidian/graph.json` should return ≥ 21. If Obsidian overwrote the groups (it rewrites graph.json on close), restore them from the table in graph-config.md. If new domain folders are activated (deferred stubs), add a group row for each.
+
 ## Step 4 — Wave 3b: registry + bookkeeping (main agent, sequential)
 
 1. Generate `vault/_meta/artifact-registry.md` — one table row per Filament artifact scraped from every module's `## Filament Artifacts` (module-key, artifact, kind row #, blueprint/tweaks, permission). Grep-driven, not hand-typed.
