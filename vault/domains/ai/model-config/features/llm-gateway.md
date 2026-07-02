@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # LLM Gateway
@@ -42,6 +42,20 @@ The single metered LLM call path for every AI feature in FlowFlex. No feature ca
 - Provides: `LlmGateway::complete(...)` command API → consumed by [[../../copilot/_module|ai.copilot]], [[../../document-intelligence/_module|ai.document-intelligence]], and optionally [[../../workflow-builder/_module|ai.workflows]].
 - Reads: provider/budget/toggles from [[provider-config|Provider Config]]'s `ai_config` row.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Model resolution: per-feature override in `feature_models` wins over `default_model`; falls back to default when absent.
+- [ ] `cost_cents` computed from tokens × provider pricing table (integer minor unit, brick/money — no float math).
+
+### Feature (Pest)
+- [ ] Disabled feature throws `AiFeatureDisabledException` **before** any provider call (provider mock asserts not called).
+- [ ] Budget hard-stop throws `AiBudgetExceededException` once the monthly token budget is exceeded.
+- [ ] 80% budget alert fires exactly once per month (guarded by `ai_config.budget_alerted_at`).
+- [ ] Successful call writes one `ai_usage_log` row with computed `cost_cents`; `LlmGateway` is the sole writer.
+- [ ] Provider error retries on the configured fallback model (provider mocked to fail then succeed).
+- [ ] Runs under `CompanyContext`: usage log + key resolution bind to the acting company (tenant isolation).
 
 ## Unknowns
 

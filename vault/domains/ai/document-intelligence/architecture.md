@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Document Intelligence — Architecture
@@ -52,9 +52,13 @@ upload (DocumentExtractionResource create)
 
 **Nav group:** Document Intelligence
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `DocumentExtractionResource` | #1 CRUD resource | list + create/**upload** (behind `ExtractDocumentJob`); a **review** page (custom, per-field confidence highlighting); an **apply** action |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `DocumentExtractionResource` | #1 CRUD resource | tweaks: state-badge-column (processing/extracted/reviewed/applied/failed), custom-header-actions (apply, retry) | list + create/**upload** (behind `ExtractDocumentJob`); review page = per-field confidence form (view page variant); apply action gated per feature |
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('ai.document-intelligence.view-any') && BillingService::hasModule('ai.document-intelligence')`
+per [[../../../architecture/filament-patterns]] #1.
 
 The resource hosts three feature slices — see [[features/upload-and-extract]], [[features/review-and-confirm]], [[features/apply-to-record]]. Pattern references: [[../../../architecture/filament-patterns]], [[../../../architecture/patterns/custom-pages]], [[../../../architecture/ui-strategy]].
 
@@ -63,3 +67,15 @@ The resource hosts three feature slices — see [[features/upload-and-extract]],
 ## Jobs & Scheduling
 
 - `ExtractDocumentJob` — the only async work; one job per uploaded document, batchable via the queue. No scheduled commands. No Meilisearch index and no realtime broadcast for this module *(assumed — a "processing → extracted" broadcast would be a nice-to-have but is not specced)*.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Review edits (field corrections) | Optimistic | `updated_at` stale-check → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Apply to record | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the extraction — applied exactly once; second applier rejected, target created once |
+| Job writeback (parse results) | n/a | Single writer (`ExtractDocumentJob`) per extraction row |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].

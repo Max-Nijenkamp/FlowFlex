@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Chat Console
@@ -41,6 +41,22 @@ The copilot chat surface: a streaming conversation with the AI assistant plus a 
 - Consumes: `LlmGateway::complete` from `ai.config`.
 - Uses: [[tool-registry|Tool Registry]] for every data read; [[draft-and-summarise|Draft & Summarise]] modes live in this same surface.
 - Shared entity: `user_id` (platform `users`), read-only.
+
+## Test Checklist
+
+### Unit
+- [ ] `SendCopilotMessageData` validation: `content` required + `max:8000`; `conversation_id` nullable; `context` shape `{ panel?, record_type?, record_id? }`.
+
+### Feature (Pest)
+- [ ] `CopilotService::send` persists user + assistant (+ tool) turns and meters via `LlmGateway` (provider mocked).
+- [ ] Conversation ownership: sending to another user's `conversation_id` is rejected.
+- [ ] Budget hard-stop surfaces a friendly error, not a stack trace (`AiBudgetExceededException`).
+- [ ] Rate-limited send returns a "slow down" response (panel-action throttle).
+
+### Livewire
+- [ ] `CopilotPage` `canAccess()` = `ai.copilot.use` + `hasModule('ai.copilot')`; hidden otherwise.
+- [ ] Empty state renders the "Ask me anything" prompt + example chips when the user has no conversations.
+- [ ] Conversation rail lists only the acting user's own threads (privacy filter).
 
 ## Unknowns
 

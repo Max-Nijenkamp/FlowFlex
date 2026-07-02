@@ -40,6 +40,20 @@ Turn a reviewed extraction into a real business record — a bill, an expense, o
 - Feeds (command call): `ApService::createBill` ([[../../../finance/accounts-payable/_module|finance.ap]]), `ExpenseService::submit` ([[../../../finance/expenses/_module|finance.expenses]]), applicant creation ([[../../../hr/recruitment/_module|hr.recruitment]]).
 - Shared entity: the polymorphic `target_record` pointer (target module owns the record).
 
+## Test Checklist
+
+### Unit
+- [ ] Field mapping produces a valid target Create DTO per document type
+
+### Feature (Pest)
+- [ ] Apply calls the owning service (`ApService::createBill` etc.) — target validation errors surface, never bypassed
+- [ ] Apply requires both `ai.document-intelligence.apply` AND the target module's create permission
+- [ ] Double-apply rejected (row lock) — exactly one target record + `applied` status with target link
+
+### Livewire
+- [ ] Apply action hidden when target module inactive; validation errors render inline
+- [ ] Denied without `ai.document-intelligence.apply`
+
 ## Unknowns
 
 > [!warning] UNVERIFIED

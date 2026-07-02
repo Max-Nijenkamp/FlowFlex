@@ -42,6 +42,21 @@ Upload a document (invoice / receipt / CV); a queued job runs OCR + LLM extracti
 - Feeds: the extracted row into [[review-and-confirm|Review & Confirm]].
 - Shared entity: `media` owned by core.files.
 
+## Test Checklist
+
+### Unit
+- [ ] Upload contract enforced: `max:10240` KB, MIME whitelist pdf/jpg/png
+- [ ] `ExtractionSchemas` shapes the prompt per document type (invoice/receipt/cv)
+
+### Feature (Pest)
+- [ ] Upload creates `ai_extractions` row (processing) + dispatches `ExtractDocumentJob` under `WithCompanyContext`
+- [ ] Provider/parse failure sets `failed` + error, retryable; usage metered via `LlmGateway` (faked)
+- [ ] Media stored tenant-scoped under `companies/{id}/`
+
+### Livewire
+- [ ] Upload form rejects oversized/wrong-MIME files with human error copy
+- [ ] Denied without `ai.document-intelligence.upload`
+
 ## Unknowns
 
 > [!warning] UNVERIFIED

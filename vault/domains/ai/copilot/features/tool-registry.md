@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Tool Registry
@@ -37,6 +37,18 @@ The permission-guarded, CompanyScope-bound execution path that is the **only** w
 - Reads: crm/finance/hr/support services (permission-checked, tenant-scoped).
 - Feeds: the tool set + results back into [[chat-console|Chat Console]]'s agent loop.
 - Shared entity: each tool's declared permission belongs to its owning domain's permission set ([[../../../../domains/core/rbac/_module|core.rbac]]).
+
+## Test Checklist
+
+### Unit
+- [ ] `ToolDefinition` shape `{schema, permission, module-key, handler}` validated on registration.
+- [ ] Offered-set filter: a tool is offered only when its `module-key` is active AND the user holds its `permission`.
+
+### Feature (Pest)
+- [ ] Execution re-checks the user's permission before running the handler; a denied tool returns "not permitted" (no silent leak).
+- [ ] Handler runs under `CompanyContext` + `CompanyScope`: a tool cannot read another company's data (per-tool tenant test).
+- [ ] A tool for an inactive module is never registered/offered to the model.
+- [ ] Tool results are returned as data-only content (embedded instructions not surfaced as commands — prompt-injection fixture, best-effort *(assumed)*).
 
 ## Unknowns
 

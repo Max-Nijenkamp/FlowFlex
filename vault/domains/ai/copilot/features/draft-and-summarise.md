@@ -41,6 +41,20 @@ Generation and summarisation modes of the copilot: draft an email reply / produc
 - Uses: [[tool-registry|Tool Registry]] to fetch summarisable content under permission.
 - Shared entity: none new.
 
+## Test Checklist
+
+### Unit
+- [ ] Generated draft + summary output is treated as plain text (never executed / raw HTML).
+
+### Feature (Pest)
+- [ ] Draft generation runs through `CopilotService::send` → `LlmGateway::complete` and is metered like any message (provider mocked).
+- [ ] Summarisation fetches source content with a **permission check at fetch time**; content the user can't view is refused ("you don't have access to that content").
+- [ ] Summarise turns write only `ai_copilot_messages` — no cross-domain write.
+
+### Livewire
+- [ ] "Draft reply" / "Summarise this record" quick actions are gated by `ai.copilot.use` + `hasModule`.
+- [ ] A fetch-denied summarise shows the access error inline without failing the whole turn.
+
 ## Unknowns
 
 > [!warning] UNVERIFIED

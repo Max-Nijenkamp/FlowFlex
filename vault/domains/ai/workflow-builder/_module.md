@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Workflow Builder
@@ -14,14 +14,13 @@ No-code cross-domain automation builder — the "Zapier inside FlowFlex". A comp
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `ai.workflows` |
-| priority | p3 |
-| panel | ai |
-| permission-prefix | `ai.workflows` |
-| tables | `ai_workflows`, `ai_workflow_runs` |
-| encrypted-fields | none |
+`ai.workflows`
+
+**Priority:** p3
+**Panel:** ai
+**Permission prefix:** `ai.workflows`
+**Tables:** `ai_workflows`, `ai_workflow_runs`
+**Encrypted:** none
 
 ## Dependencies
 
@@ -71,7 +70,8 @@ tests/Feature/AI/{WorkflowExecutionTest,WorkflowLoopGuardTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A workflows never fire on company B events
+- [ ] Module gating: artifacts hidden when `ai.workflows` inactive
 - [ ] Event trigger runs matching active workflows for the right company only
 - [ ] Conditions branch on payload fields (AND/OR fixtures)
 - [ ] Each registered action type executes through owning service; inactive-module action rejected at save

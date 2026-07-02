@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # AI Model Configuration
@@ -14,14 +14,13 @@ Configure LLM providers, models, API keys, usage limits, and cost controls for e
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `ai.config` |
-| priority | p3 |
-| panel | ai |
-| permission-prefix | `ai.config` |
-| tables | `ai_config`, `ai_usage_log` |
-| encrypted-fields | `ai_config.api_key` |
+`ai.config`
+
+**Priority:** p3  
+**Panel:** ai  
+**Permission prefix:** `ai.config`  
+**Tables:** `ai_config`, `ai_usage_log`  
+**Encrypted fields:** `ai_config.api_key`
 
 ## Dependencies
 
@@ -64,8 +63,10 @@ tests/Feature/AI/{LlmGatewayTest,AiBudgetTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read company B's `ai_config` row or usage rows.
+- [ ] Module gating: config + usage pages hidden when `ai.config` inactive.
 - [ ] API key stored ciphertext; verified before save; never re-displayed.
+- [ ] Concurrent config save: second writer with a stale `updated_at` gets the conflict notification ([[../../../architecture/patterns/optimistic-locking]]).
 - [ ] Budget hard-stop + 80% alert once/month.
 - [ ] Disabled feature throws before any provider call.
 - [ ] Usage rows written per call with cost (provider mocked); fallback model on primary failure.

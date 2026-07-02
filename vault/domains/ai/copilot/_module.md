@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # AI Copilot
@@ -14,14 +14,13 @@ Cross-domain AI assistant: natural-language queries over company data, draft gen
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `ai.copilot` |
-| priority | p3 |
-| panel | ai |
-| permission-prefix | `ai.copilot` |
-| tables | `ai_copilot_conversations`, `ai_copilot_messages` |
-| encrypted-fields | *(none)* |
+`ai.copilot`
+
+**Priority:** p3  
+**Panel:** ai  
+**Permission prefix:** `ai.copilot`  
+**Tables:** `ai_copilot_conversations`, `ai_copilot_messages`  
+**Encrypted fields:** none
 
 ## Dependencies
 
@@ -68,7 +67,8 @@ tests/Feature/AI/{CopilotToolScopeTest,CopilotPermissionTest}.php
 ## Test Checklist
 
 - [ ] Tenant isolation: tools return current-company data only (per-tool test).
-- [ ] Module gating + conversation privacy (other users can't read).
+- [ ] Module gating: copilot page + its tools hidden when `ai.copilot` inactive.
+- [ ] Conversation privacy: another user in the same company cannot read a user's threads.
 - [ ] Tool denied when user lacks the domain permission (LLM told "not permitted").
 - [ ] Unknown/disabled-module tool never offered to the model.
 - [ ] Prompt-injection fixture: instruction embedded in tool result not followed (system-prompt assertion *(assumed: best-effort test)*).

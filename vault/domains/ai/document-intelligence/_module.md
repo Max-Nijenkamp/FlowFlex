@@ -70,7 +70,8 @@ tests/Feature/AI/{ExtractionFlowTest,ExtractionApplyTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see company B extractions or media
+- [ ] Module gating: artifacts hidden when `ai.document-intelligence` inactive
 - [ ] Type offered only when target module active
 - [ ] Apply requires review; goes through target DTO validation (invalid extraction rejected like manual input)
 - [ ] Apply requires target-module permission

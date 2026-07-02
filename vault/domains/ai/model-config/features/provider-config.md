@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Provider Config
@@ -41,6 +41,22 @@ The settings surface where a company chooses its LLM provider, models, API key, 
 
 - Feeds: the stored config is read by [[llm-gateway|LLM Gateway]] on every AI call.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] `ConfigureAiData` validation: provider enum, `default_model` valid for provider, `monthly_token_budget` min:0/nullable, `data_residency` enum.
+- [ ] Write-only key rule: an empty `api_key` submit keeps the stored ciphertext (does not blank it).
+
+### Feature (Pest)
+- [ ] Create-or-update writes exactly one `ai_config` row per company (unique on `company_id`, never duplicated).
+- [ ] API key verified with a live provider test call before persist; a rejected key aborts save with an inline error (provider mocked).
+- [ ] Saved `api_key` is stored ciphertext and never returned to the form on reload.
+
+### Livewire
+- [ ] `AiConfigPage` `canAccess()` = `ai.config.manage` + `hasModule('ai.config')`; hidden otherwise.
+- [ ] Provider select change refreshes the `default_model` options.
+- [ ] Key field renders as write-only ("•••• set" placeholder), never exposing the stored value.
 
 ## Unknowns
 

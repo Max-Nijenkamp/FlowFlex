@@ -1,10 +1,14 @@
 ---
 domain: ai
+domain-key: ai
+panel: ai
+phase: 3
+module-count: 4
 type: domain-index
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # AI & Automation — MOC
@@ -15,12 +19,12 @@ Every LLM call in the domain routes through `ai.config`'s metered `LlmGateway`; 
 
 ## Modules
 
-| Module | Key | Build | Notes |
-|---|---|---|---|
-| [[model-config/_module\|AI Model Configuration]] | `ai.config` | planned | build first — the `LlmGateway` every AI feature calls |
-| [[copilot/_module\|AI Copilot]] | `ai.copilot` | planned | cross-domain assistant; data only via permission-checked tools |
-| [[document-intelligence/_module\|Document Intelligence]] | `ai.document-intelligence` | planned | invoice/receipt/CV extraction behind mandatory human review |
-| [[workflow-builder/_module\|Workflow Builder]] | `ai.workflows` | planned | Zapier-inside; universal event listener, no LLM |
+| Module | Key | Build | Kind highlights | Notes |
+|---|---|---|---|---|
+| [[model-config/_module\|AI Model Configuration]] | `ai.config` | planned | settings resource + usage dashboard | build first — the `LlmGateway` every AI feature calls |
+| [[copilot/_module\|AI Copilot]] | `ai.copilot` | planned | chat console custom-page (#8 inbox/chat) | cross-domain assistant; data only via permission-checked tools |
+| [[document-intelligence/_module\|Document Intelligence]] | `ai.document-intelligence` | planned | resource + confidence-review form | invoice/receipt/CV extraction behind mandatory human review |
+| [[workflow-builder/_module\|Workflow Builder]] | `ai.workflows` | planned | builder custom-page (#9) + run-history resource | Zapier-inside; universal event listener, no LLM |
 
 ## Dependency Graph
 

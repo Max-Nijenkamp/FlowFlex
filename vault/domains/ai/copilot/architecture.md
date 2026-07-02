@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # AI Copilot — Architecture
@@ -38,19 +38,30 @@ See also [[_module|ai.copilot._module]], [[../../../architecture/filament-patter
 
 **Nav group:** Copilot
 
-| Artifact | Kind (ui-strategy row) | Notes |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `CopilotPage` | #8 shared inbox / chat / conversation | [[../../../architecture/patterns/page-blueprints#Inbox / Chat / Conversation]] | Livewire chat with streaming; conversation sidebar; hosts draft/summarise modes. Backing component `App\Livewire\AI\CopilotChat`. Streaming transport assumed SSE (not Reverb) — see [[unknowns]] |
+
+**Access contract (mandatory):** `CopilotPage` is a custom Filament page and MUST state `canAccess()` explicitly (Filament does not auto-gate custom pages):
+`canAccess() = Auth::user()->can('ai.copilot.use') && BillingService::hasModule('ai.copilot')`
+per [[../../../architecture/filament-patterns]] #1 and [[../../../architecture/patterns/custom-page-checklist]]. Per-tool domain permissions are checked separately at execution ([[security]]). No public/portal surface.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
 |---|---|---|
-| `CopilotPage` | #8-style chat custom page | Livewire chat with streaming; conversation sidebar. Hosts draft/summarise modes. |
+| Send message (append conversation + message turns) | n/a | `ai_copilot_conversations` / `ai_copilot_messages` are append-only per-user; a turn is an insert, not an edit of a shared record — no concurrent-edit conflict possible |
+| Conversation soft-delete / rename | Optimistic | `updated_at` stale-check on the owning user's own conversation ([[../../../architecture/patterns/optimistic-locking]]) — low-contention since conversations are private to one user |
 
-Backing Livewire component: `App\Livewire\AI\CopilotChat`. Pattern reference: [[../../../architecture/patterns/custom-pages]], [[../../../architecture/ui-strategy]].
-
-**Access contract:** `canAccess() = Auth::user()->can('ai.copilot.use') && BillingService::hasModule('ai.copilot')` per [[../../../architecture/filament-patterns]] #1 — the custom page states it explicitly.
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]]. Copilot holds no money/inventory/state-machine write path, so no pessimistic tier applies.
 
 ---
 
 ## Rate Limiting
 
-Per [[../../../build/security-audit-2026-06-11]] (medium): a per-user / per-company rate limiter (`RateLimiter` / throttle) guards copilot message sends **in addition to** the `LlmGateway` monthly budget. The budget bounds cost; the throttle bounds request rate/abuse.
+Per [[../../../build/security-audit-2026-06-11]] (medium): the named `panel-action` rate limiter ([[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]) guards copilot message sends — each send triggers an **external LLM provider call** via `LlmGateway`, so it falls under the "panel actions that call external APIs" rule. This is **in addition to** the `LlmGateway` monthly budget: the budget bounds cost; the throttle bounds request rate/abuse.
 
 ---
 

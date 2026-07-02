@@ -41,6 +41,20 @@ The read-only audit trail of every workflow execution: which workflow fired, on 
 - Reads: run rows produced by [[trigger-registry|Trigger Registry]] → `RunWorkflowJob` executing [[action-registry|Action Registry]] actions.
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] `partial` status derived when some actions succeed and others stop/continue
+
+### Feature (Pest)
+- [ ] One run row per trigger instance with `trigger_data` + ordered `node_results`
+- [ ] Prune command removes runs older than 90 days, none newer
+- [ ] Run rows are never updated by UI paths (read-only assertion)
+
+### Livewire
+- [ ] Run list filters by workflow/status/date; detail shows per-node trace
+- [ ] Denied without `ai.workflows.view-any`
+
 ## Unknowns
 
 > [!warning] UNVERIFIED

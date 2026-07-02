@@ -36,6 +36,17 @@ The set of things a workflow can *do*: typed actions that domains register (crea
 - Feeds (command calls): `TaskService::create`, `NotificationService::send`, `WebhookService::call`, `RecordService::update`, … across crm / finance / hr / projects / comms services.
 - Shared entity: each action's `owning_module` permission set + validation live in that module.
 
+## Test Checklist
+
+### Unit
+- [ ] `ActionDefinition` config schema validation rejects malformed config
+- [ ] Error policies map correctly: retry (3× backoff), stop (run failed/partial), continue (log + proceed)
+
+### Feature (Pest)
+- [ ] `execute()` runs under `CompanyContext` and calls the owning module's service — no direct cross-domain table writes (arch assertion)
+- [ ] Inactive-module action rejected at save; webhook action refuses internal/loopback targets (SSRF guard)
+- [ ] Dry-run returns node results with zero side effects
+
 ## Unknowns
 
 > [!warning] UNVERIFIED

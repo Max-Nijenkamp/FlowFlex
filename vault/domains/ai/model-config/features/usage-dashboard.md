@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Usage Dashboard
@@ -39,6 +39,22 @@ Read-only charts of token consumption and cost, broken down by feature, by user,
 
 - Reads: usage rows written by [[llm-gateway|LLM Gateway]].
 - Shared entity: `user_id` on usage rows resolves against the platform `users` table (read-only) for the by-user breakdown.
+
+## Test Checklist
+
+### Unit
+- [ ] `UsageReport::byFeature(period)` and `::byUser(period)` aggregate tokens + `cost_cents` correctly for a fixture set.
+- [ ] Budget-headroom calc: current-month spend vs `monthly_token_budget`, 80% threshold marked.
+
+### Feature (Pest)
+- [ ] Aggregations are tenant-scoped: only the acting company's `ai_usage_log` rows are counted.
+- [ ] Period filter (this month / last 30d / custom) bounds the rows returned.
+- [ ] `cost_cents` rendered as money via brick/money (no float math).
+
+### Livewire
+- [ ] `AiUsageDashboardPage` `canAccess()` = `ai.config.view-usage` + `hasModule('ai.config')`; hidden otherwise.
+- [ ] Empty state renders "no AI usage recorded this period" when no rows exist.
+- [ ] By-feature vs by-user breakdown toggle updates the charts.
 
 ## Unknowns
 

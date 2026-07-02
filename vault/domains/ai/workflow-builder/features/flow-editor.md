@@ -41,10 +41,25 @@ Where an admin authors an automation: pick a trigger, add condition nodes, add a
 - Feeds: saved workflows drive [[run-history|Run History]] once they fire.
 - Shared entity: event keys owned by the [[../../../../architecture/event-bus|event bus]].
 
+## Test Checklist
+
+### Unit
+- [ ] `WorkflowGraphValidator` rejects cycles, orphan nodes, unknown trigger keys
+- [ ] Action config invalid against its `ActionDefinition` schema rejected at save
+
+### Feature (Pest)
+- [ ] Save persists the nodes graph; action owned by an inactive module rejected at save
+- [ ] Trigger/action pickers offer only the company's active-module set
+- [ ] Toggle `is_active` enables/disables firing
+
+### Livewire
+- [ ] Builder renders trigger/condition/action rows; invalid graph shows inline node errors
+- [ ] Edit/save denied without `ai.workflows.manage`
+
 ## Unknowns
 
 > [!warning] UNVERIFIED
-> Whether v1 is a visual drag-canvas or a list-based builder is unresolved (large front-end cost difference), and the route slug is assumed. See [[../unknowns]].
+> Whether v1 is a visual drag-canvas or a list-based builder is unresolved (large front-end cost difference), and the route slug is assumed. See [[../unknowns]]. Per [[../architecture]], v1 is specced as the list-based #9 builder *(assumed)*; a drag-canvas needs an ADR + new ui-strategy row.
 
 ## Related
 

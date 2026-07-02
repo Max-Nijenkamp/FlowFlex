@@ -41,6 +41,19 @@ The mandatory human-in-the-loop step: the reviewer sees every extracted field wi
 - Feeds: the reviewed extraction into [[apply-to-record|Apply to Record]].
 - Shared entity: `reviewed_by` → platform `users` (read-only).
 
+## Test Checklist
+
+### Unit
+- [ ] Per-field confidence thresholds classify fields for highlight (low-confidence flagged)
+
+### Feature (Pest)
+- [ ] Confirm sets `reviewed` + `reviewed_by`; corrections persist over parsed values
+- [ ] Concurrent review edits: second saver gets `StaleRecordException` (optimistic guard)
+
+### Livewire
+- [ ] Review form renders parsed fields with confidence highlighting; save validates corrections
+- [ ] Denied without `ai.document-intelligence.review`
+
 ## Unknowns
 
 > [!warning] UNVERIFIED

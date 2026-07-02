@@ -38,6 +38,16 @@ The set of things that can start a workflow: every contracted domain event (deal
 - Feeds: matched triggers → `RunWorkflowJob` → [[run-history|Run History]].
 - Shared entity: event contracts owned by the event bus; `company_id` scalar on every event.
 
+## Test Checklist
+
+### Unit
+- [ ] Event-key matching resolves the right workflows for a trigger; non-matching events dispatch nothing
+
+### Feature (Pest)
+- [ ] Listener resolves company from the event's scalar `company_id` and runs only that company's active workflows
+- [ ] Loop guard: a system-actor-flagged event does not re-trigger workflows
+- [ ] Scheduled command advances the next-run cursor atomically — no double dispatch on overlap
+
 ## Unknowns
 
 > [!warning] UNVERIFIED

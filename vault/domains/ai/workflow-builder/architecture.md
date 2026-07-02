@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # Workflow Builder — Architecture
@@ -51,6 +51,32 @@ No LLM anywhere in this module — it is a deterministic event/action orchestrat
 | `PruneWorkflowRunsCommand` | default | daily | date guard on `started_at` (90 days *(assumed)*) |
 
 No Meilisearch index. No realtime broadcast (run history reads on page load).
+
+---
+
+## Filament Artifacts
+
+**Nav group:** Automation
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `WorkflowResource` | #1 CRUD resource | tweaks: custom-header-actions (enable/disable, dry-run), state-badge-column (`is_active`) | run count column; list filters: trigger, active |
+| `WorkflowBuilderPage` | #9 Report builder / query UI | [[../../../architecture/patterns/page-blueprints#Report Builder / Query UI]] — builder rail = trigger picker + condition rows + action rows *(assumed: v1 is the list-based builder; a drag-canvas node editor is a new UI kind requiring an ADR + ui-strategy row first)* | pickers module-gated; save runs `WorkflowGraphValidator`, inline node errors |
+| `WorkflowRunResource` | #2 detail with tabs | tweaks: read-only-flow-owned (rows written by `RunWorkflowJob`), view-page-tabs (trigger payload, node trace) | filters: workflow, status, date |
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('ai.workflows.view-any') && BillingService::hasModule('ai.workflows')`
+per [[../../../architecture/filament-patterns]] #1. `WorkflowBuilderPage` is a custom page and MUST state it explicitly — Filament does not auto-gate custom pages. Editing/saving/enabling additionally requires `ai.workflows.manage`.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Workflow definition CRUD (nodes graph, toggle) | Optimistic | `updated_at` stale-check → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Run rows (`ai_workflow_runs`) | n/a | Append-only, written by `RunWorkflowJob` — single writer, nothing to stale-check |
+| Scheduled-trigger cursor (`next_run`) | Pessimistic | Advance cursor inside the dispatch transaction (same pattern as analytics scheduled exports) — no double-fire |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 > [!warning] UNVERIFIED
 > The scheduled-workflow cadence (every 15 min) and the loop-guard mechanism (system-actor flag, depth 1) are assumed. Confirm the actor-tagging approach against [[../../../architecture/event-bus]].

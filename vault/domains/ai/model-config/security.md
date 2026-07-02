@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-02
 ---
 
 # AI Model Configuration — Security
@@ -18,19 +18,35 @@ See also [[../../../security/tenancy-isolation]], [[../../../security/authn-auth
 
 | Permission | Description |
 |---|---|
-| `ai.config.manage` | Configure provider, models, keys, budget, toggles |
-| `ai.config.view-usage` | View the usage/cost dashboard |
+| `ai.config.manage` | Configure provider, models, keys, budget, toggles (gates `AiConfigPage`) |
+| `ai.config.view-usage` | View the usage/cost dashboard (gates `AiUsageDashboardPage`) |
+
+Seeded in `PermissionSeeder`. There is no `ai.config.view-any` — each custom page gates on its own verb (config = `manage`, usage = `view-usage`); the two-page split is why this module has no shared list-view permission.
 
 ---
 
 ## Access Contract
 
+Each custom page states `canAccess()` explicitly (Filament does not auto-gate custom pages):
+
 ```php
-canAccess() = Auth::user()->can('ai.config.view-any')
+// AiConfigPage
+canAccess() = Auth::user()->can('ai.config.manage')
+           && BillingService::hasModule('ai.config')
+
+// AiUsageDashboardPage
+canAccess() = Auth::user()->can('ai.config.view-usage')
            && BillingService::hasModule('ai.config')
 ```
 
-Per [[../../../architecture/filament-patterns]] #1 — both custom pages state `canAccess()` explicitly.
+Per [[../../../architecture/filament-patterns]] #1 and [[../../../architecture/patterns/custom-page-checklist]].
+
+---
+
+## Rate Limiting
+
+- The **API-key verification test call** on save reaches an external LLM provider — it MUST carry the named `panel-action` rate limiter ([[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]) so a repeated bad-key save cannot be used to hammer a provider endpoint.
+- Runtime LLM calls through `LlmGateway::complete` are bounded primarily by the **monthly token budget hard-stop** (cost control); consuming modules (`ai.copilot`, `ai.document-intelligence`) additionally throttle their own send/upload actions with `panel-action`. The provider key itself is stored encrypted (`ai_config.api_key`, `encrypted` cast) — see **Secret Handling** below.
 
 ---
 
