@@ -9,6 +9,10 @@ color: "#A78BFA"
 
 # Deployment & Production
 
+> [!warning] Authoritative infra source moved
+> Verified infrastructure facts now live in [[../infrastructure/deployment]] — production is **UNVERIFIED / not provisioned**. Details on this page may predate the 2026-06-20 rebuild — trust the linked note on any conflict.
+
+
 Production environment, environment variables, health checks, and what "production-ready" means for FlowFlex.
 
 ---

@@ -1,47 +1,45 @@
 ---
 type: domain-index
-domain: E-commerce
+domain: ecommerce
 domain-key: ecommerce
 panel: ecommerce
 phase: 3
 module-count: 8
 status: active
+build-status: planned
 color: "#4ADE80"
+updated: 2026-06-20
 ---
 
-# E-commerce
+# E-commerce — MOC
 
-Products, variants, orders, payments, promotions, reviews, abandoned cart recovery, and storefront. **Panel:** `/ecommerce` (Teal) — Phase 3.
-
----
+Products, variants, orders, payments, promotions, reviews, storefront, and abandoned-cart recovery. **Panel:** `/ecommerce` (Teal) — Phase 3, priority p3. Every module is exploded to its folder (`_module` + architecture/data-model/api/security/decisions/unknowns + `features/`).
 
 ## Navigation Groups
 
 - **Catalogue** — Products, Categories, Variants, Reviews
-- **Orders** — Orders, Payments, Fulfilment
+- **Orders** — Orders, Payments, Fulfilment (board)
 - **Marketing** — Coupons, Promotions, Abandoned Carts
-- **Settings** — Storefront Configuration
-
----
+- **Settings** — Storefront configuration + content pages
 
 ## Modules
 
-| Module | Key | Status | Priority | Depends on (intra-domain) |
+| Module | Key | Status | Intra-domain deps | Features |
 |---|---|---|---|---|
-| [[domains/ecommerce/products\|Product Catalogue]] | `ecommerce.products` | planned | p3 | — (anchor) |
-| [[domains/ecommerce/variants\|Product Variants]] | `ecommerce.variants` | planned | p3 | products |
-| [[domains/ecommerce/orders\|Orders]] | `ecommerce.orders` | planned | p3 | products |
-| [[domains/ecommerce/payments\|Payments]] | `ecommerce.payments` | planned | p3 | orders |
-| [[domains/ecommerce/storefront\|Storefront]] | `ecommerce.storefront` | planned | p3 | products, orders |
-| [[domains/ecommerce/promotions\|Promotions & Coupons]] | `ecommerce.promotions` | planned | p3 | products |
-| [[domains/ecommerce/reviews\|Product Reviews]] | `ecommerce.reviews` | planned | p3 | products, orders |
-| [[domains/ecommerce/abandoned-cart\|Abandoned Cart]] | `ecommerce.abandoned-cart` | planned | p3 | storefront, orders |
+| [[products/_module\|Product Catalogue]] | `ecommerce.products` | wip | — (anchor) | manage-catalogue, stock-linkage |
+| [[variants/_module\|Product Variants]] | `ecommerce.variants` | wip | products | generate-variants |
+| [[orders/_module\|Orders]] | `ecommerce.orders` | wip | products | place-order, fulfil-order |
+| [[payments/_module\|Payments]] | `ecommerce.payments` | wip | orders | process-payment, refund |
+| [[promotions/_module\|Promotions & Coupons]] | `ecommerce.promotions` | wip | products | manage-coupons, apply-discount |
+| [[reviews/_module\|Product Reviews]] | `ecommerce.reviews` | wip | products, orders | submit-review, moderate-review |
+| [[storefront/_module\|Storefront]] | `ecommerce.storefront` | wip | products, orders | browse-and-cart, checkout, configure-storefront |
+| [[abandoned-cart/_module\|Abandoned Cart]] | `ecommerce.abandoned-cart` | wip | storefront, orders | recover-cart |
 
 ## Dependency Graph (intra-domain)
 
 ```mermaid
 graph TD
-    products --> variants
+    products[products] --> variants
     products --> orders
     orders --> payments
     products --> storefront
@@ -51,34 +49,35 @@ graph TD
     orders --> reviews
     storefront --> abandoned-cart
     orders --> abandoned-cart
+    promotions -.discount.-> orders
+    payments -.markPaid.-> orders
 ```
 
 ## Cross-Domain Edges
 
-| Direction | Event | Counterpart |
-|---|---|---|
-| Fires | `CheckoutCompleted` (orders) | Finance (record sale), Analytics (P3) |
-
-`CartAbandoned` event from v1 specs dropped (recovery is same-domain). Stock via `ProductStock` → `StockService` when operations active. Payload contract: [[architecture/event-bus]].
-
----
-
-## Status Board (Dataview)
-
-```dataview
-TABLE module-key AS "Key", status AS "Status", priority AS "Priority"
-FROM "domains/ecommerce"
-WHERE type = "module"
-SORT module-key ASC
+```mermaid
+graph LR
+    orders -->|CheckoutCompleted event| finance[finance: record sale]
+    orders -->|CheckoutCompleted event| analytics[analytics P3]
+    products -.ProductStock/StockService.-> inventory[operations.inventory]
+    orders -.tax classes read.-> tax[finance.tax-management]
+    orders -.findOrCreateByEmail.-> contacts[crm.contacts]
+    promotions -.segment read.-> segments[crm.customer-segments]
+    payments -->|Stripe API + webhook| stripe[(Stripe)]
 ```
 
----
+**Ownership boundary:** E-commerce writes only `ec_*` tables. The one write-effect into Finance is the `CheckoutCompleted` event — Finance's own listener writes finance tables; Orders never does. Stock is read/reserved through `operations.inventory`'s `StockService`. See [[../../security/data-ownership]].
 
 ## Key Patterns
 
-- `spatie/laravel-model-states` — order status
-- `brick/money` — all totals/pricing; prices snapshot at order time
-- `stripe/stripe-php` raw SDK — payments (Connect vs per-company keys = build-time ADR)
-- `spatie/laravel-sluggable` — product/category/page slugs
-- Storefront rendered via Vue + Inertia ([[frontend/_index]], ui-strategy row #16)
-- Server re-validates cart at every step — client cart is never trusted
+- `spatie/laravel-model-states` — order status.
+- `brick/money` — all totals/pricing; prices snapshot at order time.
+- `stripe/stripe-php` raw SDK — payments (Connect vs per-company keys = build-time ADR).
+- `spatie/laravel-sluggable` — product/category/page slugs.
+- Storefront rendered via Vue + Inertia ([[../../frontend/_index]], ui-strategy row #16).
+- Server re-validates the cart at every step — the client cart is never trusted.
+
+## Related
+
+- [[_opportunities|E-commerce Opportunities]] · [[../../architecture/event-bus]] · [[../../security/data-ownership]]
+- [[../../architecture/patterns/feature-ui-spec]] · [[../../decisions/decision-2026-06-20-full-mapping-conventions]]

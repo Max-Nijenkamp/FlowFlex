@@ -36,6 +36,6 @@ Blocks specific later modules, not the scaffold:
 3. Log an ADR if a package is permanently swapped.
 
 ## Related
-- [[domains/foundation/laravel-scaffold]]
+- [[domains/foundation/laravel-scaffold/_module]]
 - [[architecture/ui-strategy]]
 - [[architecture/packages]]

@@ -104,8 +104,8 @@ Specs contain `*(assumed)*` markers for invented defaults (see [[_meta/spec-temp
 
 ## Related
 
-- [[build/BUILD-ORDER]] — what to build next
-- [[build/ROADMAP]] — milestones to v1
+- [[_archive/BUILD-ORDER]] — what to build next
+- [[_archive/ROADMAP]] — milestones to v1
 - [[_meta/spec-template]] — spec format + `(assumed)` convention
 - [[architecture/patterns/testing-pattern]] — test scope
 - [[architecture/ci-cd]] — the same gates in CI

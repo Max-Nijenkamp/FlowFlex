@@ -8,7 +8,7 @@ color: "#6B7280"
 
 # Module Spec Template v2
 
-The canonical template for all 173 module specs. **Frozen** — changes require an ADR + backfill of already-rewritten specs. Read this plus the two golden specs ([[domains/crm/deals]], [[domains/hr/leave-management]]) before writing or rewriting any spec.
+The canonical template for all 173 module specs. **Frozen** — changes require an ADR + backfill of already-rewritten specs. Read this plus the two golden specs ([[domains/crm/deals/_module]], [[domains/hr/leave-management/_module]]) before writing or rewriting any spec.
 
 **Core rule**: rewrites are *enrichment + restructure, never regeneration*. Migrate existing Data Model / Features / Filament content verbatim, then add the missing layers.
 
@@ -58,8 +58,8 @@ Field rules:
 ## Dependencies                                                         [M]
 | Type | Module | Why |
 |---|---|---|
-| Hard | [[domains/crm/contacts\|crm.contacts]] | Deals attach to contacts |
-| Soft | [[domains/finance/invoicing\|finance.invoicing]] | DealWon → invoice stub; without it, event fires with no consumer |
+| Hard | [[domains/crm/contacts/_module\|crm.contacts]] | Deals attach to contacts |
+| Soft | [[domains/finance/invoicing/_module\|finance.invoicing]] | DealWon → invoice stub; without it, event fires with no consumer |
 
 ## Core Features                                                        [M]
 - {existing list preserved, enriched to acceptance-level specificity}
@@ -169,8 +169,8 @@ tests/Feature/CRM/DealTest.php
 
 ## Related
 
-- [[domains/crm/deals]] — golden spec
-- [[domains/hr/leave-management]] — golden spec
+- [[domains/crm/deals/_module]] — golden spec
+- [[domains/hr/leave-management/_module]] — golden spec
 - [[architecture/ui-strategy]]
 - [[architecture/event-bus]]
 - [[_meta/module-graph]]

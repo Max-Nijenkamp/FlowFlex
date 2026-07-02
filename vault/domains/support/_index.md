@@ -1,19 +1,23 @@
 ---
 type: domain-index
-domain: Support & Help Desk
+domain: support
 domain-key: support
 panel: support
 phase: 2
 module-count: 7
-status: active
+build-status: planned
+status: planned
 color: "#4ADE80"
+updated: 2026-07-02
 ---
 
-# Support & Help Desk
+# Support & Help Desk — MOC
 
-Customer ticket management, knowledge base, SLA tracking, live chat, and automation. **Panel:** `/support` (Orange) — Phase 2 (M7 in [[build/ROADMAP]]).
+Customer ticket management, knowledge base, SLA tracking, live chat, canned responses, automations, and analytics. **Panel:** `/support` (Orange) — Phase 2 (M7 in [[_archive/ROADMAP]]).
 
-**Displaces**: Freshdesk, Zendesk (SMB tier), Intercom (support use case)
+**Displaces**: Freshdesk, Zendesk (SMB tier), Intercom (support use case). Opportunity radar: [[_opportunities]].
+
+Every module is exploded to a folder (`<slug>/_module.md` + architecture / data-model / api / security / decisions / unknowns / `features/`). Constitution: [[../../decisions/decision-2026-06-20-full-mapping-conventions]].
 
 ---
 
@@ -29,17 +33,19 @@ Customer ticket management, knowledge base, SLA tracking, live chat, and automat
 
 ## Modules
 
-| Module | Key | Status | Priority | Depends on (intra-domain) |
+| Module | Key | Priority | Build status | Depends on (intra-domain) |
 |---|---|---|---|---|
-| [[domains/support/tickets\|Tickets]] | `support.tickets` | planned | p2 | — (anchor) |
-| [[domains/support/knowledge-base\|Knowledge Base]] | `support.kb` | planned | p2 | — |
-| [[domains/support/sla\|SLA Management]] | `support.sla` | planned | p2 | tickets |
-| [[domains/support/canned-responses\|Canned Responses]] | `support.canned` | planned | p2 | tickets |
-| [[domains/support/automations\|Automations]] | `support.automations` | planned | p2 | tickets |
-| [[domains/support/live-chat\|Live Chat]] | `support.chat` | planned | p2 | tickets |
-| [[domains/support/support-analytics\|Support Analytics]] | `support.analytics` | planned | p2 | tickets |
+| [[tickets/_module\|Tickets]] | `support.tickets` | p2 | planned | — (anchor) |
+| [[knowledge-base/_module\|Knowledge Base]] | `support.kb` | p2 | planned | tickets (soft) |
+| [[sla/_module\|SLA Management]] | `support.sla` | p2 | planned | tickets |
+| [[canned-responses/_module\|Canned Responses]] | `support.canned` | p2 | planned | tickets |
+| [[automations/_module\|Automations]] | `support.automations` | p2 | planned | tickets, sla (soft), canned (soft) |
+| [[live-chat/_module\|Live Chat]] | `support.chat` | p2 | planned | tickets, canned (soft) |
+| [[support-analytics/_module\|Support Analytics]] | `support.analytics` | p2 | planned | tickets, sla (soft) |
 
 Build order: tickets → kb → sla → canned → automations → chat → analytics.
+
+---
 
 ## Dependency Graph (intra-domain)
 
@@ -50,38 +56,55 @@ graph TD
     tickets --> automations
     tickets --> chat
     tickets --> analytics
-    sla --> automations
-    canned --> automations
-    canned --> chat
-    sla --> analytics
+    tickets -.soft.-> kb
+    sla -.soft.-> automations
+    canned -.soft.-> automations
+    canned -.soft.-> chat
+    sla -.soft.-> analytics
+
+    subgraph external
+      crm_contacts[crm.contacts]
+      core_notif[core.notifications]
+      mkt[marketing CSAT P3]
+    end
+    tickets -.reads.-> crm_contacts
+    chat -.reads.-> crm_contacts
+    sla -.notifies.-> core_notif
+    tickets -->|TicketResolved| analytics
+    tickets -.->|TicketResolved| mkt
 ```
+
+---
 
 ## Cross-Domain Edges
 
-| Direction | Event | Counterpart |
+| Direction | Event / API | Counterpart |
 |---|---|---|
-| Fires | `TicketResolved` (tickets) | support.analytics CSAT survey (v1 consumer); Marketing CSAT (P3) |
-| Soft | — | crm.contacts requester linking |
+| Fires | `TicketResolved` (tickets) | support.analytics CSAT (v1 consumer); marketing CSAT (P3) |
+| Reads | `ContactService` (tickets, chat) | crm.contacts — requester/visitor find-or-create (soft) |
+| Reads | business hours / timezone (sla) | core.settings |
+| Feeds | breach / escalation notifications | core.notifications |
+| Public | help centre, chat widget, CSAT page | unauthenticated — scoped guards + rate limits |
 
-Payload contract: [[architecture/event-bus]].
+Payload contracts: [[../../architecture/event-bus]]. Data-ownership: [[../../security/data-ownership]] — each module writes only its own tables; ticket mutations from automations/chat go through `TicketService`.
 
 ---
 
 ## Status Board (Dataview)
 
 ```dataview
-TABLE module-key AS "Key", status AS "Status", priority AS "Priority"
+TABLE module AS "Module", build-status AS "Build", status AS "Status"
 FROM "domains/support"
 WHERE type = "module"
-SORT module-key ASC
+SORT module ASC
 ```
 
 ---
 
 ## Key Patterns
 
-- `spatie/laravel-model-states` — ticket status machine
-- Custom pages — Ticket Inbox (#8 + Reverb), Chat Queue (#8 + Reverb), SLA Monitor, Support Dashboard
+- `spatie/laravel-model-states` — ticket status machine ([[tickets/architecture]])
+- Custom pages — Ticket Inbox (#8 + Reverb), Chat Queue (#8 + Reverb, heaviest consumer), SLA Monitor, Support Dashboard
 - `awcodes/filament-tiptap-editor` — KB articles (purified)
-- [[architecture/websockets]] — chat is the heaviest Reverb consumer
-- Public surfaces (help centre, CSAT, chat widget) = Vue + Inertia / built embed, all rate-limited
+- [[../../architecture/websockets]] — live chat is the heaviest Reverb consumer
+- Public surfaces (help centre, CSAT, chat widget) = Vue + Inertia / built embed, all under scoped guards + rate-limited ([[../../security/data-ownership]])

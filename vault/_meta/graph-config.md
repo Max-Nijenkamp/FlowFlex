@@ -73,7 +73,7 @@ The v2 spec frontmatter ([[_meta/spec-template]]) adds structured fields that Da
 | `tables` | find the module owning a table |
 | `last-reviewed` | staleness audits |
 
-Pre-built boards: [[build/STATUS]] (status + priority) and [[_meta/module-graph]] (full dependency table — also maintained as a static table so AI agents get it without Dataview).
+Pre-built boards: [[00-index/status-board]] (status + priority) and [[_meta/module-graph]] (full dependency table — also maintained as a static table so AI agents get it without Dataview).
 
 ---
 

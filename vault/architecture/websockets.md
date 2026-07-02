@@ -9,6 +9,10 @@ color: "#A78BFA"
 
 # WebSockets (Laravel Reverb)
 
+> [!warning] Authoritative infra source moved
+> Verified infrastructure facts now live in [[../infrastructure/websockets-reverb]] (Reverb runs on **:8081**, not 8080). Details on this page may predate the 2026-06-20 rebuild — trust the linked note on any conflict.
+
+
 Real-time features via Laravel Reverb 1.x. Reverb is a first-party WebSocket server — no third-party service needed. Features: notification badges, live data updates, presence channels for collaborative editing.
 
 ---

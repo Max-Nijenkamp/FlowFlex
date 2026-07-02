@@ -6,14 +6,69 @@ panel: operations
 phase: 3
 module-count: 6
 status: active
+build-status: planned
 color: "#4ADE80"
+updated: 2026-07-02
 ---
 
-# Procurement
+# Procurement — Map of Content
 
-Purchase requisitions, sourcing POs, supplier catalogue, 3-way match, spend analytics, and approval workflows. **Panel:** `/operations` (hosted — see [[build/decisions/decision-2026-06-01-panel-consolidation]]) — Phase 3.
+Purchase requisitions, sourcing POs, supplier catalogue, 3-way match, spend analytics, and approval workflows.
 
-Procurement does NOT have its own panel. Its resources appear in the `/operations` panel under the **Procurement** nav group. Procurement layers on the Operations PO/GRN/supplier entities (hard deps — standalone fallbacks dropped in v2). Integrates with Finance AP for 3-way match (PO → GRN → bill).
+**Panel:** hosted in **/operations** (no panel of its own — see [[../../decisions/decision-2026-06-01-panel-consolidation]]). Its resources appear in the `/operations` panel under the **Procurement** nav group. Procurement layers on Operations' PO/GRN/supplier entities (hard deps) and hooks Finance AP for 3-way match. Phase 3, priority p3.
+
+Opportunities / competitive gaps: [[_opportunities]].
+
+---
+
+## Modules
+
+| Module | Key | Status | Intra-domain deps | Owns tables |
+|---|---|---|---|---|
+| [[approvals/_module\|Procurement Approvals]] | `procurement.approvals` | planned | — (build first) | `proc_approval_rules`, `proc_approval_delegations` |
+| [[requisitions/_module\|Purchase Requisitions]] | `procurement.requisitions` | planned | approvals | `proc_requisitions`, `proc_requisition_items`, `proc_requisition_approvals` |
+| [[supplier-catalogue/_module\|Supplier Catalogue]] | `procurement.catalogue` | planned | — | `proc_catalogue_items`, `proc_supplier_status` |
+| [[purchase-orders/_module\|Purchase Orders (layer)]] | `procurement.purchase-orders` | planned | requisitions, approvals | `proc_po_sourcing` |
+| [[goods-receipt/_module\|3-Way Match]] | `procurement.goods-receipt` | planned | — (ops GRN + finance.ap) | `proc_three_way_matches` |
+| [[spend-analytics/_module\|Spend Analytics]] | `procurement.spend` | planned | requisitions | — (read-only) |
+
+---
+
+## Dependency & flow graph
+
+```mermaid
+graph TD
+    subgraph Procurement
+      APP[approvals]
+      CAT[supplier-catalogue]
+      REQ[requisitions]
+      PO[purchase-orders layer]
+      TWM[3-way match]
+      SPEND[spend-analytics]
+    end
+
+    APP -->|chainFor| REQ
+    APP -->|chainFor| PO
+    CAT -->|picker + SupplierGate| REQ
+    CAT -->|sourcing + SupplierGate| PO
+    REQ -->|convertToPo| PO
+    REQ -->|RequisitionApproved| SPEND
+    PO -->|committed/actual| SPEND
+    CAT -->|savings/maverick| SPEND
+
+    %% cross-domain (dashed = read or event, never a write into another domain)
+    REQ -.read remaining.-> BUD`finance.budgets`
+    PO -.createFromRequisition.-> OPO`operations.purchase-orders`
+    PO ==>|PurchaseApproved event| FIN`finance.ap / operations`
+    TWM -.reads PO+GRN+bill.-> OPO
+    TWM -.reads.-> OGRN`operations.goods-receipt`
+    TWM ==>|ThreeWayMatchResolved / gate| AP`finance.ap`
+
+    classDef ext fill:#1f2937,stroke:#94a3b8,color:#e5e7eb;
+    class BUD,OPO,OGRN,FIN,AP ext;
+```
+
+Dashed = read-only query; double-line = domain event. **No procurement module writes another domain's tables** — [[../../security/data-ownership]].
 
 ---
 
@@ -21,37 +76,26 @@ Procurement does NOT have its own panel. Its resources appear in the `/operation
 
 - **Requisitions** — Purchase Requisitions
 - **Purchase Orders** — POs (procurement layer), Sourcing, 3-Way Match
-- **Suppliers** — Supplier Catalogue, Supplier Status
+- **Suppliers** — Supplier Catalogue, Supplier Status, onboarding portal (public)
 - **Reporting** — Spend Analytics
 - **Settings** — Approval Rules, Delegations
 
 ---
 
-## Modules
+## Cross-Domain Edges (summary)
 
-| Module | Key | Status | Priority | Depends on (intra-domain) |
-|---|---|---|---|---|
-| [[domains/procurement/approvals\|Procurement Approvals]] | `procurement.approvals` | planned | p3 | — (build first) |
-| [[domains/procurement/requisitions\|Purchase Requisitions]] | `procurement.requisitions` | planned | p3 | approvals |
-| [[domains/procurement/supplier-catalogue\|Supplier Catalogue]] | `procurement.catalogue` | planned | p3 | — |
-| [[domains/procurement/purchase-orders\|Purchase Orders (layer)]] | `procurement.purchase-orders` | planned | p3 | requisitions, approvals |
-| [[domains/procurement/goods-receipt\|3-Way Match]] | `procurement.goods-receipt` | planned | p3 | — (ops GRN + finance.ap) |
-| [[domains/procurement/spend-analytics\|Spend Analytics]] | `procurement.spend` | planned | p3 | requisitions |
+| From (procurement) | To | Mechanism | Direction |
+|---|---|---|---|
+| approvals | core.rbac, hr.org | read roles/depts | read |
+| requisitions | finance.budgets | `BudgetService::remaining()` | read (soft) |
+| requisitions | operations.purchase-orders | `createFromRequisition` | call (Ops writes PO) |
+| requisitions | spend / finance | `RequisitionApproved` | event |
+| purchase-orders | approvals, catalogue | chainFor / SupplierGate | read |
+| purchase-orders | finance.ap, operations | `PurchaseApproved` | event |
+| goods-receipt | ops PO/GRN, finance.ap | read docs; `MatchFailedException` gate | read + event (`ThreeWayMatchResolved`) |
+| spend-analytics | requisitions, ops POs, catalogue, budgets | aggregate | read-only (owns no tables) |
 
-## Dependency Graph (intra-domain)
-
-```mermaid
-graph TD
-    approvals --> requisitions
-    requisitions --> purchase-orders
-    approvals --> purchase-orders
-    catalogue --> requisitions
-    requisitions --> spend
-```
-
-## Cross-Domain Edges
-
-No events of its own. Hard cross-domain deps: operations.purchase-orders, operations.goods-receipt, finance.ap (3-way match gate hooks into `ApService::approveBill`). Budget checks via `BudgetService::remaining()`.
+**Data ownership:** every procurement table is owned + written by exactly one module above; all cross-domain effects are read-only or event-driven — [[../../security/data-ownership]].
 
 ---
 
@@ -68,7 +112,11 @@ SORT module-key ASC
 
 ## Key Patterns
 
-- `spatie/laravel-model-states` — requisition status
-- `ApprovalMatrix::chainFor(type, amount, category)` — single routing API for requisitions + POs
-- Blacklisted suppliers blocked everywhere via `SupplierGate`
-- All money integer cents (brick/money)
+- `spatie/laravel-model-states` — requisition status.
+- `ApprovalMatrix::chainFor(type, amount, category)` — single routing API for requisitions + POs.
+- `SupplierGate::isBlocked` — blacklisted suppliers blocked everywhere.
+- All money integer cents (brick/money).
+
+## Related
+
+- [[_opportunities]] · [[../../security/data-ownership]] · [[../operations/_index]] · [[../finance/_index]] · [[../../architecture/patterns/feature-ui-spec]]

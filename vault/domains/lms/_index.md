@@ -5,83 +5,122 @@ domain-key: lms
 panel: lms
 phase: 3
 module-count: 8
-status: active
+build-status: planned
+status: planned
 color: "#4ADE80"
+updated: 2026-06-20
 ---
 
-# Learning & Development
+# Learning & Development (LMS)
 
-Courses, lessons, enrolments, certifications, learning paths, skills matrix, mentoring, and analytics. **Panel:** `/lms` (Green) — Phase 3.
+Courses, lessons, enrolments, certifications, learning paths, skills matrix, mentoring, and analytics. **Panel:** `/lms` (Green) — Phase 3. **Admin side** in Filament; **learner-facing portal** in Vue + Inertia ([[../../frontend/_index|frontend]], ui-strategy row #15).
 
-**Admin side** in Filament. **Learner-facing portal** in Vue + Inertia ([[frontend/_index]], ui-strategy row #15).
+**Displaces**: TalentLMS, Docebo, 360Learning, Cornerstone OnDemand, SAP SuccessFactors Learning.
 
----
-
-## Navigation Groups
-
-- **Courses** — Courses, Course Builder, Learning Paths
-- **Enrolments** — Enrolments, Compliance
-- **Certifications** — Certificates, Templates
-- **Skills** — Skills Matrix
-- **Mentoring** — Mentorships, Mentor Directory
-- **Analytics** — LMS Dashboard
+Every module is exploded to a folder (`<slug>/_module.md` + architecture / data-model / api / security / decisions / unknowns / `features/`). No flat module files remain.
 
 ---
 
 ## Modules
 
-| Module | Key | Status | Priority | Depends on (intra-domain) |
+| Module | Key | Priority | Tables | Depends on (intra-domain) |
 |---|---|---|---|---|
-| [[domains/lms/courses\|Course Builder]] | `lms.courses` | planned | p3 | — (anchor) |
-| [[domains/lms/lessons\|Lessons & Content]] | `lms.lessons` | planned | p3 | courses |
-| [[domains/lms/enrolments\|Enrolments]] | `lms.enrolments` | planned | p3 | courses, lessons |
-| [[domains/lms/certifications\|Certifications]] | `lms.certifications` | planned | p3 | enrolments |
-| [[domains/lms/learning-paths\|Learning Paths]] | `lms.paths` | planned | p3 | courses, enrolments |
-| [[domains/lms/skills-matrix\|Skills Matrix]] | `lms.skills` | planned | p3 | — (courses soft) |
-| [[domains/lms/mentoring\|Mentoring]] | `lms.mentoring` | planned | p3 | — (skills soft) |
-| [[domains/lms/lms-analytics\|LMS Analytics]] | `lms.analytics` | planned | p3 | enrolments |
+| [[courses/_module\|Course Builder]] | `lms.courses` | p3 | 2 | — (anchor) |
+| [[lessons/_module\|Lessons & Content]] | `lms.lessons` | p3 | 3 | courses |
+| [[enrolments/_module\|Enrolments]] | `lms.enrolments` | p3 | 2 | courses, lessons |
+| [[certifications/_module\|Certifications]] | `lms.certifications` | p3 | 2 | enrolments |
+| [[learning-paths/_module\|Learning Paths]] | `lms.paths` | p3 | 3 | courses, enrolments |
+| [[skills-matrix/_module\|Skills Matrix]] | `lms.skills` | p3 | 4 | hr.profiles (courses soft) |
+| [[mentoring/_module\|Mentoring]] | `lms.mentoring` | p3 | 3 | hr.profiles (skills soft) |
+| [[lms-analytics/_module\|LMS Analytics]] | `lms.analytics` | p3 | 0 (read-only) | enrolments |
 
-## Dependency Graph (intra-domain)
+---
+
+## Map of Content
 
 ```mermaid
 graph TD
+    subgraph LMS[Learning & Development]
+        courses[[courses/_module]]
+        lessons[[lessons/_module]]
+        enrolments[[enrolments/_module]]
+        certifications[[certifications/_module]]
+        paths[[learning-paths/_module]]
+        skills[[skills-matrix/_module]]
+        mentoring[[mentoring/_module]]
+        analytics[[lms-analytics/_module]]
+    end
+
     courses --> lessons
     courses --> enrolments
     lessons --> enrolments
     enrolments --> certifications
     courses --> paths
     enrolments --> paths
+    paths --> certifications
     skills --> mentoring
+    courses -. taught-level .-> skills
+    enrolments -. raises .-> skills
     enrolments --> analytics
     certifications --> analytics
     skills --> analytics
+    paths --> analytics
+
+    hr[(hr.profiles)] -. EmployeeHired .-> enrolments
+    hr -. employees .-> skills
+    hr -. employees .-> mentoring
 ```
+
+Solid = hard intra-domain dependency; dotted = soft / cross-domain read/event.
+
+---
 
 ## Cross-Domain Edges
 
-| Direction | Event | Counterpart |
-|---|---|---|
-| Consumes | `EmployeeHired` (hr.profiles) | lms.enrolments mandatory auto-enrol |
+| Direction | Event / API | Counterpart | In module |
+|---|---|---|---|
+| Consumes | `EmployeeHired` | hr.profiles | enrolments (auto-enrol mandatory) |
+| Reads | employees + reporting line | hr.profiles | skills, mentoring |
+| Reads (by) | skill context | hr.performance | skills (read-only display) |
 
-The v1-spec `CourseCompleted`/`CertificationExpiring` events were dropped in v2 — completion side effects (certificate issue, skill raise, path advance) are same-domain direct calls from `EnrolmentService`.
+**No LMS module writes another domain's tables.** Completion side effects (certificate, skill raise, path advance) are **same-domain direct service calls** from `EnrolmentService` — the v1 `CourseCompleted` / `CertificationExpiring` events were dropped. HR integration on completion (feeding training/performance records) is the domain's biggest open cross-domain question — see each module's `unknowns`. Data-ownership rule: [[../../security/data-ownership]].
+
+---
+
+## UI Kinds by Feature
+
+| Kind | Features |
+|---|---|
+| simple-resource | course-management, lesson-content, enrolment-management, certificate-issuance, path-builder, skill-catalogue, mentorship-management, session-logging |
+| custom-page | course-builder, quizzes, skills-heatmap, gap-analysis, mentor-directory |
+| public-vue | learner-portal, public-verification |
+| widget | lms-dashboard, compliance-report |
+| background | auto-enrol-on-hire, path-progression, expiry-renewal |
 
 ---
 
 ## Status Board (Dataview)
 
 ```dataview
-TABLE module-key AS "Key", status AS "Status", priority AS "Priority"
+TABLE module AS "Module", build-status AS "Build", status AS "Status"
 FROM "domains/lms"
 WHERE type = "module"
-SORT module-key ASC
+SORT module ASC
 ```
 
 ---
 
 ## Key Patterns
 
-- `awcodes/filament-tiptap-editor` — lesson content (purified)
-- `spatie/laravel-pdf` — certificates
-- `spatie/laravel-sluggable` — course slugs
-- Learner portal scope: learner sees own data only (token + user paths) — the domain's key isolation test
-- Quizzes graded server-side; correct answers never serialized to client
+- `awcodes/filament-tiptap-editor` — lesson content (purified).
+- `spatie/laravel-pdf` — certificates (queued).
+- `spatie/laravel-sluggable` — course slugs (per-company unique).
+- `spatie/laravel-model-states` — enrolment state machine.
+- Learner portal scope: learner sees own data only (token + user paths) — the domain's key isolation test.
+- Quizzes graded server-side; correct answers never serialized to client.
+- Mentoring session notes pair-private (query-level, not just UI).
+
+## Related
+
+- [[_opportunities|LMS Opportunity Radar]] · [[../../architecture/cross-domain-relations]]
+- [[../../decisions/decision-2026-06-20-full-mapping-conventions]] · [[../../security/data-ownership]]

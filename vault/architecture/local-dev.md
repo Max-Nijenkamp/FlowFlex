@@ -9,6 +9,10 @@ color: "#A78BFA"
 
 # Local Development
 
+> [!warning] Authoritative infra source moved
+> Verified infrastructure facts now live in [[../infrastructure/docker-stack]] + [[../infrastructure/secrets-env]]. Details on this page may predate the 2026-06-20 rebuild — trust the linked note on any conflict.
+
+
 Everything to get a working dev environment and stay unblocked: .env spec, Docker service map, daily commands, and a troubleshooting table for the usual suspects.
 
 ---
@@ -167,7 +171,7 @@ npm run dev                                            # Vite (host machine)
 
 ## Related
 
-- [[domains/foundation/docker-environment]] — the module that builds this stack
+- [[domains/foundation/docker-environment/_module]] — the module that builds this stack
 - [[architecture/deployment]] — production env vars
 - [[architecture/patterns/testing-pattern]] — SQLite test config
 - [[architecture/patterns/seeders]] — LocalDevSeeder contents

@@ -1,19 +1,22 @@
 ---
 type: domain-index
-domain: HR & People
-domain-key: hr
-panel: hr
-phase: 1
-module-count: 15
-status: active
+domain: hr
+build-status: planned
+status: wip
 color: "#4ADE80"
+updated: 2026-07-02
 ---
 
-# HR & People
+# HR & People — Domain MOC
 
-Complete employee lifecycle — hire to offboard. Leave management, payroll tracking, onboarding, performance, compensation, org chart, and workforce planning. **Panel:** `/hr` (Violet). Milestone M2 in [[build/ROADMAP]].
+Complete employee lifecycle — hire to offboard: profiles, org chart, self-service, onboarding, recruitment, leave, time & attendance, shift scheduling, payroll, compensation & benefits, performance, feedback, analytics, workforce planning, DEI. **Panel:** `/hr` (violet). Milestone M2 in [[../../build/ROADMAP]].
 
-**Displaces**: BambooHR, Workday, HiBob, Personio
+**Displaces:** BambooHR, Workday, HiBob, Personio.
+
+> [!warning] Rebuild blueprint — nothing built
+> The HR domain code was **stripped** back to the App + Admin shell (see [[../../decisions/decision-2026-06-19-strip-to-app-admin-shell]]). Every module below is `build-status: planned`. These specs are the **source of truth** for the rebuild — no code exists to verify against. Any earlier "shipped/complete" wording has been softened to intended tense.
+
+Related stack: [[../../infrastructure/_moc|Infrastructure]] · [[../../security/_moc|Security]] · [[../../architecture/event-bus|Event Bus]] · [[../../glossary|Glossary]] · [[_opportunities|Opportunity Radar]].
 
 ---
 
@@ -29,80 +32,76 @@ Complete employee lifecycle — hire to offboard. Leave management, payroll trac
 
 ## Modules
 
-| Module | Key | Status | Priority | Depends on (intra-domain) |
+| Module | Key | Priority | Build status | Depends on (intra-domain) |
 |---|---|---|---|---|
-| [[domains/hr/employee-profiles\|Employee Profiles]] | `hr.profiles` | planned | v1-core | — (anchor) |
-| [[domains/hr/leave-management\|Leave Management]] | `hr.leave` | planned | v1-core | profiles |
-| [[domains/hr/onboarding\|Onboarding]] | `hr.onboarding` | planned | v1-core | profiles |
-| [[domains/hr/payroll\|Payroll]] | `hr.payroll` | planned | v1-core | profiles |
-| [[domains/hr/org-chart\|Org Chart]] | `hr.org` | planned | v1 | profiles |
-| [[domains/hr/employee-self-service\|Employee Self-Service]] | `hr.self-service` | planned | v1 | profiles |
-| [[domains/hr/recruitment\|Recruitment]] | `hr.recruitment` | planned | v1 | profiles |
-| [[domains/hr/performance-reviews\|Performance Reviews]] | `hr.performance` | planned | v1 | profiles |
-| [[domains/hr/time-attendance\|Time & Attendance]] | `hr.time` | planned | v1 | profiles |
-| [[domains/hr/shift-scheduling\|Shift Scheduling]] | `hr.shifts` | planned | v1 | profiles |
-| [[domains/hr/compensation-benefits\|Compensation & Benefits]] | `hr.compensation` | planned | v1 | profiles, payroll |
-| [[domains/hr/hr-analytics\|HR Analytics]] | `hr.analytics` | planned | v1 | profiles |
-| [[domains/hr/workforce-planning\|Workforce Planning]] | `hr.workforce` | planned | v1 | profiles |
-| [[domains/hr/employee-feedback\|Employee Feedback]] | `hr.feedback` | planned | v1 | profiles |
-| [[domains/hr/dei-metrics\|DEI Metrics]] | `hr.dei` | planned | v1 | profiles |
+| [[employee-profiles/_module\|Employee Profiles]] | `hr.profiles` | v1-core | planned | — (anchor) |
+| [[leave-management/_module\|Leave Management]] | `hr.leave` | v1-core | planned | profiles |
+| [[onboarding/_module\|Onboarding]] | `hr.onboarding` | v1-core | planned | profiles |
+| [[payroll/_module\|Payroll]] | `hr.payroll` | v1-core | planned | profiles |
+| [[org-chart/_module\|Org Chart]] | `hr.org` | v1 | planned | profiles |
+| [[employee-self-service/_module\|Employee Self-Service]] | `hr.self-service` | v1 | planned | profiles |
+| [[recruitment/_module\|Recruitment]] | `hr.recruitment` | v1 | planned | profiles |
+| [[performance-reviews/_module\|Performance Reviews]] | `hr.performance` | v1 | planned | profiles |
+| [[time-attendance/_module\|Time & Attendance]] | `hr.time` | v1 | planned | profiles |
+| [[shift-scheduling/_module\|Shift Scheduling]] | `hr.shifts` | v1 | planned | profiles |
+| [[compensation-benefits/_module\|Compensation & Benefits]] | `hr.compensation` | v1 | planned | profiles, payroll |
+| [[hr-analytics/_module\|HR Analytics]] | `hr.analytics` | v1 | planned | profiles |
+| [[workforce-planning/_module\|Workforce Planning]] | `hr.workforce` | v1 | planned | profiles |
+| [[employee-feedback/_module\|Employee Feedback]] | `hr.feedback` | v1 | planned | profiles |
+| [[dei-metrics/_module\|DEI Metrics]] | `hr.dei` | v1 | planned | profiles |
 
-Build order: profiles → org → self-service → leave → onboarding → payroll → rest ([[build/BUILD-ORDER]]).
+Build order: profiles → org → self-service → leave → onboarding → payroll → rest ([[../../build/BUILD-ORDER]]).
+
+---
 
 ## Dependency Graph (intra-domain)
 
 ```mermaid
 graph TD
-    profiles --> org
-    profiles --> self-service
-    profiles --> leave
-    profiles --> onboarding
-    profiles --> payroll
-    profiles --> recruitment
-    profiles --> performance
-    profiles --> time
-    profiles --> shifts
-    profiles --> analytics
-    profiles --> workforce
-    profiles --> feedback
-    profiles --> dei
-    payroll --> compensation
+    profiles[Employee Profiles] --> org[Org Chart]
+    profiles --> selfservice[Self-Service]
+    profiles --> leave[Leave]
+    profiles --> onboarding[Onboarding]
+    profiles --> payroll[Payroll]
+    profiles --> recruitment[Recruitment]
+    profiles --> performance[Performance]
+    profiles --> time[Time & Attendance]
+    profiles --> shifts[Shift Scheduling]
+    profiles --> analytics[HR Analytics]
+    profiles --> workforce[Workforce Planning]
+    profiles --> feedback[Feedback]
+    profiles --> dei[DEI Metrics]
+    payroll --> compensation[Compensation & Benefits]
+    leave -.approved leave.-> shifts
+    leave -.deductions.-> payroll
+    time -.hourly pay.-> payroll
+    recruitment -.hire handoff.-> profiles
+    workforce -.requisitions.-> recruitment
+    performance -.feeds.-> feedback
 ```
+
+_Solid = hard intra-domain dependency; dashed = event/soft integration._
+
+---
 
 ## Cross-Domain Edges
 
 | Direction | Event | Counterpart |
 |---|---|---|
-| Fires | `EmployeeHired`, `EmployeeOffboarded` (profiles) | payroll stub/final pay, onboarding plan, IT (P3) |
+| Fires | `EmployeeHired`, `EmployeeOffboarded` (profiles) | payroll stub/final pay, onboarding plan, IT provisioning (P3) |
 | Fires | `LeaveRequestApproved` (leave) | payroll deductions, shift blocking |
 | Fires | `TimesheetApproved` (time) | payroll hourly pay |
 | Fires | `PayrollRunApproved` (payroll) | finance.ledger journal entry |
 | Consumes | `ExpenseApproved` (finance) | payroll reimbursement |
 
-Payload contracts: [[architecture/event-bus]].
-
----
-
-## Status Board (Dataview)
-
-```dataview
-TABLE module-key AS "Key", status AS "Status", priority AS "Priority"
-FROM "domains/hr"
-WHERE type = "module"
-SORT priority ASC, module-key ASC
-```
+Payload contracts: [[../../architecture/event-bus]].
 
 ---
 
 ## Key Patterns
 
-- [[architecture/patterns/belongs-to-company]] — all HR models are tenant-scoped
-- [[architecture/patterns/interface-service]] — `EmployeeService`, `LeaveService`, `PayrollService`
-- [[architecture/patterns/encryption]] — national ID, DOB, salary, IBAN, DEI attributes
-- [[architecture/packages]] — `spatie/laravel-model-states`, `saade/filament-fullcalendar`
-
----
-
-## Panel Dashboard (2026-06-12)
-
-/hr dashboard widgets shipped: HrStatsWidget (headcount, on leave today, pending leave, open roles), HeadcountChartWidget (12-month line, PHP date grouping), PendingLeaveWidget (approval queue table).
+- [[../../architecture/patterns/belongs-to-company]] — all HR models are tenant-scoped
+- [[../../architecture/patterns/interface-service]] — `EmployeeService`, `LeaveService`, `PayrollService`
+- [[../../architecture/patterns/states]] — employee, leave, timesheet, review, payroll-run state machines
+- [[../../security/encryption]] — national ID, DOB, salary, IBAN, DEI attributes
+- [[../../architecture/packages]] — `spatie/laravel-model-states`, `saade/filament-fullcalendar`, `brick/money`

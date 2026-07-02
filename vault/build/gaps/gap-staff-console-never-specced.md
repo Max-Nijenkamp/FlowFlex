@@ -26,4 +26,4 @@ Blocks selling. Company provisioning only possible via seeder/tinker.
 
 ## Resolution
 
-New module spec [[domains/core/staff-console]] (core.staff-console, v1-core) + built same session: CompanyResource (provisioning flow, module/invoice/user relation managers, suspend), read-only BillingInvoiceResource, platform stats + 12-month revenue widgets.
+New module spec [[domains/core/staff-console/_module]] (core.staff-console, v1-core) + built same session: CompanyResource (provisioning flow, module/invoice/user relation managers, suspend), read-only BillingInvoiceResource, platform stats + 12-month revenue widgets.

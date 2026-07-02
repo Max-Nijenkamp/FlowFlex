@@ -1,6 +1,7 @@
 ---
 type: domain-overview
 color: "#4ADE80"
+build-status: planned
 ---
 
 # Domain Overview

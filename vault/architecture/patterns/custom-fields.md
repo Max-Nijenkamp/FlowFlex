@@ -137,5 +137,5 @@ Wrap in a "Custom Fields" form Section, appended after fixed fields. Table colum
 ## Related
 
 - [[architecture/packages]] — spatie/laravel-schemaless-attributes evaluation
-- [[domains/crm/contacts]] — first consumer
+- [[domains/crm/contacts/_module]] — first consumer
 - [[architecture/patterns/dto-pattern]] — dynamic rules

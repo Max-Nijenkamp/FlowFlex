@@ -39,6 +39,6 @@ Resolved 2026-06-11 via [[build/decisions/decision-2026-06-11-static-analysis-wi
 
 ## Related
 - [[build/decisions/decision-2026-06-11-static-analysis-without-larastan]]
-- [[domains/foundation/laravel-scaffold]]
+- [[domains/foundation/laravel-scaffold/_module]]
 - [[architecture/ci-cd]]
 - [[architecture/patterns/testing-pattern]]

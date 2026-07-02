@@ -254,7 +254,7 @@ Pdf::view('pdfs.invoice', ['invoice' => $invoice])
 
 **Problem**: `pxlrbt/filament-excel` handles Filament table exports, but bulk queue-based exports (export all 50,000 employees for an HRIS migration) need the underlying `maatwebsite/laravel-excel` library for chunked, streaming, and queued export jobs.
 
-**Use in**: Any domain with large data exports. Import processing for [[domains/core/data-import]].
+**Use in**: Any domain with large data exports. Import processing for [[domains/core/data-import/_module]].
 
 ```php
 class EmployeeExport implements FromQuery, WithHeadings, ShouldQueue

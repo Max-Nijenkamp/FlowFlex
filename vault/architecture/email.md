@@ -209,7 +209,7 @@ Never `Mail::send()` in tests — always `Mail::fake()` + `assertQueued()`.
 
 ## Unsubscribe / Preference Management
 
-Each email type has a corresponding entry in `notification_preferences` (see [[domains/core/notifications]]). Users can opt out of non-critical email types via their notification preferences page. Critical emails (password reset, billing, security) are always sent regardless of preferences.
+Each email type has a corresponding entry in `notification_preferences` (see [[domains/core/notifications/_module]]). Users can opt out of non-critical email types via their notification preferences page. Critical emails (password reset, billing, security) are always sent regardless of preferences.
 
 ---
 

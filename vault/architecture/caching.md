@@ -9,6 +9,10 @@ color: "#A78BFA"
 
 # Caching Strategy
 
+> [!warning] Authoritative infra source moved
+> Verified infrastructure facts now live in [[../infrastructure/cache-redis]] (note: a code snippet uses the PHP 8.5 `|>` operator — won't parse on 8.3). Details on this page may predate the 2026-06-20 rebuild — trust the linked note on any conflict.
+
+
 Redis backs all caching in FlowFlex. Three categories: application data cache, session store, and rate limiter state. This file documents what to cache, cache keys, TTLs, and invalidation rules.
 
 ---

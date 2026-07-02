@@ -9,6 +9,10 @@ color: "#A78BFA"
 
 # Domain Panel Reference
 
+> [!warning] Authoritative infra source moved
+> Verified infrastructure facts now live in [[../infrastructure/_moc|Infrastructure]] — only **2 panels** exist today (Admin+App); this 19/21-panel map is the aspirational target. Details on this page may predate the 2026-06-20 rebuild — trust the linked note on any conflict.
+
+
 Per-domain breakdown: panel styling, navigation structure, Filament resource type (CRUD vs custom page), key permissions, and caching notes. Read alongside [[architecture/filament-patterns]].
 
 ---

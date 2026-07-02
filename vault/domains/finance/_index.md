@@ -5,15 +5,19 @@ domain-key: finance
 panel: finance
 phase: 1
 module-count: 13
-status: active
+build-status: planned
+status: wip
 color: "#4ADE80"
+updated: 2026-06-20
 ---
 
 # Finance & Accounting
 
-Complete accounting stack: general ledger, invoicing, expenses, AP/AR, bank reconciliation, budgets, financial reporting, and FP&A features. **Panel:** `/finance` (Emerald). Milestone M3 in [[build/ROADMAP]].
+Complete accounting stack: general ledger, invoicing, expenses, AP/AR, bank reconciliation, budgets, financial reporting, and FP&A. **Panel:** `/finance` (Emerald). Milestone M3 in [[../../build/ROADMAP]].
 
-**Displaces**: Xero, QuickBooks, Sage, FreshBooks
+**Displaces**: Xero, QuickBooks, Sage, FreshBooks.
+
+> Rebuild blueprint. The finance code was stripped to the [[../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; every module below is `build-status: planned`. These specs are the source of truth for the rebuild — nothing here is built, shipped, or tested yet.
 
 ---
 
@@ -29,23 +33,25 @@ Complete accounting stack: general ledger, invoicing, expenses, AP/AR, bank reco
 
 ## Modules
 
-| Module | Key | Status | Priority | Depends on (intra-domain) |
+| Module | Key | Priority | Build-status | Depends on (intra-domain) |
 |---|---|---|---|---|
-| [[domains/finance/general-ledger\|General Ledger]] | `finance.ledger` | planned | v1-core | — (anchor) |
-| [[domains/finance/invoicing\|Invoicing]] | `finance.invoicing` | planned | v1-core | ledger |
-| [[domains/finance/expenses\|Expenses]] | `finance.expenses` | planned | v1-core | ledger |
-| [[domains/finance/bank-accounts\|Bank Accounts]] | `finance.bank` | planned | v1-core | ledger |
-| [[domains/finance/accounts-receivable\|Accounts Receivable]] | `finance.ar` | planned | v1 | invoicing |
-| [[domains/finance/accounts-payable\|Accounts Payable]] | `finance.ap` | planned | v1 | ledger |
-| [[domains/finance/budgets\|Budgets]] | `finance.budgets` | planned | v1 | ledger |
-| [[domains/finance/financial-reporting\|Financial Reporting]] | `finance.reporting` | planned | v1 | ledger |
-| [[domains/finance/tax-management\|Tax Management]] | `finance.tax` | planned | v1 | ledger |
-| [[domains/finance/multi-currency\|Multi-Currency]] | `finance.currency` | planned | v1 | ledger |
-| [[domains/finance/forecasting\|Forecasting]] | `finance.forecasting` | planned | v1 | ledger, budgets |
-| [[domains/finance/cash-flow\|Cash Flow]] | `finance.cashflow` | planned | v1 | invoicing, bank |
-| [[domains/finance/fixed-assets\|Fixed Assets]] | `finance.assets` | planned | v1 | ledger |
+| [[general-ledger/_module\|General Ledger]] | `finance.ledger` | v1-core | planned | — (anchor) |
+| [[invoicing/_module\|Invoicing]] | `finance.invoicing` | v1-core | planned | ledger |
+| [[expenses/_module\|Expenses]] | `finance.expenses` | v1-core | planned | ledger |
+| [[bank-accounts/_module\|Bank Accounts]] | `finance.bank` | v1-core | planned | ledger |
+| [[accounts-receivable/_module\|Accounts Receivable]] | `finance.ar` | v1 | planned | invoicing |
+| [[accounts-payable/_module\|Accounts Payable]] | `finance.ap` | v1 | planned | ledger |
+| [[budgets/_module\|Budgets]] | `finance.budgets` | v1 | planned | ledger |
+| [[financial-reporting/_module\|Financial Reporting]] | `finance.reporting` | v1 | planned | ledger |
+| [[tax-management/_module\|Tax Management]] | `finance.tax` | v1 | planned | ledger |
+| [[multi-currency/_module\|Multi-Currency]] | `finance.currency` | v1 | planned | ledger |
+| [[forecasting/_module\|Forecasting]] | `finance.forecasting` | v1 | planned | ledger, budgets |
+| [[cash-flow/_module\|Cash Flow]] | `finance.cashflow` | v1 | planned | invoicing, bank |
+| [[fixed-assets/_module\|Fixed Assets]] | `finance.assets` | v1 | planned | ledger |
 
-Build order: ledger → invoicing → expenses → bank → AR/AP → budgets/reporting/tax → rest ([[build/BUILD-ORDER]]).
+Build order: ledger → invoicing → expenses → bank → AR/AP → budgets/reporting/tax → rest ([[../../build/BUILD-ORDER]]).
+
+> `financial-reporting` is the canonical reporting note. Any reference to "finance/reporting" resolves to [[financial-reporting/_module]].
 
 ## Dependency Graph (intra-domain)
 
@@ -75,37 +81,29 @@ graph TD
 | Consumes | `PayrollRunApproved` (hr.payroll) | ledger journal entry |
 | Consumes | `DealWon` (crm.deals) | invoicing draft stub |
 
-Payload contracts: [[architecture/event-bus]]. AP additionally consumes PO/GRN events when operations/procurement build (P3 — contracts added then).
-
----
-
-## Status Board (Dataview)
-
-```dataview
-TABLE module-key AS "Key", status AS "Status", priority AS "Priority"
-FROM "domains/finance"
-WHERE type = "module"
-SORT priority ASC, module-key ASC
-```
+Payload contracts: [[../../architecture/event-bus]]. AP additionally consumes PO/GRN events when operations/procurement build (P3 — contracts added then).
 
 ---
 
 ## Absorbed Domains
 
-**FP&A** (formerly standalone) — budgeting and forecasting live in [[domains/finance/budgets]] and [[domains/finance/forecasting]].
+**FP&A** (formerly standalone) — budgeting and forecasting live in [[budgets/_module]] and [[forecasting/_module]].
 
 ---
 
 ## Key Patterns
 
-- `spatie/laravel-model-states` — invoice status, expense status, bill status
-- `lorisleiva/laravel-actions` — simpler operations like `MarkInvoiceAsPaid`, `RecalculateInvoiceTotals`
-- All amounts stored as integers (cents/minor currency units) — never floats ([[build/decisions/decision-2026-06-01-currency-precision]])
-- Currency from [[domains/core/company-settings]] — no per-record currency unless Multi-Currency module active
-- All ledger writes through `LedgerService::post` — posted entries immutable, reversals only
+- `spatie/laravel-model-states` — invoice status, expense status, bill status.
+- `lorisleiva/laravel-actions` — simpler operations like `MarkInvoiceAsPaid`, `RecalculateInvoiceTotals`.
+- All amounts stored as integer minor units (cents) via `brick/money` — never floats ([[../../architecture/packages]]).
+- Currency from [[../core/company-settings/_module]] — no per-record currency unless Multi-Currency module active.
+- All ledger writes through `LedgerService::post` — posted entries immutable, reversals only.
 
 ---
 
-## Panel Dashboard (2026-06-12)
+## Related
 
-/finance dashboard widgets shipped: FinanceStatsWidget (cash position, outstanding AR, overdue count, expenses this month), RevenueExpensesChartWidget (12-month revenue vs expenses, PHP date grouping). All master-data resources (suppliers, tax rates, exchange rates, fixed assets, budgets, forecasts, bills, expenses) gained real forms + create/edit actions in the 2026-06-12 sweep.
+- [[../../architecture/event-bus]]
+- [[../../security/encryption]] — IBAN / bank account encryption (bank-accounts)
+- [[../../glossary]]
+- [[../../decisions/decision-2026-06-19-strip-to-app-admin-shell]]

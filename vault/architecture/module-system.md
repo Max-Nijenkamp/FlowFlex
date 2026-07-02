@@ -173,6 +173,6 @@ Managed in `/admin` by FlowFlex staff. Price changes apply globally at the start
 ## Related
 
 - [[product/pricing-model]]
-- [[domains/core/billing-engine]]
-- [[domains/core/module-marketplace]]
+- [[domains/core/billing-engine/_module]]
+- [[domains/core/module-marketplace/_module]]
 - [[architecture/caching]] — module list caching

@@ -91,7 +91,7 @@ Per-company retention overrides: configurable in Company Settings per data type 
 
 ## Related
 
-- [[domains/core/data-privacy]] — the implementing module
+- [[domains/core/data-privacy/_module]] — the implementing module
 - [[architecture/patterns/encryption]] — erasure of encrypted fields
 - [[product/pricing-model]] — cancellation + 90-day window
 - [[domains/legal/_index]] — DSAR processing surface (Phase 3)

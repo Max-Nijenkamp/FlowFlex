@@ -9,6 +9,10 @@ color: "#A78BFA"
 
 # Tech Stack
 
+> [!warning] Authoritative infra source moved
+> Verified infrastructure facts now live in [[../infrastructure/_moc|Infrastructure]] (PHP floor is **^8.3**, **2** panels not 21). Details on this page may predate the 2026-06-20 rebuild — trust the linked note on any conflict.
+
+
 ---
 
 ## System Diagram

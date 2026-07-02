@@ -6,20 +6,27 @@ panel: crm
 phase: 3
 module-count: 6
 status: active
+build-status: planned
 color: "#4ADE80"
+updated: 2026-06-20
 ---
 
 # Customer Success
 
-Health scores, playbooks, churn risk alerts, NPS, QBR management, and analytics. **Panel:** `/crm` (hosted — see [[build/decisions/decision-2026-06-01-panel-consolidation]]) — Phase 3.
+Health scores, churn-risk alerts, NPS, QBR management, success playbooks, and analytics. CS does **not** have
+its own panel — its resources appear in the `/crm` panel under the **Customer Success** nav group (see
+[[../../build/decisions/decision-2026-06-01-panel-consolidation]]). CS operates on CRM accounts. Phase 3 — not v1.
 
-Customer Success does NOT have its own panel. Its resources appear in the `/crm` panel under the **Customer Success** nav group. CS operates on CRM accounts.
+**Displaces:** Gainsight (SME), ChurnZero, Vitally, Planhat. Differentiators researched in [[_opportunities]].
 
-**Displaces**: Gainsight (SMB), ChurnZero, Vitally
+All six modules are exploded to folder specs: `<slug>/_module.md` + `architecture` + `data-model`(+ERD, where the
+module owns tables) + `api` + `security` + `unknowns` (+ `decisions` where a real decision exists) + `features/<feature>`.
+Only `_index.md` and `_opportunities.md` remain as flat files. Conventions:
+[[../../decisions/decision-2026-06-20-full-mapping-conventions]].
 
 ---
 
-## Navigation Groups (within /crm)
+## Navigation Group (within /crm)
 
 - **Customer Success** — Health Scores, Churn Risk, NPS, QBRs, Playbooks, CS Dashboard
 
@@ -27,29 +34,88 @@ Customer Success does NOT have its own panel. Its resources appear in the `/crm`
 
 ## Modules
 
-| Module | Key | Status | Priority | Depends on (intra-domain) |
+| Module | Key | Tables | Priority | Depends on (intra-domain) |
 |---|---|---|---|---|
-| [[domains/customer-success/health-scores\|Customer Health Scores]] | `cs.health` | planned | p3 | — (anchor) |
-| [[domains/customer-success/churn-risk\|Churn Risk Alerts]] | `cs.churn` | planned | p3 | health |
-| [[domains/customer-success/playbooks\|CS Playbooks]] | `cs.playbooks` | planned | p3 | — (health soft) |
-| [[domains/customer-success/nps\|NPS Surveys]] | `cs.nps` | planned | p3 | — (health soft) |
-| [[domains/customer-success/qbr\|QBR Management]] | `cs.qbr` | planned | p3 | — (health soft) |
-| [[domains/customer-success/success-analytics\|Success Analytics]] | `cs.analytics` | planned | p3 | health |
+| [[health-scores/_module\|Customer Health Scores]] | `cs.health` | 2 | p3 | — (anchor) |
+| [[churn-risk/_module\|Churn Risk Alerts]] | `cs.churn` | 1 | p3 | health |
+| [[nps/_module\|NPS Surveys]] | `cs.nps` | 2 | p3 | — (health soft consumer) |
+| [[qbr/_module\|QBR Management]] | `cs.qbr` | 2 | p3 | — (health soft) |
+| [[playbooks/_module\|CS Playbooks]] | `cs.playbooks` | 4 | p3 | — (health/churn soft) |
+| [[success-analytics/_module\|Success Analytics]] | `cs.analytics` | 0 | p3 | health |
 
-## Dependency Graph (intra-domain)
+---
+
+## Domain Map (MOC)
 
 ```mermaid
 graph TD
-    health --> churn
-    health --> analytics
-    nps --> health
-    churn --> playbooks
+    subgraph CS[Customer Success]
+        health["cs.health<br/>(anchor · 2 tables)"]
+        churn["cs.churn<br/>(1 table)"]
+        nps["cs.nps<br/>(2 tables · public collector)"]
+        qbr["cs.qbr<br/>(2 tables)"]
+        playbooks["cs.playbooks<br/>(4 tables)"]
+        analytics["cs.analytics<br/>(0 tables · read-only)"]
+    end
+
+    nps -->|sentiment signal| health
+    health -->|tier / drop signal| churn
+    churn -->|one-click recovery run| playbooks
+    health -.->|health-drop trigger| playbooks
+    health -->|core metrics| analytics
+    churn -.->|at-risk + recovery| analytics
+    nps -.->|NPS trend| analytics
+    playbooks -.->|effectiveness| analytics
     health --> qbr
+
+    %% cross-domain (read-only unless noted)
+    crm[(crm.contacts<br/>accounts)] -. read .-> health
+    crm -. read .-> nps
+    crm -. read .-> churn
+    crm -. read .-> qbr
+    crm -. read .-> playbooks
+    fin[(finance.invoicing)] -. read .-> health
+    fin -. read .-> analytics
+    sup[(support.tickets)] -. read .-> health
+    sup -. read .-> qbr
+    contracts[(crm.contracts)] -. read .-> playbooks
+    notif[(core.notifications)]
+    health -->|tier-drop alert| notif
+    churn -->|at-risk alert| notif
+    nps -->|detractor alert| notif
 ```
 
-## Cross-Domain Edges
+Solid = hard intra-domain dependency; dotted = soft (degrades gracefully). All cross-domain edges to
+`crm` / `finance` / `support` / `contracts` are **read-only** through those domains' read APIs — CS never
+writes another domain's tables ([[../../security/data-ownership]]).
 
-No events of its own. Signals pulled (soft): support.tickets, finance.invoicing, crm accounts. Health recalc → churn evaluation chained nightly.
+---
+
+## Cross-Domain Edges (summary)
+
+| Direction | Signal / API | Counterpart |
+|---|---|---|
+| Reads | accounts + owner (CSM) | crm.contacts |
+| Reads | payment status / invoice revenue | finance.invoicing |
+| Reads | ticket volume / summary | support.tickets |
+| Reads | renewal dates | crm.contracts |
+| Writes (via events/notifications) | tier-drop / at-risk / detractor alerts, step reminders | core.notifications |
+
+CS fires **no cross-domain domain events** v1 — all effects are CSM notifications via `core.notifications`.
+The nightly **health recalc → churn evaluation** chain is the domain's key sequencing contract.
+
+**Data ownership:** every module writes only its own `cs_*` tables; `cs.analytics` writes nothing at all. See
+[[../../security/data-ownership]].
+
+---
+
+## Key Patterns
+
+- Nightly chained jobs: health recalc → churn evaluation (strict ordering).
+- Signals from inactive soft-dep modules are excluded + weights renormalised (health) / sections omitted (qbr, analytics).
+- Heavy aggregations cached ([[../../architecture/caching]]); NRR uses `brick/money`.
+- Public NPS collector is the domain's only unauthenticated surface — token-scoped, no session ([[nps/security]]).
+- Builds on [[../crm/contacts/_module|crm.contacts]] accounts; CSM = account `owner_id` *(assumed, domain-wide)*.
 
 ---
 
@@ -64,9 +130,9 @@ SORT module-key ASC
 
 ---
 
-## Key Patterns
+## Related
 
-- Nightly chained jobs: health recalc → churn evaluation
-- Signals from inactive modules excluded + weights renormalised
-- Heavy caching of aggregations ([[architecture/caching]])
-- Builds on [[domains/crm/contacts]] accounts; CSM = account owner
+- [[_opportunities|CS Opportunities (competitor gaps)]]
+- [[../../security/data-ownership]] · [[../../architecture/patterns/feature-ui-spec]]
+- [[../../decisions/decision-2026-06-20-full-mapping-conventions]]
+- [[../crm/_index|CRM & Sales (host panel)]]

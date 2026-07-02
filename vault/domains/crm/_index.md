@@ -5,13 +5,18 @@ domain-key: crm
 panel: crm
 phase: 1
 module-count: 16
-status: active
+build-status: planned
+status: wip
 color: "#4ADE80"
+updated: 2026-06-20
 ---
 
 # CRM & Sales
 
-Full customer relationship lifecycle: contacts, deal pipeline, quoting, contracting, activities, email integration, and sales intelligence. **Panel:** `/crm` (Rose). Milestone M4 in [[build/ROADMAP]].
+Full customer relationship lifecycle: leads, contacts, deal pipeline, quoting, contracting, activities, email integration, and sales intelligence. **Panel:** `/crm` (Rose). Milestone M4 in [[_archive/ROADMAP]].
+
+> [!warning] Domain planned for rebuild
+> The CRM code was **stripped back to the app/admin shell** — none of these modules are currently built. Every module below is `build-status: planned`. Any "shipped / complete / live" language surviving in older notes reflects the pre-strip codebase and is being softened to intended tense during the rebuild. See [[decisions/decision-2026-06-19-strip-to-app-admin-shell]] for the strip decision, and [[decisions/decision-2026-06-12-custom-pipelines]] for the pipeline design that predates the strip.
 
 **This panel also hosts the Customer Success domain** (see [[build/decisions/decision-2026-06-01-panel-consolidation]]). CS operates on CRM accounts, so sales + success share one customer panel. CS modules are Phase 3 — not v1.
 
@@ -22,7 +27,7 @@ Full customer relationship lifecycle: contacts, deal pipeline, quoting, contract
 ## Navigation Groups
 
 - **Pipeline** — Deals, Pipeline Board, Forecasting, Quotes, Contracts
-- **Contacts** — Contacts, Companies (Accounts), Segments
+- **Contacts** — Leads, Contacts, Companies (Accounts), Segments
 - **Activities** — Activities, Email Integration, Sequences, Appointment Scheduling, Deal Rooms
 - **Intelligence** — Revenue Intelligence, Referral Program
 - **Settings** — Price Management
@@ -32,25 +37,31 @@ Full customer relationship lifecycle: contacts, deal pipeline, quoting, contract
 
 ## Modules
 
-| Module | Key | Status | Priority | Depends on (intra-domain) |
-|---|---|---|---|---|
-| [[domains/crm/contacts\|Contacts]] | `crm.contacts` | planned | v1-core | — (anchor) |
-| [[domains/crm/deals\|Deals]] | `crm.deals` | planned | v1-core | contacts, pipeline |
-| [[domains/crm/pipeline\|Pipeline Board]] | `crm.pipeline` | planned | v1-core | deals |
-| [[domains/crm/activities\|Activities]] | `crm.activities` | planned | v1-core | contacts |
-| [[domains/crm/quotes\|Quotes]] | `crm.quotes` | planned | v1-core | deals |
-| [[domains/crm/email-integration\|Email Integration]] | `crm.email` | planned | v1 | contacts, activities |
-| [[domains/crm/customer-segments\|Customer Segments]] | `crm.segments` | planned | v1 | contacts |
-| [[domains/crm/sales-sequences\|Sales Sequences]] | `crm.sequences` | planned | v1 | contacts, activities |
-| [[domains/crm/forecasting\|Forecasting]] | `crm.forecasting` | planned | v1 | deals |
-| [[domains/crm/appointment-scheduling\|Appointment Scheduling]] | `crm.scheduling` | planned | v1 | contacts, activities |
-| [[domains/crm/price-management\|Price Management]] | `crm.pricing` | planned | v1 | deals |
-| [[domains/crm/contracts\|Contracts]] | `crm.contracts` | planned | v1 | deals |
-| [[domains/crm/deal-rooms\|Deal Rooms]] | `crm.deal-rooms` | planned | v1 | deals |
-| [[domains/crm/revenue-intelligence\|Revenue Intelligence]] | `crm.revenue-intelligence` | planned | v1 | deals, activities |
-| [[domains/crm/referral-program\|Referral Program]] | `crm.referrals` | planned | v1 | contacts |
+All 16 modules are rebuilt as folder specs (`<slug>/_module.md` + architecture / data-model / security / api / decisions / unknowns / features). Status is uniform `planned` post-strip.
 
-Build order: contacts → deals → pipeline → activities → quotes → rest ([[build/BUILD-ORDER]]).
+| Module | Key | Priority | Build status | Depends on (intra-domain) |
+|---|---|---|---|---|
+| [[domains/crm/contacts/_module\|Contacts]] | `crm.contacts` | v1-core | planned | — (anchor) |
+| [[domains/crm/deals/_module\|Deals]] | `crm.deals` | v1-core | planned | contacts, pipeline |
+| [[domains/crm/pipeline/_module\|Pipeline Board]] | `crm.pipeline` | v1-core | planned | deals |
+| [[domains/crm/activities/_module\|Activities]] | `crm.activities` | v1-core | planned | contacts |
+| [[domains/crm/quotes/_module\|Quotes]] | `crm.quotes` | v1-core | planned | deals |
+| [[domains/crm/leads/_module\|Leads]] | `crm.leads` | v1 | planned | contacts, deals, pipeline (soft) |
+| [[domains/crm/email-integration/_module\|Email Integration]] | `crm.email` | v1 | planned | contacts, activities |
+| [[domains/crm/customer-segments/_module\|Customer Segments]] | `crm.segments` | v1 | planned | contacts |
+| [[domains/crm/sales-sequences/_module\|Sales Sequences]] | `crm.sequences` | v1 | planned | contacts, activities |
+| [[domains/crm/forecasting/_module\|Forecasting]] | `crm.forecasting` | v1 | planned | deals |
+| [[domains/crm/appointment-scheduling/_module\|Appointment Scheduling]] | `crm.scheduling` | v1 | planned | contacts, activities |
+| [[domains/crm/price-management/_module\|Price Management]] | `crm.pricing` | v1 | planned | deals |
+| [[domains/crm/contracts/_module\|Contracts]] | `crm.contracts` | v1 | planned | deals |
+| [[domains/crm/deal-rooms/_module\|Deal Rooms]] | `crm.deal-rooms` | v1 | planned | deals |
+| [[domains/crm/revenue-intelligence/_module\|Revenue Intelligence]] | `crm.revenue-intelligence` | v1 | planned | deals, activities |
+| [[domains/crm/referral-program/_module\|Referral Program]] | `crm.referrals` | v1 | planned | contacts |
+
+> [!note] Leads is UNVERIFIED
+> `crm.leads` was rebuilt from the weakest spec in the vault (~2.9KB flat, missing a Dependencies table + DTOs, prose data model, self-declared assumed copy). It needs a full v2 spec pass before serving as a build blueprint — see [[domains/crm/leads/unknowns|leads/unknowns]].
+
+Build order: contacts → deals → pipeline → activities → quotes → rest ([[_archive/BUILD-ORDER]]).
 
 ## Dependency Graph (intra-domain)
 
@@ -61,6 +72,9 @@ graph TD
     deals --> pipeline
     contacts --> activities
     deals --> quotes
+    contacts --> leads
+    deals --> leads
+    pipeline --> leads
     contacts --> email
     activities --> email
     contacts --> segments
@@ -77,7 +91,7 @@ graph TD
     contacts --> referrals
 ```
 
-(deals ↔ pipeline: pipeline owns the stages table deals reference; the board builds after deals.)
+(deals ↔ pipeline: pipeline owns the stages table deals reference; the board builds after deals. Leads' inbound edges are soft — it degrades to a standalone capture list without deals/pipeline.)
 
 ## Cross-Domain Edges
 
@@ -85,7 +99,7 @@ graph TD
 |---|---|---|
 | Fires | `DealWon`, `DealLost` (deals) | finance.invoicing stub, crm.sequences |
 | Consumes | `QuoteAccepted` — none (within-domain direct call) | |
-| Consumes | `InvoicePaid` (finance) | contacts LTV, sequences upsell |
+| Consumes | `DealWon`, `InvoicePaid` (finance) | crm.sequences (success + upsell), contacts LTV |
 | Consumes | `FormSubmissionReceived` (marketing P3), `EventRegistrationReceived` (events P3) | contacts find-or-create |
 
 Payload contracts: [[architecture/event-bus]].
@@ -95,30 +109,24 @@ Payload contracts: [[architecture/event-bus]].
 ## Status Board (Dataview)
 
 ```dataview
-TABLE module-key AS "Key", status AS "Status", priority AS "Priority"
+TABLE module AS "Module", build-status AS "Build", status AS "Status"
 FROM "domains/crm"
 WHERE type = "module"
-SORT priority ASC, module-key ASC
+SORT module ASC
 ```
 
 ---
 
 ## Absorbed Domains
 
-**Pricing Management** (formerly standalone) — price books and CPQ live in [[domains/crm/price-management]].
+**Pricing Management** (formerly standalone) — price books and CPQ live in [[domains/crm/price-management/_module|price-management]].
 
 ---
 
 ## Key Patterns
 
 - `spatie/laravel-model-states` — deal status, quote status, contract status
-- `lorisleiva/laravel-actions` — `MoveDealToStage`, `MarkActivityComplete`
+- `lorisleiva/laravel-actions` — `ConvertLeadAction`, `MoveDealToStage`, `MarkActivityComplete`
 - Pipeline board = custom Filament page with Reverb broadcast ([[architecture/ui-strategy]] row #3)
-- No separate Lead model — `crm_contacts.lifecycle_stage` (see contacts spec)
+- Leads are a distinct top-of-funnel object (`crm_leads`) that convert into deals; contacts also carry `lifecycle_stage` (see contacts + leads specs)
 - Custom fields on contacts/accounts via [[architecture/patterns/custom-fields]]
-
----
-
-## Panel Dashboard + Sweep (2026-06-12)
-
-/crm dashboard widgets shipped: CrmStatsWidget (open pipeline €, won this month, win rate, new leads), WonDealsChartWidget (12-month won revenue). Custom pipelines live ([[build/decisions/decision-2026-06-12-custom-pipelines]]); Organisations (AccountResource) + lifecycle tabs + attachments shipped. Remaining empty-form resources tracked in [[build/gaps/gap-panel-ux-depth-leftovers]].

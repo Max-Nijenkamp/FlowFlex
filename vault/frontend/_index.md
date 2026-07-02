@@ -66,14 +66,21 @@ The public-facing side of FlowFlex. Separate from Filament panels — custom des
 | Route | Component | Notes |
 |---|---|---|
 | `/login` | `Pages/Auth/Login.vue` | Login form |
-| `/register/invite/{token}` | `Pages/Auth/InviteRegister.vue` | Invite-accept registration — name + password only, email pre-filled. No open self-registration; companies are created by FlowFlex staff in `/admin` (see [[domains/core/invitation-system]]) |
+| `/register/invite/{token}` | `Pages/Auth/InviteRegister.vue` | Invite-accept registration — name + password only, email pre-filled. No open self-registration; companies are created by FlowFlex staff in `/admin` (see [[domains/core/invitation-system/_module]]) |
 | `/forgot-password` | `Pages/Auth/ForgotPassword.vue` | Password reset request |
 | `/reset-password/{token}` | `Pages/Auth/ResetPassword.vue` | Password reset form |
 | `/verify-email` | `Pages/Auth/VerifyEmail.vue` | Email verification |
 
+> [!important] The public site is one of the two workspace-login entry points
+> `/login` here is the **workspace login** for tenant users — the same `web`-guard auth reachable from
+> the marketing site's "Log in". On success the user lands on the **[[../domains/core/workspace-hub/_module|Workspace Hub]]**
+> (domain selector), not a default panel. The **admin** login (internal FlowFlex staff) is separate and
+> not part of this site. Only these two logins exist — see [[../security/authn-authz#Login model — exactly two ways in]]
+> and [[../decisions/decision-2026-06-20-workspace-hub-and-login-model]].
+
 ### Onboarding
 
-No public onboarding pages. New company setup runs through the first-login Setup Wizard — a custom Filament page in `/app` (see [[domains/core/setup-wizard]]). New users join a workspace only via invitation (see [[domains/core/invitation-system]]).
+No public onboarding pages. New company setup runs through the first-login Setup Wizard — a custom Filament page in `/app` (see [[domains/core/setup-wizard/_module]]). New users join a workspace only via invitation (see [[domains/core/invitation-system/_module]]).
 
 ### Portals (Phase 2+)
 

@@ -5,7 +5,14 @@ color: "#6B7280"
 
 # FlowFlex — Build Vault
 
-All-in-one SaaS for SMEs (50–500 employees). 21 active domains, modular activation, per-user per-module pricing.
+> [!important] Canonical entry point moved
+> This vault was rebuilt feature-first on 2026-06-20. Start at **[[00-index/MOC|the Map of Content]]**;
+> live build state is on the **[[00-index/status-board|Status Board]]**. Links below are kept for
+> convenience but the MOC is authoritative.
+
+All-in-one SaaS for SMEs (50–500 employees). **31 defined domains** (2 built — core + foundation;
+HR/Finance/CRM stripped to rebuild blueprints; the rest planned/deferred). Modular activation,
+per-user per-module pricing. Reality snapshot: a platform shell — see [[00-index/status-board]].
 
 ---
 
@@ -17,7 +24,7 @@ All-in-one SaaS for SMEs (50–500 employees). 21 active domains, modular activa
 | Understand the tech stack | [[architecture/tech-stack]], [[architecture/packages]] |
 | Know which UI tech for which screen | [[architecture/ui-strategy]] — the decision table |
 | Know how we work (DoD, gates, deviation protocol) | [[architecture/way-of-working]] |
-| See the milestone roadmap to v1 | [[build/ROADMAP]] |
+| See the milestone roadmap to v1 | [[_archive/ROADMAP]] |
 | Read/write a module spec (v2 format) | [[_meta/spec-template]] |
 | See the whole module dependency graph | [[_meta/module-graph]] |
 | Build Filament panels | [[architecture/filament-patterns]], [[architecture/domain-panels]] |
@@ -34,8 +41,8 @@ All-in-one SaaS for SMEs (50–500 employees). 21 active domains, modular activa
 | REST API design | [[architecture/api-design]] |
 | Production deployment | [[architecture/deployment]] |
 | See all domain specs | [[domains/_overview]] |
-| See the build sequence (start here to build) | [[build/BUILD-ORDER]] |
-| Check build progress | [[build/STATUS]] |
+| See the build sequence (start here to build) | [[_archive/BUILD-ORDER]] |
+| Check build progress | [[00-index/status-board]] |
 | Open bugs/gaps | [[build/gaps/INDEX]] |
 | Architectural decisions | [[build/decisions/INDEX]] |
 | Set up Obsidian graph + plugins | [[_meta/graph-config]] |
@@ -72,7 +79,7 @@ All-in-one SaaS for SMEs (50–500 employees). 21 active domains, modular activa
 
 ## Build Phase Map
 
-Milestones with exit gates: [[build/ROADMAP]]. v1 = all 66 MVP modules.
+Milestones with exit gates: [[_archive/ROADMAP]]. v1 = all 66 MVP modules.
 
 | Phase | Milestones | Domains | Status |
 |---|---|---|---|

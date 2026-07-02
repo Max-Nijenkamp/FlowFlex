@@ -9,6 +9,10 @@ color: "#A78BFA"
 
 # CI/CD Pipeline
 
+> [!warning] Authoritative infra source moved
+> Verified infrastructure facts now live in [[../infrastructure/ci-cd]] (real workflows: lint + a PHP **8.3/8.4/8.5** test matrix). Details on this page may predate the 2026-06-20 rebuild — trust the linked note on any conflict.
+
+
 GitHub Actions pipeline for FlowFlex. Runs on every push and PR. Blocks merge on failure.
 
 ---

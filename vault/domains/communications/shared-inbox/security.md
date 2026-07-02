@@ -1,0 +1,58 @@
+---
+domain: communications
+module: shared-inbox
+type: security
+build-status: planned
+status: wip
+color: "#4ADE80"
+updated: 2026-06-20
+---
+
+# Shared Inbox — Security
+
+## Permissions
+
+| Permission | Grants |
+|---|---|
+| `comms.inbox.view-any` | View conversations + messages |
+| `comms.inbox.reply` | Send outbound replies / internal notes |
+| `comms.inbox.assign` | Assign conversations to team members |
+| `comms.inbox.manage-channels` | Activate / deactivate channels |
+
+See [[../../../security/authn-authz]].
+
+## Access Contract
+
+```php
+public static function canAccess(): bool
+{
+    return Auth::user()->can('comms.inbox.view-any')
+        && BillingService::hasModule('comms.inbox');
+}
+```
+
+## Tenant Isolation
+
+- `comms_channels`, `comms_conversations`, `comms_messages` all carry `company_id` (indexed) via `BelongsToCompany`; `CompanyScope` constrains every query.
+- Inbound webhook processing resolves the channel — and therefore the company — from the provider payload, then runs under `WithCompanyContext` on the queue. See [[../../../security/tenancy-isolation]] and [[../../../architecture/patterns/tenant-context-pitfalls]].
+
+## Webhook & Rate Limiting (medium — [[../../../build/security-audit-2026-06-11]])
+
+- Inbound channel webhook controllers (in the channel modules) must be **signature-verified** and behind a **throttle / rate limiter** to protect the inbound pipeline from flooding.
+- Body content is HTML-purified (`ezyang/htmlpurifier`) before storage.
+
+## Upload Contract (medium)
+
+Message attachments: MIME/extension whitelist, max size, tenant-scoped path `companies/{company_id}/comms/...` via `core.files` (Media Library). See [[../../core/file-storage/_module]].
+
+## Encrypted Fields
+
+None in this module. Channel **secrets** (API keys, OAuth tokens) live in the channel modules' own tables and are encrypted there.
+
+## GDPR
+
+Conversations of erased contacts are unlinked (`contact_id` nulled); bodies retained as company records per [[../../../architecture/data-lifecycle]] *(assumed)*. See [[unknowns]].
+
+## Related
+
+- [[_module]] · [[../../../security/data-ownership]]

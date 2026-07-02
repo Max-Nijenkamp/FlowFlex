@@ -8,6 +8,9 @@ color: "#6B7280"
 
 # Module Graph — Whole-Vault Dependency Map
 
+> [!note] Superseded for build state
+> Per-note `build-status:` frontmatter + the live [[00-index/status-board|Status Board]] are now the source of build state. This graph remains a useful dependency reference but lags the exploded domains (missing `crm.leads`, `core.staff-console`, `core.two-factor-auth`, `core.spotlight`).
+
 One row per module: the machine-readable graph in a single read. **Generated from spec frontmatter — never hand-edit a row without updating the spec; frontmatter is the source of truth.** Rows are added per rewrite wave; `status: stable` until all 173 rows present.
 
 Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · fires/consumes = event class names.
@@ -296,4 +299,4 @@ SORT priority ASC, module-key ASC
 
 - [[_meta/spec-template]] — frontmatter schema feeding this graph
 - [[architecture/event-bus]] — event contracts
-- [[build/BUILD-ORDER]] — build sequencing derived from these edges
+- [[_archive/BUILD-ORDER]] — build sequencing derived from these edges

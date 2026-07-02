@@ -5,76 +5,106 @@ domain-key: it
 panel: it
 phase: 3
 module-count: 6
-status: active
+build-status: planned
+status: wip
 color: "#4ADE80"
+updated: 2026-06-20
 ---
 
 # IT & Security
 
-Asset inventory, IT helpdesk, access provisioning, software licences, MDM integration, and reporting. **Panel:** `/it` (Cyan) — Phase 3.
+Asset inventory, IT helpdesk, HR-driven access provisioning, software licences, MDM device management, and IT reporting. **Panel:** `/it` (Cyan) — Phase 3.
+
+> [!info] Fully mapped to feature level
+> All six modules are exploded into folder specs (`<slug>/_module.md` + `architecture` / `data-model` / `security` / `decisions` / `unknowns` / `features/*`) per [[decisions/decision-2026-06-20-full-mapping-conventions]]. Every feature carries a `## UI` + `## Data` + `## Relations` block; data-ownership boundaries follow [[security/data-ownership]]. Status is uniform `planned` (Phase 3).
+
+**Displaces**: Snipe-IT / AssetSonar (assets), Jira Service Management / Freshservice (helpdesk), BetterCloud / Zluri (SaaS licences), Jamf / Intune (MDM), and the manual HR↔IT provisioning handoff that no single-purpose tool owns.
 
 ---
 
 ## Navigation Groups
 
 - **Assets** — Asset Inventory, Assignments
-- **Helpdesk** — IT Tickets, Queue
-- **Access** — Systems, Access Grants, Access Review
-- **Licences** — Software Licences
-- **Devices** — MDM Devices
+- **Helpdesk** — IT Tickets, Staff Queue
+- **Access** — Systems, Access Grants, Templates, Access Review
+- **Licences** — Software Licences, Seats
+- **Devices** — MDM Devices, Provider Config
 - **Reporting** — IT Dashboard
 
 ---
 
 ## Modules
 
-| Module | Key | Status | Priority | Depends on (intra-domain) |
+| Module | Key | Priority | Build status | Depends on (intra-domain) |
 |---|---|---|---|---|
-| [[domains/it/asset-inventory\|Asset Inventory]] | `it.assets` | planned | p3 | — (anchor) |
-| [[domains/it/helpdesk\|IT Helpdesk]] | `it.helpdesk` | planned | p3 | assets (soft) |
-| [[domains/it/access-provisioning\|Access Provisioning]] | `it.access` | planned | p3 | — |
-| [[domains/it/software-licences\|Software Licences]] | `it.licences` | planned | p3 | — |
-| [[domains/it/mdm-integration\|MDM Integration]] | `it.mdm` | planned | p3 | assets |
-| [[domains/it/it-reporting\|IT Reporting]] | `it.reporting` | planned | p3 | assets |
+| [[domains/it/asset-inventory/_module\|Asset Inventory]] | `it.assets` | p3 | planned | — (anchor) |
+| [[domains/it/helpdesk/_module\|IT Helpdesk]] | `it.helpdesk` | p3 | planned | assets (soft) |
+| [[domains/it/access-provisioning/_module\|Access Provisioning]] | `it.access` | p3 | planned | — |
+| [[domains/it/software-licences/_module\|Software Licences]] | `it.licences` | p3 | planned | — |
+| [[domains/it/mdm-integration/_module\|MDM Integration]] | `it.mdm` | p3 | planned | assets |
+| [[domains/it/it-reporting/_module\|IT Reporting]] | `it.reporting` | p3 | planned | assets + all IT (soft) |
+
+Asset Inventory is the IT anchor — build first. IT Reporting aggregates read-only from every other IT module and owns no tables.
 
 ## Dependency Graph (intra-domain)
 
 ```mermaid
 graph TD
-    assets --> helpdesk
-    assets --> mdm
-    assets --> reporting
-    licences --> reporting
+    assets[it.assets<br/>anchor] --> helpdesk[it.helpdesk]
+    assets --> mdm[it.mdm]
+    assets --> reporting[it.reporting]
+    access[it.access] --> reporting
+    licences[it.licences] --> reporting
     helpdesk --> reporting
-    access --> reporting
     mdm --> reporting
+
+    hr`hr.profiles` -.EmployeeHired.-> access
+    hr -.EmployeeOffboarded.-> access
+    hr -.EmployeeOffboarded.-> assets
+    hr -.EmployeeOffboarded.-> licences
 ```
+
+Reporting's inbound edges are soft — its sections hide when a source module is inactive. Helpdesk's asset link is soft — it degrades to plain tickets without `it.assets`.
 
 ## Cross-Domain Edges
 
-| Direction | Event | Counterpart |
-|---|---|---|
-| Consumes | `EmployeeHired` (hr.profiles) | it.access provisioning checklist |
-| Consumes | `EmployeeOffboarded` (hr.profiles) | it.access de-provision, it.assets return flags, it.licences seat reclaim |
+The IT domain's main event surface is the **HR employee lifecycle**. Each consumer reacts with its **own** listener writing its **own** tables (never HR's) — [[security/data-ownership]].
 
-Payload contracts: [[architecture/event-bus]].
+| Direction | Event | Source | IT consumer → effect (own tables) |
+|---|---|---|---|
+| Consumes | `EmployeeHired` | hr.profiles | `it.access` → `ProvisionOnHireListener` creates pending grants from role template (`it_access_grants`) |
+| Consumes | `EmployeeOffboarded` | hr.profiles | `it.access` → flag active grants for revocation (`it_access_grants`) |
+| Consumes | `EmployeeOffboarded` | hr.profiles | `it.assets` → `FlagAssetsForReturnListener` flags assigned assets (`it_assets`) |
+| Consumes | `EmployeeOffboarded` | hr.profiles | `it.licences` → `FlagSeatsForReclaimListener` flags seats (`it_licence_assignments`) |
+| Reads | employee records | hr.profiles | assignees / requesters / grant holders (read-only) |
+| Soft feed | licence spend | it.licences | finance.expenses — read-only report link |
+| Soft link | financial asset | finance.assets | `it_assets.fin_asset_id` — read-only reference |
+
+Payload contracts: [[architecture/event-bus]]. Ownership rule: [[security/data-ownership]].
 
 ---
 
 ## Status Board (Dataview)
 
 ```dataview
-TABLE module-key AS "Key", status AS "Status", priority AS "Priority"
+TABLE module AS "Module", build-status AS "Build", status AS "Status"
 FROM "domains/it"
 WHERE type = "module"
-SORT module-key ASC
+SORT module ASC
 ```
 
 ---
 
 ## Key Patterns
 
-- `spatie/laravel-model-states` — asset status, ticket status
-- Encrypted MDM API credentials ([[architecture/patterns/encryption]])
-- Three offboarding listeners — the domain's main event surface
-- Integrates with [[domains/hr/onboarding]] and [[domains/finance/fixed-assets]]
+- `spatie/laravel-model-states` — asset lifecycle, ticket status
+- Encrypted MDM API credentials ([[architecture/patterns/encryption]] — `it_mdm_config.api_key`)
+- Three HR-offboarding listeners (assets return, licence seat reclaim, access de-provision) + one HR-hire listener (access provision) — the domain's core cross-domain surface
+- `brick/money` for licence spend + waste; caching for IT Reporting aggregates
+- Integrates with [[domains/hr/onboarding/_module]] and [[domains/finance/fixed-assets/_module]]
+
+## Related
+
+- [[domains/it/asset-inventory/_module]] · [[domains/it/helpdesk/_module]] · [[domains/it/access-provisioning/_module]] · [[domains/it/software-licences/_module]] · [[domains/it/mdm-integration/_module]] · [[domains/it/it-reporting/_module]]
+- [[domains/it/_opportunities|IT Opportunity Radar]]
+- [[decisions/decision-2026-06-20-full-mapping-conventions]] · [[security/data-ownership]] · [[architecture/event-bus]]
