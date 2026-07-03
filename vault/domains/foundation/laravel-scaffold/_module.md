@@ -2,7 +2,7 @@
 domain: foundation
 module: laravel-scaffold
 type: module
-build-status: in-progress
+build-status: complete
 status: unverified
 color: "#4ADE80"
 updated: 2026-07-03

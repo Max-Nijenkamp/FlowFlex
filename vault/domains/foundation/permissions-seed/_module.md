@@ -2,7 +2,7 @@
 domain: foundation
 module: permissions-seed
 type: module
-build-status: planned
+build-status: complete
 status: unverified
 color: "#4ADE80"
 updated: 2026-07-03

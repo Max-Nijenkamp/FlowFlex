@@ -2,7 +2,7 @@
 domain: foundation
 module: test-suite
 type: module
-build-status: planned
+build-status: complete
 status: unverified
 color: "#4ADE80"
 updated: 2026-07-03
