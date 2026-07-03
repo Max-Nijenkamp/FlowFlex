@@ -1,7 +1,7 @@
 ---
 type: decision-index
 color: "#F97316"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Decision Log
@@ -11,6 +11,7 @@ Architectural decisions, one file per decision. Moved from `build/decisions/` to
 
 | Date | Decision | Status |
 |---|---|---|
+| 2026-07-03 | [[decisions/decision-2026-07-03-public-endpoint-limiters\|Public / guest endpoint rate limiters registered]] | decided |
 | 2026-07-02 | [[decisions/decision-2026-07-02-optimistic-locking-standard\|Optimistic locking — platform standard for concurrent edits]] | decided |
 | 2026-07-02 | [[decisions/decision-2026-07-02-spec-template-v3-exploded-format\|Spec template v3 — exploded format, per-feature test checklists, concurrency notes]] | decided |
 | 2026-07-02 | [[decisions/decision-2026-07-02-browser-test-convention\|Browser test convention — automated Playwright smoke suite]] | decided |

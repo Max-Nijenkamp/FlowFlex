@@ -9,7 +9,7 @@ color: "#6B7280"
 # Module Graph — Whole-Vault Dependency Map
 
 > [!note] Superseded for build state
-> Per-note `build-status:` frontmatter + the live [[00-index/status-board|Status Board]] are now the source of build state. This graph remains a useful dependency reference but lags the exploded domains (missing `crm.leads`, `core.staff-console`, `core.two-factor-auth`, `core.spotlight`).
+> Per-note `build-status:` frontmatter + the live [[00-index/status-board|Status Board]] are now the source of build state. This graph remains a dependency reference. Backfilled 2026-07-03 (wave 3b): `crm.leads`, `core.staff-console`, `core.2fa`, `core.spotlight`, `core.hub` — the last three carry *(assumed key)* pending a key-confirmation ADR. Filament artifacts now live in the generated [[artifact-registry]].
 
 One row per module: the machine-readable graph in a single read. **Generated from spec frontmatter — never hand-edit a row without updating the spec; frontmatter is the source of truth.** Rows are added per rewrite wave; `status: stable` until all 173 rows present.
 
@@ -50,6 +50,9 @@ Legend: deps = `depends-on` (hard, build-blocking) · soft = `soft-depends` · f
 | core.privacy | v1 | core.settings, foundation.queues, core.files, core.rbac, core.billing | — | DSARRequestSubmitted | — | dsar_requests, consent_logs |
 | core.i18n | v1 | core.settings | — | — | — | — |
 | core.health | v1 | foundation.queues, foundation.panels | — | — | — | — |
+| core.2fa *(assumed key)* | v1-core | foundation.panels | — | — | — | — (columns on users/admins) |
+| core.spotlight *(assumed key)* | v1 | foundation.panels, core.rbac | — | — | — | — |
+| core.hub *(assumed key)* | v1 | foundation.panels, core.billing, core.rbac | — | — | — | — |
 
 ## HR & People (15)
 

@@ -12,6 +12,9 @@ color: "#A78BFA"
 > [!warning] Authoritative infra source moved
 > Verified infrastructure facts now live in [[../infrastructure/_moc|Infrastructure]] — only **2 panels** exist today (Admin+App); this 19/21-panel map is the aspirational target. Details on this page may predate the 2026-06-20 rebuild — trust the linked note on any conflict.
 
+> [!note] Artifact source of truth moved (2026-07-03)
+> The current per-module artifact map is the generated [[../_meta/artifact-registry|artifact registry]] — one row per Filament artifact scraped from every module's `## Filament Artifacts` section, with kind, blueprint/tweaks, and permission. Keep using this page as a navigation overview only; on any conflict, the registry (and each module's `architecture.md`) wins.
+
 
 Per-domain breakdown: panel styling, navigation structure, Filament resource type (CRUD vs custom page), key permissions, and caching notes. Read alongside [[architecture/filament-patterns]].
 

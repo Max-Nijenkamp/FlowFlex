@@ -87,6 +87,14 @@ RateLimiter::for('panel-action', fn (Request $r) =>
 RateLimiter::for('api-company', fn (Request $r) =>
     Limit::perMinute(1000)->by($r->user()?->company_id) // (assumed — tune with real traffic)
 );
+
+// Public / guest endpoint limiters (registered 2026-07-03, wave 2 reconciliation —
+// see decisions/decision-2026-07-03-public-endpoint-limiters). All per-IP, all *(assumed — tune)*.
+RateLimiter::for('public-booking', fn (Request $r) => Limit::perMinute(10)->by($r->ip())); // CRM scheduling public booking
+RateLimiter::for('public-apply',   fn (Request $r) => Limit::perMinute(10)->by($r->ip())); // recruitment public applications
+RateLimiter::for('help-centre',    fn (Request $r) => Limit::perMinute(60)->by($r->ip())); // KB public views + feedback
+RateLimiter::for('chat-widget',    fn (Request $r) => Limit::perMinute(30)->by($r->ip())); // live-chat public widget
+RateLimiter::for('csat',           fn (Request $r) => Limit::perMinute(10)->by($r->ip())); // public CSAT submissions
 ```
 
 Rate limit state stored in Redis. All rate limiters return `429 Too Many Requests` with `Retry-After` on breach.

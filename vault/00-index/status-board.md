@@ -28,6 +28,13 @@ plugin). Replaces the old hand-maintained `build/STATUS.md` (archived at [[_arch
 | Deferred domains (10) | 💤 deferred (stub index only) |
 | Production infra / CD | ⚠ UNVERIFIED — nothing provisioned |
 
+## Recent sessions
+
+| Date | Scope | Work |
+|---|---|---|
+| 2026-07-03 | All 21 domains | ✅ Vault v3 program waves 2–3b complete: Filament Artifacts + Concurrency on all 172 module specs, per-feature Test Checklists, hub normalization, [[../_meta/artifact-registry\|artifact registry]] generated, module-graph backfilled. Batches 3–4 partly done inline after subagent session-limit outage. |
+| 2026-07-02 | Wave 1 + batch 0 | ADRs, patterns (optimistic-locking, error-pages, page-blueprints, custom-page-checklist), spec-template v3; legal/ai/analytics/workplace propagated |
+
 ## Live queries (populate as `build-status` frontmatter is backfilled)
 
 ```dataview
