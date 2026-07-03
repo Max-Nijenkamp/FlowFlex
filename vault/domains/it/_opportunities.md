@@ -128,6 +128,23 @@ speculative sizing is marked `UNVERIFIED`. Constitution: [[../../decisions/decis
 
 ---
 
+## 2026-07 refresh — package-fit candidates
+
+Wave 3a refresh: ITAM/ITSM table-stakes and SME asks that FlowFlex can ship **with the already-chosen package list** (CLAUDE.md Tech Stack) — no new dependencies. Each maps to an existing module. `UNVERIFIED` on incumbent-complaint frequency.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| **Printable QR + barcode asset label sheets** | Snipe-IT treats QR/1D asset labels as table-stakes; FlowFlex asset record has `asset_tag` but no label print | `simplesoftwareio/simple-qrcode` + `spatie/laravel-pdf` | [[asset-inventory/_module\|assets]] |
+| **Scan asset QR → pre-filled helpdesk ticket** | unified asset+ticket "one record, one pane" (opp #2) | `simplesoftwareio/simple-qrcode` + Filament page | [[helpdesk/_module\|helpdesk]] ← [[asset-inventory/_module\|assets]] |
+| **Access-review evidence PDF export** (SOC 2 / ISO 27001) | "auditors care that reviews happen and are recorded" (opp #9) | `spatie/laravel-pdf` + `spatie/laravel-activitylog` | [[access-provisioning/_module\|access]] |
+| **Renewals / warranty .ics calendar feed** (subscribe) | renewal-surprise prevention, spreadsheet-killer (opp #7) | `spatie/icalendar-generator` | [[software-licences/_module\|licences]] · [[asset-inventory/_module\|assets]] |
+| **Licence waste + reclaim spend export** | 30–50% of seats idle (opp #6) | `brick/money` + `pxlrbt/filament-excel` | [[software-licences/_module\|licences]] |
+| **Refresh-priority report** (age + tickets/device + MDM compliance) | data-driven refresh signals, not blanket 4-year rule (opp #8) `UNVERIFIED` post-v1 | `leandrocfe/filament-apex-charts` (join view, no new pkg) | [[it-reporting/_module\|reporting]] |
+
+Sources: [Snipe-IT Review 2026 — tech.co](https://tech.co/asset-tracking/snipe-it-review) · [Asset Labels — Snipe-IT Docs](https://snipe-it.readme.io/docs/asset-labels) · [Snipe-IT Review 2026 — Goworkwize](https://www.goworkwize.com/blog/snipe-it-review)
+
+---
+
 ## Related
 
 - [[_index|IT & Security MOC]] · [[../../decisions/decision-2026-06-20-full-mapping-conventions]]

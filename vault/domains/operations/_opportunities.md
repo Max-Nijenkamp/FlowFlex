@@ -141,6 +141,22 @@ sizing/claims are marked `UNVERIFIED`. Constitution: [[../../decisions/decision-
 
 ---
 
+## 2026-07 refresh — package-fit candidates
+
+Wave 3a refresh: features SMEs repeatedly ask inventory/PO incumbents for that FlowFlex can ship **with the already-chosen package list** (CLAUDE.md Tech Stack) — no new dependencies. Each maps to an existing module. `UNVERIFIED` on incumbent-complaint frequency (review-site anecdote).
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| Printable SKU + bin/location **barcode & QR label sheets** | SMEs migrating off spreadsheets expect built-in label printing; "built-in label editor essential" `UNVERIFIED` depth | `simplesoftwareio/simple-qrcode` + `spatie/laravel-pdf` | [[inventory/_module\|inventory]] · [[warehouses/_module\|warehouses]] |
+| Opening-balance / item **bulk import (CSV/XLSX)** | first-run migration from spreadsheets or another tool | `maatwebsite/laravel-excel` (+ `pxlrbt/filament-excel`) | [[inventory/_module\|inventory]] |
+| **Stocktake / cycle-count sheet import** → reconcile to system qty | recurring count workflow; cycle-count flagged in [[stock-adjustments/unknowns]] | `maatwebsite/laravel-excel` → `StockService` adjustment | [[stock-adjustments/_module\|adjustments]] |
+| PO PDF **emailed to supplier** + overdue-PO **reminder/escalation** | "automatic reminders + escalation rules keep requests flowing" | `spatie/laravel-pdf` + queued Mailable + scheduled command | [[purchase-orders/_module\|purchase-orders]] |
+| **Spend-by-supplier/category export** | "exportable dashboards — spend by supplier/category/time" | `pxlrbt/filament-excel` | [[operations-reporting/_module\|reporting]] |
+
+Sources: [Best Barcode Inventory Software 2026 — Unicommerce](https://unicommerce.com/blog/best-barcode-inventory-managment-software/) · [Best Barcoding Software 2026 — Business.org](https://www.business.org/finance/inventory-management/best-barcoding-software/) · [Best Purchase Order Software 2026 — Lido](https://www.lido.app/blog/best-purchase-order-software) · [PO Management Software 2026 — Order.co](https://www.order.co/blog/purchasing-process/purchase-order-management-software/) · [Purchase Order Tracking — Moxo](https://www.moxo.com/blog/purchase-order-tracking-software)
+
+---
+
 ## Related
 
 - [[_index|Operations MOC]] · [[../../security/data-ownership]] · [[../../architecture/event-bus]]

@@ -100,6 +100,22 @@ marked UNVERIFIED. Per [[../../decisions/decision-2026-06-20-full-mapping-conven
 - [Pylon — CSM Tools 2026](https://www.usepylon.com/blog/csm-tools-2026)
 - [TrustRadius — CRM Pricing & Cost Guide 2025](https://solutions.trustradius.com/buyer-blog/crm-pricing/)
 
+## 2026-07 refresh — package-fit candidates
+
+Wave 3a refresh: CS asks (especially the export-friction complaints) that FlowFlex can ship **with the already-chosen package list** (CLAUDE.md Tech Stack) — no new dependencies, no ML. Each maps to an existing module. `UNVERIFIED` product bets marked inline.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| **Auto-assembled QBR deck PDF export** | "Success Snapshots — exportable executive summary slides for QBR prep"; [[qbr/features/deck-preparation]] | `spatie/laravel-pdf` | [[qbr/_module\|qbr]] |
+| **NPS response export (CSV/XLSX)** | "exporting survey data … cumbersome multi-step process" is a named friction | `pxlrbt/filament-excel` / `maatwebsite/laravel-excel` | [[nps/_module\|nps]] |
+| **Health-score history + trend export** (not export-only) | ChurnZero "advanced reporting limited to data exports" complaint (opp #11) | `leandrocfe/filament-apex-charts` + `pxlrbt/filament-excel` | [[success-analytics/_module\|analytics]] |
+| **NPS suppression window** (skip if surveyed ≤14 days) | survey fatigue (opp #7); noted in [[nps/unknowns]] | query + `spatie/laravel-settings` (no new pkg) | [[nps/_module\|nps]] |
+| **Renewal-timed survey/health scheduling** | NPS best-timed ~45 days pre-renewal (opp #8); renewal dates in `crm.contracts` | scheduled command (no new pkg) `UNVERIFIED` | [[nps/_module\|nps]] · [[health-scores/_module\|health]] |
+
+Sources: [Best Customer Success Platforms 2026 — Oliv.ai](https://www.oliv.ai/blog/best-customer-success-platforms) · [Gainsight Features 2026 — Oliv.ai](https://www.oliv.ai/blog/gainsight-features) · [Best Customer Health Score Software 2026 — BuildBetter](https://blog.buildbetter.ai/best-customer-health-score-software-2026/)
+
+---
+
 ## Related
 
 - [[_index|Customer Success MOC]] · [[health-scores/_module]] · [[churn-risk/_module]]

@@ -61,3 +61,22 @@ Web-researched (2024–2026) gaps in Asana / Monday / ClickUp / Jira that a lean
 - https://www.wrike.com/professional-services-guide/project-profitability/
 - https://birdviewpsa.com/blog/project-financial-kpis-to-track-in-professional-services/
 - https://trackingtime.co/project-management-software/asana-vs-monday-vs-clickup.html
+
+---
+
+## 2026-07 refresh — package-fit candidates
+
+Second pass focused on features teams migrating off **Asana / Monday / ClickUp / Jira** repeatedly ask
+for that are buildable with the **already-chosen package list** ([[../../architecture/packages]]) — no new
+dependencies. Demand-size claims are directional (`UNVERIFIED`); the package fit is the confident part.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| **Task CSV/Excel import + export** (migration on-ramp; ClickUp users call ClickUp↔ClickUp import/export "one of the biggest needs") `UNVERIFIED` | Teams leaving Asana/Monday/ClickUp with a spreadsheet of work | `maatwebsite/laravel-excel` + `pxlrbt/filament-excel` | [[tasks/_module\|projects.tasks]] |
+| **Task labels / tags** with cross-project filtering | Teams organising work beyond project/section | `spatie/laravel-tags` | [[tasks/_module\|projects.tasks]] |
+| **Timesheet Excel export** (already `report-export` feature — confirm package fit) | Finance/PMs exporting billable hours | `pxlrbt/filament-excel` | [[time-tracking/_module\|projects.time]] |
+| **Milestone / deadline `.ics` calendar feed** (subscribe due dates) | ICs who want deadlines in their calendar app | `spatie/icalendar-generator` | [[milestones/_module\|projects.milestones]] |
+| **Realization-rate / profitability dashboard** (billable vs total, live margin — radar #1/#9) | Services SMEs tracking margin, not gut feel `UNVERIFIED` | `leandrocfe/filament-apex-charts` | [[time-tracking/_module\|projects.time]] |
+| **Gantt PDF export** (client/stakeholder-shareable timeline) | Agencies presenting a plan outside the tool | `spatie/laravel-pdf` | [[gantt/_module\|projects.gantt]] |
+
+Sources: [ClickUp — Feature Request: export a List and re-upload with updated data](https://feedback.clickup.com/feature-requests/p/ability-to-export-a-list-and-then-re-upload-into-that-same-list-with-updated-dat) · [Asana — CSV Importer](https://asana.com/apps/csv-importer) · [TrackingTime — Project Profitability](https://trackingtime.co/project-management-software/project-profitability.html) (2025–26).

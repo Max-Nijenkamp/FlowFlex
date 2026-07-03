@@ -150,3 +150,23 @@ dated; speculative sizing marked `UNVERIFIED`. Constitution: [[../../decisions/d
 ## Related
 
 - [[_index|Legal & Compliance MOC]] · [[../../decisions/decision-2026-06-20-full-mapping-conventions]]
+
+---
+
+## 2026-07 refresh — package-fit candidates
+
+Second pass focused on features SME in-house legal teams migrating off **ContractWorks / Ironclad /
+LinkSquares / DocuSign** repeatedly ask for that are buildable with the **already-chosen package list**
+([[../../architecture/packages]]) — no new dependencies. Demand-size claims are directional (`UNVERIFIED`);
+the package fit is the confident part.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| **Contract full-text search** ("tag, search, and pull up documents in seconds" is ContractWorks' headline) | Anyone hunting a clause/party across the repository | `laravel/scout` (Meilisearch) | [[legal-contracts/_module\|legal.contracts]] |
+| **Contract tag-based organization** (parallels ContractWorks Smart Document Tagging) | Legal ops filtering by type/party/status | `spatie/laravel-tags` | [[legal-contracts/_module\|legal.contracts]] |
+| **Bulk contract import + metadata** (migration on-ramp off ContractWorks/spreadsheets) | Teams importing an existing contract book `UNVERIFIED` | `maatwebsite/laravel-excel` | [[legal-contracts/_module\|legal.contracts]] |
+| **Auditor-ready compliance PDF pack** (readiness % + evidence; radar #9) | Compliance owners assembling an audit pack `UNVERIFIED` | `spatie/laravel-pdf` | [[compliance-registers/_module\|legal.compliance]] |
+| **Policy acknowledgement matrix export** (who-acknowledged-what, Excel; radar #10) | Legal/HR proving attestation coverage | `pxlrbt/filament-excel` | [[policy-library/_module\|legal.policies]] |
+| **DSAR subject-data export pack** (PDF + Excel fulfilment bundle) | DSAR handlers producing a subject response | `spatie/laravel-pdf` + `maatwebsite/laravel-excel` | [[dsar-processing/_module\|legal.dsar]] |
+
+Sources: [ContractWorks — Bulk-Tag Documents with Spreadsheets](https://www.contractworks.com/help/how-to-bulk-tag-documents-with-data-spreadsheets) · [Software Advice — ContractWorks Profile](https://www.softwareadvice.com/contract-management/contractworks-profile/) · [Onit — ContractWorks CLM](https://www.onit.com/products/clm/contractworks/) (2025–26).

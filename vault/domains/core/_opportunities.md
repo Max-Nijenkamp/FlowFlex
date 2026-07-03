@@ -63,6 +63,26 @@ Concrete differentiators for FlowFlex's platform/admin layer, grounded in real 2
 > [!warning] UNVERIFIED
 > The source discusses general Retool/low-code limitations (roadmap-you-don't-control, added latency); framing FlowFlex's in-repo module marketplace as the specific competitive answer is our extrapolation, not a claim made by the source.
 
+## 2026-07 refresh — package-fit candidates
+
+Buildable with the already-chosen stack (no new packages) — a second pass focused on concrete, low-lift holes rather than positioning. Each row: the feature, who asks for it, the in-stack package that covers it, and the target module. `UNVERIFIED` where the demand is inferred rather than directly evidenced.
+
+| Feature | Who asks for it | In-stack package | Target module |
+|---|---|---|---|
+| **Bulk employee invite via CSV** — upload a spreadsheet of email+role, send all invites at once (today `SendInvitationAction` is one-at-a-time in a modal) | Admins onboarding a 50–500-person company or migrating off another tool in one sitting | `maatwebsite/laravel-excel` (+ existing `core.data-import` ImporterRegistry) | `core.invitations` |
+| **Compliance-ready audit-log export** — filtered CSV/PDF of the activity log for auditors / SOC 2 / ISO evidence packs (distinct from #3 hash-chaining) | Risk & compliance teams, external auditors who want an evidence file, not screen access | `pxlrbt/filament-excel` + `spatie/laravel-pdf` | `core.audit-log` |
+| **Slack / Teams notification delivery channel** — route selected notification types to a company Slack/Teams webhook, not just in-app bell + email (extends #5's preference center with a third channel) | Teams who live in Slack/Teams and miss in-app-only alerts | Laravel's built-in Slack notification channel | `core.notifications` |
+| **Per-API-client usage & rate-limit dashboard** — each API key shows call volume, throttle headroom, and recent errors | Developers integrating against the REST API who need to see their own usage before hitting limits | Laravel rate limiter counters + `spatie/laravel-activitylog` | `core.api-clients` |
+| **Self-serve machine-readable data-portability export (GDPR Art. 20)** — one-click "download all our data" in a structured format, distinct from the DSAR *erasure* path in #7 | Tenants exercising portability rights or preparing to switch tools; buyers checking the compliance box | `maatwebsite/laravel-excel` + `spatie/laravel-pdf` (bundle) | `core.data-privacy` |
+
+New high-confidence spec hole from this pass → [[../../build/gaps/gap-feature-core-bulk-invite]] (bulk invite importer).
+
+### Sources (2026-07 refresh)
+
+- Metabase-style export/attachment demand and RBAC billing-scope patterns — [enterpriseready.io RBAC](https://www.enterpriseready.io/features/role-based-access-control/), [osohq RBAC examples](https://www.osohq.com/learn/rbac-examples) (accessed 2026-07-03)
+- Email suppression must not block account notices — [MailerSend suppression management](https://www.mailersend.com/features/suppression-list-management) (accessed 2026-07-03)
+- GDPR portability (Art. 20) is separate from erasure; machine-readable self-serve export is table-stakes — [Transcend — DSAR guide](https://transcend.io/blog/dsar), [ECOMPLY — GDPR SaaS checklist](https://www.ecomply.io/blog-en/gdpr-saas-checklist) (accessed 2026-07-03)
+
 ## Related
 
 - [[../../decisions/decision-2026-06-20-full-mapping-conventions]]

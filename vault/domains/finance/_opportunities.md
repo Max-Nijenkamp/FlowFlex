@@ -148,6 +148,22 @@ speculative sizing/angle is marked `UNVERIFIED`. Constitution:
 
 All rankings `UNVERIFIED` — no customer discovery run yet.
 
+## 2026-07 refresh — package-fit candidates
+
+Features buildable with the **already-chosen** package stack (CLAUDE.md → Tech Stack) — no new
+dependencies. These are the near-term, no-AI complement to the candidates above (Excel/PDF export on all
+three statements is already specced in [[financial-reporting/_module|financial-reporting]]). Rows marked
+`UNVERIFIED` are inferred demand or may already be partly specced — confirm against the module spec first.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| Attach source documents (receipt / contract / bank statement) directly to a bill or journal entry, not a separate folder | Accountants + auditors who want the paper trail on the entry itself | `spatie/laravel-media-library` | [[accounts-payable/_module\|finance.ap]], [[general-ledger/_module\|finance.ledger]] |
+| Human-readable posting / reversal audit log ("who posted or reversed entry X, when") on top of the immutable ledger | SMEs preparing for accountant / audit review `UNVERIFIED` (ledger is already immutable + reversal-only) | `spatie/laravel-activitylog` | [[general-ledger/_module\|finance.ledger]] |
+| Recurring / scheduled invoices + recurring journal templates | SMEs migrating off Xero/QuickBooks expect subscription-style recurring billing out of the box `UNVERIFIED` (continuous-close #12 may already imply this) | Laravel scheduler + queue (Horizon) + `spatie/laravel-model-states` — no new package | [[invoicing/_module\|finance.invoicing]] |
+| Batch customer-statement PDF run (generate + email statements for all overdue accounts at once) | AR clerks chasing many customers each month — extends the single-account statement page already specced | `spatie/laravel-pdf` + queue | [[accounts-receivable/_module\|finance.ar]] |
+
+*Sources: [Export financials to Excel — the accountant handoff format (DiMercurio, 2025)](https://www.dimercurioadvisors.com/learning-center/how-do-i-export-my-financials-from-xero) · [Automate export of financial statements to Excel — recurring SMB request (QuickBooks Community)](https://quickbooks.intuit.com/learn-support/en-us/reports-and-accounting/automate-export-of-financial-statements-to-excel/00/1338896). Confirm each row against the target module spec before building.*
+
 ## Related
 
 - [[_index|Finance & Accounting index]] · [[../../architecture/cross-domain-relations]]

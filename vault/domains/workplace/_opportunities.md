@@ -137,3 +137,23 @@ Sourced + dated; speculative sizing is marked `UNVERIFIED`. Constitution:
 
 - [[_index|Workplace MOC]] - [[../../security/data-ownership]] - [[../../architecture/module-system]]
 - [[../../decisions/decision-2026-06-20-full-mapping-conventions]]
+
+---
+
+## 2026-07 refresh — package-fit candidates
+
+Second pass focused on features SMEs migrating off **Envoy / Robin / Skedda / SwipedOn** repeatedly ask
+for that are buildable with the **already-chosen package list** ([[../../architecture/packages]]) — no new
+dependencies. Demand-size claims are directional (`UNVERIFIED`); the package fit is the confident part.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| **Room booking `.ics` invites** (currently `*(assumed)*` in the room spec — promote to first-class) | Bookers who want the meeting in their calendar | `spatie/icalendar-generator` | [[room-booking/_module\|workplace.rooms]] |
+| **Visitor QR pre-registration → fast kiosk check-in** (scan-to-check-in; also sidesteps the encrypted-visitor in-memory lookup) | Reception + pre-registered guests; Envoy/SwipedOn QR check-in is table stakes `UNVERIFIED` | `simplesoftwareio/simple-qrcode` | [[visitor-management/_module\|workplace.visitors]] |
+| **Visitor badge PDF** (already `GenerateVisitorBadgeJob` — confirm package fit) | Security wanting printed/photo badges | `spatie/laravel-pdf` | [[visitor-management/_module\|workplace.visitors]] |
+| **Utilisation analytics charts** (booked-vs-checked-in occupancy; radar #3) | Facilities leads reading real occupancy | `leandrocfe/filament-apex-charts` | [[workplace-analytics/_module\|workplace.analytics]] |
+| **Utilisation / log export** (Envoy exports "arrive split across tabs"; radar #10) | Facilities avoiding a spreadsheet reshuffle project | `pxlrbt/filament-excel` | [[workplace-analytics/_module\|workplace.analytics]] |
+| **Room/desk amenity tags + filter** ("find a room with a projector / a standing desk") | Employees booking by feature, not just name `UNVERIFIED` | `spatie/laravel-tags` | [[room-booking/_module\|workplace.rooms]] / [[desk-booking/_module\|workplace.desks]] |
+| **Maintenance photo attachments** (already a cross-domain edge — confirm package fit) | Reporters attaching a photo of the fault | `spatie/laravel-media-library` | [[maintenance/_module\|workplace.maintenance]] |
+
+Sources: [SwipedOn — Features (QR check-in, badge print, NDA)](https://www.swipedon.com/features) · [Envoy — Visitor NDA](https://envoy.com/features/visitor-nda) · [Envoy — Visitors product](https://envoy.com/products/visitors) (2025–26).

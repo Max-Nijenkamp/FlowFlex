@@ -61,6 +61,21 @@ Web-researched gaps (2024–2026) in Eventbrite / Cvent / Hopin (and the wider e
 - [Ticket Fairy — Navigating Global Data Privacy in Event Tech 2026](https://branded.ticketfairy.com/blog/navigating-global-data-privacy-in-event-tech-gdpr-ccpa-compliance-strategies-for-2026)
 - [GDPR Local — GDPR Compliance for Events](https://gdprlocal.com/gdpr-compliance-for-events/)
 
+## 2026-07 refresh — package-fit candidates
+
+Features buildable with the **already-chosen** package stack (CLAUDE.md → Tech Stack) — no new
+dependencies. Attendee *export* (CSV/Excel) is already specced in
+[[registrations/features/registration-admin|registration-admin]]; the *import* side is not (gap filed).
+Rows marked `UNVERIFIED` are inferred demand or may already be partly specced — confirm against the spec.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| Bulk attendee / guest-list import (upload CSV → create registrations → email QR tickets) | Eventbrite organizers repeatedly want to add many attendees at once instead of one-at-a-time; third-party tools exist purely to bulk-add to a guest list | `maatwebsite/laravel-excel` via [[../core/data-import/_module\|core.data-import]] + `simplesoftwareio/simple-qrcode` + `spatie/laravel-pdf` | [[registrations/_module\|events.registrations]], [[tickets/_module\|events.tickets]] |
+| On-demand badge PDF (name + QR) printed at the check-in desk | Planners avoiding pre-printed no-show waste (radar #7) — no new package needed | `spatie/laravel-pdf` + `simplesoftwareio/simple-qrcode` | [[registrations/_module\|events.registrations]] (check-in) `UNVERIFIED` (product decision) |
+| "Add to calendar" `.ics` for confirmed registrants (attaches on the confirmation email) | Attendees wanting the event auto-added to Google/Outlook | `spatie/icalendar-generator` | [[registrations/_module\|events.registrations]], [[events/_module\|events.events]] `UNVERIFIED` (may be specced at event level) |
+
+*Sources: [Add multiple attendees at once — organizers ask, Eventbrite has no bulk-add (Quora)](https://www.quora.com/Is-there-a-way-in-Eventbrite-to-add-multiple-attendees-to-an-event-without-doing-it-one-at-a-time) · [Import attendees from a text/CSV file to a guest list (IgniteTalks, GitHub)](https://github.com/IgniteTalks/AddAttendeesToEventBrite) · [Upload a list of attendees & email QR tickets (Event Smart)](https://eventsmart.com/features/attendee-importer/). Confirm each row against the target module spec before building.*
+
 ## Related
 
 - [[_index|Events MOC]] · [[registrations/features/check-in|Check-In]] · [[sponsors/features/deliverables|Deliverables]] · [[event-analytics/_module|Event Analytics]]

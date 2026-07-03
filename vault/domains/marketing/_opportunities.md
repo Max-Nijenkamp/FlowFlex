@@ -71,6 +71,21 @@ Incumbents lead with visual journey/customer-journey builders (ActiveCampaign 90
 - [Perspective: best AI landing-page builders (2026)](https://www.perspective.co/article/ai-landing-page-builder)
 - [Leadpages: AI Landing Page Builder with built-in A/B & CRO](https://leadpages.com/)
 
+## 2026-07 refresh — package-fit candidates
+
+Features buildable with the **already-chosen** package stack (CLAUDE.md → Tech Stack) — no new
+dependencies. Note: unlike CRM/finance/e-commerce, Marketing does **not** yet register an importer with
+[[../core/data-import/_module|core.data-import]], so the migration on-ramp is a genuine hole (gap filed).
+Rows marked `UNVERIFIED` are inferred demand or may already be partly specced.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| Subscriber-list CSV/Excel import (register a `marketing.audience` importer with `core.data-import`) | Teams migrating off Mailchimp/ActiveCampaign — Mailchimp export is a ZIP of CSVs that has to land somewhere; audiences currently only materialise from CRM segments, so a raw imported list has no home | `maatwebsite/laravel-excel` via [[../core/data-import/_module\|core.data-import]] | [[campaigns/_module\|marketing.campaigns]] (audience) |
+| Export form submissions & campaign recipient lists to Excel | Marketers reconciling leads offline or handing lists to sales `UNVERIFIED` (whether specced on forms) | `pxlrbt/filament-excel` | [[forms/_module\|marketing.forms]], [[campaigns/_module\|marketing.campaigns]] |
+| Campaign performance & funnel charts (opens / clicks / conversions over time) as panel widgets | Marketers wanting Mailchimp-style reports natively `UNVERIFIED` (analytics module may cover) | `leandrocfe/filament-apex-charts` | [[marketing-analytics/_module\|marketing.analytics]] |
+
+*Sources: [Export your Mailchimp list — ZIP of CSVs, migrate to a new tool (Mailsoftly, 2026)](https://mailsoftly.com/blog/how-to-export-mailchimp-list/) · [Import contacts to a new platform via CSV (Mailchimp Help)](https://mailchimp.com/help/import-subscribers-to-a-list/). Confirm each row against the target module spec before building.*
+
 ## Related
 
 - [[_index|Marketing MOC]] · [[../../decisions/decision-2026-06-20-full-mapping-conventions]] · [[../../security/data-ownership]]

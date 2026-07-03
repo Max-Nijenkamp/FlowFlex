@@ -41,6 +41,24 @@ domain. Sourced + dated; speculative items marked UNVERIFIED. Convention:
 - https://filamentmastery.com/articles/manage-laravel-filament-spatie-permissions-on-multi-tenant-panel/ · https://github.com/spatie/laravel-permission/issues/1744 (2024)
 - https://filamentphp.com/docs/3.x/panels/tenancy · https://dev.to/mlz/filament-v3-multi-tenancy-form-component-scoping-4ho8 · https://github.com/filamentphp/filament/discussions/8059
 
+## 2026-07 refresh — package-fit candidates
+
+Second pass, scoped to what the already-chosen stack can build (no new packages). Each row: the feature, who asks for it, the in-stack package, and the target module. `UNVERIFIED` where demand is inferred.
+
+| Feature | Who asks for it | In-stack package | Target module |
+|---|---|---|---|
+| **Complaint + soft-bounce suppression list** — today [[email-setup/features/bounce-webhook\|bounce-webhook]] only flags **hard** bounces on a `users` boolean; spam-complaint and repeated-soft-bounce suppression (isolated transactional vs marketing) is out of scope | Any team sending transactional mail — Gmail (≤0.3%) and Microsoft (May 2025) now *reject* senders over the complaint threshold, so unsuppressed complaints degrade delivery for everyone | Laravel mailer + Resend webhook events (no new package; add a suppression table) | `foundation.email` |
+| **Failed-job push alerting (Slack/email)** — Horizon alerts on wait-time, not on failures; hook `Queue::failing` to push an alert (concretises the [[queue-workers/unknowns\|queue-workers]] gap) | Ops teams who today discover a broken listener days later via missing data | Laravel `Queue::failing` event + Slack notification channel | `foundation.queues` |
+| **Per-tenant queue metrics** — throughput / wait / failure counts *per company*, not just the global Horizon dashboard | Ops on a busy multi-tenant instance needing to see which tenant's jobs are backing up | `laravel/pulse` (already in stack) custom card | `foundation.queues` |
+| **Scheduled off-site backup + restore-verification** — automated backup with a periodic test-restore so DR is proven, not assumed | Admins/ops wanting DR confidence and a downloadable restore point | `spatie/laravel-backup` (already in stack) + scheduler | `foundation.queues` (scheduled) |
+
+New high-confidence spec hole from this pass → [[../../build/gaps/gap-feature-foundation-email-suppression]] (complaint/soft-bounce suppression).
+
+### Sources (2026-07 refresh)
+
+- Suppression must cover complaints + soft-bounce thresholds and isolate transactional from marketing; Gmail 0.3% / Microsoft May-2025 enforcement — [MessageGears — suppression best practices](https://support.messagegears.com/hc/en-us/articles/37304213923213-Email-Deliverability-Best-Practices-Suppression-Lists-and-Blocklists), [MailerSend — suppression management](https://www.mailersend.com/features/suppression-list-management) (accessed 2026-07-03)
+- Horizon alerts on wait-time not failures; failed-job alerting needs an event hook — [Horizon issue #341](https://github.com/laravel/horizon/issues/341), [spatie/laravel-failed-job-monitor](https://github.com/spatie/laravel-failed-job-monitor) (pattern reference, accessed 2026-07-03)
+
 ## Related
 
 - [[_index|Foundation]] · [[../../decisions/decision-2026-06-20-full-mapping-conventions]]

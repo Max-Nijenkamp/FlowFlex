@@ -131,3 +131,22 @@ All rankings `UNVERIFIED` — no customer discovery run yet.
 
 - [[_index|LMS index]] · [[../../architecture/cross-domain-relations]]
 - [[../../decisions/decision-2026-06-20-full-mapping-conventions]]
+
+---
+
+## 2026-07 refresh — package-fit candidates
+
+Second pass focused on features SMEs migrating off **TalentLMS / Docebo / Cornerstone / SAP** repeatedly
+ask for that are buildable with the **already-chosen package list** ([[../../architecture/packages]]) — no
+new dependencies. Demand-size claims are directional (`UNVERIFIED`); the package fit is the confident part.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| **Bulk enrolment spreadsheet import** (already specced as `BulkEnrolData` — confirm package fit) | Admins onboarding a cohort; Docebo/TalentLMS both CSV-enrol | `maatwebsite/laravel-excel` | [[enrolments/_module\|lms.enrolments]] |
+| **Per-learner certificate PDF** (already a key pattern; radar #1 — cert tied to holder) | Compliance teams tracking who holds what | `spatie/laravel-pdf` | [[certifications/_module\|lms.certifications]] |
+| **Compliance report export** (overdue-mandatory list → Excel/PDF audit pack; radar #11) | HR/compliance owners chasing overdue training `UNVERIFIED` | `pxlrbt/filament-excel` + `spatie/laravel-pdf` | [[lms-analytics/_module\|lms.analytics]] |
+| **Course catalogue tags + topic filter** | Learners/admins filtering a growing catalogue | `spatie/laravel-tags` | [[courses/_module\|lms.courses]] |
+| **Skills heatmap / gap chart** (already a `skills-heatmap` custom page — confirm chart lib) | L&D leads reading team skill coverage | `leandrocfe/filament-apex-charts` | [[skills-matrix/_module\|lms.skills]] |
+| **Public certificate QR verification** (scan → verify authenticity; `public-verification` feature exists) | Third parties / auditors verifying a cert `UNVERIFIED` | `simplesoftwareio/simple-qrcode` | [[certifications/_module\|lms.certifications]] |
+
+Sources: [Docebo — Enrolling users via CSV](https://help.docebo.com/hc/en-us/articles/9298423851794-Enrolling-users-in-courses-and-sessions-using-CSV-files) · [TalentLMS — Import/Export data](https://help.talentlms.com/hc/en-us/articles/360018689774-How-to-import-export-data-) · [Docebo — Certifications & retraining app](https://help.docebo.com/hc/en-us/articles/360020083240-Managing-the-Certifications-and-retraining-app) (2025–26).

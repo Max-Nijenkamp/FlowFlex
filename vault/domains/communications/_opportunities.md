@@ -70,6 +70,23 @@ Sources: [eWay-CRM communication gaps](https://www.eway-crm.com/blog/business/fr
 
 ---
 
+## 2026-07 refresh — package-fit candidates
+
+Wave 3a refresh: omnichannel-inbox and internal-comms asks that FlowFlex can ship **with the already-chosen package list** (CLAUDE.md Tech Stack) — no new dependencies. Each maps to an existing module. `UNVERIFIED` on incumbent-complaint frequency.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| **Send-later / scheduled replies in the inbox** | scheduled send under-served in SMB inboxes; broadcast already schedules | queue `delay()` + `spatie/laravel-model-states` (no new pkg) | [[shared-inbox/_module\|inbox]] · [[broadcast/_module\|broadcast]] |
+| **Cross-channel saved replies / templates** | "reuse templates on any channel" | owned templates table (WhatsApp-template pattern, no new pkg) | [[shared-inbox/_module\|inbox]] · [[automations/_module\|automations]] |
+| **Per-user quiet hours + daily digest** | notification fatigue, calm-by-default (opp #1) | `spatie/laravel-settings` (prefs) + scheduled digest job | [[internal-messaging/_module\|internal]] |
+| **Broadcast recipient CSV import** (external lists) | one-off blasts to non-CRM contacts; audiences today only from CRM segments / HR groups | `maatwebsite/laravel-excel` | [[broadcast/_module\|broadcast]] |
+| **Channel-spend export + monthly cap alert** | cost transparency vs Twilio's "complex cost stack" (opp #8) | `brick/money` + `pxlrbt/filament-excel` + scheduled alert | [[sms-channel/_module\|sms]] · [[comms-analytics/_module\|analytics]] |
+| **Platform-wide opt-out enforcement** | STOP/consent gaps when enforced per-channel (opp #9) | `OptOutService` (no new pkg) | [[sms-channel/_module\|sms]] · [[broadcast/_module\|broadcast]] |
+
+Sources: [Best Shared Inbox Software 2026 — Alfred](https://get-alfred.ai/blog/best-shared-inbox-software) · [Best Shared Inbox with AI 2026 — Crisp](https://crisp.chat/en/blog/best-shared-inbox-software/) · [Omnichannel Shared Inbox — Heymarket](https://www.heymarket.com/product/omnichannel-shared-inbox/) · [9 Top Shared Inbox Software 2026 — Featurebase](https://www.featurebase.app/blog/shared-inbox-software)
+
+---
+
 ## Related
 
 - [[_index|Communications MOC]] · [[../../product/positioning]] · [[whatsapp/_module]] · [[automations/_module]] · [[shared-inbox/_module]]

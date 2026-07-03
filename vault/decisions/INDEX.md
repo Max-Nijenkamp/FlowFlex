@@ -11,6 +11,7 @@ Architectural decisions, one file per decision. Moved from `build/decisions/` to
 
 | Date | Decision | Status |
 |---|---|---|
+| 2026-07-03 | [[decisions/decision-2026-07-03-pos-kiosk-ui-row\|Kiosk / scan-station UI-strategy row (#20) — shared-terminal scan/touch surfaces]] | proposed |
 | 2026-07-03 | [[decisions/decision-2026-07-03-public-endpoint-limiters\|Public / guest endpoint rate limiters registered]] | decided |
 | 2026-07-02 | [[decisions/decision-2026-07-02-optimistic-locking-standard\|Optimistic locking — platform standard for concurrent edits]] | decided |
 | 2026-07-02 | [[decisions/decision-2026-07-02-spec-template-v3-exploded-format\|Spec template v3 — exploded format, per-feature test checklists, concurrency notes]] | decided |

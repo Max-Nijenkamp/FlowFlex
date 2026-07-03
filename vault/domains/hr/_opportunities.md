@@ -139,3 +139,24 @@ better" — valuable but more easily matched.
 
 - [[_index|HR Domain MOC]] · [[../../decisions/decision-2026-06-20-full-mapping-conventions]]
 - [[compensation-benefits/_module]] · [[hr-analytics/_module]] · [[workforce-planning/_module]] · [[employee-feedback/_module]] · [[onboarding/_module]] · [[employee-self-service/_module]]
+
+---
+
+## 2026-07 refresh — package-fit candidates
+
+Second pass focused on features SMEs migrating off **BambooHR / Personio / HiBob / Gusto** repeatedly
+ask for that are buildable with the **already-chosen package list** ([[../../architecture/packages]]) — no
+new dependencies. Each row names the feature, who asks, the package that covers it, and the target module.
+Demand-size claims are directional (`UNVERIFIED`); the package fit is the confident part.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| Bulk employee **spreadsheet import + export** (migration on-ramp; BambooHR importer + Personio bulk export both leave gaps — payroll docs / history excluded) | HR admins moving off BambooHR/Personio `UNVERIFIED` on size | `maatwebsite/laravel-excel` + `pxlrbt/filament-excel` (export half; import via soft-dep `core.data-import`) | [[employee-profiles/_module\|hr.profiles]] |
+| **Org-chart PDF export** (printable / shareable board pack) | Leadership + HR wanting a shareable chart, not a screen-only tree | `spatie/laravel-pdf` | [[org-chart/_module\|hr.org]] |
+| **Document + certificate expiry reminders** (right-to-work, licences, mandatory certs) — a named HR-DMS staple | Compliance-minded HR teams `UNVERIFIED` | `spatie/laravel-media-library` (store) + scheduled reminder → `core.notifications` | [[employee-profiles/_module\|hr.profiles]] / [[employee-self-service/_module\|hr.self-service]] |
+| **Team leave calendar `.ics` subscription** (leave shows in Outlook/Google) | Managers who live in their calendar | `spatie/icalendar-generator` | [[leave-management/_module\|hr.leave]] |
+| **Reporting-line tree-select** for org editing | HR admins editing hierarchy without a flat dropdown | `codewithdennis/filament-select-tree` | [[org-chart/_module\|hr.org]] |
+| **Custom per-company employee fields** (fields BambooHR gates to Pro/Elite; radar #2 package-fit slice) | SMEs with non-standard people data `UNVERIFIED` | `spatie/laravel-schemaless-attributes` | [[employee-profiles/_module\|hr.profiles]] |
+| **Flexible analytics export** (Excel + PDF) — reporting rigidity is the top incumbent complaint (radar #12) | Anyone hitting BambooHR/Personio report limits | `pxlrbt/filament-excel` + `spatie/laravel-pdf` | [[hr-analytics/_module\|hr.analytics]] |
+
+Sources: [Coefficient — Import/Export BambooHR Data](https://coefficient.io/import-and-export-bamboohr-data) · [Personio Community — Missing Payroll Docs in Bulk Export](https://community.personio.com/employee-data-documents-86/missing-payroll-documents-in-personio-bulk-export-any-workarounds-4458) · [PeopleManagingPeople — Best HR Document Management Software 2026](https://peoplemanagingpeople.com/tools/best-hr-document-management-software/) · [Expiration Reminder — Document Expiration Tracking](https://www.expirationreminder.com/) (2025–26).

@@ -86,6 +86,22 @@ Procurement teams increasingly **expect punchout into SAP Ariba / Coupa / Oracle
 - [Shopify changelog — don't collect tax for B2B](https://changelog.shopify.com/posts/don-t-collect-tax-option-now-available-for-b2b) · [BSS B2B tax-exempt docs](https://docs-shpf.bsscommerce.com/b2b-wholesale-solution/tax/tax-exempt/tax-exempt-for-eligible-customers-and-orders)
 - [HelloRep best cart-abandonment solutions 2026](https://www.hellorep.ai/blog/best-shopping-cart-abandonment-solutions) · [Atwix B2B ecommerce flows 2026](https://www.atwix.com/b2b-ecommerce/best-practices-10-flows/) · [commercetools punchout explained](https://commercetools.com/blog/eprocurement-integration-punchout-explained-for-b2b) · [Shopify — how modern B2B distributors scale 2026](https://www.shopify.com/enterprise/blog/b2b-distributors)
 
+## 2026-07 refresh — package-fit candidates
+
+Features buildable with the **already-chosen** package stack (CLAUDE.md → Tech Stack) — no new
+dependencies. Bulk product import already routes through [[../core/data-import/_module|core.data-import]]
+(products register an importer), so these are the additive, no-AI complement. Rows marked `UNVERIFIED` are
+inferred demand or may already be partly specced — confirm against the module spec first.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| Bulk **price / promo** update via Excel round-trip (export selected products → edit prices offline → re-import) | Merchants running seasonal repricing; Shopify's product CSV silently resets inventory when unrelated fields change and caps files at 15 MB | `maatwebsite/laravel-excel` via [[../core/data-import/_module\|core.data-import]] | [[products/_module\|ecommerce.products]], [[promotions/_module\|ecommerce.promotions]] |
+| Packing slip + order-invoice PDF (printable per order or batched for a fulfilment run) | Merchants fulfilling orders who need a printable slip/invoice `UNVERIFIED` (whether specced) | `spatie/laravel-pdf` + queue | [[orders/_module\|ecommerce.orders]] |
+| Multi-image product & variant galleries with ordering | Storefront needing several images per product/variant `UNVERIFIED` (likely partly specced) | `spatie/laravel-media-library` | [[products/_module\|ecommerce.products]], [[variants/_module\|ecommerce.variants]] |
+| Product tagging + tag-based collections ("sale", "new-in", "clearance") without hard categories | Merchants curating storefront collections beyond the category tree `UNVERIFIED` | `spatie/laravel-tags` | [[products/_module\|ecommerce.products]] |
+
+*Sources: [Shopify bulk product CSV — 15 MB cap, silent inventory resets, confusing multi-row variants (Amasty, 2026)](https://amasty.com/blog/shopify-bulk-product-import-csv/) · [Shopify CSV import limitation thread — Shopify Community](https://community.shopify.com/c/shopify-discussions/import-products-via-csv-limitation-of-100-products/m-p/2301859). Confirm each row against the target module spec before building.*
+
 ## Related
 
 - [[_index|E-commerce MOC]] · [[../../security/data-ownership]] · [[abandoned-cart/unknowns]] · [[../crm/quotes/_module|CRM Quotes]]

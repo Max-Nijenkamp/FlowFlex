@@ -74,6 +74,23 @@ Constitution: [[../../decisions/decision-2026-06-20-full-mapping-conventions]].
 
 ---
 
+## 2026-07 refresh — package-fit candidates
+
+Wave 3a refresh: help-desk table-stakes and SMB asks that FlowFlex can ship **with the already-chosen package list** (CLAUDE.md Tech Stack) — no new dependencies, no AI layer required. Each maps to an existing module. `UNVERIFIED` on incumbent-complaint frequency.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| **Post-resolution CSAT survey** (token link, no login) | CSAT tracking is table-stakes for SMB help desks | Vue+Inertia public page (ui #16) + `spatie/laravel-data` token | [[support-analytics/_module\|analytics]] ← [[tickets/_module\|tickets]] |
+| **Business-hours-aware SLA clock** (pause outside hours) | SLA correctness; business-hours config expected | `core.settings` business hours + Carbon (no new pkg) | [[sla/_module\|sla]] |
+| **Ticket tagging + tag-based reporting** | triage + volume/trend reporting | `spatie/laravel-tags` | [[tickets/_module\|tickets]] · [[support-analytics/_module\|analytics]] |
+| **Help-centre full-text KB search** | "customers abandon self-service after two failed searches" | `laravel/scout` (Meilisearch) | [[knowledge-base/_module\|kb]] |
+| **Macros** (canned reply + set status/assign in one action) | "macros" a named SMB expectation | `lorisleiva/laravel-actions` on `TicketService` (no new pkg) | [[canned-responses/_module\|canned]] · [[automations/_module\|automations]] |
+| **Ticket + CSAT export** | reporting without export-only walls | `pxlrbt/filament-excel` | [[support-analytics/_module\|analytics]] |
+
+Sources: [Best Help Desk Software for Small Business 2026 — Freshworks](https://www.freshworks.com/helpdesk/software/small-business/) · [Small Business Help Desk Software — Hiver](https://hiverhq.com/blog/small-business-helpdesk-software) · [Small Business Help Desk Software — monday.com](https://monday.com/blog/service/small-business-help-desk-software/)
+
+---
+
 ## Related
 
 - [[_index|Support MOC]] · [[../../decisions/decision-2026-06-20-full-mapping-conventions]] · [[../../architecture/event-bus]]

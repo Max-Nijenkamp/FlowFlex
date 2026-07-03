@@ -59,3 +59,24 @@ Web-researched gaps (2024–2026) in embedded/self-serve BI vs Metabase, Looker,
 - Databricks — [What is agentic analytics?](https://www.databricks.com/blog/what-is-agentic-analytics)
 - Tellius — [Best augmented analytics platforms 2026](https://www.tellius.com/resources/blog/best-augmented-analytics-platforms-in-2026-12-tools-compared-for-automated-insight-discovery-governance-and-analytical-depth)
 - Draxlr — [Best AI-powered BI tools 2026](https://www.draxlr.com/blogs/ai-powered-bi-tools/)
+
+---
+
+## 2026-07 refresh — package-fit candidates
+
+The items above lean AI/semantic (mostly Phase-4, `UNVERIFIED`). This pass is the opposite: concrete export/sharing features every BI buyer already expects, all buildable with the chosen stack (no new packages). Each row: feature, who asks, in-stack package, target module.
+
+| Feature | Who asks for it | In-stack package | Target module |
+|---|---|---|---|
+| **Seatless external read-only dashboard share (tokened link)** — today [[dashboards/features/dashboard-sharing\|sharing]] is same-company-only; no way to hand a client/board member a view-only URL without a seat | Teams sharing a dashboard with an external stakeholder (client, investor, auditor) who won't log in — Metabase's most-requested sharing feature | Laravel signed URLs + a public read-only Filament/Blade view | `analytics.dashboards` |
+| **Dashboard-to-PDF snapshot + scheduled email** — render a dashboard to a branded PDF and deliver it on a schedule (board packs, weekly exec summary) | Execs who want the dashboard in their inbox, not a login prompt — a recurring Metabase ask | `spatie/laravel-pdf` + [[scheduled-exports/_module\|scheduled-exports]] | `analytics.scheduled-exports` |
+| **Full-table CSV/Excel attachment on scheduled reports** — attach the actual data file, not just a link back to the tool | Report recipients who don't use the BI tool and want the numbers directly (Metabase pulse-attachment request) | `maatwebsite/laravel-excel` / `pxlrbt/filament-excel` | `analytics.scheduled-exports` |
+| **Formatted Excel export from the report builder** — grouped/pivoted export so analysts stop "pulling raw exports and rebuilding in a spreadsheet" (opp #5) | Analysts and finance who currently rebuild BI output in Excel | `maatwebsite/laravel-excel` | `analytics.report-builder` |
+| **Per-user report subscription cadence** — a user self-subscribes to a saved report (daily/weekly/off) without an admin setting it up | Individual users who want their own delivery of a shared report | [[scheduled-exports/_module\|scheduled-exports]] + `core.notifications` preferences | `analytics.scheduled-exports` |
+
+New high-confidence spec hole from this pass → [[../../build/gaps/gap-feature-analytics-public-dashboard-share]] (seatless external read-only share).
+
+### Sources (2026-07 refresh)
+
+- Public read-only shareable dashboard/question links — long-standing, heavily-upvoted Metabase requests — [Metabase #3681 (dashboard public link)](https://github.com/metabase/metabase/issues/3681), [Metabase public sharing docs](https://www.metabase.com/docs/latest/embedding/public-links) (accessed 2026-07-03)
+- Automate emailing a PDF dashboard + attach full CSV to a pulse — [Metabase discourse — email PDF dashboard](https://discourse.metabase.com/t/automate-emailing-pdf-of-a-dashboard/40485), [Metabase #2623 (attach CSV to pulse)](https://github.com/metabase/metabase/issues/2623) (accessed 2026-07-03)

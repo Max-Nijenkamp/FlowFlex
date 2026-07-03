@@ -120,6 +120,23 @@ Each is a candidate differentiator for FlowFlex CRM. Sourced + dated; speculativ
 
 All rankings `UNVERIFIED` — no customer discovery run yet.
 
+## 2026-07 refresh — package-fit candidates
+
+Features buildable with the **already-chosen** package stack (CLAUDE.md → Tech Stack) — no new
+dependencies. These complement the AI-heavy candidates above; several *extend* modules that are already
+specced (e.g. `.ics` invites + round-robin already live in [[appointment-scheduling/_module|scheduling]],
+contact export + `core.data-import` already cover import), so confirm against the module spec before
+filing build work. Rows marked `UNVERIFIED` are inferred demand or may already be partly specced.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| Field-level change history on deals & contacts ("who moved the stage / changed the amount / reassigned, when") | Reps + managers who distrust silent edits; audit trail is a recurring CRM ask `UNVERIFIED` (demand size) | `spatie/laravel-activitylog` + `rmsramos/activitylog` viewer | [[deals/_module\|crm.deals]], [[contacts/_module\|crm.contacts]] |
+| Bulk edit / bulk-tag / bulk-reassign owner across selected contacts & deals | Ops cleaning migrated data; reassigning a departing rep's book — CSV migration loses associations, so post-import cleanup is common | Filament bulk actions + `spatie/laravel-tags` | [[contacts/_module\|crm.contacts]], [[deals/_module\|crm.deals]] |
+| iCal **subscription feed** of a rep's booked meetings (subscribe once in Google/Outlook, stays in sync) — extends the single-booking `.ics` already specced | Reps who don't want to re-add each `.ics` invite by hand `UNVERIFIED` (whether specced) | `spatie/icalendar-generator` | [[appointment-scheduling/_module\|crm.scheduling]] |
+| Weighted-pipeline & win/loss trend charts as embeddable panel widgets (beyond the forecasting page) | Managers wanting at-a-glance pipeline health on the panel dashboard `UNVERIFIED` (overlaps forecasting) | `leandrocfe/filament-apex-charts` | [[revenue-intelligence/_module\|crm.revenue-intelligence]], [[forecasting/_module\|crm.forecasting]] |
+
+*Sources: [Pipedrive→HubSpot migration — CSV loses associations/timestamps (IntegrateIQ, 2026)](https://integrateiq.com/blogs/pipedrive-to-hubspot-migration/) · [Pipedrive HubSpot migration KB (Pipedrive, 2026)](https://support.pipedrive.com/en/article/hubspot-to-pipedrive-migration). Confirm each row against the target module spec before building.*
+
 ## Related
 
 - [[_index|CRM & Sales index]] · [[../../architecture/cross-domain-relations]]

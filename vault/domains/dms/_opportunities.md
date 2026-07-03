@@ -130,6 +130,25 @@ dated; speculative sizing / adoption claims are marked `UNVERIFIED`. Constitutio
 - [Docusign — SMB Solutions](https://www.docusign.com/solutions/small-and-medium-sized-businesses)
 - [arXiv 2410.12840 — Prompt Chaining for Contract QA (2024)](https://arxiv.org/pdf/2410.12840)
 
+## 2026-07 refresh — package-fit candidates
+
+The candidates above include several that need capabilities FlowFlex hasn't chosen a package for (native e-sign, RAG/"chat with docs", LLM auto-classification). This pass isolates the **no-new-package** wins buildable on the current stack. Each row: feature, who asks, in-stack package, target module.
+
+| Feature | Who asks for it | In-stack package | Target module |
+|---|---|---|---|
+| **Batch generate-from-template (mail-merge)** — today [[templates/features/generate-from-template\|Generate]] makes **one** document per run; generate a whole batch (one template × many employees/contacts → many PDFs) | HR (offer letters), sales (contracts), ops (certificates) issuing dozens/hundreds at once — a named bulk-doc pain | `spatie/laravel-pdf` + `maatwebsite/laravel-excel` (record-set source) | `dms.templates` |
+| **Bulk document upload + metadata CSV** — upload many files with a spreadsheet mapping columns → folder / tags / review-date, instead of filing one at a time | Teams migrating a file share into DMS and needing metadata on arrival (the SharePoint bulk-upload-with-metadata workflow) | `maatwebsite/laravel-excel` + `spatie/laravel-media-library` | `dms.library` |
+| **Document review / expiry reminders** — notify owners before a document's review date, then auto-archive per policy | Records/compliance owners tracking contract renewals and policy reviews (SharePoint "reminders before expire") | Laravel scheduler + `core.notifications` + `spatie/icalendar-generator` (.ics) | `dms.retention` |
+| **Document tagging + tag-filtered browse/search** — polymorphic tags so filing isn't purely folder-rigid; browse/search by tag | Everyone filing documents; ~50% of workers lose hours to poor indexing (opp #4/#11) | `spatie/laravel-tags` (already listed for DMS) | `dms.library` |
+| **Folder/library export as ZIP bundle** — export an accessible folder subtree as one download | Users handing off a project folder, exporting on exit, or assembling an audit bundle | `spatie/laravel-backup` / Laravel `ZipArchive` over `media-library` paths | `dms.library` |
+
+New high-confidence spec hole from this pass → [[../../build/gaps/gap-feature-dms-batch-template-generation]] (bulk mail-merge generation).
+
+### Sources (2026-07 refresh)
+
+- Bulk mail-merge from a CSV/record-set to many PDFs (contracts, offer letters, certificates) is a standard, repeatedly-requested workflow — [Juro — mail merge for contracts](https://juro.com/learn/mail-merge-excel-letters-contracts), [Zoho Writer — bulk offer letters](https://www.zoho.com/writer/journals/send-offer-letters-in-bulk-hr-automation.html) (accessed 2026-07-03)
+- Bulk upload with metadata + expiry/review reminders + auto-archive are core SharePoint/DMS workflows — [SysTools — SharePoint DM best practices](https://www.systoolsgroup.com/updates/sharepoint-document-management-best-practices/), [Orchestry — SharePoint file management 2025](https://www.orchestry.com/insight/admins-guide-to-sharepoint-file-management) (accessed 2026-07-03)
+
 ## Related
 
 - [[_index|Document Management MOC]] · [[../../decisions/decision-2026-06-20-full-mapping-conventions]]

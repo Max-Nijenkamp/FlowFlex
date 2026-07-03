@@ -59,6 +59,22 @@ Web-researched (2024–2026) gaps and unmet needs in procurement/P2P tooling vs 
 - [PunchOut Catalog Software — Fraxion](https://www.fraxion.biz/punchout-catalog-software)
 - [PunchOut Catalogs Explained — Procurify](https://www.procurify.com/blog/punchout-catalog/)
 
+## 2026-07 refresh — package-fit candidates
+
+Wave 3a refresh: SME P2P asks that FlowFlex can ship **with the already-chosen package list** (CLAUDE.md Tech Stack) — no new dependencies. Each maps to an existing module. `UNVERIFIED` on incumbent-complaint frequency.
+
+| Feature | Who asks for it | Package (already chosen) | Target module |
+|---|---|---|---|
+| **Out-of-office approval delegation** (auto-route while approver is away) | "map exactly what happens when someone is unavailable — ambiguous routing is where onboarding fails"; `proc_approval_delegations` table already exists | `spatie/laravel-model-states` + scheduled window command (no new pkg) | [[approvals/_module\|approvals]] |
+| **Approval escalation on timeout** | "escalation rules keep requests flowing" | scheduled command + `lorisleiva/laravel-actions` | [[approvals/_module\|approvals]] |
+| **Supplier self-service onboarding docs + expiry alerts** | "digital document collection … document management with expiration alerts"; [[supplier-catalogue/features/supplier-portal]] | `spatie/laravel-media-library` (uploads) + scheduled expiry command | [[supplier-catalogue/_module\|catalogue]] |
+| **Supplier price-list bulk import** (catalogue refresh) | keep negotiated pricing current without re-keying | `maatwebsite/laravel-excel` | [[supplier-catalogue/_module\|catalogue]] |
+| **Requisition / PO PDF + full approval audit-trail export** | audit + supplier record-keeping | `spatie/laravel-pdf` + `spatie/laravel-activitylog` | [[requisitions/_module\|requisitions]] |
+
+Sources: [Vendor Onboarding Workflow 2026 — Moxo](https://www.moxo.com/blog/vendor-onboarding-workflow) · [Supplier Onboarding Guide — Precoro](https://precoro.com/blog/supplier-onboarding/) · [Best Supplier Onboarding Software 2026 — Atlas Systems](https://www.atlassystems.com/blog/best-supplier-onboarding-software) · [Purchase Order Approval Process 2026 — GEP](https://www.gep.com/blog/strategy/purchase-order-approval-process-guide)
+
+---
+
 ## Related
 
 - [[_index|Procurement MOC]] · [[../../decisions/decision-2026-06-20-full-mapping-conventions]]

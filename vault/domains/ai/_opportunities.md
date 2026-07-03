@@ -83,6 +83,27 @@ A repeated 2025–2026 critique: copilots "operate reactively when prompted by h
 - **Product/pricing decisions:** #7 enforced EU residency, #10 hybrid pricing.
 - **Roadmap additions (new build):** #4 tenant knowledge/RAG layer, #9 zero-shot extraction, #11 proactive AI nudges, #1 write-autonomy UX.
 
+## 2026-07 refresh — package-fit candidates
+
+The items above are mostly RAG/LLM/pricing bets (several need a vector store FlowFlex doesn't yet have). This pass isolates the **deterministic, no-new-package** wins — mostly on `ai.workflows` and `ai.document-intelligence`, where the plumbing already exists. Each row: feature, who asks, in-stack package, target module.
+
+| Feature | Who asks for it | In-stack package | Target module |
+|---|---|---|---|
+| **Inbound external-webhook trigger** — start a workflow from a third-party POST; today [[workflow-builder/features/trigger-registry\|triggers]] are internal domain events + schedule only, so an outside tool can't kick off a flow | Anyone integrating a tool FlowFlex doesn't own (form vendor, phone system) — Zapier's "Catch Hook" is a baseline expectation | `core.webhooks` (inbound) + existing `RunWorkflowJob` | `ai.workflows` |
+| **Workflow template library (import/export as JSON)** — ship starter flows and let users export/share a flow definition | New users facing a blank canvas; teams standardising flows across a company | No new package (JSON serialise of the flow graph) | `ai.workflows` |
+| **Extracted-data export to Excel** — bulk-export a batch of extracted invoices/receipts/CVs for reconciliation | Finance/AP teams reconciling a month of extractions against the ledger | `maatwebsite/laravel-excel` / `pxlrbt/filament-excel` | `ai.document-intelligence` |
+| **Batch document upload for extraction** — drop many files at once; each queues an extraction with per-file review | AP teams uploading a month of invoices, not one at a time | `core.files` + `foundation.queues` | `ai.document-intelligence` |
+| **AI usage / cost export (CSV per user + period)** — export the metered `ai_usage_log` so finance can reconcile spend (ties to bill-shock #6) | Finance owners and admins reconciling AI cost against the budget dashboard | `pxlrbt/filament-excel` | `ai.config` |
+
+> [!note] Scheduled/cron workflow triggers are **already specced** ([[workflow-builder/features/trigger-registry|trigger-registry]] `RunScheduledWorkflowsCommand`) — promote, don't rebuild. The gap is *inbound* external triggers, below.
+
+New high-confidence spec hole from this pass → [[../../build/gaps/gap-feature-ai-inbound-webhook-trigger]] (external-webhook workflow trigger).
+
+### Sources (2026-07 refresh)
+
+- Inbound webhook ("Catch Hook") + schedule are the two universal automation entry points buyers expect — [Zapier — Webhooks catch hook](https://zapier.com/apps/webhook/integrations), [Zapier — Schedule intervals](https://help.zapier.com/hc/en-us/articles/8496288648461-Schedule-Zaps-to-run-at-specific-intervals) (accessed 2026-07-03)
+- SME complaint: automations fail silently with no retry/continue-on-error path — [Vantagepoint — Workato vs Zapier](https://vantagepoint.io/blog/sf/integrations/workato-vs-zapier-simple-automation) (accessed 2026-07-03)
+
 ## Related
 
 - [[_index|AI & Automation MOC]] · [[model-config/_module|ai.config]] · [[copilot/_module|ai.copilot]] · [[document-intelligence/_module|ai.document-intelligence]] · [[workflow-builder/_module|ai.workflows]]
