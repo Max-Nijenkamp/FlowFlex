@@ -14,7 +14,6 @@ Bugs, spec issues, and missing details discovered during build sessions.
 | ID | Severity | Domain | Module | Description | Discovered |
 |---|---|---|---|---|---|
 | [[gap-filament5-plugins-unavailable]] | low | foundation | foundation.scaffold | 2 of 4 Filament plugins still lack v5 (fullcalendar, tiptap — needed Phase 2+); shield + activitylog resolved via custom resources in core.rbac/core.audit | 2026-06-11 |
-| [[gap-panel-ux-depth-leftovers]] | medium | All | crm.pipeline | Leftovers after 2026-06-12 UX sweep: cash-flow restyle, 8 CRM empty forms, broader attachments + global search (spotlight ✅ delivered) | 2026-06-12 |
 | [[gap-switchboard-expansion-spec-missing]] | low | All | frontend | §14–25 pages built in-system with *(assumed)* copy — regenerated design bundle never landed; diff + swap when it arrives | 2026-06-12 |
 | [[gap-bank-accounts-import-page-not-in-manifest]] | low | finance | finance.bank-accounts | ImportStatementPage in Filament Artifacts but absent from Build Manifest | 2026-07-03 |
 | [[gap-two-panel-matcher-ui-row-missing]] | low | finance | finance.bank-accounts | Bank-rec + payment-run are two-panel matchers with no ui-strategy row; cite #9* — needs ADR | 2026-07-03 |
@@ -36,27 +35,9 @@ Bugs, spec issues, and missing details discovered during build sessions.
 | [[gap-feature-comms-broadcast-recipient-import]] | medium | communications | communications.broadcast | Broadcast audiences only from CRM segments / HR groups / manual list — no CSV import of external recipients (parallels marketing + events import gaps) | 2026-07-03 |
 | [[gap-feature-it-asset-qr-labels]] | medium | it | it.assets | Asset record has `asset_tag` but no QR/barcode **label printing** — blocks scan-to-ticket unified asset+helpdesk loop (simple-qrcode + laravel-pdf) | 2026-07-03 |
 
-All 7 audit gaps resolved at spec level 2026-06-11 (see below). Code-level enforcement is carried into each module build via the Definition of Done. Full per-spec worklist: [[build/security-audit-2026-06-11]].
+## Archived history
 
----
-
-## Resolved Gaps
-
-| ID | Domain | Description | Resolved |
-|---|---|---|---|
-| [[gap-canaccess-missing-filament]] | All | canAccess() missing on Filament artifacts — backfilled into 165 specs | 2026-06-11 |
-| [[gap-public-surfaces-no-guard]] | All | Public surfaces no guest/portal guard — Security notes added to 14 specs | 2026-06-11 |
-| [[gap-encrypted-fields-missing]] | All | Sensitive PII/secrets unencrypted — 7 specs fixed | 2026-06-11 |
-| [[gap-webhook-verification-assumed]] | All | Webhook verification assumed — promoted to requirement in 3 specs | 2026-06-11 |
-| [[gap-rate-limiter-missing]] | All | Missing rate limiters — Security notes added to 50 specs | 2026-06-11 |
-| [[gap-file-upload-contract]] | All | Upload contract omitted — Security notes added to 24 specs | 2026-06-11 |
-| [[gap-ui-row-not-in-table]] | All | UI kinds not in table — ADR + rows 17–19, 3 specs re-cited | 2026-06-11 |
-| [[gap-larastan-laravel-boot-crash]] | foundation | Larastan crash — switched gate to plain PHPStan + @property docblocks (ADR) | 2026-06-11 |
-| [[gap-filament-assets-unpublished]] | core | Filament JS assets 404 in browser (suite stayed green) — published + composer hooks | 2026-06-11 |
-| [[gap-pgsql-self-fk-ordering]] | All | Self-FKs in Schema::create break pgsql (sqlite green) — moved to post-create alters | 2026-06-11 |
-| [[gap-admin-mfa-contract-missing]] | foundation | Panel MFA enabled but Admin model lacked HasAppAuthentication — /admin login 500; Livewire submit tests added | 2026-06-11 |
-| [[gap-notifications-data-text-pgsql]] | core | notifications.data text column breaks Filament bell on pgsql (data->>) — jsonb migration | 2026-06-11 |
-| [[gap-staff-console-never-specced]] | core | /admin had zero functionality after full MVP — staff console never specced; core.staff-console specced + built | 2026-06-11 |
+Resolved gaps and the 2026-06-11 security-audit worklist described fixes to the pre-2026-06-20 app (code since deleted). Moved to `_archive/build-history/` on 2026-07-03 — their spec-level outcomes are baked into the v3 specs and the Definition of Done. The porting lessons that still matter at build time (pgsql self-FK ordering, notifications jsonb, Filament asset publishing, panel MFA contract) live on as notes in [[../ROADMAP|the roadmap]].
 
 ---
 

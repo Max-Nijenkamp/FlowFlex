@@ -72,4 +72,5 @@ SORT file.path ASC
 
 ## Related
 
+- [[../build/ROADMAP|Build roadmap]] — feature-level build order with per-feature AI + hand gates
 - [[00-index/MOC|Vault MOC]] · [[_audit/AUDIT|Audit]] · [[_meta/module-graph|Module graph]]
