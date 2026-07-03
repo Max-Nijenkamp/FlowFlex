@@ -193,12 +193,13 @@
     padding: 2rem;
     min-height: 100dvh;
     /* The layout-level bloom hides behind the brand panel in split mode —
-       paint the paper + bloom on the right column itself. */
-    background-color: var(--ff-paper-deep);
+       paint the paper + bloom on the right column itself. Deliberately a
+       step deeper than paper so the white card visibly sits on a surface. */
+    background-color: #efece4;
     background-image:
-        radial-gradient(44rem 30rem at 50% -10%, rgb(var(--primary-500) / 0.16), transparent 62%),
-        radial-gradient(36rem 24rem at 90% 110%, rgb(var(--primary-500) / 0.08), transparent 60%),
-        linear-gradient(to bottom, var(--ff-paper), var(--ff-paper-deep));
+        radial-gradient(46rem 32rem at 45% -12%, rgb(var(--primary-500) / 0.22), transparent 60%),
+        radial-gradient(38rem 26rem at 95% 115%, rgb(var(--primary-500) / 0.12), transparent 58%),
+        linear-gradient(160deg, #f6f4ee 0%, #efece4 55%, #eae6db 100%);
 }
 
 .ff-auth-brand {
