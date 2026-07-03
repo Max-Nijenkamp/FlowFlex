@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Document Templates — Security
@@ -37,9 +37,13 @@ Merge providers expose a **fixed whitelist** of fields. Sensitive fields — sal
 
 ## Generate Rate Limiter (explicit)
 
-Per the [[../../../build/security-audit-2026-06-11]] audit (medium):
+Per the [[../../../build/security-audit-2026-06-11]] audit (medium) and the security contract ([[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]):
 
-- **Rate limiter** — `RateLimiter::for` on the **generate** action, scoped per company/user, to throttle PDF rendering and document creation. Cite it explicitly (not by link alone).
+| Action | Limiter | Why |
+|---|---|---|
+| Generate (`dms.templates.generate`) | `panel-action` | renders a PDF/document via `spatie/laravel-pdf` and creates a library document — file generation |
+
+The named `panel-action` limiter is scoped per company/user; its definition lives in [[../../../architecture/security]] (cited, not by link alone).
 
 ## Body Purification
 

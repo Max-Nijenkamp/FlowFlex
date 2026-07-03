@@ -42,6 +42,20 @@ Restrict a folder (and its subtree) to specific roles or users; enforced uniform
 - Feeds: nothing.
 - Shared entity: roles/users owned by `core.rbac` (read-only for the picker).
 
+## Test Checklist
+
+### Unit
+- [ ] Each `dms_folder_access` row validates as exactly one of role/user (not both, not neither).
+- [ ] `accessibleFoldersFor` excludes a restricted folder's whole subtree for a non-permitted user (inheritance).
+
+### Feature (Pest)
+- [ ] Restricting a parent folder hides all descendants from the tree, grid, search, and direct viewer URL for a non-permitted user.
+- [ ] Granting a role/user access re-resolves the accessible set so the folder becomes visible to that principal only.
+
+### Livewire
+- [ ] Toggling `restricted` reveals the role/user picker; save validates each row and re-resolves access.
+- [ ] Access config denied without `dms.library.manage-access`.
+
 ## Unknowns
 
 - Intersection vs override semantics when a child adds its own rules on top of an inherited parent restriction *(assumed intersection)*.

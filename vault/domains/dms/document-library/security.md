@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Document Library — Security
@@ -44,6 +44,17 @@ Per the [[../../../build/security-audit-2026-06-11]] audit (medium):
 - **Whitelist** — `UploadDocumentData` enforces a MIME/extension whitelist and max upload size using `mimes` + `max` rules, referencing the [[../../../architecture/security]] baseline values explicitly (not by link alone).
 - **Rate limiter** — `RateLimiter::for` on the document **search** and **upload** endpoints, scoped per company/user, to prevent abuse of Meilisearch and storage.
 - **Signed URLs** — preview/download always uses a short-lived temporary signed URL; no permanent public path.
+
+## Rate Limiting
+
+Both heavy endpoints carry a **named** limiter per the security contract ([[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]), scoped per company/user:
+
+| Endpoint | Limiter | Why |
+|---|---|---|
+| Document upload (`dms.library.upload`) | `panel-action` | writes bytes to storage + dispatches extraction; protects storage abuse |
+| Document search | `panel-action` *(assumed limiter name — a dedicated search limiter may exist in [[../../../architecture/security]]; flagged for registry reconcile)* | protects the Meilisearch instance |
+
+Named-limiter definitions live in [[../../../architecture/security]]; the upload/download signed-URL and whitelist rules are restated under **Upload Contract** below.
 
 ## Tenant Isolation
 

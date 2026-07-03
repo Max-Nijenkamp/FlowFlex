@@ -38,6 +38,18 @@ The registry through which HR and CRM modules expose field providers to template
 - Feeds: the merge-field insert menu ([[template-editor]]) and field resolution ([[generate-from-template]]).
 - Shared entity: employee / contact records owned by HR / CRM (read-only).
 
+## Test Checklist
+
+### Unit
+- [ ] `register()` records a provider per `type`; only whitelisted fields are exposed and sensitive fields (salary, national ID) are never offered.
+- [ ] An inactive source module leaves its provider absent, so those fields fall back to manual entry.
+
+### Feature (Pest)
+- [ ] At generate time the registry resolves whitelisted fields read-only for a given record id; a non-whitelisted field is unreachable.
+- [ ] Field resolution is tenant-scoped — a provider cannot resolve another company's employee/contact data.
+
+<!-- No Livewire: background registry, no UI -->
+
 ## Unknowns
 
 - The exact whitelist each provider exposes is not enumerated in the source — see [[../unknowns]].

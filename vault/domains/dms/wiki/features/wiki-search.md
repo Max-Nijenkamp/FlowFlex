@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Wiki Search
@@ -40,6 +40,19 @@ Full-text search across page titles and stripped bodies — always post-filtered
 - Consumes: nothing.
 - Feeds: navigation into [[wiki-viewer|Wiki Viewer]].
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Index payload: title + stripped body (no HTML tags) sent to Meilisearch on save
+
+### Feature (Pest)
+- [ ] Restricted page never surfaces in results for a non-permitted user, even on a direct term hit (post-filter)
+- [ ] Search endpoint rate-limited per company/user; over-limit returns 429
+- [ ] Tenant isolation: results never include another company's pages
+
+### Livewire
+- [ ] Debounced query renders results overlay; clear returns to the current page; backend-down shows toast + retry
 
 ## Unknowns
 

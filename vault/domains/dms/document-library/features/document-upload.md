@@ -42,6 +42,20 @@ Upload a file into a folder, store it under the tenant path, and kick off text e
 - Feeds: nothing v1 (a `DocumentUploaded` event is an open question — [[../unknowns]]).
 - Shared entity: media record (`core.files`).
 
+## Test Checklist
+
+### Unit
+- [ ] `UploadDocumentData` validation: MIME/extension whitelist + max-size rules reject a disallowed type/oversize file before storage.
+
+### Feature (Pest)
+- [ ] Upload stores bytes under `companies/{id}/dms/`, writes the `dms_documents` row, and dispatches `ExtractDocumentTextJob`.
+- [ ] Upload into a folder the user cannot access is rejected; a company A user cannot upload into a company B folder (tenant isolation).
+- [ ] Upload endpoint is throttled by the named `panel-action` limiter per company/user.
+
+### Livewire
+- [ ] A disallowed file type is rejected inline before upload starts; storage failure surfaces a retry toast.
+- [ ] Upload denied without `dms.library.upload` + target folder access.
+
 ## Unknowns
 
 - Whether to fire `DocumentUploaded` for audit/analytics — open ([[../unknowns]]).

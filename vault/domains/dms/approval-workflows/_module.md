@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Approval Workflows
@@ -14,13 +14,12 @@ Document approval chains before publication. Route a document through an ordered
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `dms.approvals` |
-| priority | p2 |
-| panel | dms |
-| permission-prefix | `dms.approvals` |
-| tables | `dms_approval_workflows`, `dms_approval_requests`, `dms_approval_actions` |
+`dms.approvals`
+
+**Priority:** p2  
+**Panel:** dms  
+**Permission prefix:** `dms.approvals`  
+**Tables:** `dms_approval_workflows`, `dms_approval_requests`, `dms_approval_actions`
 
 ## Dependencies
 
@@ -71,7 +70,8 @@ tests/Feature/DMS/{ApprovalSequentialTest,ApprovalParallelTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot see or act on company B's approval requests, workflows, or actions.
+- [ ] Module gating: artifacts hidden when `dms.approvals` inactive.
 - [ ] Sequential: only the current-step approver can act; the pointer advances in order.
 - [ ] Parallel: completes only when all approve; one reject rejects the whole request.
 - [ ] Submitter cannot approve their own request.

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Retention Audit Log
@@ -42,6 +42,20 @@ An append-only record of every retention action — archived, soft-deleted, hard
 - Consumes: rows produced by [[retention-run|Retention Run]].
 - Feeds: nothing — terminal compliance view.
 - Shared entity: documents (owned by `dms.library`), policies (own).
+
+## Test Checklist
+
+### Unit
+- [ ] Idempotency guard: existing `(document_id, action)` row means the action is reported as already-performed
+
+### Feature (Pest)
+- [ ] Every run action (archived / soft-deleted / hard-deleted / notified) writes exactly one log row with policy + timestamp
+- [ ] Log rows cannot be updated or deleted via any exposed path (append-only)
+- [ ] Tenant isolation: company A's log never lists company B's documents; `dms.retention.view-log` required
+
+### Livewire
+- [ ] Retention log resource is read-only: no create/edit/delete actions rendered; filters by action/policy/date work
+- [ ] canAccess(): hidden without `dms.retention.view-log` or with `dms.retention` module inactive
 
 ## Unknowns
 

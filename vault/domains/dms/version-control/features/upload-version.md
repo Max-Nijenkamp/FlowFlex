@@ -42,6 +42,20 @@ Upload a new version of an existing document — replaces the current file, keep
 - Feeds: nothing v1 (a `DocumentVersionUploaded` event is an open question — [[../unknowns]]).
 - Shared entity: `dms_documents` (`dms.library`), media record (`core.files`).
 
+## Test Checklist
+
+### Unit
+- [ ] `UploadVersionData` validation: whitelist/max-size reuse from `dms.library`; next `version_number` is sequential per document.
+
+### Feature (Pest)
+- [ ] Upload flips `is_current` so exactly one current version remains, keeps the prior as history, and refreshes document metadata via `DocumentService`.
+- [ ] Upload by a non-lock-holder on a locked document throws `DocumentLockedException` and writes no version; the lock owner uploads normally.
+- [ ] Concurrent uploads are serialised by the row lock — version numbers never collide (tenant-scoped).
+
+### Livewire
+- [ ] Upload action modal accepts file + change note; disallowed type/oversize rejected inline; locked-by-another surfaces a blocked toast.
+- [ ] Action denied without `dms.versions.upload` + folder access.
+
 ## Unknowns
 
 - Whether to fire `DocumentVersionUploaded` for audit/approvals — open ([[../unknowns]]).

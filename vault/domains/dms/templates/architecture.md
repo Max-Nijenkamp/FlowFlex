@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Document Templates — Architecture
@@ -22,24 +22,28 @@ updated: 2026-06-20
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Templates
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `DocumentTemplateResource` | Templates | #1 CRUD resource | Table + form; body is a Tiptap editor with a merge-field insert menu. System templates (`is_system`) are read-only → copy-on-edit. |
-| `GenerateFromTemplatePage` | Templates | #7 wizard custom page | Stepper: template → merge source / fields → target folder → generate. |
+| `DocumentTemplateResource` | #1 CRUD resource | tweaks: custom-header-actions (duplicate/copy-on-edit for system templates) | body is a Tiptap editor (HTMLPurifier) with a merge-field insert menu; `is_system` rows read-only |
+| `GenerateFromTemplatePage` | #7 wizard custom page | [[../../../architecture/patterns/page-blueprints#Wizard]] | stepper: template → merge source / fields → target folder → output; generate gated on `dms.templates.generate` |
 
-See [[../../../architecture/filament-patterns]] and [[../../../architecture/ui-strategy]].
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('dms.templates.view-any') && BillingService::hasModule('dms.templates')`
+per [[../../../architecture/filament-patterns]] #1. `GenerateFromTemplatePage` is a custom page and MUST state it
+explicitly — Filament does not auto-gate custom pages. The generate action carries an additional
+`dms.templates.generate` gate, and its target folder must pass `dms.library`'s `accessibleFoldersFor` (a second gate).
 
-### Access contract
+## Concurrency
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('dms.templates.view-any')
-        && BillingService::hasModule('dms.templates');
-}
-```
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Template CRUD (`DocumentTemplateResource` form) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| System-template copy-on-edit | n/a | Creates a new company-owned row (append); the seeded `is_system` original is never mutated |
+| Generate document | n/a | Writes no `dms_templates` row — the output document is created through `dms.library`'s `DocumentService::upload` (single writer in that module) |
 
-Custom pages state this explicitly. The generate action carries an additional `dms.templates.generate` gate.
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Events
 

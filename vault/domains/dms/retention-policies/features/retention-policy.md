@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Retention Policy
@@ -44,6 +44,21 @@ Define a rule that governs when documents in a folder subtree or with a given ta
 - Consumes: nothing.
 - Feeds: policies read by [[retention-run|Retention Run]] each night.
 - Shared entity: folders / tags (owned by `dms.library`).
+
+## Test Checklist
+
+### Unit
+- [ ] Expiry math: document is expired iff `now - clock_from ≥ retention_days`, for both `created` and `modified` clocks
+- [ ] `CreateRetentionPolicyData` validation: retention_days min 1, action in archive|delete, applies_to type folder|tag
+
+### Feature (Pest)
+- [ ] Folder policy matches subtree documents only; tag policy matches tagged documents only
+- [ ] `is_active = false` policy is ignored by the run; bulk activate/deactivate flips evaluation
+- [ ] Tenant isolation: policies scoped by company; `dms.retention.manage-policies` required to create/edit
+
+### Livewire
+- [ ] `RetentionPolicyResource` form validates fields (retention_days min 1); statutory-floor warning surfaces on delete policies below floor *(assumed)*
+- [ ] canAccess(): hidden without `dms.retention.manage-policies` or with `dms.retention` module inactive
 
 ## Unknowns
 

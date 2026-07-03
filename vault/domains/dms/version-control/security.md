@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Version Control — Security
@@ -44,6 +44,17 @@ Per the [[../../../build/security-audit-2026-06-11]] audit (medium):
 - **Whitelist** — `UploadVersionData` reuses the `dms.library` MIME/extension whitelist and max upload size using `mimes` + `max` rules, referencing the [[../../../architecture/security]] baseline values explicitly (not by link alone).
 - **Storage path** — version bytes are stored under `companies/{id}/dms/` via `CompanyPathGenerator`, identical to the library upload path.
 - **Signed URLs** — historical-version download always uses a short-lived temporary signed URL; no permanent public path.
+
+## Rate Limiting
+
+Version writes store/copy bytes, so they carry a **named** limiter per the security contract ([[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]), scoped per company/user:
+
+| Action | Limiter | Why |
+|---|---|---|
+| Upload new version (`dms.versions.upload`) | `panel-action` | writes bytes to storage + re-dispatches text extraction |
+| Restore version (`dms.versions.restore`) | `panel-action` | copies/references media into a new current version |
+
+Named-limiter definitions live in [[../../../architecture/security]]. Lock/unlock actions are metadata-only and rely on the default panel throttle.
 
 ## Tenant Isolation
 

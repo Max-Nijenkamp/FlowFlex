@@ -41,6 +41,20 @@ Lock a document while editing to prevent concurrent version conflicts; unlock wh
 - Feeds: nothing (no cross-domain event on lock/unlock v1 — [[../unknowns]]).
 - Shared entity: `dms_documents` (`dms.library`).
 
+## Test Checklist
+
+### Unit
+- [ ] Lock-eligibility rule: a document with an existing lock by another user rejects a new lock unless the caller holds `dms.versions.force-unlock`.
+- [ ] Stale-lock predicate: a lock older than the auto-expiry window (4h *(assumed)*) is expirable.
+
+### Feature (Pest)
+- [ ] `LockDocumentAction` creates at most one lock per document (unique `document_id`); a second locker is rejected; force-unlock overrides.
+- [ ] While locked by A, any other user's version upload throws `DocumentLockedException`; `ExpireStaleLocksCommand` clears an abandoned lock.
+- [ ] Locks are tenant-scoped — a company A user cannot lock/unlock a company B document.
+
+### Livewire
+- [ ] Lock badge shows the holder; the action toggles lock/unlock; force-unlock exposed only with `dms.versions.force-unlock`.
+
 ## Unknowns
 
 - 4h auto-expiry window + `ExpireStaleLocksCommand` schedule frequency are *(assumed)* — not in source ([[../unknowns]]).

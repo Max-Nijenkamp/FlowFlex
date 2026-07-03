@@ -41,6 +41,19 @@ In-browser preview of a single document with its metadata and (when active) vers
 - Feeds: nothing.
 - Shared entity: media record (`core.files`); `dms_document_versions` (owned by `dms.versions`).
 
+## Test Checklist
+
+### Unit
+- [ ] Preview eligibility resolves to inline (PDF/image) vs download-only (Office) by mime.
+
+### Feature (Pest)
+- [ ] Preview mints a short-lived signed URL; the direct viewer URL 403s for a user without folder access (never serves the file).
+- [ ] A user in company A cannot open a company B document by id (tenant isolation).
+
+### Livewire
+- [ ] An expired signed URL re-mints and retries; favourite toggle persists.
+- [ ] Version-history relation renders only when `dms.versions` is active; page gated on `dms.library.view-any` + folder access.
+
 ## Unknowns
 
 - Inline Office preview (needs a converter/viewer) — deferred *(assumed)*.

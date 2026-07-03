@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Approval Workflows — Security
@@ -39,6 +39,15 @@ Beyond the resource-level permission, `ApprovalService::act()` enforces two runt
 - **Submitter ≠ approver** — the user who submitted the document cannot approve their own request *(assumed)*.
 
 These mirror the [[../document-library/security#Folder Access Inheritance\|"second gate"]] pattern in `dms.library`: the permission opens the screen, business rules gate the individual action.
+
+## Rate Limiting
+
+Both approval commands dispatch notifications through [[../../core/notifications/_module|core.notifications]] (email + in-app), so they carry the `panel-action` rate limiter per the security contract ([[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]):
+
+| Action | Limiter | Why |
+|---|---|---|
+| Submit for approval (`dms.approvals.submit`) | `panel-action` | notifies the first approver(s) each submit |
+| Approve / reject / request-changes (`dms.approvals.act`) | `panel-action` | notifies the next approver / submitter on each step |
 
 ## Tenant Isolation
 

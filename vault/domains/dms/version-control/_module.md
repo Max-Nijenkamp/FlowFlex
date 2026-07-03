@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Version Control
@@ -14,13 +14,12 @@ Version history on documents. Upload a new version, view the full history, compa
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `dms.versions` |
-| priority | p2 |
-| panel | dms |
-| permission-prefix | `dms.versions` |
-| tables | `dms_document_versions`, `dms_document_locks` |
+`dms.versions`
+
+**Priority:** p2  
+**Panel:** dms  
+**Permission prefix:** `dms.versions`  
+**Tables:** `dms_document_versions`, `dms_document_locks`
 
 ## Dependencies
 
@@ -64,7 +63,9 @@ tests/Feature/DMS/{VersionControlTest,DocumentLockTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating + folder-access gate on history / download.
+- [ ] Tenant isolation: company A cannot view, download, or restore company B's document versions.
+- [ ] Module gating: artifacts hidden when `dms.versions` inactive.
+- [ ] Folder-access gate applies to version history and historical-version download.
 - [ ] Version numbers sequential; exactly one `is_current` per document.
 - [ ] Upload on a document locked by another user rejected; lock owner OK.
 - [ ] Restore creates a new version, history intact.

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Wiki — Architecture
@@ -41,6 +41,18 @@ public static function canAccess(): bool
 ```
 
 Custom pages state this explicitly. The per-page access list is a **second gate** on top of the permission — resolved by `accessiblePagesFor`.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Page save (`WikiService::save`) | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] — stale editor gets a conflict instead of silently overwriting; the pre-save snapshot to `dms_wiki_page_versions` preserves the losing body for manual merge |
+| Restore version (`WikiService::restoreVersion`) | Optimistic | Same version check; restore itself snapshots first, so a raced restore never destroys history |
+| Page access-list edit | Optimistic | Settings-form save per [[../../../architecture/patterns/optimistic-locking]] |
+| Version snapshots | n-a | Append-only rows, never updated |
+| Tree / search / viewer reads | n-a | Read-only, composed on `accessiblePagesFor` |
+
+Wiki pages do NOT use the DMS document-lock (checkout/checkin) tier — that tier is scoped to `dms.version-control` binary documents; wiki concurrency is handled by versioned saves. Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Events
 

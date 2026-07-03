@@ -42,6 +42,19 @@ The primary DMS surface: a nested folder tree beside a document grid, with drag-
 - Feeds: nothing (no events v1).
 - Shared entity: media/file record owned by `core.files`.
 
+## Test Checklist
+
+### Unit
+- [ ] The tree query includes only folders returned by `accessibleFoldersFor(user)` (restricted subtree excluded).
+
+### Feature (Pest)
+- [ ] Selecting a folder loads only that folder's documents; a restricted folder is absent for a non-permitted user (no placeholder disclosing existence).
+- [ ] Company A's tree never renders company B's folders (tenant isolation).
+
+### Livewire
+- [ ] Drag-drop upload shows an optimistic progress row replaced by the real row on completion; failed upload shows a retry toast.
+- [ ] Page hidden without `dms.library.view-any` / when `dms.library` inactive; upload button hidden without `dms.library.upload`.
+
 ## Unknowns
 
 - Multi-select bulk move/delete in v1? *(assumed out)*

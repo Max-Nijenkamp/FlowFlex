@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Wiki Viewer
@@ -41,6 +41,19 @@ The read surface — a rendered wiki page with an auto table of contents and the
 - Consumes: rendered body + versions produced by [[page-editor|Page Editor]]; nav from [[page-tree|Page Tree]].
 - Feeds: nothing.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Internal page-id links resolve to the target's current slug/title at render time *(assumed)*
+
+### Feature (Pest)
+- [ ] Direct URL to a restricted page returns 404/403 for a non-permitted user (composes on `accessiblePagesFor`)
+- [ ] Tenant isolation: slug lookup scoped by company — same slug in another company never resolves
+
+### Livewire
+- [ ] `WikiViewerPage` canAccess(): hidden without `dms.wiki.view-any` or with `dms.wiki` module inactive
+- [ ] Renders purified body; page without headings hides the TOC rail
 
 ## Unknowns
 

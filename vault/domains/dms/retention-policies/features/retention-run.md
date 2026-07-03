@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Retention Run
@@ -39,6 +39,20 @@ The daily background job that evaluates every active policy, archives/deletes ex
 - Commands: `dms.library` (archive / soft-delete), `core.files` (media purge), `core.notifications` (pre-deletion notice).
 - Coordinates: [[../../../../core/data-privacy/_module|core.privacy]] erasure (soft) — erasure overrides retention for person-files, but legal holds still win.
 - Feeds: writes the [[retention-audit-log|Retention Audit Log]].
+
+## Test Checklist
+
+### Unit
+- [ ] Held-document skip: active hold exempts from archive AND delete; released hold does not
+- [ ] Log-row idempotency guard: existing `(document_id, action)` row → action not repeated
+
+### Feature (Pest)
+- [ ] Archive policy commands `DocumentService::archive` (never writes `dms_documents` directly) and logs `archived`
+- [ ] Delete path: `notified` logged at the 7-day lead *(assumed)*, `soft-deleted` on expiry, `hard-deleted` + media purge after 30-day grace *(assumed)*
+- [ ] Same-day re-run performs zero duplicate actions; one document throwing does not abort the chunked run
+
+### Livewire
+- (none — background command, no UI)
 
 ## Unknowns
 

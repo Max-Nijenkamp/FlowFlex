@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Page Editor
@@ -42,6 +42,21 @@ Create and edit a wiki page with a rich-text Tiptap editor; every save purifies 
 - Consumes: nothing.
 - Feeds: version rows consumed by [[page-history|Page History]]; rendered output shown by [[wiki-viewer|Wiki Viewer]].
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Cycle check: parent selection that would make a page its own ancestor is rejected
+- [ ] Slug generation unique per company; body purified (script tags stripped) before storage
+
+### Feature (Pest)
+- [ ] Update via `WikiService::save` snapshots the previous body to `dms_wiki_page_versions` before writing
+- [ ] Concurrent edit: stale version-checked save conflicts instead of silently overwriting (optimistic locking)
+- [ ] Tenant isolation: page create/edit scoped by company; `dms.wiki.create`/`dms.wiki.update` enforced
+
+### Livewire
+- [ ] Editor form validates: cycle-forming parent rejected, restricted access with empty list rejected
+- [ ] canAccess(): create page hidden without `dms.wiki.create`; access section hidden without `dms.wiki.manage-access`
 
 ## Unknowns
 

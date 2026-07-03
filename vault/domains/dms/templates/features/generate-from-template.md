@@ -42,6 +42,20 @@ A wizard that turns a template into a finished document: pick the template, choo
 - Feeds: a new document into [[../../document-library/_module|Document Library]] via its service.
 - Shared entity: the `DocumentData` output + folder tree owned by `dms.library`.
 
+## Test Checklist
+
+### Unit
+- [ ] Field-completeness rule: generation is blocked until every declared merge field has a resolved or manual value.
+
+### Feature (Pest)
+- [ ] `generate()` substitutes fields into the purified body, renders the requested `document`/`pdf`, and stores it via `DocumentService::upload` into the chosen folder.
+- [ ] Generate into a folder the user cannot access is rejected (`accessibleFoldersFor` second gate); a company A user cannot generate into a company B folder (tenant isolation).
+- [ ] Generate is throttled by the named `panel-action` limiter per company/user.
+
+### Livewire
+- [ ] The wizard blocks a step with incomplete fields; on generate, success links to the new library document.
+- [ ] Page open gated on `dms.templates.view-any`; generate gated on `dms.templates.generate`.
+
 ## Unknowns
 
 - Whether generation records provenance (template + source) on the library document — see [[../unknowns]].

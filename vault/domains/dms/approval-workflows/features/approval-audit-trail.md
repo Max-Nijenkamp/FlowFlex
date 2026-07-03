@@ -41,6 +41,18 @@ An append-only record of every approval action — who approved or rejected, whe
 - Feeds: nothing downstream in v1.
 - Shared entity: users (platform), referenced as `approver_id`.
 
+## Test Checklist
+
+### Unit
+- [ ] Action-row builder maps `action` (`approved`/`rejected`/`changes`) to the correct display badge and retains the comment.
+
+### Feature (Pest)
+- [ ] Each `ApprovalService::act()` call appends exactly one `dms_approval_actions` row; rows are never updated or deleted.
+- [ ] After a reject + re-submit, the new request keeps its own trail and the original request's trail is retained.
+
+### Livewire
+- [ ] The audit-trail relation renders actions chronologically and read-only (no create/edit/delete actions exposed).
+
 ## Unknowns
 
 > [!warning] UNVERIFIED

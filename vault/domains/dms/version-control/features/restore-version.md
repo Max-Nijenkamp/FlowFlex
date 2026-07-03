@@ -41,6 +41,19 @@ Make an older version current again — by creating a **new** version, never del
 - Feeds: nothing v1 (a `DocumentRestored` event is an open question — [[../unknowns]]).
 - Shared entity: `dms_documents` (`dms.library`), media record (`core.files`).
 
+## Test Checklist
+
+### Unit
+- [ ] `RestoreVersionData` validation: `version_id` resolves to an accessible document.
+
+### Feature (Pest)
+- [ ] Restore creates a new current version referencing the target's media, flips `is_current`, and deletes nothing (history intact).
+- [ ] Document metadata is refreshed via `DocumentService` on restore; a company A user cannot restore a company B version (tenant isolation).
+
+### Livewire
+- [ ] Restore row action shows a confirm dialog naming the version; on confirm the history list appends the new current version.
+- [ ] Action denied without `dms.versions.restore` + folder access.
+
 ## Unknowns
 
 - Whether restore duplicates the media object or references it — assumed a new version pointing at the same/copied `media_id` ([[../unknowns]]).

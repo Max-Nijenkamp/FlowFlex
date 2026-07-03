@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Page History
@@ -39,6 +39,20 @@ Per-page version snapshots with restore — an append-only body history captured
 - Consumes: snapshots produced by [[page-editor|Page Editor]] on each save.
 - Feeds: a restore updates the body shown by [[wiki-viewer|Wiki Viewer]].
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Cap enforcement: 51st snapshot prunes the oldest (cap 50 *(assumed)*)
+
+### Feature (Pest)
+- [ ] Restore sets the snapshot body onto the page AND creates a new snapshot of the pre-restore state *(assumed)*
+- [ ] Snapshots are append-only — no update/delete path exposed
+- [ ] Tenant isolation: versions of company A's page invisible to company B; restore requires `dms.wiki.update`
+
+### Livewire
+- [ ] Versions relation manager: newest first, preview action works, Restore confirms then reverts; no create/edit actions
+- [ ] Restore action hidden without `dms.wiki.update`
 
 ## Unknowns
 

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Retention Policies — Architecture
@@ -43,6 +43,18 @@ public static function canAccess(): bool
 ```
 
 Each artifact gates on its own permission (`manage-policies` / `manage-holds` / `view-log`) + module gating. The source's access contract references `dms.retention.view-any`, which is **not** in the permission list — flagged in [[unknowns]].
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Policy CRUD (`RetentionPolicyResource`) | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| Place legal hold (`PlaceLegalHoldAction`) | Pessimistic | `lockForUpdate` on the document's hold rows in a transaction — enforces one active hold per document under concurrent placement |
+| Release legal hold (`ReleaseLegalHoldAction`) | Optimistic | Sets `released_at`; last-write-wins is safe (idempotent release) per [[../../../architecture/patterns/optimistic-locking]] |
+| Retention run document effects | n-a | Delegated commands to `dms.library` (`DocumentService::archive` / `softDelete`) — locking owned there; run idempotency via the `dms_retention_log` row guard |
+| Retention log writes | n-a | Append-only compliance log, no updates |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Events
 

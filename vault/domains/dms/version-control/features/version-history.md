@@ -41,6 +41,19 @@ View the full version history of a document — every version with its metadata 
 - Feeds: nothing.
 - Shared entity: `dms_documents` (`dms.library`), media records (`core.files`).
 
+## Test Checklist
+
+### Unit
+- [ ] History orders versions newest-first and flags the single `is_current` row; size/date diff computed against current.
+
+### Feature (Pest)
+- [ ] A user without folder access on the document cannot list history or download a historical version (second gate), even with the module permission.
+- [ ] Company A cannot read company B's version history (tenant isolation); download uses a short-lived signed URL.
+
+### Livewire
+- [ ] History relation renders versions with download + restore row actions; current version highlighted.
+- [ ] Rendered only when gated by the module permission + folder access.
+
 ## Unknowns
 
 - `dms.versions.view-any` is referenced by the access contract but absent from the source Permissions list — UNVERIFIED ([[../unknowns]]).

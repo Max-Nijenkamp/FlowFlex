@@ -42,6 +42,20 @@ Author and edit a document template — name, category, and a rich-text body wit
 - Feeds: templates authored here are the input to [[generate-from-template|Generate From Template]].
 - Shared entity: the merge-field whitelist owned by [[merge-source-registry|Merge Source Registry]].
 
+## Test Checklist
+
+### Unit
+- [ ] Placeholder validator: a `{{field}}` in the body that is not a declared merge field blocks save and is listed in the error.
+- [ ] `body` is purified on save — markup sanitised, `{{field}}` placeholders preserved.
+
+### Feature (Pest)
+- [ ] Editing a seeded `is_system` template triggers copy-on-edit: a new `is_system = false` company-owned row is created and the original is untouched.
+- [ ] Templates are tenant-scoped — company A cannot open/edit company B's templates.
+
+### Livewire
+- [ ] Merge-field insert menu drops a placeholder at the cursor; unknown-placeholder save surfaces the validation error.
+- [ ] List gated on `dms.templates.view-any`; write actions gated on `create`/`update`; system template shows a read-only banner.
+
 ## Unknowns
 
 - Custom merge fields beyond the built-ins — how they're declared and typed is not fully specified.

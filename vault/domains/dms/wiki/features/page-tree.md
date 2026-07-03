@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Page Tree
@@ -40,6 +40,18 @@ The nested page hierarchy and navigation sidebar — a cycle-checked `parent_pag
 - Consumes: nothing.
 - Feeds: navigation into [[wiki-viewer|Wiki Viewer]]; parent selection into [[page-editor|Page Editor]].
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] `WikiService::tree()` nests by `parent_page_id`; branch ordering alphabetical *(assumed)*
+
+### Feature (Pest)
+- [ ] Tree is access-filtered: restricted pages absent from a non-permitted user's tree
+- [ ] Tenant isolation: tree contains only own-company pages; `dms.wiki.view-any` required
+
+### Livewire
+- [ ] Viewer nav tree renders nodes, highlights the active page, expand/collapse works; empty state shows "Create the first wiki page" CTA
 
 ## Unknowns
 

@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Retention Policies
@@ -14,13 +14,12 @@ Automated document lifecycle for the DMS domain: archive or delete documents aft
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `dms.retention` |
-| priority | p2 |
-| panel | dms |
-| permission-prefix | `dms.retention` |
-| tables | `dms_retention_policies`, `dms_legal_holds`, `dms_retention_log` |
+`dms.retention`
+
+**Priority:** p2  
+**Panel:** dms  
+**Permission prefix:** `dms.retention`  
+**Tables:** `dms_retention_policies`, `dms_legal_holds`, `dms_retention_log`
 
 ## Dependencies
 
@@ -69,7 +68,8 @@ tests/Feature/DMS/{RetentionTest,LegalHoldTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: a policy/hold/run in company A never acts on or logs company B's documents.
+- [ ] Module gating: artifacts hidden when `dms.retention` inactive.
 - [ ] Expired document archived/deleted per policy + `clock_from`.
 - [ ] Active legal hold blocks delete AND archive.
 - [ ] Pre-deletion notification 7 days before, once.

@@ -45,6 +45,22 @@ Let an approver approve, reject-with-reason, or request-changes on a request ass
 - Feeds: [[approval-audit-trail|Approval Audit Trail]] reads the action rows written here; completion commands unlock (`dms.versions`) + notify (`core.notifications`).
 - Shared entity: the document (`dms.library`); the lock column (`dms.versions`).
 
+## Test Checklist
+
+### Unit
+- [ ] `ApprovalActionData` validation: `action in:approved,rejected,changes`; `comment required_if` action is rejected/changes.
+- [ ] `pendingFor(User)` returns only requests where the user is a current-step (sequential) or set-member (parallel) approver.
+
+### Feature (Pest)
+- [ ] Sequential: only the current-step approver can act; an approve advances `current_step` in order; a non-current-step approver is blocked.
+- [ ] Parallel: request completes (`in_review → approved`) only when all approvers approve; a single reject rejects the whole request.
+- [ ] Submitter cannot approve their own request (actor ≠ submitter); reject unlocks the document + notifies submitter; request-changes returns to `pending` and resubmit restarts the chain.
+- [ ] Concurrent double-act on the same step is serialised by the row lock (no double advance).
+
+### Livewire
+- [ ] Approve row action advances the request; reject/request-changes open a comment modal requiring a reason.
+- [ ] Wrong-step or self-approval attempt is blocked with a toast; actions denied without `dms.approvals.act`.
+
 ## Unknowns
 
 - Actor ≠ submitter is *(assumed)* — [[../unknowns]].

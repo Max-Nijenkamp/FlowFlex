@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Document Templates
@@ -14,13 +14,12 @@ Reusable document templates (contracts, SOPs, policies, letters) with merge-fiel
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `dms.templates` |
-| priority | p2 |
-| panel | dms |
-| permission-prefix | `dms.templates` |
-| tables | `dms_templates` |
+`dms.templates`
+
+**Priority:** p2  
+**Panel:** dms  
+**Permission prefix:** `dms.templates`  
+**Tables:** `dms_templates`
 
 ## Dependencies
 
@@ -65,7 +64,8 @@ tests/Feature/DMS/TemplateGenerationTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot view, edit, or generate from company B's templates.
+- [ ] Module gating: artifacts hidden when `dms.templates` inactive.
 - [ ] All declared fields substituted; missing value blocks generation.
 - [ ] Employee / contact merge sources resolve whitelisted fields only (no sensitive fields).
 - [ ] PDF output branded + stored in chosen folder via the library service.

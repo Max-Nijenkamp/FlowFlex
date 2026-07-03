@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Page Access Control
@@ -39,6 +39,20 @@ Per-page visibility — a page is open to `all` company users or `restricted` to
 - Consumes: role/user reference data from [[../../../core/rbac/_module|core.rbac]].
 - Feeds: the `accessiblePagesFor` scope used by [[page-tree|Page Tree]], [[wiki-viewer|Wiki Viewer]], and [[wiki-search|Wiki Search]].
 - Shared entity: roles/users (owned by `core.rbac`).
+
+## Test Checklist
+
+### Unit
+- [ ] `accessiblePagesFor`: `all` pages visible to any company user; `restricted` visible only to listed roles/users
+- [ ] Validation: `restricted` with empty `access_list` rejected
+
+### Feature (Pest)
+- [ ] Restricted page invisible in tree, search results, AND direct viewer URL for a non-permitted user
+- [ ] Scope applies immediately after save (no stale cache lets a newly-restricted page leak)
+- [ ] Tenant isolation: access lists reference only own-company roles/users; `dms.wiki.manage-access` required to edit the section
+
+### Livewire
+- [ ] Access form section: switching to `restricted` reveals + requires the role/user multi-select; hidden without `dms.wiki.manage-access`
 
 ## Unknowns
 

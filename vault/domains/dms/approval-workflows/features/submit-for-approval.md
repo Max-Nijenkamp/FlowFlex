@@ -43,6 +43,20 @@ Submit a document into an approval workflow: create the request, lock the docume
 - Feeds: [[approver-actions|Approver Actions]] act on the request created here; the lock command targets `dms.versions`.
 - Shared entity: the document (owned by `dms.library`); the lock column (owned by `dms.versions`).
 
+## Test Checklist
+
+### Unit
+- [ ] `SubmitForApprovalData` validation: `document_id` accessible + no open request; `workflow_id` resolves in the company.
+
+### Feature (Pest)
+- [ ] `submit()` creates a `pending` request, transitions `pending → in_review`, locks the document, and notifies the first approver(s).
+- [ ] A second submit on the same document throws `OpenRequestExistsException` (partial-unique enforced under a concurrent double-submit via row lock).
+- [ ] A submitter in company A cannot submit a company B document (tenant isolation).
+
+### Livewire
+- [ ] Submit modal picks document + workflow; success toast on submit.
+- [ ] Duplicate open request surfaces the `OpenRequestExistsException` error inline; action denied without `dms.approvals.submit`.
+
 ## Unknowns
 
 - Lock fallback ("flag otherwise") — which column/table when `dms.versions` is off? Open ([[../unknowns]]).

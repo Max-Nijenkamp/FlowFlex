@@ -42,6 +42,20 @@ Define a reusable approval chain: an ordered list of approvers (roles or specifi
 - Feeds: nothing directly — [[submit-for-approval|Submit for Approval]] references a workflow when creating a request.
 - Shared entity: roles/users (owned by `core.rbac` / platform).
 
+## Test Checklist
+
+### Unit
+- [ ] `CreateWorkflowData` validation: `type in:sequential,parallel`; `steps min:1`; each step names exactly one of `role_id`/`user_id`.
+- [ ] A step naming both a role and a user (or neither) is rejected.
+
+### Feature (Pest)
+- [ ] Create a workflow with an ordered steps repeater; steps persist in order with resolved role/user references.
+- [ ] A workflow references only roles/users within the acting company (cross-company role/user rejected — tenant isolation).
+
+### Livewire
+- [ ] Steps repeater adds/reorders/removes rows; an unresolved role/user surfaces a validation toast.
+- [ ] Resource denied without `dms.approvals.manage-workflows`; hidden when `dms.approvals` inactive.
+
 ## Unknowns
 
 - Whether a soft-deleted workflow with open requests behaves gracefully *(assumed)* — [[../unknowns]].

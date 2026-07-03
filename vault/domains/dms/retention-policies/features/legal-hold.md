@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Legal Hold
@@ -43,6 +43,21 @@ Exempt a specific document from all retention actions while a hold is active. A 
 - Consumes: nothing.
 - Feeds: [[retention-run|Retention Run]] reads active holds and skips those documents.
 - Shared entity: the document (owned by `dms.library`).
+
+## Test Checklist
+
+### Unit
+- [ ] Active-hold rule: a document with `released_at IS NULL` hold is reported held; released hold is not
+- [ ] `PlaceLegalHoldData` validation: reason required, max 1000
+
+### Feature (Pest)
+- [ ] Placing a second active hold on the same document is rejected (concurrent placement race: only one succeeds under lockForUpdate)
+- [ ] Held document is skipped by the retention run for BOTH archive and delete actions; release makes it eligible again
+- [ ] Tenant isolation: company A cannot place/release a hold on company B's document; `dms.retention.manage-holds` required
+
+### Livewire
+- [ ] `LegalHoldResource` create validates required reason; release action sets `released_at`; no delete action exposed
+- [ ] canAccess(): hidden without `dms.retention.manage-holds` or with `dms.retention` module inactive
 
 ## Unknowns
 

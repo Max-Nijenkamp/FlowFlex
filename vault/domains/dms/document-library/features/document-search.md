@@ -41,6 +41,20 @@ Full-text search across document names, descriptions, and extracted text — alw
 - Feeds: nothing.
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] The search query composes the `accessibleFoldersFor` set as a `folder_id` filter (post-filter always applied).
+
+### Feature (Pest)
+- [ ] A document in a restricted folder never surfaces for a non-permitted user, even on an exact name/text hit.
+- [ ] Search is tenant-scoped — company A results never include company B documents.
+- [ ] The search endpoint is throttled by the named limiter per company/user.
+
+### Livewire
+- [ ] Typing debounces into a query and swaps the grid for results; clearing restores the folder grid.
+- [ ] Search available with `dms.library.view-any`; results respect the folder-access post-filter.
+
 ## Unknowns
 
 - Non-PDF full-text extraction engine — deferred ([[../unknowns]]).

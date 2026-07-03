@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Document Library
@@ -14,13 +14,12 @@ Folder-based document storage with full-text search, in-browser preview, and inh
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `dms.library` |
-| priority | p2 |
-| panel | dms |
-| permission-prefix | `dms.library` |
-| tables | `dms_folders`, `dms_folder_access`, `dms_documents`, `dms_favourites` |
+`dms.library`
+
+**Priority:** p2  
+**Panel:** dms  
+**Permission prefix:** `dms.library`  
+**Tables:** `dms_folders`, `dms_folder_access`, `dms_documents`, `dms_favourites`
 
 ## Dependencies
 
@@ -73,7 +72,8 @@ tests/Feature/DMS/{DocumentLibraryTest,FolderAccessTest,DocumentSearchTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot list, open, search, or download company B's folders/documents.
+- [ ] Module gating: artifacts hidden when `dms.library` inactive.
 - [ ] Restricted folder invisible in tree, grid, search, and direct viewer URL for a non-permitted user.
 - [ ] Access inheritance down a subtree.
 - [ ] Upload rejects disallowed types; path under `companies/{id}/dms/`.
