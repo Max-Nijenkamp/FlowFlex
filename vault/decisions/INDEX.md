@@ -11,6 +11,7 @@ Architectural decisions, one file per decision. Moved from `build/decisions/` to
 
 | Date | Decision | Status |
 |---|---|---|
+| 2026-07-03 | [[decisions/decision-2026-07-03-custom-over-missing-plugins\|Custom-build over waiting for missing Filament plugins]] | decided |
 | 2026-07-03 | [[decisions/decision-2026-07-03-two-panel-matcher-ui-row\|Two-panel matcher — ui-strategy row #21 + blueprint]] | decided |
 | 2026-07-03 | [[decisions/decision-2026-07-03-access-contract-verb-rule\|Access-contract verbs must exist in the module's Permissions table]] | decided |
 | 2026-07-03 | [[decisions/decision-2026-07-03-external-dashboard-share\|External read-only dashboard share links (relaxes intra-company rule)]] | decided |
