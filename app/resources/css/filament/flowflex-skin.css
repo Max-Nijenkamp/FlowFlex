@@ -171,26 +171,19 @@
     margin-bottom: 0.5rem;
 }
 
-/* Staff badge inverts to an ink chip; staff buttons are ink, never indigo */
-.fi-panel-admin .fi-simple-main::before {
-    background: var(--ff-ink);
-    color: #ffffff;
-    border-radius: 6px;
-    padding: 5px 10px;
-}
-
-.fi-panel-admin .fi-simple-main .fi-btn {
-    background-color: var(--ff-ink);
-}
-
-.fi-panel-admin .fi-simple-main .fi-btn:hover {
-    background-color: #1f2937;
-}
-
-/* Split shell: 620px dark brand panel + centered card on paper */
-.ff-auth-split {
+/* Split shell: 620px dark brand panel + centered card on paper.
+   Explicitly reset the vendor flex centering — align-items:center would
+   otherwise shrink the brand panel to content height mid-page. */
+.fi-simple-layout.ff-auth-split {
     display: grid;
     grid-template-columns: minmax(420px, 620px) 1fr;
+    align-items: stretch;
+    justify-items: stretch;
+    min-height: 100dvh;
+}
+
+.ff-auth-split .ff-auth-brand {
+    min-height: 100dvh;
 }
 
 .ff-auth-split .fi-simple-main-ctn {
@@ -198,6 +191,7 @@
     align-items: center;
     justify-content: center;
     padding: 2rem;
+    min-height: 100dvh;
 }
 
 .ff-auth-brand {
