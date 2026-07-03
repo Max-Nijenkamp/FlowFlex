@@ -54,33 +54,43 @@
     color: #ffffff;
 }
 
-/* Active item: 2px primary spine + tint, per spec */
-.fi-sidebar .fi-sidebar-item-active .fi-sidebar-item-btn {
-    background-color: rgb(var(--primary-400) / 0.16);
-    border-inline-start: 2px solid rgb(var(--primary-400));
+/* Active item (real markup: li.fi-sidebar-item.fi-active > a.fi-sidebar-item-btn):
+   2px primary spine + tint, white label — in BOTH color modes */
+.fi-sidebar .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    background-color: color-mix(in srgb, var(--primary-400) 20%, transparent);
+    border-inline-start: 2px solid var(--primary-400);
     border-radius: 0 10px 10px 0;
 }
 
-.fi-sidebar .fi-sidebar-item-active .fi-sidebar-item-label {
+.fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-label {
     color: #ffffff;
     font-weight: 600;
 }
 
-.fi-sidebar .fi-sidebar-item-icon {
-    color: rgb(255 255 255 / 0.55);
+.fi-sidebar .fi-sidebar-item-icon,
+.fi-sidebar .fi-sidebar-item-btn svg {
+    color: rgb(255 255 255 / 0.6);
 }
 
-.fi-sidebar .fi-sidebar-item-active .fi-sidebar-item-icon {
-    color: rgb(var(--primary-400));
+.fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-icon,
+.fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-btn svg {
+    color: var(--primary-400);
 }
 
-/* Panel wordmark row + mono panel label */
+/* Panel wordmark row + mono panel label — the wrapper paints too, or the
+   header row renders white over the ink rail */
+.fi-sidebar-header-ctn,
 .fi-sidebar-header {
     background-color: var(--ff-ink);
     color: #ffffff;
+    border-bottom: 1px solid rgb(255 255 255 / 0.06);
 }
 
-.fi-sidebar-header::after {
+.fi-sidebar-header .fi-logo {
+    color: #ffffff;
+}
+
+.fi-sidebar-header .fi-sidebar-header-logo-ctn::after {
     content: var(--ff-panel-label, '');
     font-family: var(--ff-font-mono);
     font-size: 10px;
@@ -146,7 +156,7 @@
     min-height: 100dvh;
     background-color: var(--ff-paper);
     background-image:
-        radial-gradient(48rem 30rem at 15% -10%, rgb(var(--primary-500) / 0.1), transparent 60%),
+        radial-gradient(48rem 30rem at 15% -10%, color-mix(in srgb, var(--primary-500) 10%, transparent), transparent 60%),
         linear-gradient(to bottom, transparent, var(--ff-paper-deep));
 }
 
@@ -228,8 +238,8 @@
        step deeper than paper so the white card visibly sits on a surface. */
     background-color: #efece4;
     background-image:
-        radial-gradient(46rem 32rem at 45% -12%, rgb(var(--primary-500) / 0.22), transparent 60%),
-        radial-gradient(38rem 26rem at 95% 115%, rgb(var(--primary-500) / 0.12), transparent 58%),
+        radial-gradient(46rem 32rem at 45% -12%, color-mix(in srgb, var(--primary-500) 22%, transparent), transparent 60%),
+        radial-gradient(38rem 26rem at 95% 115%, color-mix(in srgb, var(--primary-500) 12%, transparent), transparent 58%),
         linear-gradient(160deg, #f6f4ee 0%, #efece4 55%, #eae6db 100%);
 }
 
@@ -352,15 +362,15 @@
 .dark .fi-simple-layout {
     background-color: #0b0f19;
     background-image:
-        radial-gradient(48rem 30rem at 15% -10%, rgb(var(--primary-500) / 0.14), transparent 60%),
+        radial-gradient(48rem 30rem at 15% -10%, color-mix(in srgb, var(--primary-500) 14%, transparent), transparent 60%),
         linear-gradient(to bottom, transparent, #0e1320);
 }
 
 .dark .ff-auth-split .fi-simple-main-ctn {
     background-color: #0b0f19;
     background-image:
-        radial-gradient(46rem 32rem at 45% -12%, rgb(var(--primary-500) / 0.2), transparent 60%),
-        radial-gradient(38rem 26rem at 95% 115%, rgb(var(--primary-500) / 0.1), transparent 58%),
+        radial-gradient(46rem 32rem at 45% -12%, color-mix(in srgb, var(--primary-500) 20%, transparent), transparent 60%),
+        radial-gradient(38rem 26rem at 95% 115%, color-mix(in srgb, var(--primary-500) 10%, transparent), transparent 58%),
         linear-gradient(160deg, #101624 0%, #0b0f19 55%, #090c14 100%);
 }
 
