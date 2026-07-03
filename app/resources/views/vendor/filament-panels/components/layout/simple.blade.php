@@ -23,19 +23,23 @@
         'subheading' => null,
     ])
 
+    {{-- Auth screens are always light (owner decision 2026-07-03): the panel
+         theme choice applies after login; here the split design is the brand.
+         Filament's Alpine theme store re-adds .dark after boot, so pin it. --}}
+    <script>
+        (() => {
+            const lighten = () => document.documentElement.classList.remove('dark')
+            lighten()
+            document.addEventListener('alpine:initialized', lighten)
+            document.addEventListener('livewire:navigated', lighten)
+        })()
+    </script>
+
     <div @class(['fi-simple-layout', 'ff-auth-split' => $isSplit])>
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::SIMPLE_LAYOUT_START, scopes: $renderHookScopes) }}
 
-        @if (filament()->hasDarkMode() && ! filament()->hasDarkModeForced())
-            <div class="ff-auth-theme-switcher">
-                <x-filament-panels::theme-switcher />
-            </div>
-        @endif
-
         @if ($isSplit)
             <aside class="ff-auth-brand" aria-hidden="true">
-                <div class="ff-auth-brand-glow"></div>
-
                 <svg class="ff-auth-paths" viewBox="0 0 620 900" preserveAspectRatio="none">
                     @foreach ([
                         'M-20,120 C 180,120 240,250 460,250',

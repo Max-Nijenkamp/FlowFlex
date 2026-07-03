@@ -160,6 +160,187 @@
     color: rgb(255 255 255 / 0.38);
 }
 
+/* ---- Sidebar footer (handoff .pn-side-foot + .pn-panels) ------------------- */
+.ff-sidebar-foot {
+    margin-top: auto;
+    border-top: 1px solid var(--ff-line);
+    padding: 12px 16px 4px;
+}
+
+.dark .ff-sidebar-foot {
+    border-top-color: rgb(255 255 255 / 0.08);
+}
+
+.ff-panel-chips-label {
+    display: block;
+    font-family: var(--ff-font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ff-ink-faint);
+    margin-bottom: 7px;
+}
+
+.dark .ff-panel-chips-label {
+    color: rgb(255 255 255 / 0.38);
+}
+
+.ff-panel-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.ff-panel-chip {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--ff-font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--ff-paper-deep);
+    color: var(--ff-ink-faint);
+}
+
+.ff-panel-chip.ff-on {
+    outline: 1.5px solid var(--primary-500);
+    background: color-mix(in srgb, var(--primary-400) 20%, transparent);
+    color: var(--ff-ink);
+}
+
+.dark .ff-panel-chip {
+    background: rgb(255 255 255 / 0.07);
+    color: rgb(255 255 255 / 0.55);
+}
+
+.dark .ff-panel-chip.ff-on {
+    outline-color: var(--primary-400);
+    color: #ffffff;
+}
+
+.ff-user-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-block: 8px;
+}
+
+.ff-user-ava {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--primary-500);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Archivo', var(--font-family), sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    flex: none;
+}
+
+.ff-user-meta {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.ff-user-nm {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ff-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ff-user-co {
+    font-size: 11px;
+    color: var(--ff-ink-faint);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dark .ff-user-nm {
+    color: #ffffff;
+}
+
+.dark .ff-user-co {
+    color: rgb(255 255 255 / 0.45);
+}
+
+/* ---- Topbar crumb (handoff .pn-crumb) -------------------------------------- */
+.ff-crumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ff-ink-faint);
+    white-space: nowrap;
+    padding-inline-start: 4px;
+}
+
+.ff-crumb-sep {
+    opacity: 0.6;
+}
+
+.ff-crumb-here {
+    color: var(--ff-ink);
+    font-weight: 600;
+}
+
+.dark .ff-crumb-here {
+    color: #ffffff;
+}
+
+/* ---- Search trigger (handoff .pn-search) ----------------------------------- */
+.ff-search-trigger {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 320px;
+    border: 1px solid var(--ff-line-strong);
+    background: var(--ff-card);
+    border-radius: 9px;
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--ff-ink-faint);
+    cursor: pointer;
+    text-align: start;
+}
+
+.ff-search-trigger kbd {
+    margin-left: auto;
+    font-family: var(--ff-font-mono);
+    font-size: 10px;
+    border: 1px solid var(--ff-line);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: var(--ff-ink-faint);
+}
+
+.dark .ff-search-trigger {
+    background: rgb(255 255 255 / 0.04);
+    border-color: rgb(255 255 255 / 0.1);
+    color: rgb(255 255 255 / 0.45);
+}
+
+.dark .ff-search-trigger kbd {
+    border-color: rgb(255 255 255 / 0.12);
+    color: rgb(255 255 255 / 0.4);
+}
+
+@media (max-width: 1023px) {
+    .ff-search-trigger { display: none; }
+}
+
 /* ---- Topbar (handoff .pn-top): warm 60px strip, hairline bottom ----------- */
 .fi-topbar {
     background-color: rgb(251 250 248 / 0.95);
@@ -273,10 +454,6 @@
     color: var(--ff-ink-soft);
 }
 
-.dark .fi-simple-main .fi-simple-header-subheading {
-    color: rgb(255 255 255 / 0.55);
-}
-
 /* Split shell: 620px dark brand panel + centered card on paper.
    Explicitly reset the vendor flex centering — align-items:center would
    otherwise shrink the brand panel to content height mid-page. */
@@ -317,17 +494,6 @@
     background: var(--ff-flow-bg);
     color: #ffffff;
     padding: 52px 56px;
-}
-
-.ff-auth-brand-glow {
-    position: absolute;
-    left: 50%;
-    top: -260px;
-    transform: translateX(-50%);
-    width: 900px;
-    height: 560px;
-    background: radial-gradient(ellipse 50% 50% at 50% 50%, rgb(79 70 229 / 0.28), rgb(56 189 248 / 0.05) 55%, transparent 75%);
-    pointer-events: none;
 }
 
 .ff-auth-paths {
@@ -403,50 +569,6 @@
 @media (max-width: 1023px) {
     .ff-auth-split { grid-template-columns: 1fr; }
     .ff-auth-brand { display: none; }
-}
-
-/* Guest theme toggle, top-right of the auth shell */
-.ff-auth-theme-switcher {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 20;
-    display: flex;
-    gap: 2px;
-    padding: 4px;
-    border-radius: 10px;
-    background: rgb(17 24 39 / 0.06);
-    backdrop-filter: blur(4px);
-}
-
-.dark .ff-auth-theme-switcher {
-    background: rgb(255 255 255 / 0.08);
-}
-
-/* ---- Auth dark mode -------------------------------------------------------- */
-.dark .fi-simple-layout {
-    background-color: #0b0f19;
-    background-image:
-        radial-gradient(48rem 30rem at 15% -10%, color-mix(in srgb, var(--primary-500) 14%, transparent), transparent 60%),
-        linear-gradient(to bottom, transparent, #0e1320);
-}
-
-.dark .ff-auth-split .fi-simple-main-ctn {
-    background-color: #0b0f19;
-    background-image:
-        radial-gradient(46rem 32rem at 45% -12%, color-mix(in srgb, var(--primary-500) 20%, transparent), transparent 60%),
-        radial-gradient(38rem 26rem at 95% 115%, color-mix(in srgb, var(--primary-500) 10%, transparent), transparent 58%),
-        linear-gradient(160deg, #101624 0%, #0b0f19 55%, #090c14 100%);
-}
-
-.dark .fi-simple-main {
-    background-color: #111827;
-    border-color: rgb(255 255 255 / 0.08);
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 28px 56px -32px rgb(0 0 0 / 0.6);
-}
-
-.dark .fi-simple-main::before {
-    color: rgb(255 255 255 / 0.4);
 }
 
 /* Brand panel is dark in both modes — hairline it against the dark canvas */
