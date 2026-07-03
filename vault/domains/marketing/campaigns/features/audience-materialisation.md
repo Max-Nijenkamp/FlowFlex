@@ -39,6 +39,18 @@ Snapshot the recipient list at schedule time so the send is deterministic and su
 - Feeds: materialised rows consumed by `SendCampaignBatchJob` ([[tracking-suppression]]).
 - Shared entity: `mkt_unsubscribes` (own module, shared with sequences).
 
+## Test Checklist
+
+### Unit
+- [ ] Dedupe collapses duplicate `(campaign_id, contact_id)` pairs to one recipient
+- [ ] Suppression + `email_deliverable=false` filter removes those contacts from the surviving set
+
+### Feature (Pest)
+- [ ] `CampaignService::schedule` writes exactly one `status=pending` recipient per surviving contact and transitions `draft → scheduled`
+- [ ] An empty materialised audience blocks the schedule (composer surfaces the error, no state transition)
+- [ ] Materialisation runs under the sender's `marketing.campaigns.send`; a suppressed address present in the segment is excluded
+- [ ] Tenant isolation: a segment from company A resolves only company A contacts (read via `SegmentService`, company-scoped)
+
 ## Unknowns
 
 - Manual-list max size / chunking threshold not fixed. See [[../unknowns]].

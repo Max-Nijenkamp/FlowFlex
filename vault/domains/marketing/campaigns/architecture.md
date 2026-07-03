@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Campaigns — Architecture
@@ -36,20 +36,27 @@ Public token controllers (`TrackOpenController`, `TrackClickController`, `Unsubs
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Campaigns
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `CampaignResource` | Campaigns | #1 CRUD resource | composer, audience picker, test-send, stats on view page |
-| `CampaignStatsWidget` | Campaigns | #6 widget | open/click funnel per variant |
+| `CampaignResource` | #1 CRUD resource | tweaks: state-badge-column, view-page-tabs, custom-header-actions (send / test-send) | composer, audience picker, stats on view page; send + test-send are comms actions → each names the `panel-action` limiter ([[./security]]) |
+| `CampaignStatsWidget` | #6 dashboard widget | [[../../../architecture/patterns/page-blueprints#Dashboard]] | open/click funnel per variant; widget polling 30–60s |
 
-### Access contract
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('marketing.campaigns.view-any') && BillingService::hasModule('marketing.campaigns')`
+per [[../../../architecture/filament-patterns]] #1. Custom pages MUST state this explicitly — Filament does not auto-gate them; this module has none (resource + widget only). The public Track / Click / Unsubscribe surfaces run outside the panel and the session guard on signed/opaque per-recipient tokens ([[./security]]), not Filament artifacts.
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('marketing.campaigns.view-any')
-        && BillingService::hasModule('marketing.campaigns');
-}
-```
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Campaign CRUD (draft form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Schedule (`draft → scheduled`, materialises recipient snapshot) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read status, validate, write per [[../../../architecture/patterns/states]] |
+| Dispatch / send transitions (`scheduled → sending → sent`/`failed`) | Pessimistic | status transition guard under `lockForUpdate()` per [[../../../architecture/patterns/states]]; scheduler + batch-job `pending`-only guard makes re-runs resume-safe |
+| Recipient tracking stamps (`opened_at` / `clicked_at` / `bounced_at` / `unsubscribed_at` from public token endpoints) | n/a | Single-writer per recipient row keyed by an opaque token; monotonic timestamp stamps, no concurrent editors — last-write-wins is correct here |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

@@ -40,6 +40,21 @@ Write and organise blog posts: body, excerpt, image, category, tags, SEO.
 - Feeds: posts consumed by [[scheduling-publish]] + [[public-blog]].
 - Shared entity: tags (`spatie/laravel-tags`, polymorphic).
 
+## Test Checklist
+
+### Unit
+- [ ] Reading-time estimate derives from body word count
+- [ ] Slug generated (and de-duplicated) from title via `spatie/laravel-sluggable`
+
+### Feature (Pest)
+- [ ] Saving a post persists body purified (HTMLPurifier), SEO meta, tags, category, and featured media reference
+- [ ] Title + body required — save rejected without them
+- [ ] Tenant isolation: author only lists/edits their own company's posts and categories
+
+### Livewire
+- [ ] `PostResource` form validates required fields and shows the media picker + SEO section; denied without `marketing.cms.create`/`.update`
+- [ ] `PostCategoryResource` CRUD honours `canAccess`
+
 ## Unknowns
 
 - Author bio source; multi-author bylines. See [[../unknowns]].

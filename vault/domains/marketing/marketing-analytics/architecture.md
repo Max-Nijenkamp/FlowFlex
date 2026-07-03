@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Marketing Analytics — Architecture
@@ -46,6 +46,15 @@ public static function canAccess(): bool
         && BillingService::hasModule('marketing.analytics');
 }
 ```
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| All dashboard/widget/export paths | n-a | Read-only analytics; no writes |
+| Redis aggregate cache writes | n-a | TTL-keyed cache set; idempotent recompute, last-write-wins safe |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Related
 

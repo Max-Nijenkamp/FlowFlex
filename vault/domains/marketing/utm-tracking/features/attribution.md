@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Attribution
@@ -38,6 +38,18 @@ Report which sources/campaigns drive contacts and revenue, first- vs last-touch.
 
 - Reads: [[../../../crm/contacts/_module|crm.contacts]] + [[../../../crm/deals/_module|crm.deals]] (read-only revenue join).
 - Consumed by: [[../../marketing-analytics/_module|Marketing Analytics]] dashboard.
+
+## Test Checklist
+
+### Unit
+- [ ] First- vs last-touch toggle attributes the same contact to different sources correctly
+
+### Feature (Pest)
+- [ ] Aggregation joins touches -> contacts -> deal value read-only via CRM (no writes to crm tables)
+- [ ] Tenant isolation: attribution over own-company touches only
+
+### Livewire
+- [ ] Attribution tables render inside the Marketing Analytics dashboard with the first/last toggle
 
 ## Unknowns
 

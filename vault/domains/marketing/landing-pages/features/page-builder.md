@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Page Builder
@@ -39,6 +39,18 @@ Assemble a landing page from typed content blocks and set its SEO.
 - Reads: forms from [[../../forms/_module|marketing.forms]]; media from [[../../../core/file-storage/_module|core.files]].
 - Feeds: page config consumed by [[publish-render]].
 - Shared entity: none written.
+
+## Test Checklist
+
+### Unit
+- [ ] Block config schema-validated against `BlockRegistry` on save; rich content purified
+
+### Feature (Pest)
+- [ ] Form block must reference an existing ACTIVE form; inactive/foreign form rejected
+- [ ] Tenant isolation + permission: builder edits own-company pages only
+
+### Livewire
+- [ ] Block repeater adds/reorders/edits blocks; SEO fields validate; canAccess() hides without permission or module
 
 ## Unknowns
 

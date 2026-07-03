@@ -40,6 +40,17 @@ Serve a searchable, company-scoped public blog of published posts.
 - Reads: author from core users; media from [[../../../core/file-storage/_module|core.files]].
 - Shared entity: tags.
 
+## Test Checklist
+
+### Unit
+- [ ] Related-posts query selects same-category recent posts and excludes the current post
+
+### Feature (Pest)
+- [ ] Index lists only published, company-scoped posts (paginated); draft/scheduled excluded
+- [ ] Search returns published-only results for the correct company; unknown slug → 404
+- [ ] Tenant isolation: `/blog/{company-slug}` never surfaces another company's posts or search hits
+- [ ] Public search route is throttled (429 past the limit)
+
 ## Unknowns
 
 - RSS/sitemap for SEO. See [[../unknowns]].

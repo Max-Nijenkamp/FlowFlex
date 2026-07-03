@@ -5,18 +5,23 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Campaigns
 
 Email marketing campaigns: build, segment, schedule, send, and track. Bulk one-off sends to CRM customer segments, with A/B subject-line testing, open/click tracking and a mandatory suppression list.
 
-- **module-key:** `marketing.campaigns` · **panel:** marketing · **priority:** p3
-- **fires-events:** none · **consumes-events:** none
-- **tables:** `mkt_campaigns`, `mkt_campaign_recipients`, `mkt_unsubscribes`
+## Module-key
 
-## What it does
+`marketing.campaigns`
+
+**Priority:** p3  
+**Panel:** marketing  
+**Permission prefix:** `marketing.campaigns`  
+**Tables:** `mkt_campaigns`, `mkt_campaign_recipients`, `mkt_unsubscribes`
+
+## Core Features
 
 - Campaign record: name, subject (+ subject_b/split_percent for A/B), from name/email, audience segment or manual list, content, schedule, status.
 - State machine: `draft → scheduled → sending → sent` (+ `failed`, resume-safe). See [[architecture]].
@@ -25,6 +30,8 @@ Email marketing campaigns: build, segment, schedule, send, and track. Bulk one-o
 - A/B testing: subject-line variants, split %, winner by open rate *(assumed)*.
 - Batched, rate-limited queue sending; opens (pixel), clicks (wrapped links), bounces tracked per recipient.
 - **Unsubscribe is mandatory**: every marketing send carries a footer link; the `mkt_unsubscribes` suppression list is enforced at materialisation and shared with [[../email-sequences/_module|Email Sequences]].
+
+See [[features/compose-schedule]] · [[features/audience-materialisation]] · [[features/ab-testing]] · [[features/tracking-suppression]].
 
 ## Dependencies
 
@@ -78,6 +85,17 @@ app/Filament/Marketing/Widgets/CampaignStatsWidget.php
 database/factories/Marketing/{CampaignFactory,CampaignRecipientFactory}.php
 tests/Feature/Marketing/{CampaignSendTest,UnsubscribeTest,AbTestTest}.php
 ```
+
+## Test Checklist
+
+- [ ] Tenant isolation: company A cannot see, edit, send, or read stats for company B campaigns; a company B token never resolves against a company A recipient
+- [ ] Module gating: `CampaignResource` + `CampaignStatsWidget` hidden when `marketing.campaigns` inactive
+- [ ] Schedule materialises a deduped snapshot excluding `mkt_unsubscribes` + `email_deliverable=false`
+- [ ] Suppressed / undeliverable address never receives a send (enforced at materialisation and defensively at send)
+- [ ] A/B split tags recipients `variant=a|b` per `split_percent`; per-variant funnel in `CampaignStatsData`
+- [ ] Send resume-safe: re-run of `SendCampaignBatchJob` sends only `pending` recipients
+- [ ] Unsubscribe token writes `mkt_unsubscribes`; future campaign + sequence sends exclude the address
+- [ ] Send / test-send actions gated on `marketing.campaigns.send` and throttled via `panel-action`
 
 ## Related
 

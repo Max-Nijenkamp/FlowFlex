@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Marketing Dashboard
@@ -39,6 +39,19 @@ One dashboard rolling up campaign, form, landing, sequence and attribution metri
 - Reads: all sibling marketing modules (see [[../_module|module]] Cross-Domain Edges).
 - Embeds: [[../../utm-tracking/features/attribution|UTM attribution]] tables.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Cache key embeds company_id + date range; soft-dep sections null when source module inactive
+
+### Feature (Pest)
+- [ ] Inactive source module -> its section null, no query, no error; widget omitted
+- [ ] CSV export requires `marketing.analytics.view` and cites the `exports` limiter
+- [ ] Tenant isolation: metrics never mix companies (cache key + scoped queries)
+
+### Livewire
+- [ ] `MarketingDashboardPage` canAccess(): hidden without `marketing.analytics.view` or module inactive; date-range filter re-scopes widgets
 
 ## Unknowns
 

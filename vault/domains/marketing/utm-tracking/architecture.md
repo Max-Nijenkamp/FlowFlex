@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # UTM Tracking — Architecture
@@ -41,6 +41,17 @@ public static function canAccess(): bool
         && BillingService::hasModule('marketing.utm');
 }
 ```
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `UtmService::record` first touch | Pessimistic | `lockForUpdate` (or insert-or-ignore on unique key) in transaction — first touch is immutable and must not be overwritten by a raced second submission |
+| `UtmService::record` last touch | n-a | Upsert, last-write-wins is the intended semantic |
+| `BuildUtmUrlAction` | n-a | Pure function, no persistence |
+| Attribution reads | n-a | Read-only aggregation |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Related
 

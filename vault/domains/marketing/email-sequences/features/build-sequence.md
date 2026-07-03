@@ -40,6 +40,21 @@ Author a multi-step drip: ordered emails with wait delays and a trigger.
 - Feeds: steps consumed by [[advancement-engine]]; trigger config consumed by [[enrolment-triggers]].
 - Shared entity: none written.
 
+## Test Checklist
+
+### Unit
+- [ ] Steps persist in strict `order`; step body purified (HTMLPurifier)
+- [ ] Toggling `is_active=false` marks the sequence paused
+
+### Feature (Pest)
+- [ ] Saving a sequence requires ≥1 step and a valid trigger config
+- [ ] Pausing a sequence halts advancement for all its enrolments; resuming continues
+- [ ] Tenant isolation: an author edits only their own company's sequences
+
+### Livewire
+- [ ] Step repeater adds/reorders steps; validation blocks save with zero steps or an invalid trigger config
+- [ ] Create/edit denied without `marketing.sequences.create`/`.update`; resource honours `canAccess`
+
 ## Unknowns
 
 - Branching by open/click deferred *(assumed linear)*. See [[../unknowns]].

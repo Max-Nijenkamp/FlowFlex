@@ -5,18 +5,23 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Email Sequences
 
 Automated multi-step email drip sequences triggered by events (form submission, segment entry, contact created). Nurture leads automatically. Bulk marketing automation — distinct from 1:1 rep-driven [[../../crm/sales-sequences/_module|sales-sequences]].
 
-- **module-key:** `marketing.sequences` · **panel:** marketing · **priority:** p3
-- **fires-events:** none · **consumes-events:** `FormSubmissionReceived`
-- **tables:** `mkt_sequences`, `mkt_sequence_steps`, `mkt_sequence_enrolments`
+## Module-key
 
-## What it does
+`marketing.sequences`
+
+**Priority:** p3  
+**Panel:** marketing  
+**Permission prefix:** `marketing.sequences`  
+**Tables:** `mkt_sequences`, `mkt_sequence_steps`, `mkt_sequence_enrolments`
+
+## Core Features
 
 - Sequence = ordered steps (email + wait days) + an enrolment trigger.
 - Triggers: form submitted, added to segment, contact created, manual *(date-based deferred)*.
@@ -24,6 +29,8 @@ Automated multi-step email drip sequences triggered by events (form submission, 
 - Enrolment: one active per `(contact, sequence)`; contacts progress automatically on a cursor.
 - Exit conditions: unsubscribe (suppression list), becomes customer *(assumed)*, manual unenrol.
 - Pause/resume a sequence (pauses all its enrolments). Suppression list always honoured (shared `mkt_unsubscribes`, owned by [[../campaigns/_module|campaigns]]).
+
+See [[features/build-sequence]] · [[features/enrolment-triggers]] · [[features/advancement-engine]].
 
 ## Dependencies
 
@@ -72,6 +79,16 @@ app/Filament/Marketing/Resources/{SequenceResource,SequenceEnrolmentResource}.ph
 database/factories/Marketing/{MarketingSequenceFactory,SequenceEnrolmentFactory}.php
 tests/Feature/Marketing/{SequenceAdvanceTest,SequenceTriggerTest}.php
 ```
+
+## Test Checklist
+
+- [ ] Tenant isolation: the advancement sweep and enrolment only touch the acting company's rows; a company B `FormSubmissionReceived` never enrols into a company A sequence
+- [ ] Module gating: `SequenceResource` + `SequenceEnrolmentResource` hidden when `marketing.sequences` inactive
+- [ ] One active enrolment per `(sequence, contact)` — duplicate enrol is skipped
+- [ ] Advancement sends the due step, sets `next_step_at = now + wait_days`, and completes at the last step (send-once under the cursor)
+- [ ] Suppression re-checked at enrol and before each send; a suppressed contact is never enrolled or advanced
+- [ ] `FormSubmissionReceived` enrols only when `trigger_config.form_id` matches
+- [ ] Pause/resume flips `is_active` and halts/continues all enrolments
 
 ## Related
 

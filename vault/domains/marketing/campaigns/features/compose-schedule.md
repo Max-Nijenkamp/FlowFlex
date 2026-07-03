@@ -41,6 +41,21 @@ Build a campaign — pick audience, write the email, preview, and send now or sc
 - Feeds: `CampaignService::schedule` → [[audience-materialisation]] → [[tracking-suppression]].
 - Shared entity: CRM `contacts` (owned by crm, read-only).
 
+## Test Checklist
+
+### Unit
+- [ ] Merge-field substitution replaces `{{first_name}}` against a sample contact; unknown fields degrade gracefully
+- [ ] `from_email` validation rejects a malformed address
+
+### Feature (Pest)
+- [ ] "Send now" transitions `draft → scheduled` immediately and materialises recipients
+- [ ] A future `scheduled_at` leaves status `scheduled`; `DispatchScheduledCampaignsCommand` promotes it once the time arrives
+- [ ] Creating/scheduling with no audience (empty segment and no manual list) is blocked
+
+### Livewire
+- [ ] Composer validation blocks schedule on missing audience or invalid `from_email`
+- [ ] "Send now" / "Schedule" require `marketing.campaigns.send`; drafting only requires `marketing.campaigns.create`; resource honours `canAccess`
+
 ## Unknowns
 
 - Block email builder vs Tiptap-only for v1 *(assumed Tiptap)*. See [[../unknowns]].

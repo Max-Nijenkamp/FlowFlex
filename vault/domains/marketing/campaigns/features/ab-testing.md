@@ -40,6 +40,20 @@ Test two subject lines on a split of the audience; winner measured by open rate.
 - Feeds: variant column consumed by [[tracking-suppression]] stats aggregation and [[../../marketing-analytics/_module|Marketing Analytics]].
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] Variant assignment splits recipients `a`/`b` in the configured `split_percent` ratio (deterministic given a seed)
+- [ ] Winner-by-open-rate picks the higher `opened/sent` variant; ties resolve to `a` *(assumed)*
+
+### Feature (Pest)
+- [ ] Scheduling an A/B campaign tags each `mkt_campaign_recipients` row with a `variant`; `CampaignStatsData` returns two funnels
+- [ ] `subject_b` required (validation) when A/B is enabled; `split_percent` accepted only in 10–50
+
+### Livewire
+- [ ] A/B toggle reveals the `subject_b` field + split slider; leaving `subject_b` empty blocks schedule with a field error
+- [ ] Stats widget highlights the winning variant; configuring needs `marketing.campaigns.create`, reading needs `marketing.campaigns.view-any`
+
 ## Unknowns
 
 > [!warning] UNVERIFIED

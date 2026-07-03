@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Form Builder
@@ -39,6 +39,18 @@ Compose a lead-capture form from typed fields and configure what happens on subm
 - Reads: sequences from [[../../email-sequences/_module|marketing.sequences]] (enrol config).
 - Feeds: definition consumed by [[embed-hosted]] + [[public-submit]].
 - Shared entity: none written.
+
+## Test Checklist
+
+### Unit
+- [ ] Validation: exactly one email field mandatory; field keys unique; select requires options
+
+### Feature (Pest)
+- [ ] Saving a builder config persists typed fields + submit_action (sequence enrol / notify / redirect)
+- [ ] Tenant isolation + permission: only own-company forms editable, builder gated on the module permission
+
+### Livewire
+- [ ] Builder form validates duplicate keys and missing email field; canAccess() hides resource without permission or module
 
 ## Unknowns
 

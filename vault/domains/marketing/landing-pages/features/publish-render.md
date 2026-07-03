@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Publish & Public Render
@@ -39,6 +39,19 @@ Make a page live and serve it publicly, mobile-responsive and SEO-tagged.
 - Reads: embedded form from [[../../forms/_module|marketing.forms]].
 - Feeds: page ref on a form submit → conversion counted by [[page-analytics]].
 - Shared entity: none written.
+
+## Test Checklist
+
+### Unit
+- [ ] `publish` validates every block against the registry before transitioning; failure keeps draft
+
+### Feature (Pest)
+- [ ] Publish stamps `published_at`; concurrent publish/unpublish serialised (pessimistic transition)
+- [ ] Public GET renders published page; draft -> 404; per-IP throttle returns 429 over limit
+- [ ] Tenant isolation: `/p/{company-slug}/{page-slug}` never serves another company's draft
+
+### Livewire
+- [ ] Publish/unpublish actions gated + confirm; state reflected in the resource list
 
 ## Unknowns
 

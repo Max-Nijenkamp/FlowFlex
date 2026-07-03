@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: UTM Builder
@@ -37,6 +37,18 @@ Generate correctly encoded tagged URLs for campaigns.
 
 - Feeds: generated URLs used in [[../../campaigns/_module|Campaigns]] + external channels; their clicks later become [[touch-capture]] touches.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] `BuildUtmUrlAction` URL-encodes params correctly (spaces, unicode, existing query strings)
+
+### Feature (Pest)
+- [ ] Generated URL round-trips: touch-capture parses back the same source/medium/campaign
+- [ ] Permission: page gated on `marketing.utm.view`
+
+### Livewire
+- [ ] `UtmBuilderPage` canAccess() explicit; form validates base URL; copy button renders the generated link
 
 ## Unknowns
 

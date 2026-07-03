@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Landing Pages — Architecture
@@ -42,6 +42,17 @@ public static function canAccess(): bool
         && BillingService::hasModule('marketing.landing-pages');
 }
 ```
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Page CRUD / block builder save | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| Publish / unpublish (`LandingPageService`) | Pessimistic | State transition draft<->published — `lockForUpdate` in transaction per patterns/states |
+| `RecordVisitAction` visit_count increment | n-a | Atomic SQL increment on the public path; no read-modify-write race |
+| Conversion aggregation | n-a | Read-only over Forms-owned submissions |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Related
 

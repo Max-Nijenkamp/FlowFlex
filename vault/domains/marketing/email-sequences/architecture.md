@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Email Sequences — Architecture
@@ -33,20 +33,27 @@ Consumes `FormSubmissionReceived` (from [[../forms/_module|forms]]). Fires none.
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Sequences
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `SequenceResource` | Sequences | #1 CRUD resource | step repeater, trigger config, per-step stats |
-| `SequenceEnrolmentResource` | Sequences | #1 CRUD resource | who/where, unenrol action |
+| `SequenceResource` | #1 CRUD resource | tweaks: inline-relation-repeater (steps), state-badge-column (active/paused), custom-header-actions (pause / resume) | trigger config, per-step stats on view page |
+| `SequenceEnrolmentResource` | #1 CRUD resource | tweaks: read-only-flow-owned (rows created by triggers/listener), custom-header-actions (unenrol) | who/where, `current_step`, `next_step_at`, status; manual enrol / unenrol names the `panel-action` limiter ([[./security]]) |
 
-### Access contract
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('marketing.sequences.view-any') && BillingService::hasModule('marketing.sequences')`
+per [[../../../architecture/filament-patterns]] #1. This module has no custom Filament pages and no public surface of its own — unsubscribe is the shared campaigns token endpoint ([[../campaigns/security]]). System sends run on the `notifications` queue under `CompanyContext`, not through a panel artifact.
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('marketing.sequences.view-any')
-        && BillingService::hasModule('marketing.sequences');
-}
-```
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Sequence / step CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Enrolment create (manual enrol, `EnrolFromFormListener`, segment diff) | Pessimistic | `DB::transaction()` + `lockForUpdate()` (or a `(sequence_id, contact_id)` active-uniqueness guard) so a contact is never double-enrolled in one active run |
+| Step advancement (`advanceDue` cursor + send) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the enrolment row; send-once then reschedule `next_step_at` — the cursor guarantees a step never double-sends within a sweep |
+| Pause / resume / exit / unenrol (status flip) | Optimistic | Simple-enum flip; `updated_at` stale-check ([[../../../architecture/patterns/optimistic-locking]]) — not a spatie state machine |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

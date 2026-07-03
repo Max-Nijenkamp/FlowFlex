@@ -5,18 +5,23 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Content CMS
 
 Blog and content management for the company's public marketing presence. Author posts, categorise, schedule, publish, and serve a searchable public blog.
 
-- **module-key:** `marketing.cms` · **panel:** marketing · **priority:** p3
-- **fires-events:** none · **consumes-events:** none
-- **tables:** `mkt_posts`, `mkt_post_categories`
+## Module-key
 
-## What it does
+`marketing.cms`
+
+**Priority:** p3  
+**Panel:** marketing  
+**Permission prefix:** `marketing.cms`  
+**Tables:** `mkt_posts`, `mkt_post_categories`
+
+## Core Features
 
 - Blog post: title, slug, body (Tiptap, purified), excerpt, featured image, author, category, tags, SEO fields.
 - Status: `draft → scheduled → published` (simple enum + scheduler *(assumed no spatie states — linear)*).
@@ -24,6 +29,8 @@ Blog and content management for the company's public marketing presence. Author 
 - Categories + tags; author profiles (from user record *(assumed)*).
 - Public blog (Vue + Inertia) at `/blog/{company-slug}` *(assumed company-scoped)*.
 - Full-text search (Meilisearch, published only); related posts (same category); reading-time estimate.
+
+See [[features/authoring]] · [[features/scheduling-publish]] · [[features/public-blog]].
 
 ## Dependencies
 
@@ -70,6 +77,16 @@ app/Filament/Marketing/Resources/{PostResource,PostCategoryResource}.php
 database/factories/Marketing/{PostFactory,PostCategoryFactory}.php
 tests/Feature/Marketing/BlogTest.php
 ```
+
+## Test Checklist
+
+- [ ] Tenant isolation: company A sees only its own posts/categories in the panel; `/blog/{company-slug}` renders only that company's published posts
+- [ ] Module gating: `PostResource` + `PostCategoryResource` hidden when `marketing.cms` inactive
+- [ ] Draft / scheduled posts return 404 on the public blog and are excluded from search
+- [ ] `PublishScheduledPostsCommand` flips a due `scheduled` post to `published` exactly once (idempotent guard)
+- [ ] Publishing (re)indexes into Meilisearch; unpublish removes it from the published scope
+- [ ] Body purified (HTMLPurifier) on save; public renderer emits no raw user HTML
+- [ ] Related posts return same-category recent posts, excluding self
 
 ## Related
 

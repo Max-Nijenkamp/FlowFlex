@@ -39,6 +39,20 @@ Publish now or schedule for later; the scheduler flips posts live exactly once.
 - Feeds: published posts consumed by [[public-blog]].
 - Shared entity: none written.
 
+## Test Checklist
+
+### Unit
+- [ ] Immediate publish sets `status=published` + `published_at=now`; a future `published_at` sets `status=scheduled`
+
+### Feature (Pest)
+- [ ] `PublishScheduledPostsCommand` flips a due `scheduled` post exactly once (idempotent `WHERE` guard); re-run is a no-op
+- [ ] Publishing indexes into Meilisearch (published scope); unpublish returns to `draft` and de-indexes
+- [ ] Publish/unpublish denied without `marketing.cms.publish`
+
+### Livewire
+- [ ] Publish / Schedule row actions flip the status badge; the date-time picker drives `published_at`
+- [ ] Publish action hidden/denied for a user lacking `marketing.cms.publish`
+
 ## Unknowns
 
 - Sitemap/RSS regeneration on publish — unspecced. See [[../unknowns]].

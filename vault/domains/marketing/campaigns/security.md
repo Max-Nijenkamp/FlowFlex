@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Campaigns — Security
@@ -16,15 +16,31 @@ Bulk outbound email + three public token endpoints — the highest-exposure surf
 
 ## Permissions
 
-`marketing.campaigns.view-any` · `marketing.campaigns.create` · `marketing.campaigns.send`. Send is separated from create so a marketer can draft without send rights. Resources/widgets gate on `canAccess()` ([[../../../architecture/patterns/policy]], [[../../../security/authn-authz]]).
+| Permission | Grants |
+|---|---|
+| `marketing.campaigns.view-any` | Campaign list + stats widget |
+| `marketing.campaigns.create` | Draft a campaign |
+| `marketing.campaigns.update` | Edit a draft campaign |
+| `marketing.campaigns.delete` | Soft-delete a campaign |
+| `marketing.campaigns.send` | Trigger `draft → scheduled` (schedule / send-now) **and** test-send |
+
+Send is separated from create so a marketer can draft without send rights. The `scheduled → sending → sent`/`failed` transitions are system-driven (scheduler + batch job), not user permissions. Seeded in `PermissionSeeder`. Resources/widgets gate on `canAccess()` ([[../../../architecture/patterns/policy]], [[../../../security/authn-authz]]).
+
+**Verb-per-command check:** the only user-triggered state transition is `send` (covers schedule / send-now); test-send reuses `marketing.campaigns.send`. Both are covered above.
 
 ## Public token endpoints (HIGH)
 
 `TrackOpenController`, `TrackClickController`, `UnsubscribeController` run **outside the Sanctum session guard**. Each URL carries a **signed route or per-recipient opaque token**; the token resolves company + recipient, never the session. No token → 404. Documented token scheme required before build ([[../../../security/webhooks-signing]] for the analogous signing pattern).
 
-## Rate limiting (medium)
+## Rate limiting
 
-Public Track/Unsubscribe routes carry a throttle (per-IP or per-token) to blunt pixel/scan abuse. See [[../../../architecture/security]].
+| Action | Category | Limiter |
+|---|---|---|
+| Send / schedule campaign (panel action) | sends comms (bulk) | `panel-action` ([[../../../architecture/security]]) |
+| Test-send (panel action) | sends comms | `panel-action` |
+| Public Track / Click / Unsubscribe endpoints | public token endpoint | `api` *(assumed — no dedicated public-endpoint limiter exists yet; per-IP/per-token throttle to blunt pixel/scan abuse is an open reconciliation item, see [[unknowns]])* |
+
+The batched `SendCampaignBatchJob` is itself throttled at the queue/transport layer ([[../../../architecture/queue-jobs]], [[../../../architecture/email]]); the `panel-action` limiter guards the user-facing trigger. See [[../../../architecture/security]].
 
 ## Suppression & consent
 

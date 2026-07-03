@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Embed & Hosted Page
@@ -39,6 +39,18 @@ Render the form off-platform (embed snippet / iframe) and on a hosted FlowFlex U
 - Feeds: submissions flow into [[public-submit]].
 - Consumed by: [[../../landing-pages/_module|Landing Pages]] form block embeds this.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Form-definition JSON serialisation matches the field registry schema
+
+### Feature (Pest)
+- [ ] Hosted page `/f/{slug}` renders active form; inactive form returns 404; view increments `view_count`
+- [ ] Tenant isolation: slug resolution scoped by company -- another company's slug never serves
+
+### Livewire
+- (none -- public Vue/embed surface, covered by feature + frontend tests)
 
 ## Unknowns
 

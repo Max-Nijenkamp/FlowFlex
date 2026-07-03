@@ -38,6 +38,21 @@ Decide who enters a sequence and when.
 - Reads: `SegmentService` membership from [[../../../crm/customer-segments/_module|crm.segments]]; contacts from [[../../../crm/contacts/_module|crm.contacts]].
 - Shared entity: `mkt_unsubscribes` (suppression check, owned by campaigns).
 
+## Test Checklist
+
+### Unit
+- [ ] `EnrolFromFormListener` enrols only when the event `form_id` matches `trigger_config.form_id`
+- [ ] Duplicate-active guard rejects a second active enrolment for the same `(sequence, contact)`
+
+### Feature (Pest)
+- [ ] `FormSubmissionReceived` enrols a matching contact once; a non-matching form is ignored
+- [ ] Segment-entry diff enrols each new member exactly once (uniqueness guard)
+- [ ] A suppressed contact is rejected at enrol time
+- [ ] Tenant isolation: a company B form event never enrols into a company A sequence
+
+### Livewire
+- [ ] Manual enrol / unenrol on `SequenceEnrolmentResource` requires `marketing.sequences.enrol`; rows are read-only-flow-owned otherwise
+
 ## Unknowns
 
 - Segment-exit detection + contact-created observer wiring unspecified. See [[../unknowns]].

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Public Submit
@@ -37,6 +37,20 @@ Validate, store, and fan out a submission — the event that seeds CRM, sequence
 
 - Feeds: `FormSubmissionReceived` → [[../../../crm/contacts/_module|crm.contacts]] (find-or-create), [[../../email-sequences/_module|marketing.sequences]] (enrol), [[../../utm-tracking/_module|marketing.utm]] (touch).
 - Shared entity: none written.
+
+## Test Checklist
+
+### Unit
+- [ ] Honeypot filled -> silent 200 drop, nothing stored
+- [ ] Values validated against the definition (required, email format)
+
+### Feature (Pest)
+- [ ] Valid submit stores `mkt_form_submissions` + fires `FormSubmissionReceived` with company_id as scalar
+- [ ] Per-IP rate limit: over-limit returns 429; CSRF-exempt cross-origin path works
+- [ ] Tenant isolation: submission lands on the owning company's form only
+
+### Livewire
+- (none -- public endpoint, no panel UI)
 
 ## Unknowns
 

@@ -38,6 +38,17 @@ Move enrolments through their steps on time, idempotently, honouring suppression
 - Feeds: per-step engagement consumed by [[../../marketing-analytics/_module|Marketing Analytics]].
 - Shared entity: `mkt_unsubscribes` (owned by campaigns).
 
+## Test Checklist
+
+### Unit
+- [ ] `next_step_at = now + wait_days` for the advanced step; last step transitions to `completed`
+- [ ] Suppression check short-circuits a send and marks the enrolment `exited`
+
+### Feature (Pest)
+- [ ] `AdvanceMarketingSequencesCommand` sends the due step exactly once (cursor advance in a transaction; re-run within the window is a no-op)
+- [ ] A per-enrolment send failure is isolated (try/catch) and does not abort the sweep
+- [ ] Tenant isolation: the sweep runs under `CompanyContext` and never advances another company's enrolments
+
 ## Unknowns
 
 - Reuse campaign open/click tracking exactly vs. a lighter counter. See [[../unknowns]].

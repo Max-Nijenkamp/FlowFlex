@@ -40,6 +40,20 @@ Send the batch, track opens/clicks/bounces per recipient, and honour the mandato
 - Feeds: recipient statuses aggregated by [[../../marketing-analytics/_module|Marketing Analytics]].
 - Shared entity: `mkt_unsubscribes` honoured by [[../../email-sequences/_module|Email Sequences]].
 
+## Test Checklist
+
+### Unit
+- [ ] Open pixel hit stamps `opened_at`; wrapped-link hit stamps `clicked_at` then issues the redirect; provider bounce sets `bounced_at` + `status=failed`
+- [ ] Unsubscribe writes an `mkt_unsubscribes` row (email, company) and stamps `unsubscribed_at`
+
+### Feature (Pest)
+- [ ] After unsubscribe, a subsequent campaign **and** sequence send excludes the address
+- [ ] Re-running `SendCampaignBatchJob` sends only `pending` recipients (already-sent rows untouched)
+- [ ] A public token from company A never resolves a company B recipient (no token → 404); tenant boundary holds without a session
+
+### Livewire
+- [ ] `CampaignStatsWidget` renders the per-variant funnel and reads only with `marketing.campaigns.view-any`
+
 ## Unknowns
 
 - Should an open/click log a CRM activity touch? Currently no event fired. See [[../unknowns]].

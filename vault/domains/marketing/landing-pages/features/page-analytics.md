@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Page Analytics
@@ -39,6 +39,19 @@ Count visits and conversions per page (funnel: visits → form submits on the pa
 - Reads: submission conversions from [[../../forms/_module|marketing.forms]].
 - Feeds: page funnel consumed by [[../../marketing-analytics/_module|Marketing Analytics]].
 - Shared entity: none written.
+
+## Test Checklist
+
+### Unit
+- [ ] Conversion rate = conversions / visits; zero visits -> 0, not division error
+
+### Feature (Pest)
+- [ ] Public render increments `visit_count` atomically (parallel hits lose no counts)
+- [ ] Form submission carrying the page ref counts as one conversion (read-only over Forms data)
+- [ ] Tenant isolation: analytics scoped to own-company pages
+
+### Livewire
+- [ ] Visit/conversion columns render on `LandingPageResource`; hidden without `marketing.landing-pages.view-any`
 
 ## Unknowns
 
