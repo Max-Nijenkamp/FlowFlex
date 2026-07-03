@@ -74,7 +74,7 @@ Verified present: all three `0001_01_01_*` migrations, both panel providers, the
 
 ## Test Checklist (verified by suite)
 
-- [ ] Tenant isolation: every tenant table carries a `company_id` `foreignUlid` (the column `CompanyScope` filters on) — asserted by `ModelsTest`
+- [x] Tenant isolation: every tenant table carries a `company_id` `foreignUlid` (the column `CompanyScope` filters on) — asserted by `ModelsTest`
 - [ ] Module gating: n/a — `foundation.scaffold` is always-on platform scaffold, not a billable/gateable module
 - [x] `php artisan migrate` creates companies/users/admins with ULID PKs
 - [x] Arch test: models use `HasUlids` + `SoftDeletes` (`tests/Architecture/ModelsTest.php`)

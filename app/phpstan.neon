@@ -1,0 +1,8 @@
+# Plain PHPStan, not Larastan — decision-2026-06-11-static-analysis-without-larastan.
+# Model magic is covered by @property docblocks on every model.
+parameters:
+    level: 5
+    paths:
+        - app
+        - database/factories
+    treatPhpDocTypesAsCertain: false
