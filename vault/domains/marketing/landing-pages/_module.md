@@ -16,6 +16,13 @@ Build and publish standalone landing pages from typed content blocks, with embed
 - **fires-events:** none · **consumes-events:** none
 - **tables:** `mkt_landing_pages`
 
+## Module-key
+
+**Priority:** p3
+**Panel:** /marketing
+**Permission prefix:** `marketing.landing-pages`
+**Tables:** `mkt_landing_pages`
+
 ## What it does
 
 - Block builder: typed registry (hero, features, testimonial, CTA, form, footer); rich content per block (purified).

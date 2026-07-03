@@ -63,7 +63,8 @@ tests/Feature/Ecommerce/{StorefrontTest,CheckoutFlowTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's storefront data
+- [ ] Module gating: artifacts hidden when `ecommerce.storefront` inactive
 - [ ] Storefront serves only active products of the right company.
 - [ ] Guest checkout toggle honored; required fields enforced.
 - [ ] Shipping: flat + free-over-threshold math.

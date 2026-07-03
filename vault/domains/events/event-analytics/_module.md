@@ -58,7 +58,8 @@ tests/Feature/Events/EventAnalyticsTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's event analytics data
+- [ ] Module gating: artifacts hidden when `events.event-analytics` inactive
 - [ ] Funnel + attendance math over fixtures.
 - [ ] Revenue via brick/money; sections hidden when modules inactive.
 - [ ] Across-events comparison.

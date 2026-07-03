@@ -21,6 +21,13 @@ Read-only IT dashboards: asset inventory value, licence spend and waste, helpdes
 
 ---
 
+## Module-key
+
+**Priority:** p3
+**Panel:** /it
+**Permission prefix:** `it.reporting`
+**Tables:** none
+
 ## Purpose
 
 A pure read/aggregate layer over the IT domain. It computes asset valuation, licence spend/waste, helpdesk metrics, and compliance rates and renders them as apex-chart widgets on a single dashboard page. **It owns zero tables** — all data is aggregated read-only from the five source tables listed below via their owning modules' read APIs. It never writes, and soft-dependent sections disappear cleanly when their module is inactive.
@@ -68,7 +75,8 @@ tests/Feature/IT/ItReportingTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's it reporting data
+- [ ] Module gating: artifacts hidden when `it.reporting` inactive
 - [ ] Asset valuation + licence waste math over fixtures
 - [ ] Helpdesk resolution averages over fixtures
 - [ ] Inactive soft-dep sections hidden, no errors

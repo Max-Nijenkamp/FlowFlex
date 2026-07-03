@@ -34,14 +34,14 @@ Only `_index.md` and `_opportunities.md` remain as flat files. Conventions:
 
 ## Modules
 
-| Module | Key | Tables | Priority | Depends on (intra-domain) |
-|---|---|---|---|---|
-| [[health-scores/_module\|Customer Health Scores]] | `cs.health` | 2 | p3 | — (anchor) |
-| [[churn-risk/_module\|Churn Risk Alerts]] | `cs.churn` | 1 | p3 | health |
-| [[nps/_module\|NPS Surveys]] | `cs.nps` | 2 | p3 | — (health soft consumer) |
-| [[qbr/_module\|QBR Management]] | `cs.qbr` | 2 | p3 | — (health soft) |
-| [[playbooks/_module\|CS Playbooks]] | `cs.playbooks` | 4 | p3 | — (health/churn soft) |
-| [[success-analytics/_module\|Success Analytics]] | `cs.analytics` | 0 | p3 | health |
+| Module | Key | Tables | Priority | Depends on (intra-domain) | Kind highlights |
+|---|---|---|---|---|---|
+| [[health-scores/_module\|Customer Health Scores]] | `cs.health` | 2 | p3 | — (anchor) | resource + #4 page |
+| [[churn-risk/_module\|Churn Risk Alerts]] | `cs.churn` | 1 | p3 | health | resource |
+| [[nps/_module\|NPS Surveys]] | `cs.nps` | 2 | p3 | — (health soft consumer) | 2 resources + custom page |
+| [[qbr/_module\|QBR Management]] | `cs.qbr` | 2 | p3 | — (health soft) | resource |
+| [[playbooks/_module\|CS Playbooks]] | `cs.playbooks` | 4 | p3 | — (health/churn soft) | 2 resources |
+| [[success-analytics/_module\|Success Analytics]] | `cs.analytics` | 0 | p3 | health | custom page |
 
 ---
 

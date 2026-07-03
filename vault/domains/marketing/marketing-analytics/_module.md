@@ -16,6 +16,13 @@ Campaign performance, form conversion, landing-page funnel, sequence engagement,
 - **fires-events:** none · **consumes-events:** none
 - **tables:** none — pure aggregation over other marketing modules' tables
 
+## Module-key
+
+**Priority:** p3
+**Panel:** /marketing
+**Permission prefix:** `marketing.analytics`
+**Tables:** none — pure aggregation over other marketing modules' tables
+
 ## What it does
 
 - Campaign performance: open/click/bounce/unsubscribe rates over time.

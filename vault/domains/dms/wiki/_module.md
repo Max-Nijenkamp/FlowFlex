@@ -69,7 +69,8 @@ tests/Feature/DMS/{WikiPageTest,WikiAccessTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's wiki data
+- [ ] Module gating: artifacts hidden when `dms.wiki` inactive
 - [ ] Restricted page invisible in tree, search, AND direct viewer URL for a non-permitted user.
 - [ ] Body purified (XSS fixture) before storage.
 - [ ] Version snapshot per save; restore works; cap enforced.

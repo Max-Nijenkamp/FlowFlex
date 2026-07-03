@@ -29,6 +29,13 @@ Hosted in **/operations** (Procurement nav → Purchase Orders). See [[../_index
 
 ---
 
+## Module-key
+
+**Priority:** p3
+**Panel:** /operations
+**Permission prefix:** `procurement.goods-receipt`
+**Tables:** proc_three_way_matches
+
 ## Dependencies
 
 | Type | Module | Why |
@@ -90,7 +97,8 @@ Detail: [[decisions]] · [[unknowns]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's goods receipt data
+- [ ] Module gating: artifacts hidden when `procurement.goods-receipt` inactive
 - [ ] Within-tolerance match auto-approves
 - [ ] Quantity + amount discrepancies flagged with variance (brick/money)
 - [ ] Bill approval blocked until matched/overridden when module active

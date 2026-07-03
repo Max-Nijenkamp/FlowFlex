@@ -81,7 +81,8 @@ tests/Feature/CS/CsAnalyticsTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's success analytics data
+- [ ] Module gating: artifacts hidden when `cs.analytics` inactive
 - [ ] Churn/retention math over lifecycle fixtures
 - [ ] NRR via brick/money; section hidden without invoicing
 - [ ] Playbook health-delta over fixtures

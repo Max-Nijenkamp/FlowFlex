@@ -16,6 +16,13 @@ Mobile Device Management integration: sync managed devices from an MDM provider 
 
 ---
 
+## Module-key
+
+**Priority:** p3 *(assumed)*
+**Panel:** /it
+**Permission prefix:** `it.mdm-integration`
+**Tables:** `it_mdm_devices`, `it_mdm_config`
+
 ## Dependencies
 
 | Type | Module | Why |
@@ -61,7 +68,8 @@ tests/Feature/IT/{MdmSyncTest,MdmActionTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's mdm integration data
+- [ ] Module gating: artifacts hidden when `it.mdm-integration` inactive
 - [ ] API key ciphertext; never re-displayed
 - [ ] Sync upserts (re-run = no duplicates); serial auto-match links assets
 - [ ] Compliance change alerts once; resets on recovery

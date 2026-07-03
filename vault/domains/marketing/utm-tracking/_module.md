@@ -16,6 +16,13 @@ Track campaign attribution via UTM parameters. Capture source/medium/campaign on
 - **fires-events:** none · **consumes-events:** `FormSubmissionReceived`
 - **tables:** `mkt_utm_touches`
 
+## Module-key
+
+**Priority:** p3
+**Panel:** /marketing
+**Permission prefix:** `marketing.utm`
+**Tables:** `mkt_utm_touches`
+
 ## What it does
 
 - Capture `utm_source/medium/campaign/term/content` from page URLs (first-party cookie carried to form submit *(assumed 30d)*).

@@ -27,6 +27,13 @@ Hosted in **/operations** (Procurement nav → Requisitions). See [[../_index|Pr
 
 ---
 
+## Module-key
+
+**Priority:** p3
+**Panel:** /operations
+**Permission prefix:** `procurement.requisitions`
+**Tables:** proc_requisitions, proc_requisition_items, proc_requisition_approvals
+
 ## Dependencies
 
 | Type | Module | Why |
@@ -95,7 +102,8 @@ Detail: [[decisions]] · [[unknowns]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's requisitions data
+- [ ] Module gating: artifacts hidden when `procurement.requisitions` inactive
 - [ ] Chain resolved per matrix thresholds; levels approve in order
 - [ ] Requester cannot approve own; delegate may act
 - [ ] Reject requires comment; resubmit restarts chain

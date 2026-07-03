@@ -66,7 +66,8 @@ tests/Feature/Operations/WarehouseTransferTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's warehouses data
+- [ ] Module gating: artifacts hidden when `operations.warehouses` inactive
 - [ ] Transfer atomic: both movements or none; source availability enforced
 - [ ] Same-warehouse transfer rejected
 - [ ] Exactly one default warehouse per company

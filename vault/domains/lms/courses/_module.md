@@ -64,7 +64,8 @@ tests/Feature/LMS/CourseTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's courses data
+- [ ] Module gating: artifacts hidden when `lms.courses` inactive
 - [ ] Publish without lessons rejected.
 - [ ] Prerequisite cycle rejected.
 - [ ] Draft invisible to learners.

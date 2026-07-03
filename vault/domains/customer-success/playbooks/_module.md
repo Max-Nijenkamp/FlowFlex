@@ -85,7 +85,8 @@ tests/Feature/CS/PlaybookTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's playbooks data
+- [ ] Module gating: artifacts hidden when `cs.playbooks` inactive
 - [ ] Run materialises steps with offsets + assignee
 - [ ] Duplicate active run rejected (manual + auto)
 - [ ] Last step completion closes run

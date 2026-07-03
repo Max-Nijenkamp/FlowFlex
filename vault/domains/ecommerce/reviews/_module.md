@@ -62,7 +62,8 @@ tests/Feature/Ecommerce/ReviewTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's reviews data
+- [ ] Module gating: artifacts hidden when `ecommerce.reviews` inactive
 - [ ] Verified-purchase setting blocks non-buyers; token submit works.
 - [ ] One review per (order, product).
 - [ ] Pending invisible on storefront; approve publishes + busts rating cache.

@@ -27,6 +27,13 @@ Hosted in the **/operations** panel (Procurement nav → Settings). No panel of 
 
 ---
 
+## Module-key
+
+**Priority:** p3
+**Panel:** /operations
+**Permission prefix:** `procurement.approvals`
+**Tables:** proc_approval_rules, proc_approval_delegations
+
 ## Dependencies
 
 | Type | Module | Why |
@@ -91,7 +98,8 @@ Detail: [[decisions]] · [[unknowns]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's approvals data
+- [ ] Module gating: artifacts hidden when `procurement.approvals` inactive
 - [ ] `chainFor` picks correct levels per amount/category fixtures
 - [ ] Overlapping amount ranges rejected at save
 - [ ] Delegation: delegate can act within date range; outside range rejected

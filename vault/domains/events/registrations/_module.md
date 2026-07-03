@@ -73,7 +73,8 @@ tests/Feature/Events/{RegistrationCapacityTest,WaitlistTest,CheckInTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's registrations data
+- [ ] Module gating: artifacts hidden when `events.registrations` inactive
 - [ ] Capacity atomic: concurrent registrations at limit → waitlist, never overshoot.
 - [ ] Duplicate email per event rejected (via `attendee_email_hash`).
 - [ ] Free auto-confirms + `.ics` mail; paid confirms on purchase only.

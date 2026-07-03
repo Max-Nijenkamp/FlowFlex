@@ -16,6 +16,13 @@ Build embeddable lead-capture forms. Submissions fire `FormSubmissionReceived` (
 - **fires-events:** `FormSubmissionReceived` · **consumes-events:** none
 - **tables:** `mkt_forms`, `mkt_form_submissions`
 
+## Module-key
+
+**Priority:** p3
+**Panel:** /marketing
+**Permission prefix:** `marketing.forms`
+**Tables:** `mkt_forms`, `mkt_form_submissions`
+
 ## What it does
 
 - Form builder: typed fields (text, email, phone, select, checkbox, textarea, **consent-checkbox**), labels, validation flags; exactly one email field mandatory.

@@ -27,6 +27,13 @@ Hosted in **/operations** (Procurement nav → Reporting). See [[../_index|Procu
 
 ---
 
+## Module-key
+
+**Priority:** p3
+**Panel:** /operations
+**Permission prefix:** `procurement.spend`
+**Tables:** none — read-only aggregation, owns no tables
+
 ## Dependencies
 
 | Type | Module | Why |
@@ -97,7 +104,8 @@ Detail: [[decisions]] · [[unknowns]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's spend analytics data
+- [ ] Module gating: artifacts hidden when `procurement.spend` inactive
 - [ ] Spend sums by supplier/category/department over fixtures
 - [ ] Maverick detection flags off-catalogue lines
 - [ ] Savings = (agreed − actual) × qty

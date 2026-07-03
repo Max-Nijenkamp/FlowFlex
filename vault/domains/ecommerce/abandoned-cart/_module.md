@@ -64,7 +64,8 @@ tests/Feature/Ecommerce/CartRecoveryTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's abandoned cart data
+- [ ] Module gating: artifacts hidden when `ecommerce.abandoned-cart` inactive
 - [ ] Inactivity flips active → abandoned at the window.
 - [ ] Steps fire once each at 1h/24h/72h; stop on conversion.
 - [ ] Recovery link restores cart; order via link marks recovered.

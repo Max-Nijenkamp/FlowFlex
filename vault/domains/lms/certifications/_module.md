@@ -65,7 +65,8 @@ tests/Feature/LMS/CertificateTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's certifications data
+- [ ] Module gating: artifacts hidden when `lms.certifications` inactive
 - [ ] Completion auto-issues when template set; no template = no-op.
 - [ ] Certificate numbers unique; verification returns minimal data; expired shows expired.
 - [ ] Expiry alerts once per level.

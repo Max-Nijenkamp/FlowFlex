@@ -80,7 +80,8 @@ tests/Feature/CS/ChurnRiskTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's churn risk data
+- [ ] Module gating: artifacts hidden when `cs.churn` inactive
 - [ ] Each detection rule fixture (red tier, detractor, overdue, inactivity)
 - [ ] One open risk per account; level escalation re-alerts, same level doesn't
 - [ ] Auto-resolve when factors clear

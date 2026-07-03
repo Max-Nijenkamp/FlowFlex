@@ -27,6 +27,13 @@ Hosted in **/operations** (Procurement nav → Suppliers). See [[../_index|Procu
 
 ---
 
+## Module-key
+
+**Priority:** p3
+**Panel:** /operations
+**Permission prefix:** `procurement.catalogue`
+**Tables:** proc_catalogue_items, proc_supplier_status
+
 ## Dependencies
 
 | Type | Module | Why |
@@ -90,7 +97,8 @@ Detail: [[decisions]] · [[unknowns]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's supplier catalogue data
+- [ ] Module gating: artifacts hidden when `procurement.catalogue` inactive
 - [ ] Search excludes inactive, out-of-window, blacklisted-supplier items
 - [ ] Blacklist blocks requisition picker + sourcing + PO supplier
 - [ ] Blacklist requires notes

@@ -35,14 +35,14 @@ Asset inventory, IT helpdesk, HR-driven access provisioning, software licences, 
 
 ## Modules
 
-| Module | Key | Priority | Build status | Depends on (intra-domain) |
-|---|---|---|---|---|
-| [[domains/it/asset-inventory/_module\|Asset Inventory]] | `it.assets` | p3 | planned | — (anchor) |
-| [[domains/it/helpdesk/_module\|IT Helpdesk]] | `it.helpdesk` | p3 | planned | assets (soft) |
-| [[domains/it/access-provisioning/_module\|Access Provisioning]] | `it.access` | p3 | planned | — |
-| [[domains/it/software-licences/_module\|Software Licences]] | `it.licences` | p3 | planned | — |
-| [[domains/it/mdm-integration/_module\|MDM Integration]] | `it.mdm` | p3 | planned | assets |
-| [[domains/it/it-reporting/_module\|IT Reporting]] | `it.reporting` | p3 | planned | assets + all IT (soft) |
+| Module | Key | Priority | Build status | Depends on (intra-domain) | Kind highlights |
+|---|---|---|---|---|---|
+| [[domains/it/asset-inventory/_module\|Asset Inventory]] | `it.assets` | p3 | planned | — (anchor) | resource |
+| [[domains/it/helpdesk/_module\|IT Helpdesk]] | `it.helpdesk` | p3 | planned | assets (soft) | resource + #8 page |
+| [[domains/it/access-provisioning/_module\|Access Provisioning]] | `it.access` | p3 | planned | — | 3 resources + #18 page |
+| [[domains/it/software-licences/_module\|Software Licences]] | `it.licences` | p3 | planned | — | resource |
+| [[domains/it/mdm-integration/_module\|MDM Integration]] | `it.mdm` | p3 | planned | assets | resource + #7 page |
+| [[domains/it/it-reporting/_module\|IT Reporting]] | `it.reporting` | p3 | planned | assets + all IT (soft) | #6 page |
 
 Asset Inventory is the IT anchor — build first. IT Reporting aggregates read-only from every other IT module and owns no tables.
 

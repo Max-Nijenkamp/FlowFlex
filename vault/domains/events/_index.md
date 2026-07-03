@@ -21,15 +21,15 @@ Fully mapped to the feature level per [[../../decisions/decision-2026-06-20-full
 
 ## Modules
 
-| Module | Key | Owns tables | Public surface | Fires |
-|---|---|---|---|---|
-| [[events/_module\|Events]] | `events.events` | `ev_events`, `ev_sessions` | landing (Vue) | — |
-| [[registrations/_module\|Registrations]] | `events.registrations` | `ev_registrations` | registration form (Vue) | `EventRegistrationReceived` |
-| [[tickets/_module\|Tickets]] | `events.tickets` | `ev_tickets`, `ev_ticket_purchases`, `ev_ticket_discounts` | purchase (Vue+Stripe) | — |
-| [[speakers/_module\|Speakers]] | `events.speakers` | `ev_speakers`, `ev_session_speakers` | submit + profiles (Vue) | — |
-| [[sponsors/_module\|Sponsors]] | `events.sponsors` | `ev_sponsors`, `ev_sponsor_deliverables` | logos on landing | — |
-| [[venues/_module\|Venues]] | `events.venues` | `ev_venues`, `ev_venue_rooms` | address on landing | — |
-| [[event-analytics/_module\|Event Analytics]] | `events.analytics` | *(none — read-only)* | — | — |
+| Module | Key | Owns tables | Public surface | Fires | Kind highlights |
+|---|---|---|---|---|---|
+| [[events/_module\|Events]] | `events.events` | `ev_events`, `ev_sessions` | landing (Vue) | — | 2 resources + #4 page |
+| [[registrations/_module\|Registrations]] | `events.registrations` | `ev_registrations` | registration form (Vue) | `EventRegistrationReceived` | resource + #7 page |
+| [[tickets/_module\|Tickets]] | `events.tickets` | `ev_tickets`, `ev_ticket_purchases`, `ev_ticket_discounts` | purchase (Vue+Stripe) | — | 2 resources |
+| [[speakers/_module\|Speakers]] | `events.speakers` | `ev_speakers`, `ev_session_speakers` | submit + profiles (Vue) | — | 2 resources |
+| [[sponsors/_module\|Sponsors]] | `events.sponsors` | `ev_sponsors`, `ev_sponsor_deliverables` | logos on landing | — | resource |
+| [[venues/_module\|Venues]] | `events.venues` | `ev_venues`, `ev_venue_rooms` | address on landing | — | resource |
+| [[event-analytics/_module\|Event Analytics]] | `events.analytics` | *(none — read-only)* | — | — | #6 page |
 
 ## Intra-domain dependency graph
 

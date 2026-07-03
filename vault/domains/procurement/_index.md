@@ -23,14 +23,14 @@ Opportunities / competitive gaps: [[_opportunities]].
 
 ## Modules
 
-| Module | Key | Status | Intra-domain deps | Owns tables |
-|---|---|---|---|---|
-| [[approvals/_module\|Procurement Approvals]] | `procurement.approvals` | planned | — (build first) | `proc_approval_rules`, `proc_approval_delegations` |
-| [[requisitions/_module\|Purchase Requisitions]] | `procurement.requisitions` | planned | approvals | `proc_requisitions`, `proc_requisition_items`, `proc_requisition_approvals` |
-| [[supplier-catalogue/_module\|Supplier Catalogue]] | `procurement.catalogue` | planned | — | `proc_catalogue_items`, `proc_supplier_status` |
-| [[purchase-orders/_module\|Purchase Orders (layer)]] | `procurement.purchase-orders` | planned | requisitions, approvals | `proc_po_sourcing` |
-| [[goods-receipt/_module\|3-Way Match]] | `procurement.goods-receipt` | planned | — (ops GRN + finance.ap) | `proc_three_way_matches` |
-| [[spend-analytics/_module\|Spend Analytics]] | `procurement.spend` | planned | requisitions | — (read-only) |
+| Module | Key | Status | Intra-domain deps | Owns tables | Kind highlights |
+|---|---|---|---|---|---|
+| [[approvals/_module\|Procurement Approvals]] | `procurement.approvals` | planned | — (build first) | `proc_approval_rules`, `proc_approval_delegations` | 2 resources + #8 page |
+| [[requisitions/_module\|Purchase Requisitions]] | `procurement.requisitions` | planned | approvals | `proc_requisitions`, `proc_requisition_items`, `proc_requisition_approvals` | resource |
+| [[supplier-catalogue/_module\|Supplier Catalogue]] | `procurement.catalogue` | planned | — | `proc_catalogue_items`, `proc_supplier_status` | 2 resources |
+| [[purchase-orders/_module\|Purchase Orders (layer)]] | `procurement.purchase-orders` | planned | requisitions, approvals | `proc_po_sourcing` | resource + #9 page |
+| [[goods-receipt/_module\|3-Way Match]] | `procurement.goods-receipt` | planned | — (ops GRN + finance.ap) | `proc_three_way_matches` | resource + #9 page |
+| [[spend-analytics/_module\|Spend Analytics]] | `procurement.spend` | planned | requisitions | — (read-only) | #6 page |
 
 ---
 

@@ -61,7 +61,8 @@ tests/Feature/Events/SpeakerTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's speakers data
+- [ ] Module gating: artifacts hidden when `events.speakers` inactive
 - [ ] Landing shows confirmed speakers only; logistics never public.
 - [ ] Duplicate session assignment rejected.
 - [ ] Token submit updates bio/photo; invalid token → 404.

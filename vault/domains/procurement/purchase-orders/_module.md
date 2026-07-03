@@ -29,6 +29,13 @@ Hosted in **/operations** (Procurement nav → Purchase Orders). See [[../_index
 
 ---
 
+## Module-key
+
+**Priority:** p3
+**Panel:** /operations
+**Permission prefix:** `procurement.purchase-orders`
+**Tables:** proc_po_sourcing
+
 ## Dependencies
 
 | Type | Module | Why |
@@ -92,7 +99,8 @@ Detail: [[decisions]] · [[unknowns]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's purchase orders data
+- [ ] Module gating: artifacts hidden when `procurement.purchase-orders` inactive
 - [ ] One selected quote per PO; selection swaps supplier in draft only
 - [ ] Send blocked until procurement approval when module active; unaffected when inactive
 - [ ] PO approval chain per matrix (`po` rules)

@@ -60,7 +60,8 @@ tests/Feature/LMS/{LessonTest,QuizGradingTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's lessons data
+- [ ] Module gating: artifacts hidden when `lms.lessons` inactive
 - [ ] Content schema per type enforced; non-whitelisted embed rejected.
 - [ ] Quiz graded server-side; correct answers never serialized to client.
 - [ ] Pass below `passing_score` = lesson not complete (quiz-passed criteria).

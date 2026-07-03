@@ -23,16 +23,16 @@ Every module is exploded to a folder (`<slug>/_module.md` + architecture / data-
 
 ## Modules
 
-| Module | Key | Priority | Tables | Depends on (intra-domain) |
-|---|---|---|---|---|
-| [[courses/_module\|Course Builder]] | `lms.courses` | p3 | 2 | — (anchor) |
-| [[lessons/_module\|Lessons & Content]] | `lms.lessons` | p3 | 3 | courses |
-| [[enrolments/_module\|Enrolments]] | `lms.enrolments` | p3 | 2 | courses, lessons |
-| [[certifications/_module\|Certifications]] | `lms.certifications` | p3 | 2 | enrolments |
-| [[learning-paths/_module\|Learning Paths]] | `lms.paths` | p3 | 3 | courses, enrolments |
-| [[skills-matrix/_module\|Skills Matrix]] | `lms.skills` | p3 | 4 | hr.profiles (courses soft) |
-| [[mentoring/_module\|Mentoring]] | `lms.mentoring` | p3 | 3 | hr.profiles (skills soft) |
-| [[lms-analytics/_module\|LMS Analytics]] | `lms.analytics` | p3 | 0 (read-only) | enrolments |
+| Module | Key | Priority | Tables | Depends on (intra-domain) | Kind highlights |
+|---|---|---|---|---|---|
+| [[courses/_module\|Course Builder]] | `lms.courses` | p3 | 2 | — (anchor) | resource + #3 page |
+| [[lessons/_module\|Lessons & Content]] | `lms.lessons` | p3 | 3 | courses | resource + #3 page |
+| [[enrolments/_module\|Enrolments]] | `lms.enrolments` | p3 | 2 | courses, lessons | resource |
+| [[certifications/_module\|Certifications]] | `lms.certifications` | p3 | 2 | enrolments | 2 resources |
+| [[learning-paths/_module\|Learning Paths]] | `lms.paths` | p3 | 3 | courses, enrolments | resource |
+| [[skills-matrix/_module\|Skills Matrix]] | `lms.skills` | p3 | 4 | hr.profiles (courses soft) | resource + #18 page |
+| [[mentoring/_module\|Mentoring]] | `lms.mentoring` | p3 | 3 | hr.profiles (skills soft) | resource + #17 page |
+| [[lms-analytics/_module\|LMS Analytics]] | `lms.analytics` | p3 | 0 (read-only) | enrolments | #6 page |
 
 ---
 

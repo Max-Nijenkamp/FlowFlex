@@ -68,7 +68,8 @@ tests/Feature/Events/{TicketPurchaseTest,TicketOversellTest,TicketRefundTest}.ph
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's tickets data
+- [ ] Module gating: artifacts hidden when `events.tickets` inactive
 - [ ] Concurrent purchases at the quantity limit never oversell (atomic).
 - [ ] Outside sales window rejected.
 - [ ] Payment success confirms registration + mails PDF ticket with QR.

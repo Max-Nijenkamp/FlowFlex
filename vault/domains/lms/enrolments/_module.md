@@ -69,7 +69,8 @@ tests/Feature/LMS/{EnrolmentTest,LearnerPortalScopeTest,AutoEnrolTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's enrolments data
+- [ ] Module gating: artifacts hidden when `lms.enrolments` inactive
 - [ ] Learner-portal scope: learner sees own enrolments only (token + user paths).
 - [ ] Prerequisite-unmet enrol rejected; duplicate active rejected.
 - [ ] Progress math = completed/total lessons; 100% → completed + side effects (when modules active).

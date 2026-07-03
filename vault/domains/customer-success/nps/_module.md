@@ -86,7 +86,8 @@ tests/Feature/CS/NpsTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's nps data
+- [ ] Module gating: artifacts hidden when `cs.nps` inactive
 - [ ] One response per recipient; duplicate token use rejected
 - [ ] Categorisation boundaries (6/7, 8/9)
 - [ ] NPS math over fixtures

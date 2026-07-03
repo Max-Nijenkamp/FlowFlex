@@ -57,7 +57,8 @@ tests/Feature/Events/VenueTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's venues data
+- [ ] Module gating: artifacts hidden when `events.venues` inactive
 - [ ] Delete blocked while upcoming events reference it.
 - [ ] Duplicate room name per venue rejected.
 - [ ] Phone normalised to E.164.

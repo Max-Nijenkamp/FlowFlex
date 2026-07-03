@@ -58,7 +58,8 @@ tests/Feature/LMS/LmsAnalyticsTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's lms analytics data
+- [ ] Module gating: artifacts hidden when `lms.lms-analytics` inactive
 - [ ] Completion + compliance math over fixtures.
 - [ ] Drop-off identifies the lesson with highest abandonment.
 - [ ] Soft-dep sections hidden when inactive.

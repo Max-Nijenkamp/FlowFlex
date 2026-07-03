@@ -19,15 +19,15 @@ Every module is exploded to a folder (`_module` + architecture · data-model+ERD
 
 ## Modules
 
-| Module | Key | Priority | Tables (owns) | Features |
-|---|---|---|---|---|
-| [[campaigns/_module\|Campaigns]] | `marketing.campaigns` | p3 | `mkt_campaigns`, `mkt_campaign_recipients`, `mkt_unsubscribes` | compose-schedule · audience-materialisation · ab-testing · tracking-suppression |
-| [[forms/_module\|Forms]] | `marketing.forms` | p3 | `mkt_forms`, `mkt_form_submissions` | form-builder · embed-hosted · public-submit |
-| [[email-sequences/_module\|Email Sequences]] | `marketing.sequences` | p3 | `mkt_sequences`, `mkt_sequence_steps`, `mkt_sequence_enrolments` | build-sequence · enrolment-triggers · advancement-engine |
-| [[landing-pages/_module\|Landing Pages]] | `marketing.landing-pages` | p3 | `mkt_landing_pages` | page-builder · publish-render · page-analytics |
-| [[content-cms/_module\|Content CMS]] | `marketing.cms` | p3 | `mkt_posts`, `mkt_post_categories` | authoring · scheduling-publish · public-blog |
-| [[utm-tracking/_module\|UTM Tracking]] | `marketing.utm` | p3 | `mkt_utm_touches` | touch-capture · utm-builder · attribution |
-| [[marketing-analytics/_module\|Marketing Analytics]] | `marketing.analytics` | p3 | *(none — read-only)* | marketing-dashboard |
+| Module | Key | Priority | Tables (owns) | Features | Kind highlights |
+|---|---|---|---|---|---|
+| [[campaigns/_module\|Campaigns]] | `marketing.campaigns` | p3 | `mkt_campaigns`, `mkt_campaign_recipients`, `mkt_unsubscribes` | compose-schedule · audience-materialisation · ab-testing · tracking-suppression | resource |
+| [[forms/_module\|Forms]] | `marketing.forms` | p3 | `mkt_forms`, `mkt_form_submissions` | form-builder · embed-hosted · public-submit | 2 resources |
+| [[email-sequences/_module\|Email Sequences]] | `marketing.sequences` | p3 | `mkt_sequences`, `mkt_sequence_steps`, `mkt_sequence_enrolments` | build-sequence · enrolment-triggers · advancement-engine | 2 resources |
+| [[landing-pages/_module\|Landing Pages]] | `marketing.landing-pages` | p3 | `mkt_landing_pages` | page-builder · publish-render · page-analytics | resource |
+| [[content-cms/_module\|Content CMS]] | `marketing.cms` | p3 | `mkt_posts`, `mkt_post_categories` | authoring · scheduling-publish · public-blog | 2 resources |
+| [[utm-tracking/_module\|UTM Tracking]] | `marketing.utm` | p3 | `mkt_utm_touches` | touch-capture · utm-builder · attribution | resource + #7 page |
+| [[marketing-analytics/_module\|Marketing Analytics]] | `marketing.analytics` | p3 | *(none — read-only)* | marketing-dashboard | #6 page |
 
 ## Navigation Groups
 

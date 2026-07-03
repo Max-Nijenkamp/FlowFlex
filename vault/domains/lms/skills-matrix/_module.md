@@ -66,7 +66,8 @@ tests/Feature/LMS/SkillsMatrixTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's skills matrix data
+- [ ] Module gating: artifacts hidden when `lms.skills-matrix` inactive
 - [ ] Self vs manager assessments separate; manager drives gaps.
 - [ ] Course completion raises to taught level, never lowers.
 - [ ] Gap analysis vs role requirements fixtures.

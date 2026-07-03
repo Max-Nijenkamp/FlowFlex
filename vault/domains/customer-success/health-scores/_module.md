@@ -76,7 +76,8 @@ tests/Feature/CS/HealthScoreTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's health scores data
+- [ ] Module gating: artifacts hidden when `customer-success.health-scores` inactive
 - [ ] Weighted score math; inactive-module factors excluded + weights renormalised
 - [ ] Tier thresholds; drop alert once per drop
 - [ ] Recalc idempotent, per-account failure continues batch

@@ -64,7 +64,8 @@ tests/Feature/Events/SponsorTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's sponsors data
+- [ ] Module gating: artifacts hidden when `events.sponsors` inactive
 - [ ] Revenue math committed vs. paid (brick/money).
 - [ ] Deliverable reminder fires once.
 - [ ] Landing shows logos grouped by tier.

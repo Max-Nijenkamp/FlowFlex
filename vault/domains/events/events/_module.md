@@ -68,7 +68,8 @@ tests/Feature/Events/EventLifecycleTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's events data
+- [ ] Module gating: artifacts hidden when `events.events` inactive
 - [ ] Draft landing 404; published renders.
 - [ ] Session times must fall within the event window.
 - [ ] Lifecycle command transitions at times, once.

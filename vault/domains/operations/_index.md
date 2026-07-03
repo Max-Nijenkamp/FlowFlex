@@ -34,15 +34,15 @@ Inventory, purchase orders, warehouses, suppliers, goods receipt, and stock adju
 
 ## Modules
 
-| Module | Key | Priority | Build status | Depends on (intra-domain) | Owns tables |
-|---|---|---|---|---|---|
-| [[warehouses/_module\|Warehouses]] | `operations.warehouses` | p3 | planned | — (build first) | `ops_warehouses`, `ops_warehouse_transfers` |
-| [[inventory/_module\|Inventory]] | `operations.inventory` | p3 | planned | warehouses | `ops_items`, `ops_stock_levels`, `ops_stock_movements` |
-| [[suppliers/_module\|Suppliers]] | `operations.suppliers` | p3 | planned | inventory | `ops_suppliers`, `ops_supplier_items` |
-| [[purchase-orders/_module\|Purchase Orders]] | `operations.purchase-orders` | p3 | planned | inventory, suppliers | `ops_purchase_orders`, `ops_po_lines` |
-| [[goods-receipt/_module\|Goods Receipt]] | `operations.goods-receipt` | p3 | planned | purchase-orders, inventory | `ops_goods_receipts`, `ops_grn_lines` |
-| [[stock-adjustments/_module\|Stock Adjustments]] | `operations.adjustments` | p3 | planned | inventory | `ops_stock_adjustments` |
-| [[operations-reporting/_module\|Operations Reporting]] | `operations.reporting` | p3 | planned | inventory | — (read-only) |
+| Module | Key | Priority | Build status | Depends on (intra-domain) | Owns tables | Kind highlights |
+|---|---|---|---|---|---|---|
+| [[warehouses/_module\|Warehouses]] | `operations.warehouses` | p3 | planned | — (build first) | `ops_warehouses`, `ops_warehouse_transfers` | 2 resources |
+| [[inventory/_module\|Inventory]] | `operations.inventory` | p3 | planned | warehouses | `ops_items`, `ops_stock_levels`, `ops_stock_movements` | 2 resources + #18 page |
+| [[suppliers/_module\|Suppliers]] | `operations.suppliers` | p3 | planned | inventory | `ops_suppliers`, `ops_supplier_items` | resource |
+| [[purchase-orders/_module\|Purchase Orders]] | `operations.purchase-orders` | p3 | planned | inventory, suppliers | `ops_purchase_orders`, `ops_po_lines` | resource |
+| [[goods-receipt/_module\|Goods Receipt]] | `operations.goods-receipt` | p3 | planned | purchase-orders, inventory | `ops_goods_receipts`, `ops_grn_lines` | resource + #7 page |
+| [[stock-adjustments/_module\|Stock Adjustments]] | `operations.adjustments` | p3 | planned | inventory | `ops_stock_adjustments` | resource + #7 page |
+| [[operations-reporting/_module\|Operations Reporting]] | `operations.reporting` | p3 | planned | inventory | — (read-only) | #6 page |
 
 Build order: warehouses → inventory → suppliers → purchase-orders → goods-receipt → adjustments → reporting.
 

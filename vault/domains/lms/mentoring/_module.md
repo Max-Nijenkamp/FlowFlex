@@ -63,7 +63,8 @@ tests/Feature/LMS/{MentoringTest,SessionPrivacyTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's mentoring data
+- [ ] Module gating: artifacts hidden when `lms.mentoring` inactive
 - [ ] Session notes invisible to non-participants incl. HR.
 - [ ] Self-mentorship + duplicate active pairing rejected.
 - [ ] Non-accepting mentor not requestable.

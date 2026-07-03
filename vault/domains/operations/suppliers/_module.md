@@ -66,7 +66,8 @@ tests/Feature/Operations/SupplierTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's suppliers data
+- [ ] Module gating: artifacts hidden when `operations.suppliers` inactive
 - [ ] One preferred supplier per item enforced
 - [ ] On-time rate from PO/GRN fixtures
 - [ ] Phone normalised to E.164

@@ -81,7 +81,8 @@ tests/Feature/CS/QbrTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's qbr data
+- [ ] Module gating: artifacts hidden when `cs.qbr` inactive
 - [ ] Deck snapshot includes only active-source sections
 - [ ] Completion creates next QBR per cadence once
 - [ ] Action-item overdue reminder once

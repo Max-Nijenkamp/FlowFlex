@@ -61,7 +61,8 @@ tests/Feature/LMS/LearningPathTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot read or mutate company B's learning paths data
+- [ ] Module gating: artifacts hidden when `lms.learning-paths` inactive
 - [ ] Sequential: next course enrolment created only after previous completes.
 - [ ] Parallel: all enrolments at once.
 - [ ] Path progress math; 100% → path certificate (when template set).

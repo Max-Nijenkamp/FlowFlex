@@ -24,16 +24,16 @@ Products, variants, orders, payments, promotions, reviews, storefront, and aband
 
 ## Modules
 
-| Module | Key | Status | Intra-domain deps | Features |
-|---|---|---|---|---|
-| [[products/_module\|Product Catalogue]] | `ecommerce.products` | wip | — (anchor) | manage-catalogue, stock-linkage |
-| [[variants/_module\|Product Variants]] | `ecommerce.variants` | wip | products | generate-variants |
-| [[orders/_module\|Orders]] | `ecommerce.orders` | wip | products | place-order, fulfil-order |
-| [[payments/_module\|Payments]] | `ecommerce.payments` | wip | orders | process-payment, refund |
-| [[promotions/_module\|Promotions & Coupons]] | `ecommerce.promotions` | wip | products | manage-coupons, apply-discount |
-| [[reviews/_module\|Product Reviews]] | `ecommerce.reviews` | wip | products, orders | submit-review, moderate-review |
-| [[storefront/_module\|Storefront]] | `ecommerce.storefront` | wip | products, orders | browse-and-cart, checkout, configure-storefront |
-| [[abandoned-cart/_module\|Abandoned Cart]] | `ecommerce.abandoned-cart` | wip | storefront, orders | recover-cart |
+| Module | Key | Status | Intra-domain deps | Features | Kind highlights |
+|---|---|---|---|---|---|
+| [[products/_module\|Product Catalogue]] | `ecommerce.products` | wip | — (anchor) | manage-catalogue, stock-linkage | 2 resources |
+| [[variants/_module\|Product Variants]] | `ecommerce.variants` | wip | products | generate-variants | #1 page |
+| [[orders/_module\|Orders]] | `ecommerce.orders` | wip | products | place-order, fulfil-order | resource + #3 page |
+| [[payments/_module\|Payments]] | `ecommerce.payments` | wip | orders | process-payment, refund | resource |
+| [[promotions/_module\|Promotions & Coupons]] | `ecommerce.promotions` | wip | products | manage-coupons, apply-discount | 2 resources |
+| [[reviews/_module\|Product Reviews]] | `ecommerce.reviews` | wip | products, orders | submit-review, moderate-review | resource |
+| [[storefront/_module\|Storefront]] | `ecommerce.storefront` | wip | products, orders | browse-and-cart, checkout, configure-storefront | resource + custom page |
+| [[abandoned-cart/_module\|Abandoned Cart]] | `ecommerce.abandoned-cart` | wip | storefront, orders | recover-cart | resource |
 
 ## Dependency Graph (intra-domain)
 

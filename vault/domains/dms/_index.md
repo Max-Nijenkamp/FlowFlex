@@ -33,14 +33,14 @@ Folder-based document libraries, version control, approval chains, retention + l
 
 ## Modules
 
-| Module | Key | Priority | Build status | Depends on (intra-domain) |
-|---|---|---|---|---|
-| [[document-library/_module\|Document Library]] | `dms.library` | p2 | planned | — (anchor) |
-| [[version-control/_module\|Version Control]] | `dms.versions` | p2 | planned | library |
-| [[wiki/_module\|Wiki Pages]] | `dms.wiki` | p2 | planned | — (standalone) |
-| [[templates/_module\|Document Templates]] | `dms.templates` | p2 | planned | library |
-| [[approval-workflows/_module\|Approval Workflows]] | `dms.approvals` | p2 | planned | library, versions (soft) |
-| [[retention-policies/_module\|Retention Policies]] | `dms.retention` | p2 | planned | library |
+| Module | Key | Priority | Build status | Depends on (intra-domain) | Kind highlights |
+|---|---|---|---|---|---|
+| [[document-library/_module\|Document Library]] | `dms.library` | p2 | planned | — (anchor) | resource + #11 page + #2 page |
+| [[version-control/_module\|Version Control]] | `dms.versions` | p2 | planned | library | #2 page + custom page + custom page |
+| [[wiki/_module\|Wiki Pages]] | `dms.wiki` | p2 | planned | — (standalone) | resource + #2 page |
+| [[templates/_module\|Document Templates]] | `dms.templates` | p2 | planned | library | resource + #7 page |
+| [[approval-workflows/_module\|Approval Workflows]] | `dms.approvals` | p2 | planned | library, versions (soft) | 2 resources |
+| [[retention-policies/_module\|Retention Policies]] | `dms.retention` | p2 | planned | library | 3 resources |
 
 Build order: **library → versions → wiki → templates → approvals → retention**.
 

@@ -65,7 +65,8 @@ tests/Feature/Operations/OperationsReportingTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or mutate company B's operations reporting data
+- [ ] Module gating: artifacts hidden when `operations.operations-reporting` inactive
 - [ ] Valuation matches stock fixtures (brick/money)
 - [ ] Turnover + dead-stock math over movement fixtures
 - [ ] Soft-dep sections hidden when modules inactive
