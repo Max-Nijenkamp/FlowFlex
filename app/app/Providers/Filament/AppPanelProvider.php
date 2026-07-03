@@ -34,6 +34,7 @@ class AppPanelProvider extends PanelProvider
         return $panel
             ->id('app')
             ->path('app')
+            ->viteTheme('resources/css/filament/app/theme.css')
             ->login(PanelLogin::class)
             ->passwordReset()
             ->emailVerification()

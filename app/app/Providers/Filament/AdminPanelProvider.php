@@ -29,6 +29,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->login(PanelLogin::class)
             ->passwordReset()
             ->multiFactorAuthentication(AppAuthentication::make()->recoverable())
