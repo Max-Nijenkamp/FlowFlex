@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property string $id
@@ -38,6 +39,7 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
     /** @use HasFactory<UserFactory> */
     use HasFactory;
 
+    use HasRoles;
     use HasUlids;
     use Notifiable;
     use SoftDeletes;
