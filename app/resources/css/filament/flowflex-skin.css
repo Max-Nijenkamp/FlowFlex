@@ -27,84 +27,149 @@
     background-color: var(--ff-paper);
 }
 
-/* ---- Sidebar: ink in both modes ----------------------------------------- */
+/* ---- Sidebar (handoff panel/panel.css .pn-side/.pn-nav) --------------------
+   Scheme-following per owner decision 2026-07-03: light surface in light
+   mode, ink in dark — no more permanently dark rail. Metrics from the
+   design: 8px item radius, 2px spine, active radius 0 8px 8px 0. */
 .fi-sidebar {
-    background-color: var(--ff-ink);
-    border-right: 1px solid rgb(255 255 255 / 0.06);
+    background-color: var(--ff-card);
+    border-right: 1px solid var(--ff-line);
 }
 
-.fi-sidebar .fi-sidebar-item-label,
-.fi-sidebar .fi-sidebar-group-label {
-    color: rgb(255 255 255 / 0.72);
+.fi-sidebar .fi-sidebar-item-btn {
+    border-radius: 8px;
+    border-inline-start: 2px solid transparent;
+}
+
+.fi-sidebar .fi-sidebar-item-label {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ff-ink-soft);
 }
 
 .fi-sidebar .fi-sidebar-group-label {
     font-family: var(--ff-font-mono);
-    font-size: 11px;
+    font-size: 10.5px;
+    font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: rgb(255 255 255 / 0.45);
+    color: var(--ff-ink-faint);
 }
 
 .fi-sidebar .fi-sidebar-item-btn:hover {
-    background-color: rgb(255 255 255 / 0.06);
+    background-color: var(--ff-paper-deep);
 }
 
 .fi-sidebar .fi-sidebar-item-btn:hover .fi-sidebar-item-label {
-    color: #ffffff;
+    color: var(--ff-ink);
 }
 
-/* Active item (real markup: li.fi-sidebar-item.fi-active > a.fi-sidebar-item-btn):
-   2px primary spine + tint, white label — in BOTH color modes */
+/* Active item (real markup: li.fi-sidebar-item.fi-active > a.fi-sidebar-item-btn) */
 .fi-sidebar .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
-    background-color: color-mix(in srgb, var(--primary-400) 20%, transparent);
-    border-inline-start: 2px solid var(--primary-400);
-    border-radius: 0 10px 10px 0;
+    background-color: color-mix(in srgb, var(--primary-400) 14%, transparent);
+    border-inline-start: 2px solid var(--primary-500);
+    border-radius: 0 8px 8px 0;
 }
 
 .fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-label {
-    color: #ffffff;
+    color: var(--ff-ink);
     font-weight: 600;
 }
 
 .fi-sidebar .fi-sidebar-item-icon,
 .fi-sidebar .fi-sidebar-item-btn svg {
-    color: rgb(255 255 255 / 0.6);
+    color: var(--ff-ink-faint);
 }
 
 .fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-icon,
 .fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-btn svg {
-    color: var(--primary-400);
+    color: var(--primary-500);
 }
 
-/* Panel wordmark row + mono panel label — the wrapper paints too, or the
-   header row renders white over the ink rail */
+/* Wordmark row + mono panel label */
 .fi-sidebar-header-ctn,
 .fi-sidebar-header {
-    background-color: var(--ff-ink);
-    color: #ffffff;
-    border-bottom: 1px solid rgb(255 255 255 / 0.06);
-}
-
-.fi-sidebar-header .fi-logo {
-    color: #ffffff;
+    background-color: var(--ff-card);
+    color: var(--ff-ink);
+    border-bottom: 1px solid var(--ff-line);
 }
 
 .fi-sidebar-header .fi-sidebar-header-logo-ctn::after {
     content: var(--ff-panel-label, '');
     font-family: var(--ff-font-mono);
     font-size: 10px;
-    letter-spacing: 0.18em;
-    color: rgb(255 255 255 / 0.4);
+    letter-spacing: 0.22em;
+    color: var(--ff-ink-faint);
     margin-inline-start: 0.5rem;
     align-self: center;
 }
 
-/* ---- Topbar: warm strip over paper --------------------------------------- */
+/* Dark mode: the design's ink rail */
+.dark .fi-sidebar {
+    background-color: var(--ff-ink);
+    border-right-color: rgb(255 255 255 / 0.08);
+}
+
+.dark .fi-sidebar .fi-sidebar-item-label {
+    color: rgb(255 255 255 / 0.62);
+}
+
+.dark .fi-sidebar .fi-sidebar-group-label {
+    color: rgb(255 255 255 / 0.32);
+}
+
+.dark .fi-sidebar .fi-sidebar-item-btn:hover {
+    background-color: rgb(255 255 255 / 0.06);
+}
+
+.dark .fi-sidebar .fi-sidebar-item-btn:hover .fi-sidebar-item-label {
+    color: #ffffff;
+}
+
+.dark .fi-sidebar .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    background-color: color-mix(in srgb, var(--primary-400) 18%, transparent);
+    border-inline-start-color: var(--primary-400);
+}
+
+.dark .fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-label {
+    color: #ffffff;
+}
+
+.dark .fi-sidebar .fi-sidebar-item-icon,
+.dark .fi-sidebar .fi-sidebar-item-btn svg {
+    color: rgb(255 255 255 / 0.6);
+}
+
+.dark .fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-icon,
+.dark .fi-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-btn svg {
+    color: var(--primary-400);
+}
+
+.dark .fi-sidebar-header-ctn,
+.dark .fi-sidebar-header {
+    background-color: var(--ff-ink);
+    color: #ffffff;
+    border-bottom-color: rgb(255 255 255 / 0.08);
+}
+
+.dark .fi-sidebar-header .fi-logo {
+    color: #ffffff;
+}
+
+.dark .fi-sidebar-header .fi-sidebar-header-logo-ctn::after {
+    color: rgb(255 255 255 / 0.38);
+}
+
+/* ---- Topbar (handoff .pn-top): warm 60px strip, hairline bottom ----------- */
 .fi-topbar {
-    background-color: rgb(251 250 248 / 0.9);
+    background-color: rgb(251 250 248 / 0.95);
     backdrop-filter: blur(6px);
     border-bottom: 1px solid var(--ff-line);
+}
+
+.dark .fi-topbar {
+    background-color: rgb(11 15 25 / 0.92);
+    border-bottom-color: rgb(255 255 255 / 0.08);
 }
 
 /* ---- Content chrome ------------------------------------------------------- */
@@ -130,9 +195,9 @@
     background-color: #faf9f5;
 }
 
-/* Buttons: 10px radius, press feedback */
+/* Buttons: 9px radius (handoff .pn-btn), press feedback */
 .fi-btn {
-    border-radius: 10px;
+    border-radius: 9px;
 }
 
 .fi-btn:active {

@@ -76,7 +76,7 @@ See [[_index]] route table. Auth: `AuthLayout.vue` `split` prop — split dark p
 
 One shared file: `resources/css/filament/flowflex-skin.css`, imported by every thin per-panel `theme.css` (Google fonts import first, vendor theme, skin, `@source` globs, `--ff-panel-label`). Accent rides Filament's `--primary-*` vars — never hardcode a domain color in the skin.
 
-Key rules: ink sidebar both modes (light wordmark, mono panel label, active = 2px primary border + 16% tint), warm topbar, paper canvas, mono table headers + zebra rows, underline tabs, 30px pagination squares, blueprint-cell stat widgets, 9px buttons, mono infolist labels, login parity (bloom bg, indigo customer / ink staff buttons, `/ADMIN` badge), Spotlight `.ff-spotlight-*`, empty/selected/wizard states.
+Key rules: **scheme-following sidebar** (owner decision 2026-07-03 — light card surface in light mode, ink rail in dark; previously 'ink both modes'), mono panel label, active = 2px primary spine + ~15% tint, warm topbar, paper canvas, mono table headers + zebra rows, underline tabs, 30px pagination squares, blueprint-cell stat widgets, 9px buttons, mono infolist labels, login parity (bloom bg, indigo customer / ink staff buttons, `/ADMIN` badge), Spotlight `.ff-spotlight-*`, empty/selected/wizard states.
 
 ⚠️ **Selectors must be verified against rendered Filament 5 markup** — v3-era names fail silently ([[../architecture/filament-patterns]] item 16). Spotlight: [[../architecture/filament-patterns]] item 14.
 
