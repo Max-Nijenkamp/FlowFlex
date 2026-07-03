@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Gap Analysis & Recommendations
@@ -39,6 +39,18 @@ Compare an employee's skills against their role's requirements and recommend cou
 - Consumes: nothing.
 - Feeds: enrolment (via recommendations → `EnrolmentService::enrol`).
 - Shared entity: courses, HR employee/role.
+
+## Test Checklist
+
+### Unit
+- [ ] Gap = role requirement level - manager-assessed level (manager authoritative *(assumed)*); no negative gaps listed
+
+### Feature (Pest)
+- [ ] Recommendations return courses teaching the gap skills only
+- [ ] Tenant isolation + scope: reports readable per HR reporting line permissions
+
+### Livewire
+- [ ] Gap view renders per employee; hidden without the skills permission/module
 
 ## Unknowns
 

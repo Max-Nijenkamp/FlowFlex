@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Skills Matrix — Architecture
@@ -53,6 +53,17 @@ public static function canAccess(): bool
 ## Jobs & Scheduling
 
 None.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `assess` | n-a | Upsert unique per `(employee, skill, assessor_type)` -- raced saves converge, last assessment wins by design |
+| `raiseFromCourse` | Pessimistic | `lockForUpdate` on the skill row -- `max(current, taught)` must not lose a raced raise |
+| Catalogue / role-requirement CRUD | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| Gap analysis / recommendations / heatmap | n-a | Read-only |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

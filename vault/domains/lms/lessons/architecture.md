@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Lessons — Architecture
@@ -68,6 +68,16 @@ public static function canAccess(): bool
 ## Jobs & Scheduling
 
 None.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `LessonProgressService::complete` | n-a | Upsert on unique `(lesson_id, enrolment_id)` -- raced completes converge to one row; downstream recompute locked in enrolments |
+| `QuizService::grade` (attempts + best score) | Pessimistic | `lockForUpdate` on the progress row -- attempt counter and best-score retention must not lose updates |
+| Lesson/quiz authoring CRUD | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

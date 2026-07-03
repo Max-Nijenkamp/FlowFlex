@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Mentorship Management
@@ -40,6 +40,19 @@ Manage the mentoring relationship: accept/pause/complete, focus area, and goals.
 - Consumes: nothing.
 - Feeds: session logging attaches to the relationship.
 - Shared entity: employees (HR).
+
+## Test Checklist
+
+### Unit
+- [ ] Lifecycle transitions: pending->active (accept), active->completed; invalid jumps rejected
+
+### Feature (Pest)
+- [ ] Accept notifies mentee; raced accept/complete serialised (locked transition)
+- [ ] HR `view-pairings` sees pairings but never session notes
+- [ ] Tenant isolation on pairings
+
+### Livewire
+- [ ] Accept/complete actions gated per role; goals/focus editable by participants
 
 ## Unknowns
 

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Certifications — Architecture
@@ -55,6 +55,17 @@ public static function canAccess(): bool
         && BillingService::hasModule('lms.certifications');
 }
 ```
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `CertificateService::issue` | n-a | Invoked once per enrolment completion (completion transition is locked in enrolments); unique `certificate_number` guards duplicates |
+| Certificate template CRUD | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| `CertificateExpiryCommand` alerts | n-a | Single scheduled writer with 60/14d guards |
+| `verify` | n-a | Read-only public lookup |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Events
 

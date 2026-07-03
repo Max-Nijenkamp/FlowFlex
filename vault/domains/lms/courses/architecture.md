@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Courses — Architecture
@@ -66,6 +66,16 @@ See [[../../../architecture/filament-patterns]] · [[../../../architecture/ui-st
 ## Jobs & Scheduling
 
 None.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Course CRUD / builder saves | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| `publish` (draft -> published) | Pessimistic | State transition guarded with `lockForUpdate` in transaction per patterns/states -- lesson-count + cycle guards evaluated under the lock |
+| `prerequisitesMet` | n-a | Read-only |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

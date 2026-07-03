@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Mentor Directory
@@ -39,6 +39,18 @@ Browse employees who volunteer as mentors and request a pairing.
 - Consumes: nothing.
 - Feeds: a request creates a mentorship handled in [[mentorship-management]].
 - Shared entity: employees (HR), skills (expertise).
+
+## Test Checklist
+
+### Unit
+- [ ] Directory lists accepting mentors only; expertise fed from skills when active (soft-dep)
+
+### Feature (Pest)
+- [ ] Request creates pending mentorship; self-request and duplicate-active rejected (race-safe)
+- [ ] Tenant isolation: directory shows own-company mentors only
+
+### Livewire
+- [ ] Directory grid renders; request action gated on the mentoring permission
 
 ## Unknowns
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Quizzes
@@ -41,6 +41,19 @@ Quiz-type lessons: authoring the question bank + passing score, and server-side 
 - Consumes: nothing.
 - Feeds: a passing grade recomputes enrolment progress via `EnrolmentService` (same-domain call).
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Server-side scoring against `questions[].correct`; pass = score >= passing_score; correct flags never serialized to client
+
+### Feature (Pest)
+- [ ] Attempts increment and best score retained under raced submissions (locked progress row)
+- [ ] Passing grade marks the lesson complete and triggers progress recompute; failing does not
+- [ ] Tenant isolation: learner must be enrolled to grade
+
+### Livewire
+- [ ] Quiz authoring validates question bank + passing score; learner submission returns result without correct answers
 
 ## Unknowns
 

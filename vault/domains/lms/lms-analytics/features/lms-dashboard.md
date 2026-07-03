@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: LMS Dashboard
@@ -40,6 +40,18 @@ The learning analytics dashboard: completion, engagement, quiz performance, cert
 - Consumes: nothing.
 - Feeds: nothing (a view).
 - Shared entity: all LMS sibling data, read-only.
+
+## Test Checklist
+
+### Unit
+- [ ] Cache key embeds company + window; soft-dep sections null when source module inactive
+
+### Feature (Pest)
+- [ ] Inactive module (certifications/skills/mentoring) -> section null, widget omitted, no error
+- [ ] Tenant isolation on all aggregates
+
+### Livewire
+- [ ] Dashboard page canAccess() explicit; date filter re-scopes widgets
 
 ## Unknowns
 

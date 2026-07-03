@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Learner Portal
@@ -44,6 +44,18 @@ The `/learn` learner-facing surface: my courses, the lesson player, and progress
 
 > [!warning] UNVERIFIED
 > External-learner login UX (magic link vs token URL) is *(assumed)* — see [[../unknowns]]. Own-data isolation is the headline security test.
+
+## Test Checklist
+
+### Unit
+- [ ] Progress % math: completed lessons / total lessons per enrolment
+
+### Feature (Pest)
+- [ ] `/learn` shows only the learner's own enrolments; another learner's enrolment id -> 403/404
+- [ ] Tenant isolation: external learners scoped to their company context
+
+### Livewire
+- [ ] Portal pages gate on the learner guard; lesson player renders per lesson type; progress updates after complete
 
 ## Related
 

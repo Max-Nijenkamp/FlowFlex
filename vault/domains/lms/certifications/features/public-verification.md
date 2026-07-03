@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Public Verification
@@ -42,6 +42,18 @@ Anyone can confirm a certificate's validity by its number, without logging in.
 
 > [!warning] UNVERIFIED
 > Non-enumerability rests on `FF-{ulid26}` numbers being non-sequential *(assumed)* — see [[../unknowns]]. Rate-limit + minimal payload are the tested controls.
+
+## Test Checklist
+
+### Unit
+- [ ] `VerificationResult` payload limited to {valid|expired, course_title} -- no learner PII
+
+### Feature (Pest)
+- [ ] Valid number returns valid/expired correctly; unknown number returns not-found without company enumeration
+- [ ] Public endpoint rate-limited on the guest guard *(assumed -- registry reconcile task)*
+
+### Livewire
+- (none -- public unauthenticated endpoint)
 
 ## Related
 

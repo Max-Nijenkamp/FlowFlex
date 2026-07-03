@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Path Progression
@@ -38,6 +38,19 @@ Advance a learner through a path as they complete its courses, and certify on 10
 - Consumes: nothing (invoked by enrolments' service).
 - Feeds: next course enrolment; path certificate at 100%.
 - Shared entity: course enrolments (enrolments), certificate (certifications).
+
+## Test Checklist
+
+### Unit
+- [ ] Progress = completed courses / total; 100% stamps `completed_at`
+
+### Feature (Pest)
+- [ ] Sequential: completing course N enrols course N+1 exactly once (locked hook); parallel completions recompute serially
+- [ ] Path certificate issued once at 100% when template present
+- [ ] Tenant isolation: hook only touches the owning company's path enrolments
+
+### Livewire
+- [ ] Path progress renders per learner; hidden without permission/module
 
 ## Unknowns
 

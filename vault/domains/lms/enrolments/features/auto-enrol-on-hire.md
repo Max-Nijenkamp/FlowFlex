@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Auto-Enrol on Hire
@@ -37,6 +37,18 @@ When HR hires an employee, enrol them into mandatory onboarding courses automati
 - Consumes: `EmployeeHired` from `hr.profiles` → enrol into mandatory courses.
 - Feeds: enrolments then behave normally (progress, completion side effects).
 - Shared entity: employee = a `users` record (read via the event id; HR owns the profile).
+
+## Test Checklist
+
+### Unit
+- [ ] Mandatory-course set resolution for a new hire (role/department mapping)
+
+### Feature (Pest)
+- [ ] HR hire event listener (`ShouldQueue` + `WithCompanyContext`) enrols into mandatory courses once; replayed event does not duplicate (duplicate-active guard)
+- [ ] Tenant isolation: event company_id scalar drives scoping
+
+### Livewire
+- (none -- background listener)
 
 ## Unknowns
 

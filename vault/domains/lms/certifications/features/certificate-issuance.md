@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Certificate Issuance
@@ -40,6 +40,18 @@ Design certificate templates and auto-issue certificates (with queued PDFs) on c
 - Consumes: nothing (invoked by enrolments' service).
 - Feeds: `CertificationExpiryWidget` + analytics read certificate counts.
 - Shared entity: course (association), learner (from enrolment).
+
+## Test Checklist
+
+### Unit
+- [ ] Certificate number format `FF-{ulid26}` *(assumed)* globally unique; `expires_at` from `validity_months` (null = no expiry)
+
+### Feature (Pest)
+- [ ] Completion of a course WITH a template issues one certificate + dispatches `GenerateCertificatePdfJob`; without template -> no-op null
+- [ ] Tenant isolation: certificates scoped by company; PDF generation cites the queued job (not inline)
+
+### Livewire
+- [ ] Template resource CRUD validates; hidden without the certifications permission or module inactive
 
 ## Unknowns
 

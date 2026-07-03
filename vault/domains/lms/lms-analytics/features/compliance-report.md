@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Compliance Report
@@ -39,6 +39,18 @@ Mandatory-training compliance: what % of required employees have completed, and 
 - Consumes: nothing.
 - Feeds: nothing (a report). Export is a file, not a cross-domain write.
 - Shared entity: enrolments, certificates (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Compliance % = completed required / required employees; overdue list past due date
+
+### Feature (Pest)
+- [ ] Export cites the `exports` limiter; report requires the analytics view permission
+- [ ] Tenant isolation: compliance never mixes companies
+
+### Livewire
+- [ ] Report filters by course/department; renders overdue list
 
 ## Unknowns
 

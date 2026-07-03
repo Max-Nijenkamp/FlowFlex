@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Mentoring — Architecture
@@ -56,6 +56,17 @@ public static function canAccess(): bool
 ## Jobs & Scheduling
 
 None.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `request` (pairing) | Pessimistic | `lockForUpdate` on the pair's mentorships -- no-duplicate-active + not-self guards race-safe |
+| `accept` / `complete` lifecycle | Pessimistic | Relationship state transition under lock per patterns/states |
+| Session log entries | n-a | Append-only rows, participant-scoped |
+| Goals / focus-area edits | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

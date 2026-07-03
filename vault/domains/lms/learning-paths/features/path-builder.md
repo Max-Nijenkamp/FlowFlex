@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Path Builder
@@ -39,6 +39,18 @@ Create a learning path, order its courses, choose sequential vs parallel, and bu
 - Consumes: nothing.
 - Feeds: path enrolments drive course enrolments (via enrolments service).
 - Shared entity: courses, certificate template.
+
+## Test Checklist
+
+### Unit
+- [ ] Sequential vs parallel flag; course order persisted; bulk-assign list validation
+
+### Feature (Pest)
+- [ ] Sequential enrol creates enrolment for FIRST course only; parallel enrols all; duplicate active path enrolment rejected under race
+- [ ] Tenant isolation + permission: paths per company, builder gated
+
+### Livewire
+- [ ] Path form validates course list + mode; bulk-assign action reports per-learner results
 
 ## Unknowns
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Course Management
@@ -40,6 +40,18 @@ Create, edit, publish, and archive courses and their category/prerequisite metad
 - Consumes: nothing.
 - Feeds: `CourseService::prerequisitesMet` read by [[../../enrolments/_module|enrolments]] at enrol time.
 - Shared entity: certificate template owned by [[../../certifications/_module|certifications]] (read-only reference by id).
+
+## Test Checklist
+
+### Unit
+- [ ] Publish guards: draft-only, >= 1 lesson, prerequisite cycle rejected
+
+### Feature (Pest)
+- [ ] Publish transition serialised (locked) -- raced publish attempts yield one transition; archive hides from learner catalogue
+- [ ] Tenant isolation: courses + categories per company
+
+### Livewire
+- [ ] Course form validates prerequisites (no self, no cycle); publish action gated + confirms
 
 ## Unknowns
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Lesson Content
@@ -41,6 +41,18 @@ Author lessons of each type (video, text, file) inside a course module.
 - Consumes: nothing.
 - Feeds: lesson list is read by the [[../../enrolments/_module|enrolments]] learner portal to render the player.
 - Shared entity: uploaded media owned by core.files (referenced by id).
+
+## Test Checklist
+
+### Unit
+- [ ] Content schema per type (video/text/file) validated; text purified
+
+### Feature (Pest)
+- [ ] File lesson uploads follow the upload contract (mime/size); completion criterion resolves per type
+- [ ] Tenant isolation + permission: authoring gated, company-scoped
+
+### Livewire
+- [ ] Lesson form switches schema by type and validates; hidden without permission/module
 
 ## Unknowns
 

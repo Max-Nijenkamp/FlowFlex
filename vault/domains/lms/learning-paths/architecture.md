@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Learning Paths — Architecture
@@ -56,6 +56,16 @@ public static function canAccess(): bool
 ## Jobs & Scheduling
 
 None (progress is event-free, driven by the completion hook).
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Path `enrol` | Pessimistic | `lockForUpdate` on the learner's path enrolments -- no-active-duplicate guard race-safe |
+| `onCourseCompleted` (unlock next / recompute / certify) | Pessimistic | Path enrolment row locked -- raced parallel-course completions recompute progress serially, path certificate issued once at 100% |
+| Path CRUD / builder | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Enrolment Management
@@ -40,6 +40,19 @@ Admin-side enrol, bulk-enrol, track progress, and monitor mandatory-training com
 - Consumes: nothing here (see [[auto-enrol-on-hire]]).
 - Feeds: on completion, calls certifications / skills / paths services (same-domain).
 - Shared entity: courses (published list), HR employees (as learners, read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] `EnrolData` validation; prerequisite check delegates to `CourseService::prerequisitesMet`
+
+### Feature (Pest)
+- [ ] Duplicate active enrolment rejected under race (lockForUpdate); bulkEnrol returns per-row results and is rate-limited
+- [ ] Completion at 100% fires side effects exactly once (certificate, skills, path hook)
+- [ ] Tenant isolation + permission: enrol/bulk verbs enforced
+
+### Livewire
+- [ ] Enrolment resource filters by status/course; bulk-enrol action validates file/rows; hidden without permission/module
 
 ## Unknowns
 

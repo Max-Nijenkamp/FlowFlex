@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Enrolments — Architecture
@@ -66,6 +66,16 @@ public static function canAccess(): bool
         && BillingService::hasModule('lms.enrolments');
 }
 ```
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `enrol` / `bulkEnrol` | Pessimistic | `lockForUpdate` on the learner's enrolment rows -- duplicate-active guard race-safe |
+| `recomputeProgress` completion transition | Pessimistic | spatie state transition to `completed` under `lockForUpdate` -- side effects (certificate, skills, path hook) fire exactly once |
+| Progress % update | Optimistic | Recompute-and-save; raced lesson completions converge via the locked transition at 100% |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Events
 

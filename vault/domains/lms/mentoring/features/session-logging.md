@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Session Logging
@@ -42,6 +42,18 @@ Log mentoring sessions — date, notes, action items — visible to the mentor a
 - Consumes: nothing.
 - Feeds: nothing (private log).
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Session payload: date, notes, action items; notes purified
+
+### Feature (Pest)
+- [ ] Sessions query-scoped to participants -- HR/admin without participation cannot read notes even with view-pairings
+- [ ] Tenant isolation: sessions per company
+
+### Livewire
+- [ ] Session log relation renders for participants only; add-session form validates
 
 ## Related
 

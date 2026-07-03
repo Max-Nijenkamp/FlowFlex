@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Skills Heat-map
@@ -40,6 +40,18 @@ A visual employees × skills matrix that highlights coverage and gaps at a glanc
 - Consumes: nothing.
 - Feeds: nothing (a visualisation).
 - Shared entity: HR employees (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Matrix cells: manager-assessed level vs requirement colouring; missing assessment renders empty state
+
+### Feature (Pest)
+- [ ] Heatmap reads are scoped by permission (team vs company view)
+- [ ] Tenant isolation: employees x skills matrix per company
+
+### Livewire
+- [ ] Heatmap custom page canAccess() explicit; filters by department/skill group
 
 ## Unknowns
 

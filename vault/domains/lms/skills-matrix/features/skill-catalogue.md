@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Skill Catalogue
@@ -40,6 +40,19 @@ Manage the skill list, role requirements, course→skill links, and record asses
 - Consumes: nothing.
 - Feeds: catalogue + assessments power the heat-map + gap analysis.
 - Shared entity: employee/reporting (HR, read-only), courses.
+
+## Test Checklist
+
+### Unit
+- [ ] Assessment upsert unique per assessor type; self vs manager permission resolution
+
+### Feature (Pest)
+- [ ] `assess-own` limited to own employee id; `assess-reports` limited to direct reports
+- [ ] `raiseFromCourse` applies max(current, taught) without losing raced raises (locked)
+- [ ] Tenant isolation on catalogue + role requirements
+
+### Livewire
+- [ ] Catalogue CRUD + course-skill link forms validate; hidden without permission/module
 
 ## Unknowns
 

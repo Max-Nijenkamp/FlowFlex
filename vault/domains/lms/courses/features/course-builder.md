@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Course Builder
@@ -40,6 +40,17 @@ A drag-and-drop workspace for structuring a course — arranging modules and the
 - Consumes: nothing.
 - Feeds: nothing (structure is read by the enrolments portal to render course navigation).
 - Shared entity: lessons are owned by [[../../lessons/_module|lessons]] — the builder arranges them but the lesson rows/content belong to that module.
+
+## Test Checklist
+
+### Unit
+- [ ] Module/lesson ordering persists as given; moves between modules keep lesson identity
+
+### Feature (Pest)
+- [ ] Builder saves are company-scoped and permission-gated; concurrent stale save conflicts (optimistic)
+
+### Livewire
+- [ ] Drag-and-drop reorder round-trips; canAccess() hides builder without permission or `lms.courses` inactive
 
 ## Unknowns
 

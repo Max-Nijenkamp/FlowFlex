@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # LMS Analytics — Architecture
@@ -50,6 +50,15 @@ public static function canAccess(): bool
 ## Jobs & Scheduling
 
 None (metrics computed on demand + cached).
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| All dashboard/report/export paths | n-a | Read-only aggregation; owns no writable state |
+| Metrics cache writes | n-a | TTL-keyed, idempotent recompute |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Events
 

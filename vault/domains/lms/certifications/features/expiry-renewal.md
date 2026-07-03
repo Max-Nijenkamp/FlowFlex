@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Expiry & Renewal
@@ -36,6 +36,18 @@ Track certificate validity, remind before expiry, and route renewals through re-
 - Consumes: nothing.
 - Feeds: renewal completions re-invoke `CertificateService::issue` (a new certificate row).
 - Shared entity: notification channel (core.notifications).
+
+## Test Checklist
+
+### Unit
+- [ ] Expiry guards: alerts at 60d and 14d before `expires_at`, once each
+
+### Feature (Pest)
+- [ ] `CertificateExpiryCommand` re-run same day sends no duplicate alerts; renewal routes through re-enrolment
+- [ ] Tenant isolation: alerts target the owning company's learners only
+
+### Livewire
+- [ ] Expiring-certificates view filters by window; hidden without permission/module
 
 ## Unknowns
 
