@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Contacts — Security
@@ -20,6 +20,8 @@ updated: 2026-06-20
 | `crm.contacts.update` | Edit a contact |
 | `crm.contacts.delete` | Soft-delete a contact |
 | `crm.contacts.merge` | Merge two contact records |
+| `crm.contacts.change-lifecycle` | Move a contact between lifecycle stages (`moveLifecycleStage`) *(assumed — exposed as a quick-move header action)* |
+| `crm.contacts.export` | Export contacts (`pxlrbt/filament-excel`) — throttled by the `exports` limiter |
 | `crm.accounts.manage` | Full CRUD on account (company) records |
 
 Seeded in `PermissionSeeder`.
@@ -50,7 +52,7 @@ Per [[../../../architecture/filament-patterns]] #1 — custom pages must state t
 
 ## Rate Limiting
 
-Planned (medium priority): named rate limiter on the import upload action and the export action. Throttle/dedupe on contact-creating event listeners (`FormSubmissionReceived`, `EventRegistrationReceived`) to prevent spam-induced record explosion.
+Planned (medium priority): named rate limiter on the import upload action and the `exports` limiter on the export action (`crm.contacts.export`). Throttle/dedupe on contact-creating event listeners (`FormSubmissionReceived`, `EventRegistrationReceived`) to prevent spam-induced record explosion.
 
 ---
 

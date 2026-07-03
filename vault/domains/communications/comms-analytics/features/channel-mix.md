@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Channel Mix & Volume
@@ -40,6 +40,19 @@ Message volume over time, channel-mix breakdown, busiest-hours heat-map, and the
 - Consumes: inbox + broadcast data (read-only).
 - Feeds: nothing.
 - Shared entity: `comms_messages` (inbox), `comms_broadcasts` (broadcast).
+
+## Test Checklist
+
+### Unit
+- [ ] Heat-map buckets hour×day in the company timezone (timezone-aware)
+- [ ] Channel-mix share sums to 100% across active channels
+
+### Feature (Pest)
+- [ ] Volume + mix aggregates are `CompanyScope`-bound over inbox data (tenant isolation)
+- [ ] Broadcast-performance section is included only when `comms.broadcast` is active
+
+### Livewire
+- [ ] Date/channel filter recomputes the charts; broadcast section hidden when the module is inactive
 
 ## Related
 

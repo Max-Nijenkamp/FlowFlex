@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # CRM Leads
@@ -16,13 +16,12 @@ Top-of-funnel prospect records — captured before they are qualified into pipel
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `crm.leads` |
-| priority | v1 |
-| panel | crm |
-| permission-prefix | `crm.leads` |
-| tables | `crm_leads` |
+`crm.leads`
+
+**Priority:** v1  
+**Panel:** crm  
+**Permission prefix:** `crm.leads`  
+**Tables:** `crm_leads`
 
 ## Dependencies
 
@@ -59,10 +58,11 @@ tests/Feature/CRM/LeadFlowTest.php
 
 ## Test Checklist
 
+- [ ] Tenant isolation: company A cannot see, edit, or convert company B leads (`crm_leads` company-scoped)
+- [ ] Module gating: artifacts hidden when `crm.leads` inactive
 - [ ] Convert creates a deal in default pipeline first stage with the lead value + stage probability.
 - [ ] Convert creates/links a contact from the lead email.
-- [ ] Already-converted lead refuses reconversion.
-- [ ] Leads are company-scoped.
+- [ ] Already-converted lead refuses reconversion (concurrent double-convert rejected via row lock).
 
 ## Cross-Domain Edges
 

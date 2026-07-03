@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Sprints
@@ -14,13 +14,12 @@ Sprint planning, backlog management, velocity tracking, and retrospective notes 
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `projects.sprints` |
-| priority | p2 |
-| panel | projects |
-| permission-prefix | `projects.sprints` |
-| tables | `proj_sprints`, `proj_sprint_tasks` |
+`projects.sprints`
+
+**Priority:** p2  
+**Panel:** projects  
+**Permission prefix:** `projects.sprints`  
+**Tables:** `proj_sprints`, `proj_sprint_tasks`
 
 ## Dependencies
 
@@ -63,7 +62,8 @@ tests/Feature/Projects/{SprintTest,SprintCompletionTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot see/manage company B's sprints or backlog.
+- [ ] Module gating: artifacts hidden when `projects.sprints` inactive.
 - [ ] Second active sprint per project rejected.
 - [ ] Task can't sit in two active sprints.
 - [ ] Complete with backlog vs next-sprint moves incomplete tasks correctly.

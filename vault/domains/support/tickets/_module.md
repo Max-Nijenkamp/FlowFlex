@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Tickets
@@ -82,7 +82,8 @@ tests/Feature/Support/{TicketLifecycleTest,EmailToTicketTest,TicketMergeTest}.ph
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot view/reply/resolve/merge company B tickets
+- [ ] Module gating: artifacts hidden when `support.tickets` inactive
 - [ ] Email-to-ticket creates ticket; reply with number threads onto existing
 - [ ] First public agent reply stamps `first_response_at`; internal note doesn't
 - [ ] Public reply mails requester; internal note never

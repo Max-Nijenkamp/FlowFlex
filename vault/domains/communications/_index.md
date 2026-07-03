@@ -8,7 +8,7 @@ module-count: 8
 status: planned
 build-status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Communications — MOC
@@ -23,16 +23,16 @@ Every module is exploded to a folder: `_module` + `architecture` + `data-model`(
 
 ## Modules
 
-| Module | Key | Owns tables | Features |
-|---|---|---|---|
-| [[shared-inbox/_module\|Shared Inbox]] | `comms.inbox` | channels, conversations, messages | unified-view · driver-registry · collision · snooze |
-| [[email-channel/_module\|Email Channel]] | `comms.email` | email_channels | inbound-parsing · outbound-threading |
-| [[whatsapp/_module\|WhatsApp]] | `comms.whatsapp` | whatsapp_config, whatsapp_templates | template-mgmt · window-sending · inbound-webhook |
-| [[sms-channel/_module\|SMS Channel]] | `comms.sms` | sms_config, sms_optouts | inbound-optout · outbound-send · cost-tracking |
-| [[broadcast/_module\|Broadcast]] | `comms.broadcast` | broadcasts, broadcast_recipients | compose-schedule · materialisation · delivery-tracking |
-| [[automations/_module\|Automations]] | `comms.automations` | automation_rules, chatbot_flows | auto-reply · routing · chatbot-flows |
-| [[internal-messaging/_module\|Internal Messaging]] | `comms.internal` | channels_internal, channel_members, internal_messages | channels-dms · realtime · threads-reactions |
-| [[comms-analytics/_module\|Comms Analytics]] | `comms.analytics` | **none** (read-only) | response-time · agent-perf · channel-mix |
+| Module | Key | Owns tables | Kind highlights | Features |
+|---|---|---|---|---|
+| [[shared-inbox/_module\|Shared Inbox]] | `comms.inbox` | channels, conversations, messages | inbox custom-page (#8, Reverb) + resource | unified-view · driver-registry · collision · snooze |
+| [[email-channel/_module\|Email Channel]] | `comms.email` | email_channels | resource (#1) + signed webhook | inbound-parsing · outbound-threading |
+| [[whatsapp/_module\|WhatsApp]] | `comms.whatsapp` | whatsapp_config, whatsapp_templates | resource (#1) + wizard config page (#7) + webhook | template-mgmt · window-sending · inbound-webhook |
+| [[sms-channel/_module\|SMS Channel]] | `comms.sms` | sms_config, sms_optouts | resource (#1) + read-only opt-out list + webhook | inbound-optout · outbound-send · cost-tracking |
+| [[broadcast/_module\|Broadcast]] | `comms.broadcast` | broadcasts, broadcast_recipients | resource (#1, states) + stats widget (#6) | compose-schedule · materialisation · delivery-tracking |
+| [[automations/_module\|Automations]] | `comms.automations` | automation_rules, chatbot_flows | 2× settings resources (#1) | auto-reply · routing · chatbot-flows |
+| [[internal-messaging/_module\|Internal Messaging]] | `comms.internal` | channels_internal, channel_members, internal_messages | chat custom-page (#8, Reverb presence) | channels-dms · realtime · threads-reactions |
+| [[comms-analytics/_module\|Comms Analytics]] | `comms.analytics` | **none** (read-only) | dashboard page (#6) + apex widgets | response-time · agent-perf · channel-mix |
 
 Build order: inbox → email → whatsapp → broadcast → sms → automations → internal → analytics.
 

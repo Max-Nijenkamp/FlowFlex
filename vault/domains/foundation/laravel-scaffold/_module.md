@@ -5,12 +5,38 @@ type: module
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Laravel Scaffold
 
 `foundation.scaffold` — the Laravel 13 project skeleton. ULID PKs, strict types, soft deletes, PostgreSQL-only, Redis for cache/queues/sessions, domain-organised directory layout. The first thing built; nothing exists before it.
+
+## Module-key
+
+`foundation.scaffold`
+
+**Priority:** v1-core (M0 — the first thing built)  
+**Panel:** none (backend scaffold)  
+**Permission prefix:** none (seeds no permissions of its own)  
+**Tables:** `companies`, `users`, `admins` (+ `password_reset_tokens`, `sessions`)
+
+## Dependencies
+
+| Type | Module | Why |
+|---|---|---|
+| — | None | The project skeleton — nothing exists before it |
+
+## Core Features
+
+- Laravel 13 skeleton, PHP `^8.3`, strict types, flat domain foldering (no `Core/`/`Foundation/` build-phase dirs)
+- ULID primary keys everywhere via `HasUlids` — see [[./features/ulid-identity|ULID Identity]]
+- Soft deletes on every model via `SoftDeletes` — see [[./features/soft-delete-lifecycle|Soft-Delete Lifecycle]]
+- PostgreSQL-only; Redis for cache / queue / session
+- No auth starter kit — Filament 5 owns authentication
+- Base `companies` / `users` / `admins` tables → [[data-model]]
+
+## Verified Stack
 
 | Field | Value (verified against `app/`) |
 |---|---|
@@ -48,6 +74,8 @@ Verified present: all three `0001_01_01_*` migrations, both panel providers, the
 
 ## Test Checklist (verified by suite)
 
+- [ ] Tenant isolation: every tenant table carries a `company_id` `foreignUlid` (the column `CompanyScope` filters on) — asserted by `ModelsTest`
+- [ ] Module gating: n/a — `foundation.scaffold` is always-on platform scaffold, not a billable/gateable module
 - [x] `php artisan migrate` creates companies/users/admins with ULID PKs
 - [x] Arch test: models use `HasUlids` + `SoftDeletes` (`tests/Architecture/ModelsTest.php`)
 - [x] Arch test: no `dd`/`dump` in `app/` (`tests/Architecture/LayersTest.php`)

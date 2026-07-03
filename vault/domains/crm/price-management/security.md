@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Price Management — Security
@@ -17,6 +17,7 @@ updated: 2026-06-20
 | `crm.pricing.view-any` | Access catalogue, price books, discounts. |
 | `crm.pricing.manage-products` | Create / edit products. |
 | `crm.pricing.manage-price-books` | Create / edit price books, entries, and volume discounts. |
+| `crm.pricing.assign-book` | Assign a price book to an account or segment (`AssignPriceBookAction`). |
 
 ## Access Contract
 

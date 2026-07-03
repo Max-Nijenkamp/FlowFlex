@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Job Processing (Horizon + prioritised Redis queues)
@@ -36,6 +36,15 @@ Horizon processes Redis-backed queues in priority order; the dashboard is an adm
 
 - Consumes: jobs dispatched by every domain. Feeds: async side-effects (mail, exports, event listeners).
 - Shared entity: the queue-name registry in `config/horizon.php`.
+
+## Test Checklist
+
+### Unit
+- [ ] The `defaults` supervisor declares the queue priority order
+
+### Feature (Pest)
+- [ ] `/horizon` reachable by the `admin` guard, blocked for tenant users
+- [ ] A failed job lands in `failed_jobs` and is retryable
 
 ## Unknowns
 

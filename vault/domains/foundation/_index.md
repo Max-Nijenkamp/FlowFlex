@@ -1,11 +1,15 @@
 ---
 domain: foundation
+domain-key: foundation
 module: _index
 type: domain-index
+panel: none (provides /admin + /app)
+phase: 0 (M0 — build first)
+module-count: 8
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Foundation
@@ -14,16 +18,16 @@ Platform plumbing — invisible to tenant users, required by everything else. No
 
 ## Modules
 
-| Module | Key | Build |
-|---|---|---|
-| [[laravel-scaffold/_module\|Laravel Scaffold]] | `foundation.scaffold` | planned |
-| [[docker-environment/_module\|Docker Environment]] | `foundation.docker` | planned |
-| [[multi-tenancy-layer/_module\|Multi-Tenancy Layer]] | `foundation.tenancy` | planned |
-| [[queue-workers/_module\|Queue Workers & Scheduler]] | `foundation.queues` | planned |
-| [[email-setup/_module\|Email Setup]] | `foundation.email` | planned |
-| [[filament-panels/_module\|Filament Panels]] | `foundation.panels` | planned |
-| [[permissions-seed/_module\|Permissions Seeder]] | `foundation.permissions` | planned |
-| [[test-suite/_module\|Test Suite]] | `foundation.tests` | planned |
+| Module | Key | Build | Kind highlights |
+|---|---|---|---|
+| [[laravel-scaffold/_module\|Laravel Scaffold]] | `foundation.scaffold` | planned | backend — Filament Artifacts None |
+| [[docker-environment/_module\|Docker Environment]] | `foundation.docker` | planned | backend (local-dev infra) — None |
+| [[multi-tenancy-layer/_module\|Multi-Tenancy Layer]] | `foundation.tenancy` | planned | backend (scope/context substrate) — None |
+| [[queue-workers/_module\|Queue Workers & Scheduler]] | `foundation.queues` | planned | backend + external `/horizon` dashboard (admin guard) |
+| [[email-setup/_module\|Email Setup]] | `foundation.email` | planned | backend (mail + webhook) — None |
+| [[filament-panels/_module\|Filament Panels]] | `foundation.panels` | planned | **panel shells** `/admin` + `/app` + Filament auth pages (login/2FA/profile) |
+| [[permissions-seed/_module\|Permissions Seeder]] | `foundation.permissions` | planned | backend (artisan seeders) — None |
+| [[test-suite/_module\|Test Suite]] | `foundation.tests` | planned | backend (Pest + CI) — None |
 
 ## Dependency Graph
 

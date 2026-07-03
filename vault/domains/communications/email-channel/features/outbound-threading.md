@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Outbound Threading
@@ -39,6 +39,19 @@ Replies send from the connected address with the channel signature and threading
 - Consumes: prior conversation message-ids (inbox).
 - Feeds: outbound send via `InboxService::send` → driver.
 - Shared entity: `comms_messages` (owned by [[../../shared-inbox/_module|comms.inbox]]).
+
+## Test Checklist
+
+### Unit
+- [ ] `References` / `In-Reply-To` headers built from the conversation's prior message-ids
+- [ ] Channel signature (purified HTML) appended to the outbound body
+
+### Feature (Pest)
+- [ ] `EmailChannelDriver::send` sends from the channel `address` with threading headers set (fake Resend)
+- [ ] Reply on an existing conversation threads onto it; outbound attachments included
+
+### Livewire
+- [ ] Composer send is denied without `comms.inbox.reply`; send failure surfaces a retry toast
 
 ## Related
 

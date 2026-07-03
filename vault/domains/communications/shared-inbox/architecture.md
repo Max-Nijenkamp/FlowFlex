@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Shared Inbox — Architecture
@@ -37,24 +37,26 @@ Interface→Service: `InboxServiceInterface` → `InboxService`. Channels are pl
 
 **Nav group:** Inbox
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `SharedInboxPage` | #8 inbox custom page | [[../../../architecture/patterns/page-blueprints#Inbox / Chat / Conversation]] | Three-panel (list · thread · context rail); Reverb broadcast for arrivals + collision whispers; per-channel composer driven by driver capabilities |
+| `ChannelResource` | #1 CRUD resource | tweaks: state-badge-column (active/inactive), custom-header-actions (activate/deactivate) *(assumed)* | Channel list / activation; channel-specific config + secrets live in the channel modules' own tables |
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('comms.inbox.view-any') && BillingService::hasModule('comms.inbox')`
+per [[../../../architecture/filament-patterns]] #1. `SharedInboxPage` is a custom page and MUST state this
+explicitly — Filament does not auto-gate custom pages. Reply, assign, and channel-management actions gate
+additionally on their own verbs (`comms.inbox.reply` / `.assign` / `.manage-channels` — see [[./security]]).
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
 |---|---|---|
-| `SharedInboxPage` | #8 inbox custom page | Three-panel; Reverb broadcast for arrivals + collision whispers; per-channel composer driven by driver capabilities. |
-| `ChannelResource` | #1 CRUD resource | Channel list / activation; channel-specific config lives in the channel modules' own tables. |
+| Channel CRUD / activation (`ChannelResource`) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Conversation assign / set-status / snooze | Optimistic | `updated_at` stale-check on the conversation ([[../../../architecture/patterns/optimistic-locking]]); the Reverb collision whisper is a UX-level warning, not the data guard |
+| Message append (inbound processing, outbound send) | n/a | Append-only insert into `comms_messages`; idempotent via `external_id` dedupe (unique `(conversation_id, external_id)`) — no in-place update to race |
 
-See [[../../../architecture/filament-patterns]] and [[../../../architecture/ui-strategy]].
-
-### Access contract
-
-Every artifact gates on permission **and** module entitlement per [[../../../architecture/filament-patterns]] #1 — the custom page states it explicitly.
-
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('comms.inbox.view-any')
-        && BillingService::hasModule('comms.inbox');
-}
-```
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Sales Sequences — Architecture
@@ -43,25 +43,32 @@ Both listeners `implements ShouldQueue` + `WithCompanyContext`. No matching sequ
 
 ## Filament Artifacts
 
-| Artifact | Nav group | Kind (ui-strategy) | Notes |
+**Nav group:** Activities
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `SequenceResource` | Activities | Standard CRUD resource | Step repeater builder, performance tab |
-| `SequenceEnrolmentResource` | Activities | Standard CRUD resource | Who's where; pause/unenrol actions |
-| Enrol action | Activities | Table/view action | On Contact + Deal |
+| `SequenceResource` | #1 CRUD resource | tweaks: inline-relation-repeater (step builder), view-page-tabs (performance tab), custom-header-actions (activate / A/B config) | ordered step builder; per-variant performance tab |
+| `SequenceEnrolmentResource` | #1 CRUD resource | tweaks: state-badge-column (`active`/`paused`/`completed`/`unenrolled`), custom-header-actions (pause / resume / unenrol) | who's where; enrolment lifecycle controls |
+| Enrol action (Contact / Deal) | #1 CRUD resource | tweaks: custom-header-actions (enrol in sequence) | manual `crm.sequences.enrol` action on Contact + Deal views |
 
-Access contract:
-
-```php
-public static function canAccess(): bool
-{
-    return auth()->user()?->can('crm.sequences.view-any')
-        && hasModule('crm.sequences');
-}
-```
-
-Rich-text sanitize (medium): HTMLPurifier runs on sequence email-step template HTML on save — consistent with crm.email body purification.
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('crm.sequences.view-any') && BillingService::hasModule('crm.sequences')`
+per [[../../../architecture/filament-patterns]] #1. Custom pages MUST state this explicitly — Filament does not
+auto-gate them (this module has none; all surfaces are standard resources). Rich-text sanitize (medium):
+HTMLPurifier runs on sequence email-step template HTML on save, consistent with crm.email body purification.
 
 See [[../../../architecture/filament-patterns]] and [[../../../architecture/ui-strategy]].
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Sequence / step CRUD (builder form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Enrol (one active per contact, sequence) | Pessimistic | `unique(contact_id, sequence_id) WHERE status=active` + `DB::transaction()` so a concurrent double-enrol yields one row |
+| Step advancement (`advanceDue`) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the enrolment; cursor move committed with step execution → idempotent per window |
+| Enrolment transition (pause / resume / unenrol / complete) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read status, write per [[../../../architecture/patterns/states]] |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

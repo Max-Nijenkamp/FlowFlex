@@ -8,7 +8,7 @@ module-count: 7
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Support & Help Desk — MOC
@@ -33,15 +33,15 @@ Every module is exploded to a folder (`<slug>/_module.md` + architecture / data-
 
 ## Modules
 
-| Module | Key | Priority | Build status | Depends on (intra-domain) |
-|---|---|---|---|---|
-| [[tickets/_module\|Tickets]] | `support.tickets` | p2 | planned | — (anchor) |
-| [[knowledge-base/_module\|Knowledge Base]] | `support.kb` | p2 | planned | tickets (soft) |
-| [[sla/_module\|SLA Management]] | `support.sla` | p2 | planned | tickets |
-| [[canned-responses/_module\|Canned Responses]] | `support.canned` | p2 | planned | tickets |
-| [[automations/_module\|Automations]] | `support.automations` | p2 | planned | tickets, sla (soft), canned (soft) |
-| [[live-chat/_module\|Live Chat]] | `support.chat` | p2 | planned | tickets, canned (soft) |
-| [[support-analytics/_module\|Support Analytics]] | `support.analytics` | p2 | planned | tickets, sla (soft) |
+| Module | Key | Priority | Build status | Kind highlights | Depends on (intra-domain) |
+|---|---|---|---|---|---|
+| [[tickets/_module\|Tickets]] | `support.tickets` | p2 | planned | resource + inbox custom-page (#8, Reverb) + widget; public-vue form (#16) | — (anchor) |
+| [[knowledge-base/_module\|Knowledge Base]] | `support.kb` | p2 | planned | resource ×2 + public-vue help centre (#16) | tickets (soft) |
+| [[sla/_module\|SLA Management]] | `support.sla` | p2 | planned | resource + monitor custom-page (#3, Reverb) + widget | tickets |
+| [[canned-responses/_module\|Canned Responses]] | `support.canned` | p2 | planned | resource + composer embed (host #8) | tickets |
+| [[automations/_module\|Automations]] | `support.automations` | p2 | planned | resource (backend-heavy engine) | tickets, sla (soft), canned (soft) |
+| [[live-chat/_module\|Live Chat]] | `support.chat` | p2 | planned | chat custom-page (#8, Reverb) + read-only resource + render-hook toggle; public-vue widget (#16) | tickets, canned (soft) |
+| [[support-analytics/_module\|Support Analytics]] | `support.analytics` | p2 | planned | dashboard page (#6) + widgets; public-vue CSAT (#16) | tickets, sla (soft) |
 
 Build order: tickets → kb → sla → canned → automations → chat → analytics.
 

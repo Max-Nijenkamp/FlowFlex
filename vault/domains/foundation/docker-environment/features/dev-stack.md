@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Local Dev Stack (`docker compose up`)
@@ -34,6 +34,15 @@ One command brings up all 9 services and a reproducible dev environment; the dev
 
 - Consumes: nothing at the app layer. Feeds: every module (they run inside these containers).
 - Shared entity: the compose stack itself → [[../../../../infrastructure/docker-stack]].
+
+## Test Checklist
+
+### Unit
+- [ ] Compose config declares all 9 services with postgres/redis healthcheck `depends_on` gates
+
+### Feature (Pest)
+- [ ] `docker compose up -d` brings the stack healthy; `localhost:8080` serves the app
+- [ ] `migrate --seed` runs clean from an empty DB (M0 exit gate)
 
 ## Unknowns
 

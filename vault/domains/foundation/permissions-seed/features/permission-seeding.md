@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Permission & Module-Catalog Seeding
@@ -35,6 +35,16 @@ Idempotent bootstrap of the permission universe and module catalog — runs in e
 
 - Consumes: nothing. Feeds: RBAC (assignable permissions), module marketplace (catalog).
 - Shared entity: the permission strings + module catalog.
+
+## Test Checklist
+
+### Unit
+- [ ] `PERMISSIONS` const upsert is idempotent — a re-run creates no duplicate permissions
+
+### Feature (Pest)
+- [ ] `PermissionSeeder` idempotent across two runs (`SeederTest`)
+- [ ] Permissions seed under `team_id = company_id` (no cross-tenant bleed)
+- [ ] `ModuleCatalogSeeder` populates the catalog other modules gate on
 
 ## Unknowns
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Persistent Request Context (`SetCompanyContext`, Livewire-safe)
@@ -33,6 +33,15 @@ Tenant context is set on every authenticated request — including Livewire upda
 ## Relations
 
 - Consumes: the authenticated user (guard). Feeds: `CompanyScope`, RBAC team, every queued job's payload.
+
+## Test Checklist
+
+### Unit
+- [ ] `SetCompanyContext` sets `CompanyContext` + `setPermissionsTeamId` from `$user->company_id`
+
+### Feature (Pest)
+- [ ] Every authenticated `/app` request establishes context; missing context → 403 (fail-closed, never cross-tenant)
+- [ ] A Livewire follow-up POST re-runs the middleware (`isPersistent: true`) — no null-team 403
 
 ## Unknowns
 

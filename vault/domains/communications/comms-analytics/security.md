@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Comms Analytics — Security
@@ -16,6 +16,7 @@ updated: 2026-06-20
 |---|---|
 | `comms.analytics.view` | View the analytics dashboard + widgets |
 
+Read-only module — no command actions or state transitions, so a single view verb suffices. Seeded in `PermissionSeeder`.
 See [[../../../security/authn-authz]].
 
 ## Access Contract
@@ -23,10 +24,12 @@ See [[../../../security/authn-authz]].
 ```php
 public static function canAccess(): bool
 {
-    return Auth::user()->can('comms.analytics.view-any')
+    return Auth::user()->can('comms.analytics.view')
         && BillingService::hasModule('comms.analytics');
 }
 ```
+
+*(gate reconciled to `comms.analytics.view` — the prior `view-any` was never defined in the permission set)*
 
 ## Tenant Isolation
 

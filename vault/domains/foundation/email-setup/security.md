@@ -5,10 +5,16 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Email Setup — Security
+
+## Permissions
+
+None — no user-facing panel actions. The one write path (bounce webhook → `users.email_deliverable`) is authenticated by **webhook signature** (`VerifyResendSignature`), not a permission; the route is stateless (no session/CSRF) and rate-limited (`throttle:60,1`). See the Controls table below.
+
+## Controls
 
 | Control | Implementation | Status |
 |---|---|---|

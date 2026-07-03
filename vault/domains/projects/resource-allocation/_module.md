@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Resource Allocation
@@ -14,13 +14,12 @@ Allocate team members to projects by percentage of their time; plan capacity acr
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `projects.resources` |
-| priority | p2 |
-| panel | projects |
-| permission-prefix | `projects.resources` |
-| tables | `proj_resource_allocations` |
+`projects.resources`
+
+**Priority:** p2  
+**Panel:** projects  
+**Permission prefix:** `projects.resources`  
+**Tables:** `proj_resource_allocations`
 
 ## Dependencies
 
@@ -59,7 +58,8 @@ tests/Feature/Projects/ResourceAllocationTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot view or edit company B's allocations.
+- [ ] Module gating: artifacts hidden when `projects.resources` inactive.
 - [ ] Overlapping allocations sum correctly; >100% flagged.
 - [ ] Planned vs actual uses time entries when module active, omitted otherwise.
 - [ ] Available capacity math over fixtures.

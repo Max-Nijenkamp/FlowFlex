@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Quotes — Architecture
@@ -48,12 +48,28 @@ Audited. See [[../../../architecture/patterns/states]].
 
 **Nav group:** Pipeline
 
-| Artifact | Kind (ui-strategy row) | Notes |
-|---|---|---|
-| `QuoteResource` | #1 CRUD resource | line repeater, send action, version action |
-| Quote view page | #2 detail | PDF preview, acceptance status |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `QuoteResource` | #1 CRUD resource | tweaks: inline-relation-repeater (quote lines), custom-header-actions (send / new-version), state-badge-column | list filters: status, deal, valid-until window |
+| Quote view page | #2 detail | tweaks: view-page-tabs, pdf-preview-panel | inline PDF render pane + acceptance status ([[features/pdf-generation|pdf-generation feature]]) |
+| `Quotes/Accept.vue` (public) | #16 public Vue + Inertia | external tokenised accept/decline surface — not a Filament artifact | signed route `GET /quote/{quote}/accept?signature=…`; scoped guest guard + single-use signed token; rate-limited ([[features/public-acceptance|public-acceptance feature]]) |
 
-Public accept page: Vue + Inertia `/quotes/{token}` — ui-strategy row #16, rate-limited. See [[features/public-acceptance|public-acceptance feature]].
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('crm.quotes.view-any') && BillingService::hasModule('crm.quotes')`
+per [[../../../architecture/filament-patterns]] #1. Custom pages MUST state this explicitly — Filament does not
+auto-gate them. The public accept/decline surface (`Quotes/Accept.vue`, `GET /quote/{quote}/accept?signature=…`,
+[[features/public-acceptance|public-acceptance feature]]) is Vue+Inertia per [[../../../architecture/ui-strategy]]
+with a scoped guest guard and a single-use signed token, not a Filament artifact.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Quote / quote-line CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Status transition (send / accept / decline / expire / new-version supersede) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read, validate, write per [[../../../architecture/patterns/states]] — state machine + money totals |
+| Public accept/decline (token path) | Pessimistic | token row locked in `DB::transaction()` before the `sent → accepted \| declined` write; single-use guard |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

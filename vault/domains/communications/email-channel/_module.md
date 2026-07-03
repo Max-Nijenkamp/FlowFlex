@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Email Channel
@@ -16,14 +16,13 @@ Connect a company email inbox (support@, info@) so inbound emails become shared-
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `comms.email` |
-| priority | p2 |
-| panel | comms |
-| permission-prefix | `comms.email` |
-| tables | `comms_email_channels` |
-| encrypted-fields | `comms_email_channels.oauth_token` |
+`comms.email`
+
+**Priority:** p2  
+**Panel:** comms  
+**Permission prefix:** `comms.email`  
+**Tables:** `comms_email_channels`  
+**Encrypted fields:** `comms_email_channels.oauth_token`
 
 ## Dependencies
 
@@ -65,7 +64,8 @@ tests/Feature/Comms/{EmailChannelTest,EmailThreadingTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: inbound resolves company from `inbound_token`; a token never lands mail in another company's inbox.
+- [ ] Module gating: `EmailChannelResource` hidden when `comms.email` inactive.
 - [ ] Inbound resolves channel by token; unknown token dropped.
 - [ ] Reply threads via `References` header; subject fallback works.
 - [ ] Outbound sent from channel address with signature.

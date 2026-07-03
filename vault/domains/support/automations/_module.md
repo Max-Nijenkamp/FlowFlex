@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Automations
@@ -69,7 +69,8 @@ tests/Feature/Support/{AutomationEngineTest,TimeBasedRulesTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A rules never evaluate or act on company B tickets
+- [ ] Module gating: artifacts hidden when `support.automations` inactive
 - [ ] Rules evaluate in order; `stop_processing` halts chain
 - [ ] Each condition operator fixture (keyword, category, priority)
 - [ ] Each action type fixture (assign, priority, tag, canned reply, escalate)

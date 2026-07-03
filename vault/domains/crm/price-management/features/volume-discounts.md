@@ -6,7 +6,7 @@ feature: volume-discounts
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Volume Discounts
@@ -62,3 +62,19 @@ erDiagram
 - Consumes: nothing cross-domain.
 - Feeds: tiers are read by `PricingService::resolve()` (same module) and thus surface to [[../../quotes/_module|crm.quotes]] / [[../../deals/_module|crm.deals]] via the pricing read API — not events.
 - Shared entity: none — tiers reference only own `crm_products`.
+
+## Test Checklist
+
+### Unit
+- [ ] Highest qualifying tier chosen = largest `min_quantity` that is `<= quantity`
+- [ ] Only one tier applies (no cumulative stacking); percent composes after book/promo resolution
+- [ ] `discount_percent` applied via brick/money (no float drift)
+
+### Feature (Pest)
+- [ ] Duplicate `(product_id, min_quantity)` tier rejected
+- [ ] Tier CRUD scoped to the acting company; no cross-tenant product tiers resolve
+- [ ] Resolved tier surfaces in `PriceResolutionData.volume_discount_applied`
+
+### Livewire
+- [ ] Volume-discount relation manager on `ProductResource` adds/edits/deletes tiers; `canAccess` denied without permission + active module
+- [ ] Duplicate `min_quantity` surfaces the validation error state

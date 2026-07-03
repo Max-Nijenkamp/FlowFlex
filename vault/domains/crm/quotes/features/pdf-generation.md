@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Quote PDF Generation
@@ -34,6 +34,17 @@ Render a branded PDF of a quote (company logo + colour) via `spatie/laravel-pdf`
 - Consumes: `QuoteSent` (within-domain, quotes) → enqueues `GenerateQuotePdfJob`.
 - Feeds: nothing cross-domain — output is a stored file on the quote.
 - Shared entity: company branding settings (owned by core), read-only.
+
+## Test Checklist
+
+### Unit
+- [ ] Line totals (qty × unit price − discount %) and quote total computed via brick/money — no float drift
+- [ ] PDF template binds company branding (logo/colour) from settings
+
+### Feature (Pest)
+- [ ] `QuoteSent` enqueues `GenerateQuotePdfJob`; job stores a Media Library attachment against the quote
+- [ ] Regenerate action replaces the prior attachment; download gated on `crm.quotes.view`
+- [ ] Tenant isolation: the generated PDF attaches only to the company's own quote
 
 ## Related
 

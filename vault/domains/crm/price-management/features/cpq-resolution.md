@@ -6,7 +6,7 @@ feature: cpq-resolution
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — CPQ Price Resolution
@@ -78,3 +78,16 @@ erDiagram
 - Consumes: nothing cross-domain — provides a read/resolve API.
 - Feeds: read API consumed by [[../../quotes/_module|crm.quotes]] and [[../../deals/_module|crm.deals]] for line-item pricing (Feeds via read API, not events).
 - Shared entity: `crm_segments` (owned by [[../../segments/_module|crm.segments]]) read-only for book selection *(assumed)*.
+
+## Test Checklist
+
+### Unit
+- [ ] Resolution precedence: account book > segment book > default book > product standard price (first match wins)
+- [ ] Only entries whose `valid_from`/`valid_until` window contains `date` are eligible
+- [ ] `below_margin_warning` set when discounted price < `cost_cents` + threshold; advisory, non-blocking
+- [ ] All arithmetic via brick/money integer minor units (no float)
+
+### Feature (Pest)
+- [ ] `PricingService::resolve` returns correct `PriceResolutionData` for account/segment/default/standard fixtures
+- [ ] Resolution reads only within the acting tenant (no cross-company book leak)
+- [ ] Missing eligible entry surfaces the no-price error path

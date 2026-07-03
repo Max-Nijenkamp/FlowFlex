@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Internal Messaging — Architecture
@@ -33,21 +33,28 @@ No event-bus domain-events. @mention → a `core.notifications` notification (th
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Messaging
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `InternalMessagingPage` | Messaging | #8 chat custom page | channel sidebar + thread pane; Reverb presence + typing whispers; cursor-paginated history. |
+| `InternalMessagingPage` | #8 chat custom page | [[../../../architecture/patterns/page-blueprints#Inbox / Chat / Conversation]] | channel sidebar + thread pane; Reverb presence + typing whispers; cursor-paginated history |
 
-### Access contract
+**Access contract (mandatory):** `InternalMessagingPage` gates on
+`canAccess() = Auth::user()->can('comms.internal.use') && BillingService::hasModule('comms.internal')`
+per [[../../../architecture/filament-patterns]] #1 — as a custom page it states this explicitly. All users hold
+`comms.internal.use` by default; `comms.internal.manage-channels` gates channel admin ([[./security]]). Private-channel /
+DM visibility is a second, membership scope enforced in query + Reverb channel-auth + search (see [[./security]]).
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('comms.internal.view-any')
-        && BillingService::hasModule('comms.internal');
-}
-```
+## Concurrency
 
-(All users hold `comms.internal.use` by default; `comms.internal.manage-channels` for channel admin.)
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Channel CRUD (create / admin) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Message post + membership join/invite | n/a | Append-only inserts (`comms_internal_messages`, `comms_channel_members`); DM dedupe via `dm_key`, membership unique per `(channel, user)` |
+| Reaction toggle (`reactions` jsonb) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the message row — jsonb read-modify-write, prevents lost toggles from concurrent reactors |
+| Mark-read (`last_read_at`) | n/a | Each user writes only their own membership row — no cross-writer contention |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

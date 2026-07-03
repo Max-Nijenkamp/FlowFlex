@@ -6,7 +6,7 @@ feature: contract-lifecycle
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Contract Lifecycle
@@ -59,3 +59,19 @@ erDiagram
 - Consumes: a won deal (`crm_deals`) / accepted quote (`crm_quotes`) as the create-from source — read-only query, not an event.
 - Feeds: nothing cross-domain in v1 — recurring-revenue tracking reads `crm_contracts`; a feed to finance for recurring invoicing is *(assumed)* and deferred.
 - Shared entity: `crm_deals` and `crm_accounts` (owned by [[../../deals/_module|crm.deals]] / accounts), read-only.
+
+## Test Checklist
+
+### Unit
+- [ ] State machine allows only the defined transitions (draft→sent→signed→active→expired|terminated, active→active renew) and blocks others
+- [ ] Sign-off requires an attached `application/pdf`; terminate requires a reason
+
+### Feature (Pest)
+- [ ] `createFromDeal` prefills account + value and starts the contract in `draft`
+- [ ] Each transition (send / sign-off / terminate) requires its own permission and is denied without it
+- [ ] Every status transition is serialised via `DB::transaction()` + `lockForUpdate()` — concurrent transitions cannot double-apply; tenant-scoped throughout
+- [ ] `ContractLifecycleCommand` is idempotent — re-run does not re-activate or re-expire
+
+### Livewire
+- [ ] State-appropriate action bar: Send visible in `draft`, Sign-off in `sent`, Terminate in `active`
+- [ ] `canAccess` / action gating denies transitions for a user missing the verb; missing-PDF / missing-reason errors surface inline

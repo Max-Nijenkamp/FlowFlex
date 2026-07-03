@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Activities
@@ -13,6 +13,17 @@ updated: 2026-06-20
 Calls, emails, meetings, and tasks logged against contacts and deals. The activity log is planned as the source of truth for all customer interactions.
 
 > All work here is **planned** — the CRM code was stripped back to an app/admin shell. See [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]] for context.
+
+---
+
+## Module-key
+
+`crm.activities`
+
+**Priority:** v1-core  
+**Panel:** crm  
+**Permission prefix:** `crm.activities`  
+**Tables:** `crm_activities`
 
 ---
 
@@ -59,7 +70,8 @@ tests/Feature/CRM/{ActivityTest,TaskReminderTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see/log activities on company B contacts/deals/accounts
+- [ ] Module gating: artifacts hidden when `crm.activities` inactive
 - [ ] Activity without any link rejected; task without due date rejected
 - [ ] Activity appears on contact AND deal AND account timelines when all linked
 - [ ] Reminder fires once (`reminded_at` guard)

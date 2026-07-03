@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Knowledge Base — Architecture
@@ -26,14 +26,29 @@ Slugs via `spatie/laravel-sluggable`; rich text purified via `ezyang/htmlpurifie
 
 **Nav group:** Knowledge Base
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `KbArticleResource` | #1 CRUD resource | Tiptap editor, publish action, feedback counts |
-| `KbCategoryResource` | #1 CRUD resource | tree order, sub-categories |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `KbArticleResource` | #1 CRUD resource | tweaks: state-badge-column (draft/published), custom-header-actions (publish / unpublish) | Tiptap editor (purified); view / helpful counts columns |
+| `KbCategoryResource` | #1 CRUD resource | (base resource — tree order, sub-categories) | organises articles |
 
 Public help centre: Vue + Inertia (`/help/{company}`, `/help/{company}/{category}/{slug}`) — ui-strategy row #16, `HelpCentreController` + `resources/js/Pages/Help/*`.
 
-**Access contract:** panel artifacts gate on `canAccess() = Auth::user()->can('support.kb.view-any') && BillingService::hasModule('support.kb')` per [[../../../architecture/filament-patterns]] #1. Public help centre runs under a guest guard (Vue+Inertia per [[../../../architecture/ui-strategy]]).
+**Access contract (mandatory):** every panel artifact gates on
+`canAccess() = Auth::user()->can('support.kb.view-any') && BillingService::hasModule('support.kb')`
+per [[../../../architecture/filament-patterns]] #1. The public help centre is Vue+Inertia per [[../../../architecture/ui-strategy]] under a **guest guard** (not a panel session), every query filtered to `is_published = true` + `company_id`, with rate-limited feedback/view endpoints — not a Filament artifact.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Article CRUD + revision append (form) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification; prior body appended to `revisions` jsonb in the same save ([[../../../architecture/patterns/optimistic-locking]]) |
+| Category CRUD | Optimistic | `updated_at` stale-check ([[../../../architecture/patterns/optimistic-locking]]) |
+| Publish / unpublish (status flip) | Optimistic | `updated_at` stale-check → flips `status` + `published_at`; not a money/capacity mutation, no lock needed |
+| View / feedback counters (public) | n/a | atomic `increment()` on the article counters — no read-modify-write race; rate-limited per visitor (see [[./security]]) |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

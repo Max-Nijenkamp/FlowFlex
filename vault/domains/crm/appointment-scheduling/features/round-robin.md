@@ -6,7 +6,7 @@ feature: round-robin
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Round-Robin Assignment
@@ -65,3 +65,14 @@ erDiagram
 - Consumes: invoked inline by `SchedulingService::book()` (same-module)
 - Feeds: chosen rep written to the booking → carried in `AppointmentBooked` payload
 - Shared entity: rep/user identity (foundation)
+
+## Test Checklist
+
+### Unit
+- [ ] Least-loaded selection picks the rep with the fewest bookings this week from the pool *(assumed cadence)*
+- [ ] Empty `team_user_ids` pool falls back to `owner_id`; no eligible rep raises the expected error
+
+### Feature (Pest)
+- [ ] `book()` on a team meeting type assigns exactly one rep and writes `assigned_rep_id`, then the assigned rep is not double-booked (per-rep slot re-validation)
+- [ ] Assignment is tenant-scoped: only reps in the current company's pool are eligible
+- [ ] The assigned rep receives the confirmation/reminder like an owner

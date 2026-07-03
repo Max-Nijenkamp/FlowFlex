@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Internal Messaging
@@ -16,14 +16,13 @@ Team chat for internal communication — direct messages and group channels betw
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `comms.internal` |
-| priority | p2 |
-| panel | comms |
-| permission-prefix | `comms.internal` |
-| tables | `comms_channels_internal`, `comms_channel_members`, `comms_internal_messages` |
-| patterns | websockets, custom-pages, search |
+`comms.internal`
+
+**Priority:** p2  
+**Panel:** comms  
+**Permission prefix:** `comms.internal`  
+**Tables:** `comms_channels_internal`, `comms_channel_members`, `comms_internal_messages`  
+**Patterns:** websockets, custom-pages, search
 
 ## Dependencies
 
@@ -73,7 +72,8 @@ tests/Feature/Comms/{InternalChatTest,ChannelVisibilityTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A users never see company B channels/messages; three-layer scope holds under `CompanyScope`.
+- [ ] Module gating: messaging page hidden when `comms.internal` inactive.
 - [ ] Non-member cannot read private channel/DM messages (query + channel auth + search).
 - [ ] DM dedupe: second `dmWith` returns the same channel.
 - [ ] @mention notifies; reaction toggles.

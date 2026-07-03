@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # CRM Appointment Scheduling
@@ -14,16 +14,15 @@ Public booking pages for reps, round-robin team scheduling, and calendar sync. P
 
 > This module is planned for rebuild. Prior "shipped/complete" references reflect the stripped codebase; see [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]] for context.
 
-## Module Key
+## Module-key
 
-```
-module-key:        crm.scheduling
-priority:          v1
-panel:             crm
-permission-prefix: crm.scheduling
-tables:            crm_meeting_types, crm_bookings, crm_availability
-encrypted-fields:  crm_availability.calendar_connection
-```
+`crm.scheduling`
+
+**Priority:** v1  
+**Panel:** crm  
+**Permission prefix:** `crm.scheduling`  
+**Tables:** `crm_meeting_types`, `crm_bookings`, `crm_availability`  
+**Encrypted fields:** `crm_availability.calendar_connection`
 
 ## Dependencies
 
@@ -76,7 +75,8 @@ tests/Feature/CRM/{BookingFlowTest,SlotConcurrencyTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating enforced.
+- [ ] Tenant isolation: company A cannot see/book company B meeting types or bookings
+- [ ] Module gating: artifacts hidden when `crm.scheduling` inactive
 - [ ] Slot list respects working hours / buffers / existing bookings.
 - [ ] Concurrent booking of same slot → second gets `SlotTakenException`.
 - [ ] Round-robin distributes to least-loaded rep.

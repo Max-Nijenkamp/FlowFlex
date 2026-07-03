@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Compose & Schedule
@@ -40,6 +40,21 @@ Build a broadcast — pick channel + audience, write the body, preview, and send
 - Consumes: channel availability + approved templates.
 - Feeds: `BroadcastService::schedule` → recipient materialisation.
 - Shared entity: `comms_whatsapp_templates` (owned by whatsapp, read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] `{{first_name}}` personalisation substitutes per recipient
+- [ ] WhatsApp channel selection requires an approved template (validation)
+
+### Feature (Pest)
+- [ ] "Send now" transitions `draft → scheduled → sending`; a `scheduled_at` broadcast waits for the dispatcher
+- [ ] Preview renders against a sample recipient without sending
+- [ ] Send denied without `comms.broadcast.send`; create denied without `comms.broadcast.create`
+
+### Livewire
+- [ ] Audience builder + composer validate (no audience / no approved template blocks send)
+- [ ] State badge reflects the broadcast lifecycle
 
 ## Related
 

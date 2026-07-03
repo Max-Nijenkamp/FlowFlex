@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # OKRs — Architecture
@@ -38,20 +38,27 @@ None cross-domain. Reminders use the notifications service API.
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** OKRs
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `ObjectiveResource` | OKRs | #1 CRUD (tree-ish) | nested display, KR relation manager, check-in action |
-| `OkrDashboardPage` | OKRs | #6 dashboard page | quarter selector, health distribution, recent check-ins |
+| `ObjectiveResource` | #1 CRUD resource | tweaks: custom-header-actions (check-in) | nested/indented objective display; KR relation manager (target/current/baseline/unit + progress bar); list filters: quarter, owner, health *(assumed)* |
+| `OkrDashboardPage` | #6 Dashboard custom page | [[../../../architecture/patterns/page-blueprints#Dashboard]] | quarter selector; health-distribution donut; per-objective progress; recent check-ins feed; widget polling 30–60s *(assumed)* |
 
-### Access contract
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('projects.okrs.view-any') && BillingService::hasModule('projects.okrs')`
+per [[../../../architecture/filament-patterns]] #1. `OkrDashboardPage` is a custom page and MUST state this
+explicitly — Filament does not auto-gate custom pages. The check-in action additionally requires
+`projects.okrs.update-own` (own KRs) or `projects.okrs.update-any` (others'), enforced in `OkrService::checkIn`.
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('projects.okrs.view-any')
-        && BillingService::hasModule('projects.okrs');
-}
-```
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Objective / Key Result CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Check-in + progress cascade (`OkrService::checkIn`) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the objective + its parent chain while recomputing cached `progress_percent`, so concurrent check-ins on sibling KRs don't clobber the roll-up per [[../../../architecture/patterns/states]] |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

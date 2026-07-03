@@ -6,7 +6,7 @@ feature: engagement-tracking
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Engagement Tracking
@@ -49,6 +49,15 @@ erDiagram
 - Consumes: buyer document-open from the token portal (same-module)
 - Feeds: `DealRoomViewed` / engagement events → consumed by revenue-intelligence (deal health signal)
 - Shared entity: `crm_deals` (via parent room)
+
+## Test Checklist
+
+### Unit
+- [ ] `TrackDocumentViewAction` increments `view_count` and stamps `last_viewed_at` on the document row
+
+### Feature (Pest)
+- [ ] View tracking increments once per view event
+- [ ] Engagement panel reads only its own room's rows; tenant isolation holds on `crm_deal_room_documents`
 
 ## Notes
 

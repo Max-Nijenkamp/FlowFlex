@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Demo-Data Seeding (`LocalDevSeeder`, non-prod)
@@ -36,6 +36,15 @@ A single non-production seeder that stands up a fully-populated "FlowFlex Demo" 
 
 - Consumes: nothing. Feeds: realistic first-run experience, QA, screenshots.
 - Shared entity: the "FlowFlex Demo" company as the canonical demo tenant.
+
+## Test Checklist
+
+### Unit
+- [ ] Owner `syncPermissions` grants every current `web`-guard permission
+
+### Feature (Pest)
+- [ ] `LocalDevSeeder` throws `RuntimeException` in production; seeds the demo company in non-prod
+- [ ] The three demo logins authenticate; `test@test.nl` is both staff admin and tenant owner
 
 ## Unknowns
 

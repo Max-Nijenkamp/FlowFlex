@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # SMS Channel — Architecture
@@ -26,22 +26,31 @@ None fired or consumed. Cross-domain effect is via the inbox driver contract + `
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Settings
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `SmsChannelResource` | Settings | #1 CRUD resource | Connect provider, credentials write-only, test send. |
-| Opt-out list (relation/page) | Settings | #1 read-only | Compliance view of opted-out numbers. |
+| `SmsChannelResource` | #1 CRUD resource | tweaks: custom-header-actions (test-send) | Connect provider; credentials write-only; test send |
+| Opt-out list | #1 CRUD resource | tweaks: read-only-flow-owned (writes owned by `OptOutService` / STOP webhook) | Compliance view of opted-out numbers |
 
 Sending happens through the [[../shared-inbox/_module|Shared Inbox]] composer (segment counter shown).
 
-### Access contract
+**Access contract (mandatory):** both artifacts gate on
+`canAccess() = Auth::user()->can('comms.sms.view-any') && BillingService::hasModule('comms.sms')`
+per [[../../../architecture/filament-patterns]] #1. Provider connect / test-send additionally require
+`comms.sms.manage` ([[./security]]). The opt-out list is read-only — opt-outs are written by the STOP webhook via
+`OptOutService`. Sending is gated by the inbox (`comms.inbox.reply`); the webhook (`SmsWebhookController`) is a
+signed guest endpoint, not a Filament artifact.
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('comms.sms.view-any')
-        && BillingService::hasModule('comms.sms');
-}
-```
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| SMS-config CRUD (connect, credentials) | Optimistic | single row per company; `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Opt-out write (STOP inbound) | n/a | Append-only upsert into `comms_sms_optouts`, `phone_e164` unique per company — idempotent, no in-place update to race |
+| Message send + cost record | n/a | Append-only via `InboxService`; the inbox owns the `comms_messages` row (cost rides in `meta`) + `external_id` dedupe |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

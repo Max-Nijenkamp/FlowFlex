@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Routing Rules
@@ -38,6 +38,21 @@ Rules that assign, tag, set status, or escalate a conversation by channel, keywo
 - Consumes: inbound hook from [[../../shared-inbox/_module|comms.inbox]].
 - Feeds: conversation mutations via `InboxService::assign / setStatus` + tags.
 - Shared entity: `comms_conversations` (owned by the inbox); users/teams (RBAC).
+
+## Test Checklist
+
+### Unit
+- [ ] Ordered evaluation: rules execute in `order`; `stop_processing = true` halts remaining rules on match
+- [ ] Action config validates against the action registry (assign/tag/set-status/escalate)
+
+### Feature (Pest)
+- [ ] Inbound matching a routing rule assigns/tags/sets-status via `InboxService` (inbox owns the writes)
+- [ ] Stop-on-match: a later rule does not run once an earlier match sets `stop_processing`
+- [ ] Tenant isolation: a rule never routes a conversation from another company
+
+### Livewire
+- [ ] Drag-reorder persists `order`; stop-on-match toggle saves
+- [ ] Create/edit denied without `comms.automations.manage`
 
 ## Related
 

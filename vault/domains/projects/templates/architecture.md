@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Templates — Architecture
@@ -25,20 +25,28 @@ None cross-domain. Instantiation is synchronous via owning-module actions.
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Settings
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `ProjectTemplateResource` | Settings | #1 CRUD | sections/tasks repeaters; system templates read-only |
-| `CreateProjectFromTemplatePage` | Settings | #7 wizard custom page | template → name/start date → confirm |
+| `ProjectTemplateResource` | #1 CRUD resource | tweaks: inline-relation-repeater (section/task/milestone repeaters), custom-header-actions (duplicate-to-edit, save-as-template) | system templates render read-only per-row with a "Duplicate to edit" action; list filters: category, system/company *(assumed)* |
+| `CreateProjectFromTemplatePage` | #7 Wizard custom page | [[../../../architecture/patterns/page-blueprints#Wizard]] | stepper: choose template → name/start date/owner/members → date preview → confirm; single-transaction instantiate |
 
-### Access contract
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('projects.templates.view-any') && BillingService::hasModule('projects.templates')`
+per [[../../../architecture/filament-patterns]] #1. `CreateProjectFromTemplatePage` is a custom page and MUST state
+this explicitly — Filament does not auto-gate custom pages. The wizard's instantiate step additionally requires
+`projects.templates.instantiate` (plus the target modules' create rights, enforced by their owning actions).
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('projects.templates.view-any')
-        && BillingService::hasModule('projects.templates');
-}
-```
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Template CRUD (form, repeaters, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Instantiate project from template (`TemplateService::instantiate`) | Pessimistic (transactional) | single `DB::transaction()` creating project + sections + tasks + milestones via the owning-module actions — append-only but must be all-or-nothing, so any failure rolls the whole set back; no shared counter, hence no row locks per [[../../../architecture/patterns/states]] |
+| Save project as template (`TemplateService::fromProject`) | Pessimistic (transactional) | single `DB::transaction()` writing the template + section/task/milestone rows atomically |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

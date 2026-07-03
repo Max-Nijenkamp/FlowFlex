@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # SLA Management — Architecture
@@ -33,13 +33,26 @@ Business hours + timezone read from `core.settings` (read-only).
 
 **Nav group:** Settings
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `SlaPolicyResource` | #1 CRUD resource | per-priority targets repeater |
-| `SlaMonitorPage` | #8-style live custom page | tickets nearing breach, Reverb broadcast updates |
-| `SlaComplianceWidget` | #6 widget | compliance % |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `SlaPolicyResource` | #1 CRUD resource | tweaks: inline-relation-repeater (per-priority targets) | validation resolution > first-response |
+| `SlaMonitorPage` | #3 custom page | [[../../../architecture/patterns/page-blueprints#Kanban]] — read-only near-breach queue grouped by urgency (green / amber / red), no drag reorder | "SLA Monitor" at `/support/sla-monitor`; Reverb broadcast on threshold crossings |
+| `SlaComplianceWidget` | #6 dashboard widget | [[../../../architecture/patterns/page-blueprints#Dashboard]] | rolling compliance %; widget polling 30–60s |
 
-**Access contract:** every artifact gates on `canAccess() = Auth::user()->can('support.sla.view') && BillingService::hasModule('support.sla')` per [[../../../architecture/filament-patterns]] #1 — the custom monitor page states it explicitly.
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('support.sla.view') && BillingService::hasModule('support.sla')`
+per [[../../../architecture/filament-patterns]] #1. `SlaMonitorPage` is a custom page and MUST state this explicitly — Filament does not auto-gate custom pages.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| SLA policy + targets CRUD (form) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| SLA event emission (met / warning / breach) | n/a | append-only insert into `sup_sla_events`; the unique `(ticket, event type)` constraint is the fire-once guard, not a lock — the scheduled check is idempotent |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Gantt Chart
@@ -14,13 +14,12 @@ Timeline view of tasks and milestones with dependency arrows; shows the project 
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `projects.gantt` |
-| priority | p2 |
-| panel | projects |
-| permission-prefix | `projects.gantt` |
-| tables | *(none — reads `proj_tasks`, `proj_task_dependencies`, `proj_milestones`)* |
+`projects.gantt`
+
+**Priority:** p2  
+**Panel:** projects  
+**Permission prefix:** `projects.gantt`  
+**Tables:** *(none — reads `proj_tasks`, `proj_task_dependencies`, `proj_milestones`)*
 
 ## Dependencies
 
@@ -55,7 +54,9 @@ tests/Feature/Projects/GanttTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating + membership scoping.
+- [ ] Tenant isolation: company A cannot render company B's tasks/milestones on the chart.
+- [ ] Module gating: artifacts hidden when `projects.gantt` inactive.
+- [ ] Project-membership scoping: non-member cannot open the chart for a project.
 - [ ] `GanttData` includes bars, markers, dependency edges (fixture project).
 - [ ] Critical path correct on a branched DAG fixture.
 - [ ] Drag reschedule routes through `UpdateTaskAction` validation.

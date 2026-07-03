@@ -6,7 +6,7 @@ feature: segment-builder
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Segment Builder
@@ -48,6 +48,19 @@ Before saving, the builder shows a live count via `SegmentService::preview(condi
 - Consumes: contact attribute/custom-field schema (owned by contacts)
 - Feeds: saved segment → audience consumed by [[../../sales-sequences/_module|crm.sequences]] and marketing/broadcast via `SegmentService::contacts()`
 - Shared entity: contacts; tags ([[../../../../architecture/patterns/custom-fields]])
+
+## Test Checklist
+
+### Unit
+- [ ] Each operator compiles to correct SQL (fixture per operator incl. custom-field JSONB)
+- [ ] Invalid field/operator rejected against the allowed registry before any SQL is built (no column injection)
+
+### Feature (Pest)
+- [ ] AND/OR single-nesting logic produces the correct member set end-to-end
+- [ ] `preview(conditions)` count equals the actual `contacts()` resolution count
+
+### Livewire
+- [ ] Add/remove rule + AND/OR toggle updates the live preview; save denied without `crm.segments.create`/`crm.segments.update`
 
 ## Related
 

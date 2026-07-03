@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Bounce Webhook (signature-verified suppression)
@@ -34,6 +34,16 @@ Resend posts bounce/complaint events to a signed webhook; a hard bounce flags th
 
 - Consumes: Resend webhook events (external). Feeds: [[branded-mailable]] suppression check.
 - Shared entity: `users` table ([[../../laravel-scaffold/data-model]]).
+
+## Test Checklist
+
+### Unit
+- [ ] Hard-bounce event payload maps to `email_deliverable = false`; non-hard-bounce types are no-ops
+
+### Feature (Pest)
+- [ ] Valid-signature hard bounce flags the address undeliverable (`BounceWebhookTest`)
+- [ ] Invalid/unsigned request rejected before the controller — no state change
+- [ ] Webhook route enforces `throttle:60,1`
 
 ## Unknowns
 

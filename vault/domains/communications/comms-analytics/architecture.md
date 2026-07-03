@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Comms Analytics — Architecture
@@ -24,20 +24,26 @@ None fired or consumed. Pure read aggregator. See [[../../../architecture/event-
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Analytics
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `CommsAnalyticsDashboard` | Analytics | #6 dashboard page + apex charts | date range + channel filter; polling 60s. |
-| `ChannelVolumeWidget` / `ResponseTimeWidget` / `AgentPerformanceWidget` / `ChannelMixWidget` | Analytics | #6 widgets | fed by `CommsAnalyticsService`. |
+| `CommsAnalyticsDashboard` | #6 dashboard page | [[../../../architecture/patterns/page-blueprints#Dashboard]] | date range + channel filter; polling 60s |
+| `ChannelVolumeWidget` / `ResponseTimeWidget` / `AgentPerformanceWidget` / `ChannelMixWidget` | #6 dashboard widgets | [[../../../architecture/patterns/page-blueprints#Dashboard]] | fed by `CommsAnalyticsService`; busiest-hours heat-map via apexcharts heatmap |
 
-### Access contract
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('comms.analytics.view') && BillingService::hasModule('comms.analytics')`
+per [[../../../architecture/filament-patterns]] #1. `CommsAnalyticsDashboard` is a custom page and MUST state this
+explicitly — Filament does not auto-gate custom pages. The broadcast-performance section additionally hides when
+`comms.broadcast` is inactive.
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('comms.analytics.view-any')
-        && BillingService::hasModule('comms.analytics');
-}
-```
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| (all) | n/a | Read-only aggregator — owns no tables and writes nothing; every path is a `CompanyScope`-bound aggregate query over inbox + broadcast data. No write to race |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Caching
 

@@ -5,12 +5,16 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Queue Workers — Security
 
 Parent: [[_module]]. Two security surfaces: the Horizon dashboard (an admin tool exposing job payloads) and the tenant integrity of async work.
+
+## Permissions
+
+None — no permission strings. The Horizon dashboard (`/horizon`) is gated by **guard** (`admin`, via `HorizonServiceProvider`), not by a permission; tenant users cannot reach it. Job execution carries no user permission — tenant integrity comes from `WithCompanyContext` (scope + team), not RBAC. See the Controls table below.
 
 ## Controls
 

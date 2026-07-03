@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Public Accept / Decline
@@ -37,6 +37,17 @@ Prospect accepts or declines a quote via a **signed public link** (no login).
 - Consumes: nothing cross-domain (public entrypoint).
 - Feeds: `QuoteAccepted` → consumed within-domain by deals to pre-fill products; rep then closes the deal won, and the invoice flows from the existing `DealWon` path *(assumed — no separate quote→invoice event)*.
 - Shared entity: the deal (`crm_deals`, owned by [[../../deals/_module|crm.deals]]) — updated via event, read-only here.
+
+## Test Checklist
+
+### Unit
+- [ ] Signed-URL signature validation rejects tampered / expired signatures
+- [ ] Token resolves exactly one `crm_quotes` row and cannot be replayed on another quote
+
+### Feature (Pest)
+- [ ] Valid token accepts a `sent` quote → `accepted`, fires `QuoteAccepted`, stamps the timestamp
+- [ ] Expired / declined / already-actioned quote cannot be accepted (single-use guard)
+- [ ] Public route is rate-limited and leaks no authenticated app session
 
 ## Related
 

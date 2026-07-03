@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Sub-tasks & Dependencies
@@ -38,6 +38,21 @@ Nested sub-tasks and cycle-checked blocks/blocked-by relationships between tasks
 
 - Consumes / Feeds: nothing (internal to tasks).
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Cycle detection: `AddDependencyAction` rejects a self-link and any edge that would close a loop (`DependencyCycleException`).
+- [ ] A sub-task must share its parent's project (cross-project parent rejected).
+
+### Feature (Pest)
+- [ ] Add `blocks` / `related` edges between two tasks in a project; the resulting graph stays acyclic (Gantt critical-path relies on this).
+- [ ] Tenant scope: cannot add a dependency to a task in another company/project the caller cannot see.
+- [ ] Concurrent edit: adding a dependency to a task edited elsewhere surfaces the stale-record conflict rather than silently overwriting.
+
+### Livewire
+- [ ] Sub-task / dependency relation managers require `projects.tasks.update`.
+- [ ] Cycle attempt shows the "This would create a dependency loop" error toast (no write).
 
 ## Unknowns
 

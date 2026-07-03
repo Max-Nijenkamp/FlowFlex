@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Window Sending (24h rule)
@@ -39,6 +39,19 @@ Enforces WhatsApp's customer-service window: free-form messages inside 24h of th
 - Consumes: last-inbound timestamp from the conversation (inbox).
 - Feeds: outbound message via `InboxService::send` (inbox owns the row).
 - Shared entity: `comms_messages` (owned by [[../../shared-inbox/_module|comms.inbox]]).
+
+## Test Checklist
+
+### Unit
+- [ ] Window check: `now - lastInboundAt <= 24h` allows free-form; beyond it requires a template
+- [ ] `{{n}}` substitution: variable count mismatch is rejected
+
+### Feature (Pest)
+- [ ] Free-form send inside the 24h window succeeds via `WhatsAppDriver::send`
+- [ ] Send outside the window raises `TemplateRequiredException`; an unapproved template is rejected
+
+### Livewire
+- [ ] Composer swaps to the approved-template picker outside the window; send denied without `comms.inbox.reply`
 
 ## Related
 

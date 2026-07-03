@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Inbound Webhook
@@ -37,6 +37,17 @@ Provider webhook receives inbound WhatsApp messages + delivery/read receipts, no
 - Consumes: provider webhook (360dialog / Twilio / Meta).
 - Feeds: `InboxService::handleInbound` (inbox owns + writes the message row); delivery-status updates flow to `comms_messages`.
 - Shared entity: `comms_messages`, `comms_conversations` (owned by [[../../shared-inbox/_module|comms.inbox]]).
+
+## Test Checklist
+
+### Unit
+- [ ] Payload normaliser maps a provider inbound to `InboundMessageData` (E.164 number preserved)
+- [ ] Delivery/read receipt maps to the target `comms_messages.delivery_status`
+
+### Feature (Pest)
+- [ ] Valid signed webhook calls `InboxService::handleInbound` (inbox writes the row, threaded by E.164)
+- [ ] Bad verify-token / signature returns `403` and stores nothing (fail-closed)
+- [ ] Receipt updates the message delivery status; tenant resolved from `webhook_secret` / number
 
 ## Related
 

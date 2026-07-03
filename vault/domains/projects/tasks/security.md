@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Tasks — Security
@@ -22,6 +22,8 @@ updated: 2026-06-20
 | `projects.tasks.comment` | Add comments |
 
 Project membership additionally scopes everything (a task is only visible if the user can see its project).
+
+**Verb-per-command:** every status-machine transition (`todo → in_progress → in_review → done` / `cancelled`, reopen — including `MoveTask` and `CompleteTaskAction`) is authorized by `projects.tasks.update`; the spec deliberately routes all transitions through one verb rather than a per-state permission (lightweight machine, per [[architecture]]). The only distinct command is commenting (`projects.tasks.comment`). `@mention` notifications dispatch via events to core.notifications and carry no separate permission — a mention only notifies a user who can already see the task.
 
 ## Access Contract
 

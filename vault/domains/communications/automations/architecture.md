@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Automations — Architecture
@@ -25,20 +25,29 @@ None fired or consumed. The engine is invoked by the inbox's inbound handler (in
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Settings
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `CommsAutomationRuleResource` | Settings | #1 CRUD resource | condition/action repeaters, drag-reorder, stop-on-match toggle. |
-| `ChatbotFlowResource` | Settings | #1 CRUD resource | node repeater builder (tree); flow-definition validation. |
+| `CommsAutomationRuleResource` | #1 CRUD resource | tweaks: inline-relation-repeater (condition/action repeaters), custom-header-actions (activate/deactivate) *(assumed)* | drag-reorder for rule `order`, stop-on-match toggle; shared by auto-reply + routing rules |
+| `ChatbotFlowResource` | #1 CRUD resource | tweaks: inline-relation-repeater (node/option builder) | node repeater (tree); flow-definition validation rejects orphan nodes |
 
-### Access contract
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('comms.automations.view-any') && BillingService::hasModule('comms.automations')`
+per [[../../../architecture/filament-patterns]] #1. Both are standard resources (no custom page); Filament auto-gates
+resources but the pair are settings-only and additionally require `comms.automations.manage` for write actions
+([[./security]]). Rules act on conversations only through `InboxService` — no artifact writes inbox-owned tables.
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('comms.automations.view-any')
-        && BillingService::hasModule('comms.automations');
-}
-```
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Automation-rule CRUD (form, reorder, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Chatbot-flow CRUD (form, node edits) | Optimistic | `updated_at` stale-check ([[../../../architecture/patterns/optimistic-locking]]) |
+| Rule execution (assign / tag / status / auto-reply) | n/a | No write to this module's tables — all conversation effects go through `InboxService`, which owns those write paths and their concurrency tier |
+| Chatbot flow-position advance | n/a | Position lives in inbox-owned `comms_conversations` meta; written via `InboxService`, not here |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Rule Engine
 

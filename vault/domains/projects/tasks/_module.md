@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Tasks
@@ -14,13 +14,12 @@ Task management within projects: create, assign, prioritise, track status, sub-t
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `projects.tasks` |
-| priority | p2 |
-| panel | projects |
-| permission-prefix | `projects.tasks` |
-| tables | `proj_tasks`, `proj_task_sections`, `proj_task_dependencies`, `proj_task_comments` |
+`projects.tasks`
+
+**Priority:** p2  
+**Panel:** projects  
+**Permission prefix:** `projects.tasks`  
+**Tables:** `proj_tasks`, `proj_task_sections`, `proj_task_dependencies`, `proj_task_comments`
 
 ## Dependencies
 
@@ -67,7 +66,9 @@ tests/Feature/Projects/{TaskTest,TaskDependencyTest,TaskCommentTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating + project-membership scoping.
+- [ ] Tenant isolation: company A cannot see/edit/comment on company B's tasks.
+- [ ] Module gating: artifacts hidden when `projects.tasks` inactive.
+- [ ] Project-membership scoping: a non-member cannot view/edit a project's tasks.
 - [ ] Dependency cycle rejected.
 - [ ] Assignee outside project rejected.
 - [ ] @mention notifies mentioned user only.

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Time-Based Rules
@@ -35,6 +35,16 @@ Rules triggered by elapsed time rather than an event (e.g. "no reply in 24h → 
 - Consumes: scheduled sweep (foundation.queues).
 - Feeds: escalation notifications → core.notifications.
 - Shared entity: `sup_tickets` (read + mutate via service).
+
+## Test Checklist
+
+### Unit
+- [ ] `time_config` match: a ticket is selected only when elapsed ≥ `after_minutes` and the `when` (e.g. no-reply) condition holds
+
+### Feature (Pest)
+- [ ] `RunTimeBasedRulesCommand` fires a matching rule once per ticket (unique `(rule, ticket)` window log guard)
+- [ ] A ticket already actioned in the window is not re-actioned on the next 15-min sweep
+- [ ] Actions dispatch through `TicketService` / notifications and each execution is logged
 
 ## Unknowns
 

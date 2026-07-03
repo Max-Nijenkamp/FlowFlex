@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Scheduled Commands (`scheduler` service)
@@ -32,6 +32,14 @@ A dedicated `scheduler` container (`php artisan schedule:work`) enqueues recurri
 
 - Consumes: nothing. Feeds: any domain that registers a scheduled command (reports, digests, cleanups).
 - Shared entity: `routes/console.php` schedule registry.
+
+## Test Checklist
+
+### Unit
+- [ ] A scheduled command declares `withoutOverlapping()` + `onOneServer()`
+
+### Feature (Pest)
+- [ ] An overlapping run is skipped (single instance); recurring tenant work dispatches carrying `company_id`
 
 ## Unknowns
 

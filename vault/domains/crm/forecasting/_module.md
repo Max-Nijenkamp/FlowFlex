@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # CRM Forecasting
@@ -14,15 +14,14 @@ Sales forecasts, quota tracking, and weighted pipeline. Predict revenue and meas
 
 > This module is planned for rebuild. Prior "shipped/complete" references reflect the stripped codebase; see [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]] for context.
 
-## Module Key
+## Module-key
 
-```
-module-key:        crm.forecasting
-priority:          v1
-panel:             crm
-permission-prefix: crm.forecasting
-tables:            crm_quotas, crm_forecast_snapshots
-```
+`crm.forecasting`
+
+**Priority:** v1  
+**Panel:** crm  
+**Permission prefix:** `crm.forecasting`  
+**Tables:** `crm_quotas`, `crm_forecast_snapshots`
 
 ## Dependencies
 
@@ -69,7 +68,8 @@ tests/Feature/CRM/SalesForecastTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating enforced.
+- [ ] Tenant isolation: company A cannot see company B quotas/forecasts; roll-up queries never cross tenants
+- [ ] Module gating: artifacts hidden when `crm.forecasting` inactive
 - [ ] Weighted pipeline = Σ value × probability (brick/money fixtures).
 - [ ] Attainment % per rep + roll-up math correct.
 - [ ] Forecast category settable on open deals only.

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Agent Performance
@@ -39,6 +39,18 @@ Per-agent conversations handled and average response time.
 - Consumes: inbox message/assignment data + RBAC user names (read-only).
 - Feeds: nothing.
 - Shared entity: `comms_messages` (inbox), `users` (RBAC).
+
+## Test Checklist
+
+### Unit
+- [ ] Per-agent handled count + avg response time computed correctly over fixtures
+
+### Feature (Pest)
+- [ ] Grouping by agent within the window is `CompanyScope`-bound (tenant isolation)
+- [ ] Date/channel filter narrows the per-agent aggregate
+
+### Livewire
+- [ ] Sortable table sorts by handled / avg response time; visible only with `comms.analytics.view`
 
 ## Related
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Snooze & Reopen
@@ -37,6 +37,19 @@ Snooze a conversation until later; it auto-reopens on schedule or immediately wh
 - Consumes: nothing.
 - Feeds: nothing cross-domain (status change is internal; live update via Reverb).
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] `snooze(until)` sets `snoozed_until` + status `snoozed`; conversation drops from the open list
+
+### Feature (Pest)
+- [ ] `ReopenSnoozedCommand` returns only conversations with `snoozed_until <= now` to `open`
+- [ ] Inbound on a snoozed conversation reopens it immediately in `handleInbound`
+- [ ] Tenant isolation: the reopen command never touches another company's conversations
+
+### Livewire
+- [ ] Snooze action + duration picker hides the conversation; denied without `comms.inbox.snooze`
 
 ## Related
 

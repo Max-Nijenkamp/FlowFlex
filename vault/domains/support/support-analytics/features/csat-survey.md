@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: CSAT Survey
@@ -40,6 +40,18 @@ Post-resolution satisfaction survey: mailed on resolve, answered on a public tok
 - Consumes: `TicketResolved` from [[../../tickets/_module|support.tickets]].
 - Feeds: CSAT scores into the [[./support-dashboard|Support Dashboard]] (CSAT widget, per-agent).
 - Shared entity: `sup_tickets` (read for context).
+
+## Test Checklist
+
+### Unit
+- [ ] Rating validation accepts 1–5 only; comment optional
+- [ ] Survey token is unique and single-use
+
+### Feature (Pest)
+- [ ] `TicketResolved` creates exactly one `sup_csat_responses` row and queues `CsatSurveyMail` once (idempotent on redelivery)
+- [ ] `RecordCsatAction` stamps `responded_at`; a second submit on the same token is rejected (locked `responded_at IS NULL` guard)
+- [ ] Public submit is throttled by the named `csat` limiter; expired/answered token shows a friendly notice
+- [ ] Listener writes only `sup_csat_responses` — no cross-domain write; `company_id` carried as a scalar
 
 ## Unknowns
 

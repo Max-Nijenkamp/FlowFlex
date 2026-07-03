@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Customer Segments — Architecture
@@ -33,11 +33,17 @@ Fires: none. Consumes: none.
 
 ## Filament Artifacts
 
-| Artifact | Nav group | Kind (ui-strategy) | Notes |
-|---|---|---|---|
-| `SegmentResource` | Contacts | Standard CRUD resource | Condition builder repeater, live preview count, members relation for static lists |
+**Nav group:** Contacts
 
-Access contract:
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `SegmentResource` | #1 CRUD resource | tweaks: inline-relation-repeater (condition rule rows), inline-relation-repeater (static-list members) | live audience preview via `SegmentService::preview`; static-list members relation |
+
+The rule-tree builder + live count on the create/edit form is modelled here as a repeater on `SegmentResource` (see [[./features/segment-builder]], which flags a Report Builder / Query UI custom-page shape as an alternative — resolved by ADR, tracked in [[./unknowns]]).
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('crm.segments.view-any') && BillingService::hasModule('crm.segments')`
+per [[../../../architecture/filament-patterns]] #1. Custom pages MUST state this explicitly — Filament does not auto-gate them.
 
 ```php
 public static function canAccess(): bool
@@ -48,6 +54,16 @@ public static function canAccess(): bool
 ```
 
 See [[../../../architecture/filament-patterns]] and [[../../../architecture/ui-strategy]].
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Segment CRUD (name, `type`, `conditions`) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Static membership add/remove (`AddToStaticSegmentAction`) | Optimistic | `updated_at` stale-check on the segment; duplicate members rejected by the unique `(segment_id, contact_id)` index (append-safe) |
+| Dynamic resolution + `RefreshSegmentCountsCommand` | n-a | read-only derived query / scheduled recompute of cached `member_count` — no user-facing concurrent write |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

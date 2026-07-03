@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Pipeline Board
@@ -13,6 +13,17 @@ updated: 2026-06-20
 Visual Kanban board with deal cards grouped by stage. Drag-and-drop stage changes. The primary way sales reps manage their pipeline. Owns `crm_pipeline_stages`; the board reads `crm_deals`.
 
 > All work here is **planned** — the CRM code was stripped back to an app/admin shell. See [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]] for context.
+
+---
+
+## Module-key
+
+`crm.pipeline`
+
+**Priority:** v1-core *(assumed — hard dependency of the v1-core `crm.deals` module)*  
+**Panel:** crm  
+**Permission prefix:** `crm.pipeline`  
+**Tables:** `crm_pipelines`, `crm_pipeline_stages`
 
 ---
 
@@ -62,7 +73,8 @@ tests/Feature/CRM/{PipelineBoardTest,StageManagementTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot view, move, or configure company B deals/stages
+- [ ] Module gating: artifacts hidden when `crm.pipeline` inactive
 - [ ] Board groups deals per stage with correct weighted totals (one query — no N+1)
 - [ ] Drag move calls DealService (closed-deal move rejected through the same path)
 - [ ] `DealStageChanged` broadcast on company channel with correct payload

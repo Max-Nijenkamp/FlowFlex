@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # WhatsApp — Security
@@ -14,12 +14,13 @@ updated: 2026-06-20
 
 | Permission | Grants |
 |---|---|
-| `comms.whatsapp.manage-config` | Connect number, enter/update credentials |
-| `comms.whatsapp.manage-templates` | Create/submit templates, track approval |
+| `comms.whatsapp.view-any` | View templates + config (resource / page access) *(assumed — required by the `canAccess()` contract; previously only the manage verbs were listed)* |
+| `comms.whatsapp.manage-config` | Connect number, enter/update credentials (`ConnectWhatsAppAction`) |
+| `comms.whatsapp.manage-templates` | Create templates + submit for approval (`SubmitTemplateAction`) |
 
-Messaging itself is gated by the inbox permissions (`comms.inbox.reply`).
-
-See [[../../../security/authn-authz]].
+**Verb-per-command:** `manage-templates` covers the `draft → pending` submit transition; provider-driven
+`pending → approved / rejected` is synced by `SyncTemplateStatusJob` (system, no user verb). Messaging itself is
+gated by the inbox permissions (`comms.inbox.reply`). Seeded in `PermissionSeeder`. See [[../../../security/authn-authz]].
 
 ## Access Contract
 
@@ -42,6 +43,7 @@ See [[../../../architecture/patterns/encryption]].
 
 - Verify-token / signature validated **before** processing; bad token/signature → `403`, nothing stored.
 - Throttle / rate limiter on `POST /webhooks/whatsapp`.
+- **External-API panel actions** — `ConnectWhatsAppAction` (credential verify) and `SubmitTemplateAction` (template submit) both call the provider API; each carries the `panel-action` rate limiter ([[../../../architecture/security]]).
 
 ## Upload Contract (medium)
 

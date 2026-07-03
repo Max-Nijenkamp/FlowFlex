@@ -6,7 +6,7 @@ feature: duplicate-detection
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Duplicate Detection
@@ -65,3 +65,19 @@ During CSV import (via `core.import`):
 - Consumes: nothing for detection itself.
 - Feeds: merge reassigns `crm_deals` / `crm_activities` references via those modules' own relations, not by writing their tables.
 - Shared entity: `crm_contacts` is the shared person record — support/events/marketing find-or-create via `ContactService::findOrCreateByEmail`, so idempotent dedup protects every domain.
+
+## Test Checklist
+
+### Unit
+- [ ] `findOrCreateByEmail` is idempotent — two calls with the same email return one contact
+- [ ] Same `(company_id, email)` is rejected; the same email across two companies is allowed
+
+### Feature (Pest)
+- [ ] `merge(keepId, mergeId)` reassigns activities / deals / contact-account links to `keepId` and soft-deletes the merged record, audited
+- [ ] Merge requires `crm.contacts.merge`; denied for a user without it
+- [ ] Concurrent merge/edit of the same record is serialised (pessimistic lock) — no lost reassignment
+- [ ] CSV import dedupes per row and never creates a duplicate for an existing email
+
+### Livewire
+- [ ] Duplicate email shows the inline validation error `"A contact with this email already exists."` on the resource form
+- [ ] Merge slide-over lists the duplicate pair and confirms keep-vs-merge; `canAccess` denies the action without `crm.contacts.merge`

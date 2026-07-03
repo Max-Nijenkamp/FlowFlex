@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Live Chat
@@ -77,7 +77,8 @@ tests/Feature/Support/{LiveChatTest,ChatChannelAuthTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A agents/visitors never see company B chats or transcripts
+- [ ] Module gating: artifacts hidden when `support.chat` inactive
 - [ ] Invalid widget key rejected; widget endpoints rate-limited
 - [ ] Visitor token grants only its own chat channel (cross-chat auth test)
 - [ ] No agents online → missed chat + ticket created

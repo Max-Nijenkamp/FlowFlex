@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Comms Analytics
@@ -14,14 +14,13 @@ Response time, message volume by channel, resolution rate, and agent performance
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `comms.analytics` |
-| priority | p2 |
-| panel | comms |
-| permission-prefix | `comms.analytics` |
-| tables | — (none — read-only aggregator) |
-| patterns | custom-pages |
+`comms.analytics`
+
+**Priority:** p2  
+**Panel:** comms  
+**Permission prefix:** `comms.analytics`  
+**Tables:** — (none — read-only aggregator)  
+**Patterns:** custom-pages
 
 ## Dependencies
 
@@ -60,7 +59,8 @@ tests/Feature/Comms/CommsAnalyticsTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: every metric is `CompanyScope`-bound; company A never sees company B inbox/broadcast data.
+- [ ] Module gating: dashboard + widgets hidden when `comms.analytics` inactive.
 - [ ] First-response / resolution math over fixtures.
 - [ ] Channel filter restricts all widgets.
 - [ ] Broadcast section hidden when the module is inactive.

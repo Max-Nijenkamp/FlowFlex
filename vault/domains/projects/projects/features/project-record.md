@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Project Record & Health
@@ -40,6 +40,22 @@ Create and manage a project: metadata, status machine, budget, and computed heal
 - Consumes: nothing (reads only).
 - Feeds: nothing (no domain events in v1).
 - Shared entity: `crm_accounts` (client), `users` (owner/members).
+
+## Test Checklist
+
+### Unit
+- [ ] Health math returns on-track / at-risk (>15pt behind) / off-track (>30pt) at the boundary fixtures *(assumed)*.
+- [ ] `CreateProjectData` rejects `target_date` before `start_date` ("Target date must be on or after the start date.").
+
+### Feature (Pest)
+- [ ] Create auto-adds the creator as an `owner` row in `proj_project_members`.
+- [ ] `completed` transition stamps `completed_at`; illegal transitions rejected by the state machine.
+- [ ] `ProjectService::actuals()` returns 0 (no error) when `projects.time` is inactive.
+- [ ] Tenant isolation: company A cannot read/edit company B's project.
+
+### Livewire
+- [ ] `ProjectResource` denied without `projects.projects.view-any`/`view`; hidden when `projects.projects` inactive.
+- [ ] Status transition actions gated by `projects.projects.update` and constrained to legal machine edges.
 
 ## Unknowns
 

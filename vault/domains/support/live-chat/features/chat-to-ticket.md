@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Chat-to-Ticket
@@ -39,6 +39,19 @@ Convert a live chat into a ticket — explicitly by an agent, or automatically w
 - Consumes: offline condition / agent action.
 - Feeds: a new ticket in [[../../tickets/_module|support.tickets]] (which may fire `TicketResolved` later).
 - Shared entity: `sup_tickets` (created via service), `crm_contacts` (read).
+
+## Test Checklist
+
+### Unit
+- [ ] Transcript is packaged into the ticket description *(assumed)* preserving message order
+
+### Feature (Pest)
+- [ ] Explicit convert creates a ticket via `TicketService` and links `sup_chats.ticket_id`
+- [ ] Offline capture creates exactly one ticket; the chat is guarded so a double-convert cannot create two tickets (locked `ticket_id` null check)
+- [ ] Requester is matched to a CRM contact by email where possible (soft); conversion never writes `sup_tickets` directly
+
+### Livewire
+- [ ] Convert action requires `support.chat.respond`; after convert the pane shows the "converted → T-xxxx" link
 
 ## Unknowns
 

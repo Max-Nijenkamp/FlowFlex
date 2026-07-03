@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Branded, Queued Mailable (`FlowFlexMailable`)
@@ -34,6 +34,17 @@ Every outbound mail is company-branded and sent off the request via the queue â€
 
 - Consumes: any domain that sends mail extends this class. Feeds: nothing (terminal side-effect).
 - Shared entity: company branding (name/logo/colour), owned by [[../../../../domains/core/company-settings/_module|company-settings]].
+
+## Test Checklist
+
+### Unit
+- [ ] `FlowFlexMailable` resolves name / logo / primary colour from the current `CompanyContext`
+
+### Feature (Pest)
+- [ ] Rendered mail contains the sending company's branding (`MailBrandingTest`)
+- [ ] Mailable is queued on `notifications`, never sent synchronously
+- [ ] A queued mail restores the correct tenant via `WithCompanyContext` â€” no cross-company branding
+- [ ] An address with `email_deliverable = false` is skipped
 
 ## Unknowns
 

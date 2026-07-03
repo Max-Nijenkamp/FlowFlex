@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Check-ins & Dashboard
@@ -39,6 +39,21 @@ Periodic KR check-ins, roll-up health dashboard, and reminder notifications.
 - Consumes: nothing.
 - Feeds: `NotificationService::notify` (reminders) → core.notifications.
 - Shared entity: `users` (owners).
+
+## Test Checklist
+
+### Unit
+- [ ] KR progress recomputes with baseline and clamps 0–100 from a submitted check-in value.
+- [ ] Health classification (on-track / at-risk / off-track) at the boundary thresholds vs quarter time-elapsed.
+
+### Feature (Pest)
+- [ ] Check-in writes a `proj_okr_checkins` row and cascades objective + parent `progress_percent` (real sqlite).
+- [ ] Non-owner check-in without `projects.okrs.update-any` is rejected; owner with `update-own` succeeds.
+- [ ] Weekly reminder targets only KRs stale >7 days, tenant-scoped per company; concurrent check-ins on sibling KRs don't clobber the objective roll-up (lockForUpdate).
+
+### Livewire
+- [ ] `OkrDashboardPage` denied without `projects.okrs.view-any`; hidden when `projects.okrs` inactive.
+- [ ] Check-in modal submits value + notes and refreshes the health-distribution donut.
 
 ## Unknowns
 

@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # SMS Channel
@@ -16,14 +16,13 @@ Send and receive SMS via Twilio or Vonage. Inbound SMS lands in the shared inbox
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `comms.sms` |
-| priority | p2 |
-| panel | comms |
-| permission-prefix | `comms.sms` |
-| tables | `comms_sms_config`, `comms_sms_optouts` |
-| encrypted-fields | `comms_sms_config.api_key`, `comms_sms_config.api_secret`, `comms_sms_config.webhook_secret` |
+`comms.sms`
+
+**Priority:** p2  
+**Panel:** comms  
+**Permission prefix:** `comms.sms`  
+**Tables:** `comms_sms_config`, `comms_sms_optouts`  
+**Encrypted fields:** `comms_sms_config.api_key`, `comms_sms_config.api_secret`, `comms_sms_config.webhook_secret`
 
 ## Dependencies
 
@@ -70,7 +69,8 @@ tests/Feature/Comms/{SmsDriverTest,SmsOptOutTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: webhook resolves company from `webhook_secret` / number; config + opt-outs never cross companies.
+- [ ] Module gating: SMS channel resource + opt-out list hidden when `comms.sms` inactive.
 - [ ] Credentials ciphertext; webhook signature verified.
 - [ ] STOP inbound creates opt-out; subsequent sends blocked (inbox + broadcast).
 - [ ] Segment estimation (GSM vs unicode fixtures).

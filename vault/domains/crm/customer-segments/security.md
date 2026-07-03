@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Customer Segments — Security
@@ -14,9 +14,10 @@ updated: 2026-06-20
 
 | Permission | Grants |
 |---|---|
-| crm.segments.view-any | List/view segments |
+| crm.segments.view-any | List segments |
+| crm.segments.view | View a single segment (referenced by [[../customer-segments/features/dynamic-vs-static]] gating) |
 | crm.segments.create | Create segments |
-| crm.segments.update | Edit segments and membership |
+| crm.segments.update | Edit segments and membership (static add/remove via `AddToStaticSegmentAction`) |
 | crm.segments.delete | Delete segments |
 
 ## Access Contract

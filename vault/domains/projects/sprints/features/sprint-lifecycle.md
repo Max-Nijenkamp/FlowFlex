@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Sprint Lifecycle & Backlog
@@ -39,6 +39,22 @@ Plan, start, and complete sprints; manage the backlog and assign tasks.
 
 - Consumes / Feeds: nothing (no cross-domain events).
 - Shared entity: `proj_tasks` (owned by projects.tasks).
+
+## Test Checklist
+
+### Unit
+- [ ] `CompleteSprintData` accepts `incomplete_action` in {backlog, next-sprint}; `next_sprint_id` required when next-sprint.
+- [ ] `AssignTaskData` rejects a task from another project or already in another active sprint.
+
+### Feature (Pest)
+- [ ] Start rejects a second active sprint per project (`ActiveSprintExistsException`).
+- [ ] Complete moves incomplete tasks to backlog vs next sprint per user choice; velocity recorded.
+- [ ] Concurrency: two concurrent starts on one project leave exactly one active sprint (pessimistic lock).
+- [ ] Tenant isolation: company A cannot start/assign into company B's sprint.
+
+### Livewire
+- [ ] `SprintResource` start/complete actions hidden without `projects.sprints.manage`; backlog assign gated by `projects.sprints.assign-tasks`.
+- [ ] `SprintBoardPage` denied without `projects.sprints.view-any`; hidden when `projects.sprints` inactive.
 
 ## Unknowns
 

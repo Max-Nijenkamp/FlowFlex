@@ -5,12 +5,37 @@ type: module
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Filament Panels
 
 `foundation.panels` — the Filament 5 panel shells. **Only 2 panels exist** today: Admin (`/admin`) and App (`/app`), plus a shared `App\Filament\Auth` namespace (`PanelLogin`, `EditProfile`).
+
+## Module-key
+
+`foundation.panels`
+
+**Priority:** v1-core (M0)  
+**Panel:** provides `/admin` + `/app` (+ shared `App\Filament\Auth`)  
+**Permission prefix:** none (the guard split is the boundary; per-resource `canAccess()` lives in the domain modules that mount into `/app`)  
+**Tables:** none owned (uses the scaffold's `users` / `admins`)
+
+## Dependencies
+
+| Type | Module | Why |
+|---|---|---|
+| Hard | [[../laravel-scaffold/_module\|foundation.scaffold]] | `User` / `Admin` models + auth config |
+| Hard | [[../multi-tenancy-layer/_module\|foundation.tenancy]] | `SetCompanyContext` in the `/app` auth chain |
+| Soft | [[../../core/billing-engine/_module\|core.billing]] | `EnsureSubscriptionActive` gate on `/app` |
+| Soft | [[../../core/setup-wizard/_module\|core.setup-wizard]] | `RedirectToSetupWizard` on `setup_completed_at` |
+
+## Core Features
+
+- Two panel shells: `/admin` (admin guard, no scope, Indigo) + `/app` (web guard, CompanyScope, sky) — see [[./features/admin-panel-shell|Admin Shell]] · [[./features/app-panel-shell|App Shell]]
+- Shared `Filament\Auth`: login, password reset, email verify, 2FA, profile — see [[./features/panel-auth|Panel Auth]]
+- Persistent auth-middleware chain (`isPersistent: true`) — Livewire-safe, avoids the null-team 403 family
+- Switchboard+ skin ([[../../../frontend/design-system]]), database notifications (30s poll)
 
 > [!note] Corrected from flat spec
 > The old spec implied 21 domain panels and shipped a stale provider template (wrong `Color::Slate` primary, `authModel()`, `ThemeMode` misuse, illustrative middleware). The HR/Finance/CRM domain panels were stripped with their domains. Below is the **real** `AppPanelProvider`. Domain panels return when their domains are rebuilt.
@@ -65,6 +90,8 @@ Note: no `authModel()` call — Filament resolves the model from the guard's pro
 
 ## Test Checklist (verified)
 
+- [ ] Tenant isolation: the guard split (`/app` web+CompanyScope vs `/admin` admin+no-scope) is the coarse isolation wall; `SetCompanyContext` scopes every `/app` request to the user's company
+- [ ] Module gating: n/a — `foundation.panels` *provides* the always-on panels; it is not itself gated. The domain resources/pages mounting into `/app` are the module-gated artifacts
 - [x] `/admin` login works with Admin; tenant `User` rejected on `/admin` (`tests/Feature/PanelAuthTest.php`)
 - [x] `/app` login works with User; `Admin` rejected on `/app`
 - [x] `SetCompanyContext` runs on every authenticated `/app` request

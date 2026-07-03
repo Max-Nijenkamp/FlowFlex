@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Objectives & Key Results
@@ -38,6 +38,20 @@ Create nested objectives with measurable key results; progress rolls up the hier
 
 - Consumes / Feeds: nothing.
 - Shared entity: `users`, optional `proj_projects`.
+
+## Test Checklist
+
+### Unit
+- [ ] KR progress = `(current − baseline) / (target − baseline)` clamped 0–100.
+- [ ] Objective progress = average of its KR progress; cascades to the parent objective.
+
+### Feature (Pest)
+- [ ] Create objective with a nested parent respecting depth ≤ 4; a reparent that would create a cycle is rejected.
+- [ ] Create requires `projects.okrs.create`; company A cannot attach a KR to company B's objective (tenant scope).
+
+### Livewire
+- [ ] `ObjectiveResource` denied without `projects.okrs.view-any`; hidden when `projects.okrs` inactive.
+- [ ] Cycle / depth violation surfaces an inline validation error ("would create a loop / exceed max depth").
 
 ## Unknowns
 

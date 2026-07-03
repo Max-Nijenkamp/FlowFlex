@@ -5,12 +5,36 @@ type: module
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Email Setup
 
 `foundation.email` — transactional email. Mailpit in local dev, Resend in production. Branded base mailable, queued delivery, and a signature-verified bounce webhook.
+
+## Module-key
+
+`foundation.email`
+
+**Priority:** v1-core (M0)  
+**Panel:** none (backend — mail + inbound webhook)  
+**Permission prefix:** none  
+**Tables:** none owned (writes `users.email_deliverable` / `users.email_verified_at` — scaffold columns)
+
+## Dependencies
+
+| Type | Module | Why |
+|---|---|---|
+| Hard | [[../laravel-scaffold/_module\|foundation.scaffold]] | `users.email_deliverable` column + mail config |
+| Hard | [[../queue-workers/_module\|foundation.queues]] | mailables `ShouldQueue` → `notifications` queue |
+| Soft | [[../../core/company-settings/_module\|core.company-settings]] | branding (name / logo / colour); degrades to platform default |
+
+## Core Features
+
+- `FlowFlexMailable` base class — injects company name / logo / primary colour resolved from `CompanyContext` — see [[./features/branded-mailable|Branded Mailable]]
+- All mailables `ShouldQueue` → `notifications` queue (never sent synchronously)
+- Mailpit captures mail in local dev; Resend SMTP in production
+- Signature-verified Resend bounce webhook → hard bounce sets `email_deliverable = false` — see [[./features/bounce-webhook|Bounce Webhook]]
 
 ## Core (verified)
 
@@ -29,6 +53,8 @@ updated: 2026-06-20
 
 ## Test Checklist (verified)
 
+- [ ] Tenant isolation: a queued mail carries `company_id` so `WithCompanyContext` renders it with the sending company's branding — no cross-company branding leak
+- [ ] Module gating: n/a — `foundation.email` is always-on platform infra, not a billable/gateable module
 - [x] Mailable renders company name + colour (`tests/Feature/MailBrandingTest.php`)
 - [x] Mail queued on `notifications`, never sent sync
 - [x] Bounce webhook valid signature flags `email_deliverable = false` (`tests/Feature/BounceWebhookTest.php`)

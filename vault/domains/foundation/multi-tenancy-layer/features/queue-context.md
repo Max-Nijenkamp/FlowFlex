@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Queue Tenant-Context Propagation (`WithCompanyContext`)
@@ -34,6 +34,15 @@ Tenant context survives the queue boundary: a job that runs minutes later in a H
 
 - Consumes: dispatched jobs from every domain. Feeds: correct tenant scope for all async work.
 - Shared entity: the `WithCompanyContext` middleware, mandatory across domains.
+
+## Test Checklist
+
+### Unit
+- [ ] `WithCompanyContext` reads `company_id` from the job payload
+
+### Feature (Pest)
+- [ ] Queued listener restores company + team before `handle()` (`QueueContextTest`)
+- [ ] A job dispatched without the middleware does not read another company's rows (null-tenant guard)
 
 ## Unknowns
 

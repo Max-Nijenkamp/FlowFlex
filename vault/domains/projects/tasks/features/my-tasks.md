@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # My Tasks
@@ -38,6 +38,21 @@ A personal, cross-project list of the current user's incomplete tasks.
 
 - Consumes / Feeds: nothing.
 - Shared entity: `users`.
+
+## Test Checklist
+
+### Unit
+- [ ] Due-bucket grouping assigns each task to exactly one of overdue / today / this week / later.
+- [ ] List filters to incomplete statuses only (`todo` / `in_progress` / `in_review`), never `done` / `cancelled`.
+
+### Feature (Pest)
+- [ ] `MyTasksPage` returns only the acting user's tasks across every project they belong to — even a user holding `view-any` sees only their own here (own-scope forced).
+- [ ] Tenant scope: no company B tasks appear; a project the user left drops out of the list.
+- [ ] Quick status change routes through the task status machine (`projects.tasks.update`) and respects optimistic stale-check.
+
+### Livewire
+- [ ] `MyTasksPage` accessible to any authenticated user with `projects.tasks.view` (no `view-any` required); hidden when `projects.tasks` inactive.
+- [ ] Inline quick-complete toggles status and re-buckets the row without a full reload.
 
 ## Unknowns
 

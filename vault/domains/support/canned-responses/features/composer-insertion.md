@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Composer Insertion
@@ -39,6 +39,21 @@ Insert a template into a reply with `/shortcut`, substituting live ticket variab
 - Consumes: current ticket context (customer/agent/number).
 - Feeds: rendered body into the [[../../tickets/_module|support.tickets]] reply (and chat, P3).
 - Shared entity: `sup_tickets` (read for variables).
+
+## Test Checklist
+
+### Unit
+- [ ] Placeholder substitution fills `{{customer_name}}`/`{{agent_name}}`/`{{ticket_number}}`; unknown token left literal
+- [ ] Substitution is string-replace only — never evaluates code
+
+### Feature (Pest)
+- [ ] Inserting a response increments `usage_count` exactly once (atomic)
+- [ ] `/shortcut` autocomplete lists only own + shared templates within the tenant
+- [ ] Render reads ticket fields but writes nothing in `sup_tickets`
+
+### Livewire
+- [ ] `/` trigger opens the dropdown; select inserts the rendered body into the composer
+- [ ] Widget hidden without `support.canned.view-any`
 
 ## Unknowns
 

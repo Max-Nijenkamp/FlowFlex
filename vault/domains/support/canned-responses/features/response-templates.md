@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Response Templates
@@ -40,6 +40,21 @@ Author and organise reusable reply templates, personal or team-wide.
 - Consumes: nothing.
 - Feeds: [[./composer-insertion]] renders these into ticket/chat replies.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Shortcut validation: `[a-z0-9-]+`, unique per company; duplicate rejected
+- [ ] Rich-text body purified before store (HTMLPurifier)
+
+### Feature (Pest)
+- [ ] Personal template (`is_shared=false`) is invisible to another agent in the same company
+- [ ] Creating/editing a shared template requires `support.canned.manage-shared`
+- [ ] Tenant isolation: company A never lists company B templates
+
+### Livewire
+- [ ] Personal/Shared list tabs filter correctly; usage column renders
+- [ ] Shared toggle denied without `support.canned.manage-shared`; duplicate shortcut shows inline error
 
 ## Unknowns
 

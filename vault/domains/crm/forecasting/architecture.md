@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Forecasting — Architecture
@@ -32,17 +32,30 @@ None fired, none consumed.
 
 ## Filament Artifacts
 
-Nav group: **Pipeline**.
+**Nav group:** Pipeline
 
-| Artifact | ui-strategy row | Purpose |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `QuotaResource` | #1 CRUD resource | standard resource (no tweaks) | Quota per rep / period; list filters: rep, team, period |
+| `ForecastPage` | #6 Dashboard custom page | [[../../../architecture/patterns/page-blueprints#Dashboard]] | Apex charts: attainment, coverage, week-over-week trend from snapshots; widget polling 30–60s |
+| `ForecastWidget` | #6 dashboard widget | [[../../../architecture/patterns/page-blueprints#Dashboard]] | Team attainment summary; polling 30–60s |
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('crm.forecasting.view-any') && BillingService::hasModule('crm.forecasting')`
+per [[../../../architecture/filament-patterns]] #1. `ForecastPage` is a custom page and MUST state this
+explicitly — Filament does not auto-gate custom pages. `view-own` vs `view-team` roll-up scoping is enforced in
+`SalesForecastService`, not just the UI (see [[./security]]).
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
 |---|---|---|
-| `QuotaResource` | #1 CRUD | Quota per rep / period. |
-| `ForecastPage` | #6 custom dashboard | Apex charts: attainment, coverage, week-over-week trend from snapshots. |
-| `ForecastWidget` | #6 widget | Team attainment summary. |
+| Quota CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Weighted-pipeline / attainment / coverage computation | n-a | read-only derived aggregation over `crm_deals` / `crm_pipeline_stages` — owns no writes |
+| Forecast snapshot capture (`CaptureForecastSnapshotsCommand`) | n-a | append/upsert-only batch job, single writer per (owner, period, category, week) — no interactive concurrent edit |
+| Forecast category set (`SetForecastCategoryAction`) | n-a (delegated) | writes `forecast_category` on `crm_deals` (owned by [[../deals/_module\|crm.deals]]) — the write is delegated to a deals-owned action/event pending the ownership ADR (see cross-domain warning in [[./_module]]) |
 
-Custom pages/widgets follow [[../../../architecture/ui-strategy]] and [[../../../architecture/filament-patterns]].
-
-**Access contract:** `canAccess()` = `can('crm.forecasting.view-any') && hasModule('crm.forecasting')`.
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

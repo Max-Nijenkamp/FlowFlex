@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Laravel Scaffold — Security
@@ -13,6 +13,10 @@ updated: 2026-06-20
 Parent: [[_module]]
 
 The scaffold sets the security-relevant defaults every other module inherits. It owns no business logic but bakes in the identity, hashing, and driver choices that later become attack surface.
+
+## Permissions
+
+None — the scaffold seeds no permissions and exposes no user-facing actions. It only bakes in the security-relevant defaults (ULID PKs, soft deletes, hashing, drivers) every other module inherits; the permission universe is seeded by [[../permissions-seed/_module|permissions-seed]].
 
 ## Baked-in controls
 

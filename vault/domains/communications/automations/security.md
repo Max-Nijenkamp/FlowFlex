@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Automations — Security
@@ -37,6 +37,7 @@ public static function canAccess(): bool
 
 - **Loop guard** (integrity): automation-sent replies are system-actor stamped and never re-enter `onInbound` — prevents auto-reply storms.
 - **Away-message throttle**: once per conversation per day *(assumed)* — prevents outbound spam.
+- **Send rate limit**: auto-reply / chatbot replies are outbound comms — they send through `InboxService`, whose channel send path carries the `panel-action` rate limiter ([[../../../architecture/security]]); the engine adds no separate send surface.
 - Auto-reply bodies are purified (they become inbox messages via `InboxService`).
 
 ## Encrypted Fields

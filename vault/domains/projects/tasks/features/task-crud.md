@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Task CRUD & Status
@@ -39,6 +39,21 @@ The core task record: create, assign, prioritise, and drive through the status m
 - Consumes: nothing.
 - Feeds: broadcast `TaskMoved` (view sync); same-domain milestone progress on `done`.
 - Shared entity: `users`.
+
+## Test Checklist
+
+### Unit
+- [ ] Status machine allows only valid transitions; `done` stamps `completed_at`, reopen clears it.
+- [ ] `CreateTaskData` rejects an assignee who is not a project member.
+
+### Feature (Pest)
+- [ ] Create → assign → drive `todo → in_progress → in_review → done`; `done` updates linked milestone progress (same-domain call, no cross-domain write).
+- [ ] Tenant + project-membership scope: a non-member cannot view or edit a project's tasks; company A cannot touch company B's tasks.
+- [ ] Concurrent edit: a stale form save raises `StaleRecordException` and shows the conflict notification (first write survives).
+
+### Livewire
+- [ ] `TaskResource` denied without `projects.tasks.view-any`/`view`; hidden when `projects.tasks` inactive.
+- [ ] Status transition action gated by `projects.tasks.update`; illegal transition rejected with a toast.
 
 ## Unknowns
 

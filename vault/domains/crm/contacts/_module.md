@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Contacts
@@ -77,7 +77,8 @@ tests/Feature/CRM/{ContactTest,ContactDuplicateTest,ContactListenersTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see/search company B contacts or accounts
+- [ ] Module gating: artifacts hidden when `crm.contacts` inactive
 - [ ] Duplicate email per company rejected with message; cross-company same email allowed
 - [ ] `findOrCreateByEmail` idempotent (two calls = one contact)
 - [ ] `InvoicePaid` listener updates account LTV; null account no-op

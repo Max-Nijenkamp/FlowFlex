@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Activities — Security
@@ -23,6 +23,7 @@ See also [[../../../security/tenancy-isolation]], [[../../../security/authn-auth
 | `crm.activities.create` | Log a new activity |
 | `crm.activities.update` | Edit an activity |
 | `crm.activities.delete` | Soft-delete an activity |
+| `crm.activities.complete` | Mark a task/meeting activity done (`CompleteTaskAction`) + optional follow-up |
 
 ---
 

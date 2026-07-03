@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: SLA Policies
@@ -39,6 +39,21 @@ Define per-priority response and resolution targets, optionally counted only dur
 - Consumes: `core.settings` business hours/timezone (read).
 - Feeds: policies referenced by `sup_tickets.sla_policy_id` (support.tickets reads).
 - Shared entity: company business-hours settings (owned by core.settings).
+
+## Test Checklist
+
+### Unit
+- [ ] Target validation rejects `resolution_minutes ≤ first_response_minutes`
+- [ ] Policy resolves for a ticket by category then priority (default policy fallback)
+
+### Feature (Pest)
+- [ ] Creating a policy persists one `sup_sla_targets` row per priority
+- [ ] Editing a policy requires `support.sla.manage`; view-only role is denied
+- [ ] Tenant isolation: a company only sees and attaches its own policies
+
+### Livewire
+- [ ] Targets repeater adds/removes rows; inline error on resolution ≤ first-response
+- [ ] Resource denied without `support.sla.view`
 
 ## Unknowns
 

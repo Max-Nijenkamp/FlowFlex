@@ -5,12 +5,35 @@ type: module
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Test Suite
 
 `foundation.tests` — Pest on SQLite in-memory with `RefreshDatabase` and a `CompanyContext` helper. All tests are integration tests; no DB mocking.
+
+## Module-key
+
+`foundation.tests`
+
+**Priority:** v1-core (M0)  
+**Panel:** none (backend — test suite + CI)  
+**Permission prefix:** none  
+**Tables:** none (builds and tears down the test database)
+
+## Dependencies
+
+| Type | Module | Why |
+|---|---|---|
+| Hard | [[../laravel-scaffold/_module\|foundation.scaffold]] | the code and models under test |
+| Hard | [[../multi-tenancy-layer/_module\|foundation.tenancy]] | `setCompany()` helper wraps `CompanyContext` + `setPermissionsTeamId()` |
+
+## Core Features
+
+- Pest on SQLite `:memory:` + `RefreshDatabase`, one-line `setCompany()` context helper — see [[./features/tenant-aware-harness|Tenant-Aware Harness]]
+- `Architecture` suite enforces tenant-isolation + layering rules at build time — see [[./features/architecture-tests|Architecture Tests]]
+- All integration tests — no DB mocking; every test exercises the real query path
+- CI matrix PHP 8.3 / 8.4 / 8.5, Node 22
 
 ## Shape (verified)
 
@@ -41,9 +64,10 @@ updated: 2026-06-20
 
 ## Test Checklist (verified)
 
+- [ ] Tenant isolation: `TenantIsolationTest` — company A context returns zero company B rows — is the M0 exit gate, run on every push (`tests/Feature/TenantIsolationTest.php`)
+- [ ] Module gating: n/a — `foundation.tests` is always-on CI infra, not a billable/gateable module
 - [x] `phpunit` green on SQLite in-memory from clean checkout
-- [x] Tenant-isolation test passes — **M0 exit gate** (`tests/Feature/TenantIsolationTest.php`)
-- [x] Architecture tests pass
+- [x] Architecture tests pass (`TenancyTest` bans `withoutGlobalScope(CompanyScope)` outside admin/support)
 - [ ] Full-suite runtime < 60s (paratest available)
 
 ## Build Manifest

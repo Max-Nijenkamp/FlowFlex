@@ -6,7 +6,7 @@ feature: referral-tracking
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Referral Tracking
@@ -57,6 +57,20 @@ erDiagram
 - Consumes: `DealWon` (referee deal won *(assumed)*) → `qualify()` moves referral to `qualified`
 - Feeds: `ReferralQualified` → consumed by reward-fulfilment (same-module) / notifications
 - Shared entity: `crm_contacts` (owned by Contacts)
+
+## Test Checklist
+
+### Unit
+- [ ] `codeFor` returns a stable unique code per (contact, program), unique per company
+- [ ] Self-referral (referee email/contact matches referrer) rejected; duplicate `(program_id, referee_email)` rejected
+
+### Feature (Pest)
+- [ ] Register only succeeds within an active program window (`starts_at`/`ends_at`)
+- [ ] Qualifying conversion moves `pending → qualified` and stamps `converted_at`
+- [ ] Tenant isolation: registration resolves company from the code, never an app guard
+
+### Livewire
+- [ ] `ReferralResource` list filters by status; row → detail; gated on `crm.referrals.view-any`
 
 ## Notes
 

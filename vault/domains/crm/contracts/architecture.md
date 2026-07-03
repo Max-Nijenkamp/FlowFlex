@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Contracts — Architecture
@@ -39,14 +39,27 @@ None. This module fires and consumes no cross-domain events.
 
 ## Filament Artifacts
 
-Nav group: **Pipeline**.
+**Nav group:** Pipeline
 
-| # | Artifact | ui-strategy row | Notes |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| 1 | `ContractResource` | CRUD resource | Create-from-deal action, signed-PDF upload, renew/terminate actions. |
-| 6 | `ContractRenewalWidget` | Widget | Renewals due in the next 90 days. |
+| `ContractResource` | #1 CRUD resource | tweaks: state-badge-column (contract status), custom-header-actions (create-from-deal, send, sign-off, renew, terminate), pdf-preview-panel (signed PDF) | signed-PDF upload; lifecycle actions ([[./features/contract-lifecycle]]) |
+| `ContractRenewalsPage` *(assumed)* | #3 custom page | [[../../../architecture/patterns/page-blueprints#Kanban]] — read-only queue grouped by urgency (90 / 30 / overdue), renew/terminate per row | "Renewals" at `/crm/renewals` ([[./features/renewal-tracking]]); **not yet in Build Manifest** — see [[./unknowns]] |
+| `ContractRenewalWidget` | #6 dashboard widget | [[../../../architecture/patterns/page-blueprints#Dashboard]] | renewals due next 90 days; widget polling 30–60s |
 
-**Access contract**: `canAccess()` = `can('crm.contracts.view-any') && hasModule('crm.contracts')`. See [[../../../architecture/filament-patterns]].
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('crm.contracts.view-any') && BillingService::hasModule('crm.contracts')`
+per [[../../../architecture/filament-patterns]] #1. `ContractRenewalsPage` is a custom page and MUST state this explicitly — Filament does not auto-gate custom pages. This module has no public/portal surface — all artifacts live behind the `/crm` panel guard.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Contract CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Status transition (send / sign-off / activate / expire / renew / terminate) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read, validate, write per [[../../../architecture/patterns/states]] |
+| `ContractLifecycleCommand` (`alerted_levels` once-guard) | n-a | append-only alert guard on a scheduled command — no interactive concurrent writer |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ### Upload note
 

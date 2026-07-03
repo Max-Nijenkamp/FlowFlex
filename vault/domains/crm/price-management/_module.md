@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # CRM Price Management
@@ -14,15 +14,16 @@ Product/service catalogue, price books, volume discounts, and CPQ (configure-pri
 
 > This module is planned for rebuild. Prior "shipped/complete" references reflect the stripped codebase; see [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]] for context.
 
-## Module Key
+## Module-key
 
-```
-module-key:        crm.pricing
-priority:          v1
-panel:             crm
-permission-prefix: crm.pricing
-tables:            crm_products, crm_price_books, crm_price_book_entries, crm_volume_discounts
-```
+`crm.pricing`
+
+**Priority:** v1  
+**Panel:** crm  
+**Permission prefix:** `crm.pricing`  
+**Tables:** `crm_products`, `crm_price_books`, `crm_price_book_entries`, `crm_volume_discounts`
+
+*(Note: module-key is `crm.pricing`; the spec folder is `price-management/`.)*
 
 ## Dependencies
 
@@ -69,7 +70,8 @@ tests/Feature/CRM/PriceResolutionTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating enforced.
+- [ ] Tenant isolation: company A cannot see or resolve company B products, price books, or discounts
+- [ ] Module gating: artifacts hidden when `crm.pricing` inactive
 - [ ] Price resolution order (account book > segment > default > standard) with fixtures.
 - [ ] Volume tier picks the highest qualifying `min_quantity`.
 - [ ] Promo entry applies only inside its validity window.

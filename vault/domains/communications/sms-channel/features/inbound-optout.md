@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Inbound & Opt-out
@@ -37,6 +37,20 @@ Inbound SMS lands in the inbox; a `STOP` keyword unsubscribes the number and is 
 - Consumes: provider inbound webhook.
 - Feeds: `InboxService::handleInbound` (inbox owns the row); `OptOutService::isOptedOut` consumed by [[../../broadcast/_module|comms.broadcast]].
 - Shared entity: `comms_messages`, `comms_conversations` (owned by [[../../shared-inbox/_module|comms.inbox]]).
+
+## Test Checklist
+
+### Unit
+- [ ] `STOP` (and synonyms) is recognised as an opt-out keyword; other text is a normal inbound
+- [ ] `OptOutService::isOptedOut` returns true after an opt-out row exists
+
+### Feature (Pest)
+- [ ] Signed `STOP` webhook creates a `comms_sms_optouts` row (unique per company)
+- [ ] Normal inbound calls `InboxService::handleInbound`, threaded by E.164
+- [ ] Subsequent send to the opted-out number is blocked (inbox + broadcast); tenant isolation on opt-outs
+
+### Livewire
+- [ ] Opt-out compliance list is read-only and visible only with `comms.sms.view-any`
 
 ## Related
 

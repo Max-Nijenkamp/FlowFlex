@@ -6,7 +6,7 @@ feature: reward-fulfilment
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Reward Fulfilment
@@ -53,6 +53,20 @@ erDiagram
 - Consumes: `ReferralQualified` (from referral-tracking) → notify fulfilment owner, enable issuance
 - Feeds: `ReferralRewarded` / reward events; may Feed finance (credit/payout) *(assumed)* and promotions (discount code, P3)
 - Shared entity: `crm_contacts` (owned by Contacts)
+
+## Test Checklist
+
+### Unit
+- [ ] `leaderboard(programId)` ranks referrers counting qualified + rewarded only *(assumed)*
+- [ ] Reward config parses `{type in discount|credit|cash|gift, value}` from jsonb
+
+### Feature (Pest)
+- [ ] `qualify` notifies the fulfilment owner (core.notifications) once
+- [ ] `markRewarded` moves `qualified → rewarded` and stamps `rewarded_at` exactly once (concurrent double-reward rejected via row lock)
+- [ ] Credit/payout to finance goes via event, never a direct finance-table write
+
+### Livewire
+- [ ] Mark-rewarded action on `ReferralResource` stamps the reward; requires `crm.referrals.reward`; denied without it
 
 ## Notes
 

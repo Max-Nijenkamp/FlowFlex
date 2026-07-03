@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Task Reminders
@@ -35,6 +35,17 @@ Notify owners of upcoming and overdue activities (calls, tasks, meetings).
 - Consumes: scheduled tick (`schedule:run`) → scan due/overdue activities
 - Feeds: `ActivityReminderDue` *(assumed)* → consumed by [[../../../core/notifications/_module|core.notifications]] → user notification
 - Shared entity: contacts / deals (reference data owned elsewhere; read-only here)
+
+## Test Checklist
+
+### Unit
+- [ ] Due-window selection: only activities with `due_at` inside the reminder window and `reminded_at` null are picked
+- [ ] Lead-time preference resolves to the configured value (default when unset) *(assumed)*
+
+### Feature (Pest)
+- [ ] `TaskReminderCommand` dispatches exactly one queued notification per due activity and stamps `reminded_at` (re-run fires nothing — once-guard)
+- [ ] Command is tenant-scoped: an owner in company A is never notified about company B activities
+- [ ] Notification-dispatch failure is retried on the queue without clearing `reminded_at` prematurely
 
 ## Related
 

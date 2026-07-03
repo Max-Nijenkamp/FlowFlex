@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Email-to-Ticket
@@ -36,6 +36,18 @@ Inbound customer emails become tickets (or threaded replies) via a signed parse 
 - Consumes: inbound email webhook (foundation.email inbound parse).
 - Feeds: a threaded customer reply resumes the SLA clock (read by [[../../sla/_module|support.sla]]).
 - Shared entity: `crm_contacts` (requester email match).
+
+## Test Checklist
+
+### Unit
+- [ ] Subject / `References` header parse resolves an existing `ticket_number` vs. a new-ticket case
+- [ ] Body + attachments are purified / MIME-whitelisted before storage
+
+### Feature (Pest)
+- [ ] Unmatched inbound email creates a new ticket, find-or-creating the requester by email via `ContactService`
+- [ ] Inbound email matching an existing ticket appends a customer reply and flips `waiting_on_customer → in_progress`
+- [ ] Unsigned / invalid-signature webhook is rejected; valid signature required (never `*(assumed)*`)
+- [ ] Tenant isolation: an inbound email routes only to the addressed company's ticket namespace
 
 ## Unknowns
 

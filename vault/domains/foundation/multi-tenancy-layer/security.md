@@ -5,12 +5,16 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Multi-Tenancy Layer — Security
 
 Parent: [[_module]]. This is **the** tenant-isolation control. If it fails, one company reads or writes another company's data — the single highest-severity failure mode in the product. Threat model: [[../../../security/tenancy-isolation]].
+
+## Permissions
+
+None seeded by this module. It *provides* RBAC team-scoping — `SetCompanyContext` calls `setPermissionsTeamId(company_id)` so Spatie roles/permissions are evaluated per company — but defines no permission strings of its own. The assignable permission universe is seeded by [[../permissions-seed/_module|permissions-seed]] and managed by [[../../core/rbac/_module|core.rbac]].
 
 ## Isolation guarantees
 

@@ -5,12 +5,16 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Permissions Seeder — Security
 
 Parent: [[_module]]. Seeders establish the permission universe and the first accounts — a security-sensitive bootstrap that must be safe to run and impossible to run wrongly in production.
+
+## Permissions
+
+None *of its own* — this module is what **creates** the permission universe (the `core.*` strings) every other module's `canAccess()` reads. Its own execution is guarded not by a permission but by the environment check (`LocalDevSeeder` refuses to run in production) and Spatie team-scoping (`team_id = company_id`). See the Controls table below.
 
 ## Controls
 

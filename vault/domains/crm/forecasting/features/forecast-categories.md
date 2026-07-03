@@ -6,7 +6,7 @@ feature: forecast-categories
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Forecast Categories
@@ -66,3 +66,18 @@ erDiagram
 - Consumes: reads `crm_deals` (open deals) from [[../../deals/_module|crm.deals]]; optionally `DealWon`/`DealLost` to refresh cached category totals.
 - Feeds: nothing cross-domain — aggregates are read/reported within CRM.
 - Shared entity: `crm_deals` (owned by crm.deals) — see ownership warning above.
+
+## Test Checklist
+
+### Unit
+- [ ] Category-per-bucket aggregation sums `value_cents` per category via brick/money (commit / best-case / pipeline / closed)
+- [ ] Closed-won deal always reports as `closed` regardless of stored tag
+
+### Feature (Pest)
+- [ ] `SetForecastCategoryAction` sets category on an open deal; rejects a closed deal
+- [ ] Setting a category is denied without `crm.forecasting.set-category`
+- [ ] Bottom-up totals scope to the owner/team per `view-own` vs `view-team` (no cross-tenant leak)
+
+### Livewire
+- [ ] `ForecastPage` category matrix renders per-bucket totals; `canAccess` denied without permission + active module
+- [ ] Attempting to categorise a closed deal surfaces the error state

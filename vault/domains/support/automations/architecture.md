@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Automations — Architecture
@@ -34,12 +34,26 @@ Conditions + actions are registry-validated (known fields/operators/action types
 
 **Nav group:** Settings
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `AutomationRuleResource` | #1 CRUD resource | condition + action repeaters, reorder, test-run preview *(assumed)* |
-| Logs relation manager | on rule view | execution history |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `AutomationRuleResource` | #1 CRUD resource | tweaks: inline-relation-repeater (conditions + actions), view-page-tabs (logs tab), custom-header-actions (test-run preview *(assumed)*) | reorderable rule list; trigger + active-toggle columns |
+| Logs relation manager | #1 relation manager (on rule view) | read-only append-only history | `sup_automation_logs` — which rules fired on which tickets |
 
-**Access contract:** gates on `canAccess() = Auth::user()->can('support.automations.view-any') && BillingService::hasModule('support.automations')` per [[../../../architecture/filament-patterns]] #1.
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('support.automations.view-any') && BillingService::hasModule('support.automations')`
+per [[../../../architecture/filament-patterns]] #1. This is a backend-heavy module — the rule engine runs synchronously on ticket events plus a scheduled command; there is no custom page to auto-gate.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Rule CRUD + reorder (form) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Execution log append (engine / scheduled run) | n/a | append-only insert into `sup_automation_logs`; the unique `(rule, ticket)` window row is the fire-once idempotency guard, not a lock |
+| Ticket mutation from an action | Pessimistic | delegated to `TicketService` — the owning domain performs the locked write per [[../../../architecture/patterns/states]] ([[../tickets/architecture]]) |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

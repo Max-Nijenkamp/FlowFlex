@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Ticket Merge
@@ -39,6 +39,21 @@ Collapse duplicate tickets into one canonical ticket.
 - Consumes: nothing.
 - Feeds: nothing (a merged/closed source does not fire `TicketResolved`).
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Guard rejects `keep_id == merge_id` and an already-merged source
+
+### Feature (Pest)
+- [ ] Merge reassigns all source replies to the keep ticket and stamps the source `merged_into_id = keep_id`, closed
+- [ ] A merged/closed source does not fire `TicketResolved`
+- [ ] Both tickets locked in one transaction; concurrent double-merge rejected
+- [ ] Tenant isolation: cannot merge across companies (source + keep must share `company_id`)
+
+### Livewire
+- [ ] "Merge into…" action opens a target picker; self / closed target rejected with an error
+- [ ] Action denied without `support.tickets.merge`
 
 ## Unknowns
 

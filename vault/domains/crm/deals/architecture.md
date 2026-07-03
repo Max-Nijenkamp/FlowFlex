@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Deals — Architecture
@@ -79,16 +79,30 @@ No v1 consumers — analytics intended to consume in Phase 3 *(assumed)*.
 
 **Nav group:** Pipeline
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `DealResource` | #1 CRUD resource | tweaks: view-page-tabs, state-badge-column, custom-header-actions (close / reopen / create-invoice) | list filters: stage, owner, status; bulk owner reassign *(assumed)* |
+| Deal view page | #2 record detail with tabs | tweaks: view-page-tabs, relation-manager-timeline (Activities, if crm.activities) | Overview, Activities, Products, Files |
+| `CreateInvoiceAction` | #2 view-page header action | tweak: custom-header-actions | visible only when `status=won` AND `hasModule('finance.invoicing')` |
+| `CloseDealAction` | #2 view-page header action | tweak: custom-header-actions | outcome + lost_reason form; needs `crm.deals.close` |
+
+The Kanban board itself is [[../../crm/pipeline/_module|crm.pipeline]]'s `PipelineBoardPage` — ui-strategy row #3 ([[../../../architecture/patterns/page-blueprints#Kanban]]), Reverb broadcast.
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('crm.deals.view-any') && BillingService::hasModule('crm.deals')`
+per [[../../../architecture/filament-patterns]] #1. Custom pages MUST state this explicitly — Filament does not auto-gate them. Public/portal surfaces declare their guest or scoped-portal guard + signed-token semantics instead (Vue+Inertia per [[../../../architecture/ui-strategy]]).
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
 |---|---|---|
-| `DealResource` | #1 CRUD resource | list filters: stage, owner, status; bulk owner reassign *(assumed)* |
-| Deal view page | #2 detail with tabs | Overview, Activities (if crm.activities), Products, Files |
-| `CreateInvoiceAction` | modal action on view page | visible only when `status=won` AND `hasModule('finance.invoicing')` |
-| `CloseDealAction` | modal action | outcome + lost_reason form |
+| Deal CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Stage move (`moveToStage`) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read, validate, write per [[../../../architecture/patterns/states]] |
+| Close won/lost + reopen | Pessimistic | `DB::transaction()` + `lockForUpdate()` state transition per [[../../../architecture/patterns/states]] |
 
-The Kanban board itself is [[../../crm/pipeline/_module|crm.pipeline]]'s `PipelineBoardPage` — ui-strategy row #3, Reverb broadcast.
-
-**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.deals.view-any') && BillingService::hasModule('crm.deals')` per [[../../../architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[../../../architecture/ui-strategy]]).
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

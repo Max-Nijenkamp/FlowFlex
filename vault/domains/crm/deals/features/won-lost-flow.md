@@ -6,7 +6,7 @@ feature: won-lost-flow
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Won/Lost Flow
@@ -76,3 +76,17 @@ A closed deal (won or lost) cannot move pipeline stages. `DealService::moveToSta
 - Consumes: nothing on close itself.
 - Feeds: `DealWon` → finance.invoicing (draft invoice stub), crm.contacts (lifecycle → customer), crm.forecasting; `DealLost` → crm.forecasting, crm.sequences.
 - Shared entity: `crm_pipeline_stages` owned by crm.pipeline; deals only reference stage state.
+
+## Test Checklist
+
+### Unit
+- [ ] Close-as-lost requires `lost_reason` (DTO validation rejects a blank reason)
+- [ ] Won sets probability 100 + `actual_close_date`; lost sets probability 0 + stores `lost_reason`/`lost_to`
+
+### Feature (Pest)
+- [ ] `close` won fires `DealWon` with the exact contract payload; lost fires `DealLost`
+- [ ] `moveToStage` on a closed deal throws `ClosedDealImmutableException`
+- [ ] Concurrent close is guarded by `lockForUpdate()` — a second writer never produces a double transition (pessimistic)
+
+### Livewire
+- [ ] `CloseDealAction` reveals `lost_reason`/`lost_to` only on the `lost` outcome; close needs `crm.deals.update`, reopen `crm.deals.reopen`

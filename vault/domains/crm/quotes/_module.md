@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Quotes
@@ -13,6 +13,17 @@ updated: 2026-06-20
 Generate quotes from deal line items, apply discounts, produce a PDF, and send for acceptance.
 
 > All work here is **planned** — the CRM code was stripped back to an app/admin shell. See [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]] for context.
+
+---
+
+## Module-key
+
+`crm.quotes`
+
+**Priority:** v1 *(assumed)*  
+**Panel:** crm  
+**Permission prefix:** `crm.quotes`  
+**Tables:** `crm_quotes`, `crm_quote_lines`
 
 ---
 
@@ -66,7 +77,8 @@ tests/Feature/CRM/{QuoteLifecycleTest,QuoteAcceptTest,QuoteTotalsTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see/send/accept company B quotes
+- [ ] Module gating: artifacts hidden when `crm.quotes` inactive
 - [ ] Totals: line discounts + quote discount + tax exact (brick/money fixture)
 - [ ] Accept via token syncs deal products + notifies owner; token single-quote scoped
 - [ ] Expired token/quote cannot be accepted

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Chat Widget
@@ -41,6 +41,17 @@ The embeddable, public-facing chat bubble on a customer's website.
 - Consumes: nothing (public entry point).
 - Feeds: `ChatStarted` → queue; offline → ticket in [[../../tickets/_module|support.tickets]].
 - Shared entity: `crm_contacts` (visitor email match).
+
+## Test Checklist
+
+### Unit
+- [ ] Message body purified and rejected over 4000 chars
+
+### Feature (Pest)
+- [ ] Invalid widget key is rejected; a valid key starts a chat and issues a per-chat signed token
+- [ ] A visitor token authorises only its own `chat.{chat_id}` channel — never a company-wide channel or another chat (cross-chat auth)
+- [ ] No agents online → the visitor message is captured as a `missed` chat + a ticket via `TicketService`
+- [ ] Widget endpoints are throttled by the named `chat-widget` limiter
 
 ## Unknowns
 

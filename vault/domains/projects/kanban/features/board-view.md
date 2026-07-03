@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Board View & Drag-Move
@@ -39,6 +39,22 @@ The Kanban board: columns per section/status, draggable cards, live sync.
 - Consumes: nothing.
 - Feeds: `TaskMoved` broadcast (viewers) — UI sync only.
 - Shared entity: `proj_tasks`, `proj_task_sections` (owned by projects.tasks).
+
+## Test Checklist
+
+### Unit
+- [ ] Grouping splits cards correctly by section and by status (toggle) from a fixture set.
+- [ ] Metrics header (total, done this week, overdue) computed correctly.
+
+### Feature (Pest)
+- [ ] `KanbanService::board` returns grouped cards in a single query (no N+1).
+- [ ] Drag move routes through `MoveTask` (task `updated_at` advances; `projects.tasks.update` enforced).
+- [ ] `TaskMoved` broadcast on `company.{id}.projects` after a move.
+- [ ] Non-member of the project cannot load the board (membership + tenant scope).
+
+### Livewire
+- [ ] `KanbanBoardPage` denied without `projects.kanban.view`; hidden when `projects.kanban` inactive.
+- [ ] Rejected move reverts the card to its column and shows an error toast (optimistic reconcile).
 
 ## Unknowns
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Delivery Tracking
@@ -39,6 +39,18 @@ Per-recipient status and a delivery funnel, updated from channel callbacks.
 - Consumes: delivery/open callbacks from channel modules.
 - Feeds: funnel data read by [[../../comms-analytics/_module|comms.analytics]] (broadcast performance section).
 - Shared entity: none owned elsewhere.
+
+## Test Checklist
+
+### Unit
+- [ ] `BroadcastService::stats` funnel counts match per-recipient statuses (sent / delivered / opened / failed)
+
+### Feature (Pest)
+- [ ] Batch send marks each recipient `sent` / `failed`; resume sends only `pending` (no double-send under row lock)
+- [ ] Channel delivery/open callback updates recipient `status`; open recorded for email only
+
+### Livewire
+- [ ] Stats widget renders the live funnel; recipient table filters by status; visible only with `comms.broadcast.view-any`
 
 ## Related
 

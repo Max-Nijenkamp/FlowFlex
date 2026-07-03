@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Kanban Board
@@ -14,13 +14,12 @@ Visual Kanban board with task cards grouped by section/status; drag-and-drop car
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `projects.kanban` |
-| priority | p2 |
-| panel | projects |
-| permission-prefix | `projects.kanban` |
-| tables | *(none — reads `proj_tasks`, `proj_task_sections`)* |
+`projects.kanban`
+
+**Priority:** p2  
+**Panel:** projects  
+**Permission prefix:** `projects.kanban`  
+**Tables:** *(none — reads `proj_tasks`, `proj_task_sections`)*
 
 ## Dependencies
 
@@ -58,7 +57,9 @@ tests/Feature/Projects/KanbanBoardTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating + project-membership scoping.
+- [ ] Tenant isolation: company A cannot render or move company B's cards.
+- [ ] Module gating: artifacts hidden when `projects.kanban` inactive.
+- [ ] Project-membership scoping: non-member cannot open the board for a project.
 - [ ] Board groups correctly by section AND by status (toggle).
 - [ ] Drag updates task via `MoveTask` (same validation path).
 - [ ] `TaskMoved` broadcast on company channel.

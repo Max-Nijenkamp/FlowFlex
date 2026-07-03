@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # CRM Referral Program
@@ -14,15 +14,14 @@ Customer referral tracking with unique links, conversion detection, and configur
 
 > This module is planned for rebuild. Prior "shipped/complete" references reflect the stripped codebase; see [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]] for context.
 
-## Module Key
+## Module-key
 
-```
-module-key:        crm.referrals
-priority:          v1
-panel:             crm
-permission-prefix: crm.referrals
-tables:            [crm_referral_programs, crm_referrals]
-```
+`crm.referrals`
+
+**Priority:** v1  
+**Panel:** crm  
+**Permission prefix:** `crm.referrals`  
+**Tables:** `crm_referral_programs`, `crm_referrals`
 
 ## Dependencies
 
@@ -64,7 +63,8 @@ tests/Feature/CRM/{ReferralFraudTest,ReferralLifecycleTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating enforced.
+- [ ] Tenant isolation: company A cannot see/qualify/reward company B referrals
+- [ ] Module gating: artifacts hidden when `crm.referrals` inactive
 - [ ] Self-referral rejected (email + contact match).
 - [ ] Duplicate referee per program rejected.
 - [ ] Code registration only within an active program window.

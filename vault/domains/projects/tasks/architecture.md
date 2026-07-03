@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Tasks — Architecture
@@ -45,21 +45,29 @@ Actions (lorisleiva/laravel-actions):
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Tasks
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `TaskResource` | Tasks | #1 CRUD | filters project/assignee/status/priority |
-| Task view | Tasks | #2 detail | comments, sub-tasks, dependencies, time log, attachments |
-| `MyTasksPage` | Tasks | #1-style custom page | cross-project, grouped by due date, own scope |
+| `TaskResource` | #1 CRUD resource | tweaks: state-badge-column, view-page-tabs, relation-manager-timeline | list filters project/assignee/status/priority; view page (#2 detail) tabs: comments, sub-tasks, dependencies, time log, attachments — comments tab rendered as a timeline relation manager |
+| `MyTasksPage` | #17 gallery/directory custom page *(assumed — no dedicated grouped-list kind)* | [[../../../architecture/patterns/page-blueprints#Gallery / Directory Grid]] | cross-project own-scope list grouped by due bucket (overdue / today / week / later); inline quick-complete; no `view-any` required |
 
-### Access contract
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('projects.tasks.view-any') && BillingService::hasModule('projects.tasks')`
+per [[../../../architecture/filament-patterns]] #1. `MyTasksPage` is a custom page and MUST state this explicitly —
+Filament does not auto-gate custom pages; it gates on
+`canAccess() = Auth::user()->can('projects.tasks.view') && BillingService::hasModule('projects.tasks')`
+(own scope — no `view-any` required). Board/gantt surfaces that mutate tasks live in their own modules and route
+writes through `MoveTask` / `UpdateTaskAction`.
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('projects.tasks.view-any')
-        && BillingService::hasModule('projects.tasks');
-}
-```
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Task CRUD (form, API), comment / sub-task / dependency writes | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Status transition (`todo → in_progress → in_review → done` / `cancelled`, reopen) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read, validate, write per [[../../../architecture/patterns/states]] — `MoveTask` / `CompleteTaskAction` own the write |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

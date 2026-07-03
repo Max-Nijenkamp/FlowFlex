@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Deal Rooms — Security
@@ -40,6 +40,15 @@ Gated behind `crm.deal-rooms` in [[../../../infrastructure/module-catalog]].
 ## Encrypted Fields
 
 None.
+
+## Rate Limiting
+
+| Surface | Limiter | Notes |
+|---|---|---|
+| Public room `/room/{token}` (`PublicDealRoomController`) | named guest-route limiter (per [[../../../architecture/security]] registry) | unauthenticated token surface — throttled per IP; token resolved server-side |
+| Document delivery / `TrackDocumentViewAction` | named guest-route limiter | signed temp URL issuance; raw media path never exposed |
+
+Named limiter (not *(assumed)*) is a requirement per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]; exact registry name reconciled in [[./unknowns]].
 
 ## Source Security Notes
 

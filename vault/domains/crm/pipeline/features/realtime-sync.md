@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Realtime Board Sync
@@ -39,6 +39,19 @@ Keep the [[kanban-board]] live across users via WebSockets.
 - Consumes: `DealStageChanged` (crm.pipeline / crm.deals) → patches remote boards.
 - Feeds: `DealStageChanged` over the per-company Reverb channel → other pipeline viewers.
 - Shared entity: `crm_deals` (moved cards); channel is per-company for tenant isolation ([[../../../../security/tenancy-isolation]]).
+
+## Test Checklist
+
+### Unit
+- [ ] `DealStageChanged` payload carries `deal_id`, `from_stage_id`, `to_stage_id`, `moved_by` (character-exact contract)
+
+### Feature (Pest)
+- [ ] Stage move broadcasts `DealStageChanged` on `company.{id}.crm`; a different company never receives it (channel authorization scoped to `company_id`)
+- [ ] Channel authorization rejects a user outside the broadcasting company
+
+### Livewire
+- [ ] Remote `DealStageChanged` patches the moved card into its new column without a full refresh
+- [ ] Dropped socket falls back to manual refresh without erroring the board
 
 ## Related
 

@@ -6,7 +6,7 @@ feature: weighted-pipeline
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Weighted Pipeline
@@ -65,3 +65,18 @@ erDiagram
 - Consumes: reads `crm_deals` + `crm_pipeline_stages` from [[../../deals/_module|crm.deals]] / [[../../pipeline/_module|crm.pipeline]]; consumes `DealWon`/`DealLost` to refresh cached projections *(assumed — only if a cached projection is kept; otherwise pure read)*.
 - Feeds: nothing cross-domain — sales forecast is a read/aggregate input into [[../../../finance/forecasting/_module|finance.forecasting]] via a read API, not an event.
 - Shared entity: `crm_deals`, `crm_pipeline_stages` (owned elsewhere), read-only.
+
+## Test Checklist
+
+### Unit
+- [ ] `weighted = value_cents × (probability / 100)` computed via brick/money (integer minor units, no float math)
+- [ ] `coverage_ratio = weighted_pipeline_cents / quota_cents`; missing quota → coverage n/a (no divide-by-zero)
+
+### Feature (Pest)
+- [ ] `SalesForecastService::forecast(period, ownerId)` sums only open deals closing within `period`; closed-won lands in `closed_cents`
+- [ ] Null `ownerId` rolls up rep → team → company correctly
+- [ ] `view-own` restricts to `owner_id = auth id`; `view-team` widens to the manager's team — no cross-tenant deals included
+
+### Livewire
+- [ ] `ForecastWidget` renders weighted pipeline, quota, coverage; period/owner filter re-aggregates
+- [ ] Widget hidden without `crm.forecasting.view-any` + active module

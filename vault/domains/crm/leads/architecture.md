@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Leads — Architecture
@@ -43,24 +43,27 @@ None fired or consumed. See [[../../../architecture/event-bus]] for the platform
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Contacts
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `LeadResource` | Contacts | Standard CRUD resource | Nav sort `-1` so Leads sits above Contacts. Section form; status + source filters. |
-| `ListLeads` page | — | List page | Empty state teaches the capture → work → convert flow. |
-| "Convert to deal" row action | — | Row action | Gated `crm.leads.convert`; hidden once the lead is converted. |
-| Edit action | — | Row action | Standard edit. |
+| `LeadResource` | #1 CRUD resource | tweaks: custom-header-actions (convert-to-deal — own permission `crm.leads.convert`, hidden once `status = converted`) | Nav sort `-1` (Leads above Contacts); section form; status + source filters; standard Edit row action |
+| `ListLeads` page | #1 CRUD resource (list page) | standard list page | Empty state teaches the capture → work → convert flow |
 
-See [[../../../architecture/filament-patterns]] and [[../../../architecture/ui-strategy]].
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('crm.leads.view-any') && BillingService::hasModule('crm.leads')`
+per [[../../../architecture/filament-patterns]] #1. The "Convert to deal" action is additionally gated on
+`crm.leads.convert` and hidden once the lead is converted. There are no custom pages or public/portal surfaces in
+this module.
 
-### Access contract
+## Concurrency
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('crm.leads.view-any')
-        && BillingService::hasModule('crm.leads');
-}
-```
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Lead CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Lead convert (`ConvertLeadAction` — status → `converted`) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the lead, re-read the idempotency guard (`status`/`converted_deal_id`), then create the deal/contact via `DealService`/`ContactService` per [[../../../architecture/patterns/states]] — prevents a double-convert race creating two deals |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # OKRs — Security
@@ -16,8 +16,11 @@ updated: 2026-06-20
 |---|---|
 | `projects.okrs.view-any` | View all OKRs |
 | `projects.okrs.create` | Create objectives + KRs |
-| `projects.okrs.update-own` | Check in / edit own OKRs |
-| `projects.okrs.update-any` | Check in / edit anyone's OKRs |
+| `projects.okrs.update-own` | Check in / edit own OKRs (the check-in command verb for own KRs) |
+| `projects.okrs.update-any` | Check in / edit anyone's OKRs (the check-in command verb for others' KRs) |
+| `projects.okrs.delete` | Soft-delete an objective |
+
+Seeded in `PermissionSeeder`. The **check-in** command carries no dedicated verb — it maps to `update-own` (own KRs) / `update-any` (others'). Health is derived automatically, not a user-triggered transition, so it needs no permission. The `OkrCheckinReminderCommand` is a scheduled system command (not a panel action) and needs no rate limiter.
 
 ## Access Contract
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Burndown & Velocity
@@ -37,6 +37,21 @@ Sprint burndown chart and rolling velocity metrics.
 
 - Consumes / Feeds: nothing.
 - Shared entity: `proj_tasks` (completion timestamps).
+
+## Test Checklist
+
+### Unit
+- [ ] Burndown remaining-points curve computed correctly from task completion timestamps over a fixture sprint.
+- [ ] Velocity rolling 3-sprint average correct across a fixture sequence of completed sprints.
+
+### Feature (Pest)
+- [ ] `SprintService::burndown` derives per-day remaining from `proj_tasks.completed_at` with no N+1.
+- [ ] `SprintService::velocity` sums completed points per sprint scoped to the project.
+- [ ] Tenant isolation: burndown/velocity read only the current company's sprint + task data.
+
+### Livewire
+- [ ] `BurndownChartWidget` denied without `projects.sprints.view-any`; hidden when `projects.sprints` inactive.
+- [ ] Widget shows the "Burndown appears once the sprint is active" empty state before the sprint starts.
 
 ## Unknowns
 

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Live Chat — Architecture
@@ -35,13 +35,28 @@ Both `ShouldBroadcast`. Typing/read receipts are whisper events. Channel auth in
 
 **Nav group:** Live Chat
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `ChatQueuePage` | #8 chat custom page | active chats + conversation pane, Reverb realtime, typing/read whispers |
-| `ChatTranscriptResource` | #1 (read-only) | archive, ticket/contact links |
-| Availability toggle | panel render hook | header status |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `ChatQueuePage` | #8 chat custom page | [[../../../architecture/patterns/page-blueprints#Inbox / Chat / Conversation]] | active/waiting chats + conversation pane; Reverb realtime, typing/read whispers |
+| `ChatTranscriptResource` | #1 CRUD resource | tweaks: read-only-flow-owned (`ChatService` owns writes) | archive, ticket/contact links; `canCreate(): false` |
+| Availability toggle | #10 render hook (panel header) | [[../../../architecture/patterns/page-blueprints#Notification Bell (render hook, not a page)]] | online / away / offline; `SetAvailabilityAction` |
 
-**Access contract:** panel artifacts gate on `canAccess() = Auth::user()->can('support.chat.view-any') && BillingService::hasModule('support.chat')` per [[../../../architecture/filament-patterns]] #1 — `ChatQueuePage` states it explicitly. Public widget endpoints run under a scoped widget guard (see [[./security]]).
+**Access contract (mandatory):** every panel artifact gates on
+`canAccess() = Auth::user()->can('support.chat.view-any') && BillingService::hasModule('support.chat')`
+per [[../../../architecture/filament-patterns]] #1. `ChatQueuePage` is a custom page and MUST state this explicitly — Filament does not auto-gate custom pages. Public widget endpoints run under a **scoped widget guard** (widget-key + per-chat signed token), never the panel session — see [[./security]].
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Chat message append (visitor / agent) | n/a | append-only insert into `sup_chat_messages` + broadcast; no in-place mutation of an existing row |
+| Chat claim / assignment | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the chat row — prevents two agents claiming the same waiting chat ([[../../../architecture/patterns/states]]) |
+| Convert-to-ticket / offline capture | Pessimistic | lock the chat, guard `ticket_id` is null, stamp once; the ticket is created via `TicketService` (Tickets owns that locked write) |
+| Agent availability toggle | Optimistic | `updated_at` stale-check on the agent's own `sup_agent_availability` row ([[../../../architecture/patterns/optimistic-locking]]) |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

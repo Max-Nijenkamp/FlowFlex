@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Kanban — Architecture
@@ -21,21 +21,26 @@ updated: 2026-06-20
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Projects
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `KanbanBoardPage` | Projects | #3 Kanban custom page | Livewire + Alpine SortableJS; Reverb broadcast; project selector; slide-over detail |
+| `KanbanBoardPage` | #3 Kanban custom page | [[../../../architecture/patterns/page-blueprints#Kanban]] | Livewire + Alpine SortableJS; Reverb broadcast + presence; project selector; slide-over detail; optimistic card move |
 
-### Access contract
+**Access contract (mandatory):** `KanbanBoardPage` gates on
+`canAccess() = Auth::user()->can('projects.kanban.view') && BillingService::hasModule('projects.kanban')`
+per [[../../../architecture/filament-patterns]] #1. It is a custom page and MUST state this explicitly — Filament
+does not auto-gate custom pages. Card mutations additionally require `projects.tasks.update` (enforced inside
+`MoveTask`, which owns the write).
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('projects.kanban.view')
-        && BillingService::hasModule('projects.kanban');
-}
-```
+## Concurrency
 
-Card mutations additionally require the relevant `projects.tasks.*` permission (moves go through `MoveTask`).
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Card move / reorder (via `MoveTask`) | Optimistic | Delegates to projects.tasks `MoveTask` — card moves on drop, action runs after, board re-renders from server on exception ([[../../../architecture/patterns/optimistic-locking]]); collaborative sync via `TaskMoved` broadcast |
+| Board read (`KanbanService::board`) | n/a | Read-only derived view — Kanban owns no tables and holds no writable state |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## No Tables
 

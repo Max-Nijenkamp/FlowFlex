@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # ULID Identity Strategy
@@ -34,6 +34,15 @@ Every model's primary key is a ULID (`HasUlids`), not an auto-increment integer 
 
 - Consumes: nothing. Feeds: every module's models depend on this PK shape.
 - Shared entity: the `HasUlids` convention itself.
+
+## Test Checklist
+
+### Unit
+- [ ] A new model's PK is a 26-char ULID, lexicographically sortable by creation
+
+### Feature (Pest)
+- [ ] `ModelsTest` asserts models declare `HasUlids` (arch gate)
+- [ ] Tenant table migrations use `foreignUlid('company_id')`
 
 ## Unknowns
 

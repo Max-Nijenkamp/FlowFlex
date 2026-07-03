@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Support Dashboard
@@ -39,6 +39,21 @@ The at-a-glance performance view: volume, response/resolution times, CSAT, agent
 - Consumes: metrics aggregated from Tickets + SLA tables (read-only).
 - Feeds: nothing.
 - Shared entity: `sup_tickets` / `sup_sla_events` (read).
+
+## Test Checklist
+
+### Unit
+- [ ] Metric math over fixtures: CSAT average, first-response/resolution averages, per-agent aggregates
+- [ ] Backlog trend counts open tickets per day correctly
+
+### Feature (Pest)
+- [ ] `SupportAnalyticsService::metrics` scopes strictly to the current company (no cross-tenant leak) and caches per `company_id`
+- [ ] Date-range filter changes the aggregated result; cached key namespaced by range
+- [ ] SLA compliance widget omitted when `support.sla` is inactive
+
+### Livewire
+- [ ] `SupportDashboardPage` `canAccess()` denies without `support.analytics.view` / inactive module
+- [ ] Changing the date range refreshes the widgets
 
 ## Unknowns
 

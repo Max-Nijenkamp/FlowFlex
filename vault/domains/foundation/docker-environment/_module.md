@@ -5,12 +5,34 @@ type: module
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Docker Environment
 
 `foundation.docker` — the local-dev Compose stack. `docker compose up` starts **9** services. This note is the spec-level view; the authoritative, line-by-line infra truth lives in [[../../../infrastructure/docker-stack]] — defer there rather than duplicate.
+
+## Module-key
+
+`foundation.docker`
+
+**Priority:** v1-core (M0)  
+**Panel:** none (local-dev infrastructure)  
+**Permission prefix:** none  
+**Tables:** none (containerises the runtime; owns no application tables)
+
+## Dependencies
+
+| Type | Module | Why |
+|---|---|---|
+| Hard | [[../laravel-scaffold/_module\|foundation.scaffold]] | Containerises the scaffold's runtime |
+
+## Core Features
+
+- 9-service Compose stack: app · nginx · postgres · redis · meilisearch · mailpit · horizon · scheduler · reverb — see [[./features/dev-stack|Local Dev Stack]]
+- One-command bring-up; postgres/redis healthchecks gate `app` start
+- Only `nginx 8080` + `postgres 5432` host-published; redis / mailpit / reverb internal-only
+- `migrate --seed` → working demo logins ([[../permissions-seed/_module|permissions-seed]])
 
 > [!note] Corrected from flat spec (verified against repo-root `docker-compose.yml`)
 > The old spec was the most error-laden in the domain. Fixes applied:
@@ -46,6 +68,8 @@ docker compose exec mailpit ...   # inspect captured mail (8025 not published)
 
 ## Test Checklist
 
+- [ ] Tenant isolation: n/a — local-dev infrastructure owns no tenant data (isolation lives in [[../multi-tenancy-layer/_module|multi-tenancy-layer]])
+- [ ] Module gating: n/a — `foundation.docker` is always-on local-dev infra, not a billable/gateable module
 - [x] `docker compose up -d` brings all 9 services up (postgres/redis healthchecks gate `app`)
 - [x] `migrate --seed` runs clean (M0 exit gate)
 - [x] App reachable at `localhost:8080`

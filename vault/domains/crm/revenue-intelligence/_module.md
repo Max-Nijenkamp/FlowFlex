@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # CRM Revenue Intelligence
@@ -14,15 +14,14 @@ Rule-driven deal health scoring, at-risk deal alerts, and win/loss analysis. Sur
 
 > This module is planned for rebuild. Prior "shipped/complete" references reflect the stripped codebase; see [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]] for context.
 
-## Module Key
+## Module-key
 
-```
-module-key:        crm.revenue-intelligence
-priority:          v1
-panel:             crm
-permission-prefix: crm.revenue-intelligence
-tables:            [crm_deal_health, crm_win_loss]
-```
+`crm.revenue-intelligence`
+
+**Priority:** v1  
+**Panel:** crm  
+**Permission prefix:** `crm.revenue-intelligence`  
+**Tables:** `crm_deal_health`, `crm_win_loss`
 
 ## Dependencies
 
@@ -65,7 +64,8 @@ tests/Feature/CRM/{DealHealthTest,WinLossAnalysisTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating enforced.
+- [ ] Tenant isolation: company A cannot see company B deal-health / win-loss rows
+- [ ] Module gating: artifacts hidden when `crm.revenue-intelligence` inactive
 - [ ] Health score deterministic over fixture deals (factor math).
 - [ ] Stalled deal (no activity 14d *(assumed)*) scores low and appears at-risk.
 - [ ] Recalc idempotent; a per-deal failure doesn't stop the batch.

@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # OKRs
@@ -14,13 +14,12 @@ Objectives and Key Results: company- and team-level goal setting with progress t
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `projects.okrs` |
-| priority | p2 |
-| panel | projects |
-| permission-prefix | `projects.okrs` |
-| tables | `proj_objectives`, `proj_key_results`, `proj_okr_checkins` |
+`projects.okrs`
+
+**Priority:** p2  
+**Panel:** projects  
+**Permission prefix:** `projects.okrs`  
+**Tables:** `proj_objectives`, `proj_key_results`, `proj_okr_checkins`
 
 ## Dependencies
 
@@ -62,7 +61,8 @@ tests/Feature/Projects/OkrTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot view/check-in company B's objectives or key results.
+- [ ] Module gating: artifacts hidden when `projects.okrs` inactive.
 - [ ] KR progress math incl. baseline; clamped 0–100.
 - [ ] Objective progress = average of KRs; cascades to parent.
 - [ ] Hierarchy cycle + depth rejected.

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Response-time Metrics
@@ -40,6 +40,19 @@ First-response time, resolution time, and resolution rate per channel.
 - Consumes: inbox conversation/message data (read-only).
 - Feeds: nothing.
 - Shared entity: `comms_conversations`, `comms_messages` (owned by the inbox).
+
+## Test Checklist
+
+### Unit
+- [ ] First-response = first outbound after the first inbound per conversation (fixtures)
+- [ ] Resolution rate = resolved / total in the window; resolution time from inbound → `resolved`
+
+### Feature (Pest)
+- [ ] Metrics computed as aggregate queries (N+1-free) over inbox data; date/channel filter narrows results
+- [ ] Tenant isolation: metrics are `CompanyScope`-bound — no cross-company leakage
+
+### Livewire
+- [ ] Widget recomputes on date/channel filter change; visible only with `comms.analytics.view`
 
 ## Related
 

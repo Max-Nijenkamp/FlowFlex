@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Outbound Send
@@ -38,6 +38,20 @@ Send SMS from the company virtual number, with segment estimation and opt-out en
 - Consumes: opt-out state (own service).
 - Feeds: `InboxService::send` → driver (inbox owns the row).
 - Shared entity: `comms_messages` (owned by [[../../shared-inbox/_module|comms.inbox]]).
+
+## Test Checklist
+
+### Unit
+- [ ] Segment estimation: 160 GSM vs 70 unicode chars per segment fixtures
+- [ ] Opt-out check runs before send
+
+### Feature (Pest)
+- [ ] `SmsDriver::send` sends from `virtual_number_e164` via the provider (`Http::fake`)
+- [ ] Send to an opted-out number raises `RecipientOptedOutException`
+- [ ] Delivery callback records cost; message row written by the inbox
+
+### Livewire
+- [ ] Composer shows a live segment/char counter; send denied without `comms.inbox.reply`
 
 ## Related
 

@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Revenue Intelligence — Security
@@ -15,8 +15,11 @@ updated: 2026-06-20
 | Permission | Purpose |
 |---|---|
 | crm.revenue-intelligence.view | View deal health, at-risk queue, win/loss analysis, and dashboards. |
+| crm.revenue-intelligence.recalculate | Manually trigger a deal-health recalculation (admin) *(assumed)*. |
 
 A single view permission gates the whole module; the access contract references `view-any` as the panel-level convention alias.
+
+**Rate limiting:** the manual recalculation trigger (`crm.revenue-intelligence.recalculate`, a bulk recompute over open deals) runs behind the named `panel-action` rate limiter. Per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
 
 ## Access Contract
 

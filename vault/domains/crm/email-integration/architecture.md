@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Email Integration — Architecture
@@ -28,15 +28,17 @@ None fired or consumed. See [[../../../architecture/event-bus]] for the platform
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Activities
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `EmailConnectionResource` | Activities | Standard CRUD (own only) | Connect via OAuth redirect, disconnect, set visibility default. |
-| `EmailThread` (Livewire) | — | Embedded component | On Contact + Deal pages; visibility-scoped. |
-| Compose action | — | Modal action | On contact/deal view. |
+| `EmailConnectionResource` | #1 CRUD resource (own only) | tweaks: custom-header-actions (connect via OAuth redirect / disconnect) | own mailbox connections; set visibility default, toggle sync |
+| `EmailThread` (Livewire) | #2 embedded conversation component | tweak: relation-manager-timeline ([[../../../architecture/patterns/page-blueprints#Inbox / Chat / Conversation]] bubble cues) | on Contact + Deal pages; visibility-scoped thread |
+| Compose action | #2 view-page header action | tweak: custom-header-actions (send — `panel-action` limiter, comms) | on contact/deal view; send gated `crm.email.send` |
 
-See [[../../../architecture/filament-patterns]] and [[../../../architecture/ui-strategy]].
-
-### Access contract
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('crm.email.view-any') && BillingService::hasModule('crm.email')`
+per [[../../../architecture/filament-patterns]] #1. Custom pages MUST state this explicitly — Filament does not auto-gate them. The tracking endpoints (`TrackOpenController`, `TrackClickController`) and the OAuth callback (`EmailOAuthController`) are public/guest routes — not Filament artifacts — each with a named rate limiter and signature / `state`+PKCE verification **before** processing (see [[./security]]).
 
 ```php
 public static function canAccess(): bool
@@ -45,6 +47,19 @@ public static function canAccess(): bool
         && BillingService::hasModule('crm.email');
 }
 ```
+
+See [[../../../architecture/filament-patterns]] and [[../../../architecture/ui-strategy]].
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Connection settings (visibility default, sync toggle) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Inbound sync writes (`EmailSyncService::sync`) | n-a | append-only; idempotent dedupe on unique `(connection_id, message_id)`; single-writer per connection advancing the `last_synced_at` cursor |
+| Outbound send (`SendTrackedEmailAction`) | n-a | append-only email row + provider dispatch; `SendEmailJob` retry-safe |
+| Open/click tracking stamps (`TrackOpen` / `TrackClickController`) | n-a | idempotent once-stamp (`opened_at` / `clicked_at` set once per message) — no competing edit |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

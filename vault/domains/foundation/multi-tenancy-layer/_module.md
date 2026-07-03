@@ -5,12 +5,36 @@ type: module
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Multi-Tenancy Layer
 
 `foundation.tenancy` — shared-database multi-tenancy. Every query on every tenant model auto-filters by the current company. The single most security-critical module in the codebase.
+
+## Module-key
+
+`foundation.tenancy`
+
+**Priority:** v1-core (M0 — most security-critical)  
+**Panel:** none (backend — middleware wired into the panels by [[../filament-panels/_module|filament-panels]])  
+**Permission prefix:** none (provides RBAC team scoping; seeds no permissions of its own)  
+**Tables:** none (operates on every `BelongsToCompany` model; owns none)
+
+## Dependencies
+
+| Type | Module | Why |
+|---|---|---|
+| Hard | [[../laravel-scaffold/_module\|foundation.scaffold]] | Needs the `company_id` `foreignUlid` on every tenant table to scope against |
+
+## Core Features
+
+- `CompanyScope` global scope — auto `WHERE company_id = current` on every read — see [[./features/query-auto-scoping|Query Auto-Scoping]]
+- `BelongsToCompany` trait — auto-stamps `company_id` on create; callers cannot forge another company's id
+- `CompanyContext` request/job singleton; `current()` throws `MissingCompanyContextException` on miss (fail-closed, never a global-leak)
+- `SetCompanyContext` HTTP middleware, run `isPersistent: true` — see [[./features/persistent-context|Persistent Context]]
+- `WithCompanyContext` queue middleware — context survives the Horizon boundary — see [[./features/queue-context|Queue Context]]
+- RBAC scoped per company via `setPermissionsTeamId(company_id)`
 
 ## Components (verified in `app/Support` + `app/Http/Middleware`)
 
@@ -49,6 +73,7 @@ Full implementation: [[../../../architecture/multi-tenancy]]. No DTOs / Filament
 ## Test Checklist (verified)
 
 - [x] Tenant isolation: company A context returns zero company B rows (`tests/Feature/TenantIsolationTest.php`)
+- [ ] Module gating: n/a — `foundation.tenancy` is always-on platform substrate, not a billable/gateable module
 - [x] `creating` hook auto-fills `company_id`
 - [x] `current()` without context throws `MissingCompanyContextException`
 - [x] `WithCompanyContext` restores context + team id in a queued job (`tests/Feature/QueueContextTest.php`)

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Appointment Scheduling — Architecture
@@ -29,18 +29,18 @@ None fired, none consumed. Side effects (contact create, activity log, mail) are
 
 ## Filament Artifacts
 
-Nav group: **Activities**.
+**Nav group:** Activities
 
-| Artifact | ui-strategy row | Purpose |
-|---|---|---|
-| `MeetingTypeResource` | #1 CRUD | Meeting types with a booking-link copy button. |
-| `BookingResource` | #1 CRUD | Bookings; status actions incl. no-show marking. |
-| `AvailabilityPage` | #7 custom page | Form for the rep's own working hours. |
-| Public booking page | #16 (Vue + Inertia) | `/book/{company-slug}/{meeting-slug}` — guest-facing self-booking. |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `MeetingTypeResource` | #1 CRUD resource | tweaks: custom-header-actions (copy booking link) | meeting types (name, duration, buffers, price) |
+| `BookingResource` | #1 CRUD resource | tweaks: state-badge-column (confirmed/cancelled/completed/no-show), custom-header-actions (cancel, mark no-show) | bookings; status actions |
+| `AvailabilityPage` | #7 custom page | [[../../../architecture/patterns/page-blueprints#Wizard]] — single-step settings form for the rep's own working hours *(assumed: single-step; not a true multi-step wizard — see [[./unknowns]])* | route within `/crm` |
+| Public booking page | #16 Vue + Inertia (public-vue) | guest-facing, no Filament — [[./features/public-booking]] | `/book/{company-slug}/{meeting-slug}` self-booking |
 
-Custom pages and the public Vue page follow [[../../../architecture/ui-strategy]] and [[../../../architecture/filament-patterns]].
-
-**Access contract:** `canAccess()` = `can('crm.scheduling.view-any') && hasModule('crm.scheduling')`.
+**Access contract (mandatory):** every panel artifact gates on
+`canAccess() = Auth::user()->can('crm.scheduling.view-any') && BillingService::hasModule('crm.scheduling')`
+per [[../../../architecture/filament-patterns]] #1. `AvailabilityPage` is a custom page and MUST state this explicitly — Filament does not auto-gate custom pages. The public booking page (`/book/{company-slug}/{meeting-slug}`) is Vue+Inertia per [[../../../architecture/ui-strategy]] on an isolated **guest guard** (tenant resolved from `{company-slug}`, honeypot), gated by the `public-booking` named rate limiter — not a Filament artifact, no session-guard leakage (see [[./security]]).
 
 ## Jobs & Scheduling
 
@@ -50,6 +50,17 @@ Custom pages and the public Vue page follow [[../../../architecture/ui-strategy]
 | `BookingConfirmationMail` + `.ics` | notifications | On booking | Queued from `book()`. |
 
 See [[../../../infrastructure/queue-horizon]] and [[../../../infrastructure/mail]].
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Meeting-type / availability CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Slot booking (`SchedulingService::book`) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-validate slot freeness → `SlotTakenException` on concurrent claim (capacity/slot contention) ([[../../../architecture/patterns/states]]) |
+| Booking status transition (confirm / cancel / complete / no-show) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read, validate, write ([[../../../architecture/patterns/states]]) |
+| `BookingReminderCommand` (stamps `reminded_at`) | n-a | append-only once-guard on a scheduled background job |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Template Management
@@ -40,6 +40,20 @@ Create WhatsApp message templates, submit them to the provider for approval, and
 - Consumes: nothing internal.
 - Feeds: approved templates used by [[../../broadcast/_module|comms.broadcast]] (soft) and by outbound sends outside the 24h window ([[window-sending]]).
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Template name validated against the provider regex; category/language required
+- [ ] Only `approved` templates are selectable for sending
+
+### Feature (Pest)
+- [ ] `SubmitTemplateAction` submits a draft, sets status `pending`, records `external_template_id` (`Http::fake`)
+- [ ] `SyncTemplateStatusJob` upserts `pending → approved / rejected` by `external_template_id`
+- [ ] Tenant isolation: a template is never visible/submittable across companies
+
+### Livewire
+- [ ] "Submit for approval" row action transitions the badge; denied without `comms.whatsapp.manage-templates`
 
 ## Related
 

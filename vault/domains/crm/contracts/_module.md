@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # CRM Contracts
@@ -14,15 +14,14 @@ Customer contracts with renewal tracking, value, and signature status. A sales-f
 
 > This module is planned for rebuild. Prior "shipped/complete" references reflect the stripped codebase; see [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]] for context.
 
-## Module Key
+## Module-key
 
-```
-module-key:        crm.contracts
-priority:          v1
-panel:             crm
-permission-prefix: crm.contracts
-tables:            [crm_contracts]
-```
+`crm.contracts`
+
+**Priority:** v1  
+**Panel:** crm  
+**Permission prefix:** `crm.contracts`  
+**Tables:** `crm_contracts`
 
 ## Dependencies
 
@@ -67,7 +66,8 @@ tests/Feature/CRM/{ContractLifecycleTest,ContractRenewalTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating enforced.
+- [ ] Tenant isolation: company A cannot see/manage company B contracts
+- [ ] Module gating: artifacts hidden when `crm.contracts` inactive
 - [ ] Create-from-deal prefills account and value.
 - [ ] Sign requires a PDF upload and sets `signed_at`.
 - [ ] Lifecycle command handles activation, expiry, auto-renew, and alerts once per level.

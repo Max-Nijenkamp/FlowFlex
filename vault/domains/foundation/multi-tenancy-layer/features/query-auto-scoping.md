@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Query Auto-Scoping (`CompanyScope` + `BelongsToCompany`)
@@ -34,6 +34,16 @@ Every read on a tenant model is auto-filtered to the current company; every crea
 
 - Consumes: the current company from `SetCompanyContext` ([[persistent-context]]).
 - Feeds: every domain's data reads/writes; RBAC team scoping.
+
+## Test Checklist
+
+### Unit
+- [ ] `creating` hook stamps `company_id` from `CompanyContext::currentId()`
+
+### Feature (Pest)
+- [ ] Company A context returns zero company B rows (`TenantIsolationTest`)
+- [ ] A read with no context throws `MissingCompanyContextException` (fail-closed)
+- [ ] `withoutGlobalScope(CompanyScope)` forbidden outside admin/support (`TenancyTest`)
 
 ## Unknowns
 

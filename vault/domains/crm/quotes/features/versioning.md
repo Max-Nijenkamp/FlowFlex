@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Quote Versioning
@@ -33,6 +33,21 @@ Create a new version of an existing quote; the prior version is **locked** (read
 - Consumes: nothing cross-domain.
 - Feeds: nothing cross-domain — versioning is internal to quotes.
 - Shared entity: the originating deal (`crm_deals`, owned by [[../../deals/_module|crm.deals]]) — only one open quote version per deal *(assumed)*, read-only here.
+
+## Test Checklist
+
+### Unit
+- [ ] New version clones line items into a fresh version and flags the prior version locked / read-only
+- [ ] Only one open version per deal enforced *(assumed)*
+
+### Feature (Pest)
+- [ ] "New version" locks the prior version; a locked version rejects edits
+- [ ] A version created off an accepted quote is blocked
+- [ ] Tenant isolation: the version action only touches the company's own quote
+
+### Livewire
+- [ ] "New version" action creates + opens the new draft; requires `crm.quotes.update`; denied without it
+- [ ] Locked prior versions render read-only in the version-history infolist
 
 ## Related
 

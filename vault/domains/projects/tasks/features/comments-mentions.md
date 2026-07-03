@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Comments & @mentions
@@ -39,6 +39,21 @@ Threaded task discussion with @mention notifications and attachments.
 - Consumes: nothing.
 - Feeds: `NotificationService::notify` (mention) → core.notifications delivers.
 - Shared entity: `users`, Media Library (core.files).
+
+## Test Checklist
+
+### Unit
+- [ ] `@mention` parser extracts exactly the mentioned users from a comment body (no false positives).
+- [ ] Comment body is HTMLPurified before persistence (script/markup stripped).
+
+### Feature (Pest)
+- [ ] Posting a comment with an `@mention` notifies only the mentioned user via `NotificationService` (no broadcast to others); notification carries `company_id`.
+- [ ] Tenant scope: a user cannot comment on or read comments of a task in another company/project they cannot see; commenting requires `projects.tasks.comment`.
+- [ ] Attachment upload enforces the MIME whitelist, size cap, and tenant-scoped `companies/{id}/` path.
+
+### Livewire
+- [ ] Comment composer denied without `projects.tasks.comment`; hidden when `projects.tasks` inactive.
+- [ ] Rejected attachment upload surfaces an error toast (no partial write).
 
 ## Unknowns
 

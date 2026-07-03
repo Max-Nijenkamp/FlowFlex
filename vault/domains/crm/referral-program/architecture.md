@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Referral Program — Architecture
@@ -40,15 +40,31 @@ None fired or consumed.
 
 ## Filament Artifacts
 
-Nav group: **Intelligence**.
+**Nav group:** Intelligence
 
-| # | Artifact | ui-strategy row | Notes |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| 1 | `ReferralProgramResource` | CRUD resource | Reward config. |
-| 1 | `ReferralResource` | CRUD resource | Status pipeline, qualify / reward actions. |
-| 9 | `ReferralLeaderboardPage` | Report custom page | Top referrers. |
+| `ReferralProgramResource` | #1 CRUD resource | tweaks: inline-relation-repeater (reward config) | reward structure, terms, active period |
+| `ReferralResource` | #1 CRUD resource | tweaks: state-badge-column, custom-header-actions (qualify / reward / reject) | status pipeline `pending → qualified → rewarded` (+ `rejected`) |
+| `ReferralLeaderboardPage` | #9 Report custom page | [[../../../architecture/patterns/page-blueprints#Report Builder / Query UI]] | top referrers (qualified + rewarded counts) |
 
-**Access contract**: `canAccess()` = `can('crm.referrals.view-any') && hasModule('crm.referrals')`. See [[../../../architecture/filament-patterns]].
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('crm.referrals.view-any') && BillingService::hasModule('crm.referrals')`
+per [[../../../architecture/filament-patterns]] #1. `ReferralLeaderboardPage` is a custom page and MUST state this
+explicitly — Filament does not auto-gate custom pages. The public referral-capture route (unauthenticated
+registration entry, [[features/referral-tracking]]) is Vue+Inertia per [[../../../architecture/ui-strategy]] with a
+guest guard behind a named rate limiter, resolving company context from the referral code — not a Filament artifact,
+and currently an under-specified gap ([[unknowns]]).
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Program / referral CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Register referral (fraud + duplicate guard) | Pessimistic | `unique(program_id, referee_email)` DB constraint inside `DB::transaction()` so a concurrent double-submit yields one row |
+| Qualify / reward / reject transition | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read status, single-stamp `rewarded_at` — reward mutates credit/payout (money) per [[../../../architecture/patterns/states]] |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

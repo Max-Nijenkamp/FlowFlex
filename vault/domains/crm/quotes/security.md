@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Quotes — Security
@@ -23,7 +23,11 @@ See also [[../../../security/tenancy-isolation]], [[../../../security/authn-auth
 | `crm.quotes.create` | Create a new quote |
 | `crm.quotes.update` | Edit a quote (draft only) |
 | `crm.quotes.send` | Send a quote to a contact |
+| `crm.quotes.accept` | Internally mark a sent quote accepted (rep path; the public path uses the signed token, no permission) |
+| `crm.quotes.decline` | Internally mark a sent quote declined |
 | `crm.quotes.delete` | Soft-delete a quote |
+
+**Rate limiting:** `crm.quotes.send` queues outbound mail + PDF generation (comms/file action) → runs behind the named `panel-action` rate limiter. The public accept/decline route runs behind a named rate limiter (token-enumeration guard, see Public/Portal Guard below). Per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
 
 ---
 

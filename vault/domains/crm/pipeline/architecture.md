@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Pipeline — Architecture
@@ -44,12 +44,18 @@ Not in the domain event map — UI sync only. See [[../../../architecture/websoc
 
 **Nav group:** Pipeline
 
-| Artifact | Kind (ui-strategy row) | Notes |
-|---|---|---|
-| `PipelineBoardPage` | #3 Kanban custom page | Livewire + Alpine sortable; Reverb broadcast (collaborative); quick-add; filters in header |
-| `PipelineStageResource` | #1 CRUD resource | stage config, reorder |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `PipelineBoardPage` | #3 Kanban custom page | [[../../../architecture/patterns/page-blueprints#Kanban]] | Livewire + Alpine sortable; Reverb broadcast (collaborative, `company.{id}.crm`); quick-add; header filters; **drag delegates the deal stage move to [[../deals/_module\|crm.deals]] `DealService::moveToStage`** |
+| `PipelineStageResource` | #1 CRUD resource | standard resource; `ReorderStagesAction` for column order | stage config, reorder; stage with deals cannot be deleted |
 
-Pattern reference: [[../../../architecture/patterns/custom-pages]], [[../../../architecture/ui-strategy]].
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('crm.pipeline.view') && BillingService::hasModule('crm.pipeline')`
+per [[../../../architecture/filament-patterns]] #1. `PipelineBoardPage` is a custom page and MUST state this
+explicitly — Filament does not auto-gate custom pages. The board owns no deal write: the stage move is delegated
+to `crm.deals` `DealService::moveToStage`, which enforces `crm.deals.update` and the closed-deal-immutable rule.
+The Reverb channel `company.{id}.crm` is a private channel authorised to same-company users
+([[../../../architecture/websockets]]).
 
 ---
 
@@ -60,6 +66,17 @@ Realtime: Reverb broadcast on `company.{id}.crm` (ui-strategy row #3 — collabo
 No Meilisearch index planned for this module — filter state is in-memory on the board.
 
 ---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Pipeline / stage CRUD (`PipelineStageResource` form) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Stage reorder (`ReorderStagesAction`) | Optimistic | `updated_at` stale-check on the stage set; concurrent reorder surfaces the conflict rather than last-write-wins ([[../../../architecture/patterns/optimistic-locking]]) |
+| Board drag → deal stage move | n-a (delegated) | the board owns no write — the stage transition is a Pessimistic move owned by [[../deals/_module\|crm.deals]] (`DealService::moveToStage`, `DB::transaction()` + `lockForUpdate()` per [[../../../architecture/patterns/states]]); the board delegates and re-renders from the server on exception |
+| `DealStageChanged` broadcast | n-a | broadcast-only transport, no persistence — the move already committed in crm.deals |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

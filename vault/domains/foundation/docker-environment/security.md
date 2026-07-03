@@ -5,12 +5,16 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Docker Environment — Security
 
 Parent: [[_module]]. This is the **local-dev** stack; it is not the production topology ([[../../../infrastructure/deployment]]). Its "security" is mostly about not leaking dev services to the host network and not shipping dev defaults to prod.
+
+## Permissions
+
+None — local-dev infrastructure exposes no application permissions or user-facing actions. Access to dev services is controlled by host-port exposure (only `nginx 8080` + `postgres 5432` published), not by RBAC. Production topology and its access controls: [[../../../infrastructure/deployment]].
 
 ## Local-dev posture
 

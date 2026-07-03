@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Referral Program — Security
@@ -18,6 +18,9 @@ updated: 2026-06-20
 | crm.referrals.manage-programs | Create / edit programs and reward config. |
 | crm.referrals.qualify | Mark a referral qualified. |
 | crm.referrals.reward | Mark a referral rewarded. |
+| crm.referrals.reject | Reject a referral that fails a fraud check or program terms. |
+
+**Rate limiting:** the reward action (`crm.referrals.reward` → credit/payout + notification) is a money/comms action and runs behind the named `panel-action` rate limiter. The public referral-capture route runs behind a named rate limiter (see Source Security Notes below). Per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
 
 ## Access Contract
 

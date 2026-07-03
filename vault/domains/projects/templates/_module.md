@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Project Templates
@@ -14,13 +14,12 @@ Reusable project and task-list templates. Create a new project pre-populated wit
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `projects.templates` |
-| priority | p2 |
-| panel | projects |
-| permission-prefix | `projects.templates` |
-| tables | `proj_templates`, `proj_template_sections`, `proj_template_tasks`, `proj_template_milestones` |
+`projects.templates`
+
+**Priority:** p2  
+**Panel:** projects  
+**Permission prefix:** `projects.templates`  
+**Tables:** `proj_templates`, `proj_template_sections`, `proj_template_tasks`, `proj_template_milestones`
 
 ## Dependencies
 
@@ -61,7 +60,8 @@ tests/Feature/Projects/TemplateInstantiationTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A's templates invisible to company B (system templates excepted, read-only).
+- [ ] Module gating: artifacts hidden when `projects.templates` inactive.
 - [ ] Instantiate copies sections/tasks/milestones with correct date offsets.
 - [ ] Instantiation atomic (failure rolls all back).
 - [ ] System template not editable; visible to all companies.

@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Appointment Scheduling — Security
@@ -17,6 +17,8 @@ updated: 2026-06-20
 | `crm.scheduling.view-any` | Access the scheduling area (meeting types, bookings). |
 | `crm.scheduling.manage-types` | Create / edit meeting types. |
 | `crm.scheduling.manage-own-availability` | Edit own working hours. |
+| `crm.scheduling.cancel-booking` | Cancel a booking (`CancelBookingAction`) — notifies both sides. |
+| `crm.scheduling.mark-no-show` | Mark a booking no-show / completed *(assumed)*. |
 
 ## Access Contract
 
@@ -38,9 +40,11 @@ All three tables carry an indexed `company_id` scoped via `BelongsToCompany` / `
 
 The public booking routes live in a dedicated guest/no-auth route group, isolated from the app session guard — no Sanctum session leakage between the public flow and authenticated panels. The middleware stack (tenant resolution from slug, throttle, honeypot) is documented and reviewed. See [[../../../security/authn-authz]] and [[../../../security/webhooks-signing]].
 
-## Rate Limiter (MEDIUM)
+## Rate Limiting
 
-A named limiter (`RateLimiter::for('public-booking')`) covers the public booking POST, including slot lookup and Stripe PaymentIntent creation, to prevent enumeration and payment-abuse. See [[../../../security/threat-model]].
+- **Public booking (MEDIUM)** — a named limiter (`RateLimiter::for('public-booking')`) covers the public booking POST, including slot lookup and Stripe PaymentIntent creation, to prevent enumeration and payment-abuse. See [[../../../security/threat-model]].
+- **Calendar sync external API (v1.x)** — outbound Google/Outlook calls (token refresh, busy-time fetch, booking push in [[./features/calendar-sync]]) run under a named `panel-action` limiter and provider-side backoff to avoid rate-limit bans *(assumed — deferred with OAuth calendar sync)*.
+- **Booking-panel actions** — cancel / no-show / mark-complete that dispatch confirmation/cancellation mail run under the default `panel-action` limiter (comms category).
 
 ## Module Gating
 

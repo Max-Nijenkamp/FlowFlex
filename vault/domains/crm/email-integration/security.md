@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Email Integration — Security
@@ -14,6 +14,7 @@ updated: 2026-06-20
 
 | Permission | Grants |
 |---|---|
+| `crm.email.view-any` | Panel access (`canAccess`); list own/shared emails |
 | `crm.email.connect-own` | Connect/disconnect one's own mailbox |
 | `crm.email.send` | Send tracked emails |
 | `crm.email.view-shared` | View shared emails on timelines/threads |
@@ -50,6 +51,16 @@ See [[../../../security/tenancy-isolation]].
 | `crm_email_connections.oauth_token` | Encrypted blob holding access + refresh tokens. |
 
 See [[../../../security/encryption]] and [[../../../architecture/patterns/encryption]].
+
+## Rate Limiting
+
+| Surface | Limiter | Notes |
+|---|---|---|
+| Outbound send (`SendTrackedEmailAction`, Compose action) | `panel-action` (comms category) | 30/min per user default per [[../../../architecture/security]]; comms action → named limiter is a requirement |
+| Open pixel + click redirect (`TrackOpen` / `TrackClickController`) | named guest-route limiter (per [[../../../architecture/security]] registry) | unauthenticated; click redirect constrained to validated **stored** URLs (no open redirect) |
+| OAuth callback (`EmailOAuthController`) + provider push webhook | named guest-route limiter | throttled in addition to signature / `state`+PKCE verification |
+
+Named limiters are a requirement (not *(assumed)*) per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]; exact guest-route registry names reconciled in [[./unknowns]].
 
 ## Security Notes
 

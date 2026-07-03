@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Email Channel — Architecture
@@ -26,19 +26,27 @@ None fired or consumed. Cross-domain effect is via the inbox `ChannelDriver` con
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Settings
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `EmailChannelResource` | Settings | #1 CRUD resource (own only) | Shows the forwarding address to configure; signature editor; test-connection action. |
+| `EmailChannelResource` | #1 CRUD resource | tweaks: custom-header-actions (test-connection) | Shows the forwarding address to configure; signature editor (purified HTML); the message composer itself lives in the shared inbox |
 
-### Access contract
+**Access contract (mandatory):** `EmailChannelResource` gates on
+`canAccess() = Auth::user()->can('comms.email.view-any') && BillingService::hasModule('comms.email')`
+per [[../../../architecture/filament-patterns]] #1. Write/configure actions additionally require `comms.email.manage`
+([[./security]]). Sending replies is gated by the inbox (`comms.inbox.reply`); this module owns no message write.
+The inbound webhook (`InboundCommsEmailController`) is a signed guest endpoint, not a Filament artifact — see [[./security]].
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('comms.email.view-any')
-        && BillingService::hasModule('comms.email');
-}
-```
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Email-channel CRUD (connect, signature, config) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Inbound parse → message write | n/a | Append-only via `InboxService::handleInbound`; the inbox owns the row + its `external_id` dedupe |
+| Outbound send | n/a | Driver dispatches; the inbox records the message row — no in-place update in this module |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

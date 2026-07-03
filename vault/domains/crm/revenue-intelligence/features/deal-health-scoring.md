@@ -6,7 +6,7 @@ feature: deal-health-scoring
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Deal Health Scoring
@@ -59,6 +59,20 @@ erDiagram
 - Consumes: `ActivityLogged`, `EmailTracked`, `DealRoomViewed` (engagement signals) → recalculated into score
 - Feeds: `DealHealthChanged` *(assumed)* → consumed by sequences / notifications
 - Shared entity: `crm_deals` (owned by Deals — read-only here)
+
+## Test Checklist
+
+### Unit
+- [ ] Weighted factor math (30/30/20/20 *(assumed)*) yields the exact 0–100 score over fixture deals
+- [ ] Deal with no activity for 14 days *(assumed)* scores low and flags at-risk (`score < 40`)
+
+### Feature (Pest)
+- [ ] `recalculate()` upserts one health row per open deal; a per-deal failure doesn't stop the batch
+- [ ] Recalc is idempotent — re-run yields identical scores/rows
+- [ ] Never writes `crm_deals`; health stored only in `crm_deal_health` keyed by `deal_id`
+
+### Livewire
+- [ ] Health-score chip + factor popover render on the deal view; gated on `crm.revenue-intelligence.view-any`
 
 ## Notes
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Architecture Tests (isolation & layering enforcement)
@@ -32,6 +32,15 @@ Pest arch tests that turn the vault's hard rules into build-time gates — the C
 ## Relations
 
 - Consumes: nothing at runtime. Feeds: CI pass/fail; enforces the constitution ([[../../../../decisions/decision-2026-06-20-full-mapping-conventions]]).
+
+## Test Checklist
+
+### Unit
+- [ ] `TenancyTest` flags a class calling `withoutGlobalScope(CompanyScope)` outside admin/support
+
+### Feature (Pest)
+- [ ] `ModelsTest` fails a model missing `HasUlids` / `SoftDeletes`
+- [ ] `LayersTest` fails on `dd` / `dump` / `var_dump` in `app/`
 
 ## Unknowns
 

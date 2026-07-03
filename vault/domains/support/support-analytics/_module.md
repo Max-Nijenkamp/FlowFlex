@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Support Analytics
@@ -71,7 +71,8 @@ tests/Feature/Support/{SupportAnalyticsTest,CsatFlowTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: metrics + CSAT for company A never aggregate company B tickets
+- [ ] Module gating: artifacts hidden when `support.analytics` inactive
 - [ ] `TicketResolved` sends survey once; duplicate response rejected (unique token/ticket)
 - [ ] CSAT average + per-agent math over fixtures
 - [ ] First-response/resolution averages over fixtures

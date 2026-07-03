@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Knowledge Base
@@ -70,7 +70,8 @@ tests/Feature/Support/{KbArticleTest,HelpCentreTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A never lists or serves company B articles (panel + public)
+- [ ] Module gating: artifacts hidden when `support.kb` inactive
 - [ ] Public help centre serves published-only, right company
 - [ ] Draft invisible publicly + in public search
 - [ ] Body purified (XSS fixture)

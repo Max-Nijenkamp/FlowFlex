@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Tenant-Aware Test Harness (`setCompany` + RefreshDatabase)
@@ -32,6 +32,15 @@ Pest on in-memory SQLite with a one-line `setCompany()` helper, so every test ca
 
 - Consumes: `CompanyContext` from [[../../multi-tenancy-layer/_module|multi-tenancy]]. Feeds: every domain's feature tests.
 - Shared entity: the `TestCase`/`Pest.php` helpers.
+
+## Test Checklist
+
+### Unit
+- [ ] `setCompany($company)` sets `CompanyContext` + `setPermissionsTeamId`
+
+### Feature (Pest)
+- [ ] A feature test scoped via `setCompany` sees only that company's rows
+- [ ] `Http::fake()` blocks real Stripe/mail calls; the rate limiter is cleared per auth test
 
 ## Unknowns
 

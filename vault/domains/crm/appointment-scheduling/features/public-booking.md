@@ -6,7 +6,7 @@ feature: public-booking
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Public Booking
@@ -72,3 +72,15 @@ erDiagram
 - Consumes: nothing inbound (entry point)
 - Feeds: `AppointmentBooked` → consumed by activities (auto-log meeting) and sequences (auto-halt)
 - Shared entity: `crm_contacts` (owned by Contacts)
+
+## Test Checklist
+
+### Unit
+- [ ] `SchedulingService::slots()` excludes booked slots, buffers, and hours outside working hours
+- [ ] `BookSlotData` validates name/email (E.164 phone where captured) and rejects a slug that does not resolve to a company
+
+### Feature (Pest)
+- [ ] Happy path: `book()` in a transaction find-or-creates the contact, logs the activity, queues confirmation + `.ics`, and fires `AppointmentBooked`
+- [ ] Concurrency: two simultaneous bookings of the same slot → the second gets `SlotTakenException` (pessimistic slot re-validation)
+- [ ] Tenant isolation: a `{company-slug}` only exposes that company's meeting types/slots — no cross-tenant slot leakage
+- [ ] Public POST is throttled by the `public-booking` limiter and honeypot-guarded; priced type requires a successful PaymentIntent before confirm

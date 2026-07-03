@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Agent Queue
@@ -40,6 +40,20 @@ The in-panel real-time console where agents pick up and answer live chats.
 - Consumes: `ChatStarted` / `ChatMessageSent` (same-domain broadcasts).
 - Feeds: `ConvertChatToTicketAction` → ticket in support.tickets.
 - Shared entity: `crm_contacts` (read), `users` availability.
+
+## Test Checklist
+
+### Unit
+- [ ] Assignment picks the least-active online agent *(assumed)*; offline/away agents excluded
+
+### Feature (Pest)
+- [ ] Claiming a waiting chat locks the row so two agents cannot both claim it (row lock)
+- [ ] An agent message persists to `sup_chat_messages` and broadcasts on `chat.{chat_id}`
+- [ ] Tenant isolation: an agent never sees or claims another company's chat
+
+### Livewire
+- [ ] `ChatQueuePage` `canAccess()` denies without `support.chat.view-any` and when `support.chat` is inactive
+- [ ] Reply / claim actions require `support.chat.respond`; availability toggle updates the header state
 
 ## Unknowns
 

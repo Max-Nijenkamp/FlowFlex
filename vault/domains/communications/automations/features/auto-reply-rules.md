@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Auto-reply Rules
@@ -40,6 +40,21 @@ Rules that send a templated reply on inbound messages matching conditions — in
 - Consumes: inbound hook from [[../../shared-inbox/_module|comms.inbox]]; business hours from [[../../core/company-settings/_module|core.settings]].
 - Feeds: auto-reply message via `InboxService`.
 - Shared entity: `comms_messages` (owned by the inbox).
+
+## Test Checklist
+
+### Unit
+- [ ] Condition evaluation: AND-combined channel + keyword + business-hours match returns true only when all pass
+- [ ] Away-message throttle: second trigger same conversation same day is suppressed
+
+### Feature (Pest)
+- [ ] Inbound matching a rule sends the templated auto-reply via `InboxService` (message written to inbox tables, not this module)
+- [ ] Away message fires only outside business hours (from `core.settings`), once per conversation/day
+- [ ] Loop guard: the auto-reply message does not re-enter `onInbound` (no reply storm)
+
+### Livewire
+- [ ] Rule form validates condition/action against the registry; invalid registry ref rejected
+- [ ] Create/edit denied without `comms.automations.manage`
 
 ## Related
 

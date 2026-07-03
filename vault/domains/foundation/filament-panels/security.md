@@ -5,12 +5,16 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Filament Panels — Security
 
 Parent: [[_module]]. The panels are the authenticated entry points; their guard split and middleware order are the first authorization boundary in the product.
+
+## Permissions
+
+None seeded by this module. Access is enforced by the **guard split** (`admin` vs `web`, non-overlapping) — the coarse authorization wall — plus per-resource `canAccess()` inside `/app`, which reads RBAC permissions owned by the domain modules that mount into the panel ([[../../../domains/core/rbac/_module]]). The panels themselves are always-on infrastructure and are not permission-gated. Login / 2FA / profile are Filament framework actions, not permission-gated commands.
 
 ## The guard split IS the boundary
 

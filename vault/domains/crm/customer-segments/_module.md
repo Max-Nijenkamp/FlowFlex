@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Customer Segments
@@ -16,13 +16,12 @@ Dynamic contact segments based on attributes and behaviour. Used to target campa
 
 ## Module-key
 
-```
-key:               crm.segments
-priority:          v1
-panel:             crm
-permission-prefix: crm.segments
-tables:            crm_segments, crm_segment_members
-```
+`crm.segments`
+
+**Priority:** v1  
+**Panel:** crm  
+**Permission prefix:** `crm.segments`  
+**Tables:** `crm_segments`, `crm_segment_members`
 
 ## Dependencies
 
@@ -69,7 +68,8 @@ tests/Feature/CRM/{SegmentConditionTest,SegmentMembershipTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating enforced.
+- [ ] Tenant isolation: company A cannot see or resolve company B's segments/members
+- [ ] Module gating: artifacts hidden when `crm.segments` inactive
 - [ ] Dynamic membership reflects data changes immediately (query-time).
 - [ ] Condition operators each produce correct SQL (fixture per operator, incl. custom-field JSONB).
 - [ ] AND/OR logic correct.

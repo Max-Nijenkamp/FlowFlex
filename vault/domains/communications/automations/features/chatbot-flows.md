@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Chatbot Flows
@@ -40,6 +40,21 @@ Keyword-triggered decision trees ("1 for sales, 2 for support") that hand off to
 - Consumes: inbound hook from [[../../shared-inbox/_module|comms.inbox]].
 - Feeds: chatbot replies + human-handoff routing via `InboxService`.
 - Shared entity: `comms_conversations` (owned by the inbox; holds flow position).
+
+## Test Checklist
+
+### Unit
+- [ ] Flow-definition validation rejects orphan nodes / missing exit paths
+- [ ] `ChatbotRunner::step` advances to the `next` node on a matching option
+
+### Feature (Pest)
+- [ ] Matching option advances the flow; position persisted to conversation meta via `InboxService`
+- [ ] Two consecutive no-matches exit to human and trigger the routing rule
+- [ ] Reply + handoff routing go through `InboxService` (no direct inbox-table write)
+
+### Livewire
+- [ ] Node repeater builds the tree; validation blocks activation of an orphaned flow
+- [ ] Create/edit denied without `comms.automations.manage`
 
 ## Related
 

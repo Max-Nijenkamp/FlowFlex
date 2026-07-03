@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # WhatsApp — Architecture
@@ -28,26 +28,32 @@ None fired or consumed. See [[../../../architecture/event-bus]] for the platform
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Settings
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `WhatsAppTemplateResource` | Settings | #1 Standard CRUD resource (own only) | Create + submit templates; approval-status badge; `{{n}}` placeholders. |
-| `WhatsAppConfigPage` | Settings | #7 custom page (form) | Connect number, enter credentials (write-only display); `ConnectWhatsAppAction` verifies before save. |
+| `WhatsAppTemplateResource` | #1 CRUD resource | tweaks: state-badge-column (approval status), custom-header-actions (submit-for-approval) | Create + submit templates; `{{n}}` placeholders; rejected shows reason |
+| `WhatsAppConfigPage` | #7 wizard custom page | [[../../../architecture/patterns/page-blueprints#Wizard]] | Connect number, enter credentials (write-only display); `ConnectWhatsAppAction` verifies with the provider before save |
 
 Sending happens through the [[../shared-inbox/_module|Shared Inbox]] composer (template picker appears outside the 24h window).
 
-See [[../../../architecture/filament-patterns]] and [[../../../architecture/ui-strategy]].
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('comms.whatsapp.view-any') && BillingService::hasModule('comms.whatsapp')`
+per [[../../../architecture/filament-patterns]] #1. `WhatsAppConfigPage` is a custom page and MUST state this
+explicitly — Filament does not auto-gate custom pages. Config writes additionally require `comms.whatsapp.manage-config`,
+template writes `comms.whatsapp.manage-templates` ([[./security]]). The webhook (`WhatsAppWebhookController`) is a
+signed guest endpoint, not a Filament artifact.
 
-### Access contract
+## Concurrency
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('comms.whatsapp.view-any')
-        && BillingService::hasModule('comms.whatsapp');
-}
-```
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Template CRUD (draft edit) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Config connect / credential update | Optimistic | single row per company; `updated_at` stale-check after provider verify ([[../../../architecture/patterns/optimistic-locking]]) |
+| Template status sync (`SyncTemplateStatusJob`) | n/a | Provider-driven upsert by `external_template_id` — no concurrent user write to race |
+| Message send / inbound receipt | n/a | Append-only via `InboxService`; the inbox owns the `comms_messages` write + `external_id` dedupe |
 
-Custom pages state the same gate explicitly (per [[../../../architecture/filament-patterns]] #1).
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

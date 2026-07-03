@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # SLA Management
@@ -70,7 +70,8 @@ tests/Feature/Support/{SlaTimerTest,SlaBreachTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: SLA timers/events for company A never read company B tickets or settings
+- [ ] Module gating: artifacts hidden when `support.sla` inactive
 - [ ] Elapsed minutes excludes `waiting_on_customer` windows
 - [ ] Business-hours-only policy counts only business hours (timezone fixture)
 - [ ] Warning at 80% fires once; breach fires once

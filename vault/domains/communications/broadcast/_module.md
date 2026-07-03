@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Broadcast
@@ -16,14 +16,13 @@ Send announcements and bulk messages to employee groups or customer segments acr
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `comms.broadcast` |
-| priority | p2 |
-| panel | comms |
-| permission-prefix | `comms.broadcast` |
-| tables | `comms_broadcasts`, `comms_broadcast_recipients` |
-| patterns | queues, states |
+`comms.broadcast`
+
+**Priority:** p2  
+**Panel:** comms  
+**Permission prefix:** `comms.broadcast`  
+**Tables:** `comms_broadcasts`, `comms_broadcast_recipients`  
+**Patterns:** queues, states
 
 ## Dependencies
 
@@ -75,7 +74,8 @@ tests/Feature/Comms/{BroadcastAudienceTest,BroadcastSendTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: a broadcast only materialises recipients from the acting company's segments/employees; jobs run under its context.
+- [ ] Module gating: broadcast resource + stats widget hidden when `comms.broadcast` inactive.
 - [ ] Recipient materialisation: segment/employee/manual; dedupe; opt-outs + undeliverable excluded.
 - [ ] Personalisation per recipient.
 - [ ] Batch failure mid-send: resume sends only pending (no doubles).

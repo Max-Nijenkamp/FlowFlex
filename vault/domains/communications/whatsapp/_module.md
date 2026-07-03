@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # WhatsApp
@@ -16,14 +16,13 @@ Planned WhatsApp Business API channel — send and receive WhatsApp messages thr
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `comms.whatsapp` |
-| priority | p2 |
-| panel | comms |
-| permission-prefix | `comms.whatsapp` |
-| tables | `comms_whatsapp_config`, `comms_whatsapp_templates` |
-| encrypted-fields | `comms_whatsapp_config.api_key`, `comms_whatsapp_config.webhook_secret` |
+`comms.whatsapp`
+
+**Priority:** p2  
+**Panel:** comms  
+**Permission prefix:** `comms.whatsapp`  
+**Tables:** `comms_whatsapp_config`, `comms_whatsapp_templates`  
+**Encrypted fields:** `comms_whatsapp_config.api_key`, `comms_whatsapp_config.webhook_secret`
 
 ## Dependencies
 
@@ -72,7 +71,8 @@ tests/Feature/Comms/{WhatsAppDriverTest,WhatsAppWebhookTest,WhatsAppTemplateTest
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: webhook resolves company from `webhook_secret` / number; templates + config never cross companies.
+- [ ] Module gating: template resource + config page hidden when `comms.whatsapp` inactive.
 - [ ] API key stored as ciphertext; never re-displayed.
 - [ ] Webhook with bad verify token/signature → 403, nothing stored.
 - [ ] Inbound lands in inbox conversation (E.164 threading).

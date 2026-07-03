@@ -5,12 +5,16 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Test Suite — Security
 
 Parent: [[_module]]. The suite is itself a security control: the architecture tests are the automated enforcement of the tenant-isolation and data-ownership rules.
+
+## Permissions
+
+None — test/CI infrastructure exposes no application permissions or actions. The suite instead *verifies* the permission and isolation rules of other modules (see the enforced-rules table below).
 
 ## Security enforced by tests
 

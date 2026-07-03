@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Email Channel — Security
@@ -14,9 +14,10 @@ updated: 2026-06-20
 
 | Permission | Grants |
 |---|---|
-| `comms.email.manage` | Connect/configure email channels, edit signature |
+| `comms.email.view-any` | View connected email channels (list / resource access) *(assumed — required by the `canAccess()` contract; previously only `manage` was listed)* |
+| `comms.email.manage` | Connect/configure email channels, edit signature, run test-connection |
 
-Messaging is gated by inbox permissions (`comms.inbox.reply`).
+Messaging is gated by inbox permissions (`comms.inbox.reply`). Seeded in `PermissionSeeder`.
 
 See [[../../../security/authn-authz]].
 
@@ -38,6 +39,7 @@ public static function canAccess(): bool
 
 - Inbound webhook **signature-verified**; unknown `inbound_token` dropped.
 - **Throttle / rate limiter** on the inbound route.
+- **Test-connection** header action calls an external provider — it carries the `panel-action` rate limiter ([[../../../architecture/security]]).
 - Spam-scored mail dropped + logged.
 
 ## Upload Contract (medium)

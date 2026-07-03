@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Panel Auth (login, 2FA, profile — shared `Filament\Auth`)
@@ -37,6 +37,18 @@ Login, password reset, email verification, 2FA, and profile editing — a shared
 ## Relations
 
 - Consumes: nothing external. Feeds: `SetCompanyContext` (context set post-auth); 2FA detail in [[../../../../domains/core/two-factor-auth/_module|two-factor-auth]].
+
+## Test Checklist
+
+### Unit
+- [ ] Login resolves the guard-correct model (`web` → User, `admin` → Admin)
+
+### Feature (Pest)
+- [ ] Cross-guard login rejected — Admin on `/app`, User on `/admin` (`PanelAuthTest`)
+- [ ] Login throttling engages after repeated failed attempts
+
+### Livewire
+- [ ] Login form validation: invalid credentials show an error; throttled shows the rate-limit message
 
 ## Unknowns
 

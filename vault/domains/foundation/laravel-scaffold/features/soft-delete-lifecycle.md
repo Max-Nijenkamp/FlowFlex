@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Soft-Delete Lifecycle
@@ -32,6 +32,15 @@ Every model soft-deletes (`deleted_at`) rather than hard-deleting — recoverabl
 ## Relations
 
 - Consumes: nothing. Feeds: [[../../../../security/data-privacy-gdpr]] erasure flows, [[../../../../domains/core/audit-log/_module|audit-log]] rely on soft-delete semantics.
+
+## Test Checklist
+
+### Unit
+- [ ] A soft-deleted model is excluded from default queries and is restorable
+
+### Feature (Pest)
+- [ ] `ModelsTest` asserts `SoftDeletes` on models (arch gate)
+- [ ] Ordinary delete sets `deleted_at`; `forceDelete` is reserved for GDPR cascades
 
 ## Unknowns
 

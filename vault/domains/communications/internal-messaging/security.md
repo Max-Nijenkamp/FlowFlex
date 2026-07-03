@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Internal Messaging — Security
@@ -14,20 +14,23 @@ updated: 2026-06-20
 
 | Permission | Grants |
 |---|---|
-| `comms.internal.use` | Use chat (all users by default) |
-| `comms.internal.manage-channels` | Create/administer channels |
+| `comms.internal.use` | Use chat — read/post, DMs, join public channels, react, mark-read (all users by default) |
+| `comms.internal.manage-channels` | Create/administer channels, invite to private channels |
 
-See [[../../../security/authn-authz]].
+`use` covers the member-level command actions (post, join public, invite where member, mark-read, toggle-reaction);
+`manage-channels` covers channel create/admin. Seeded in `PermissionSeeder`. See [[../../../security/authn-authz]].
 
 ## Access Contract
 
 ```php
 public static function canAccess(): bool
 {
-    return Auth::user()->can('comms.internal.view-any')
+    return Auth::user()->can('comms.internal.use')
         && BillingService::hasModule('comms.internal');
 }
 ```
+
+*(gate reconciled to `comms.internal.use` — the prior `view-any` was never defined in the permission set)*
 
 ## Visibility — second scope (critical)
 

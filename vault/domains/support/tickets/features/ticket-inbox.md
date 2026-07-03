@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Ticket Inbox
@@ -40,6 +40,20 @@ A collaborative, real-time, email-client-style queue where agents triage and rep
 - Consumes: Reverb inbox events (same-domain broadcast).
 - Feeds: `TicketResolved` on resolve.
 - Shared entity: `crm_contacts` (requester).
+
+## Test Checklist
+
+### Unit
+- [ ] Filter query builder narrows by status / priority / assignee / category within the tenant scope
+
+### Feature (Pest)
+- [ ] Sending a reply from the inbox appends a `sup_ticket_replies` row and broadcasts on `company.{id}.support`
+- [ ] A new ticket / reply in the company broadcasts to agents viewing the inbox; other companies receive nothing
+- [ ] Tenant isolation: the inbox never lists or loads another company's ticket
+
+### Livewire
+- [ ] `canAccess()` denies the page without `support.tickets.view-any` and when `support.tickets` is inactive
+- [ ] Reply composer send is guarded by `support.tickets.reply`; optimistic append rolls back on failure
 
 ## Unknowns
 

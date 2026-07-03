@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Sales Sequences — Security
@@ -18,7 +18,12 @@ updated: 2026-06-20
 | crm.sequences.create | Create sequences |
 | crm.sequences.update | Edit sequences and steps |
 | crm.sequences.enrol | Enrol contacts/deals |
+| crm.sequences.pause | Pause an active enrolment |
+| crm.sequences.resume | Resume a paused enrolment |
+| crm.sequences.unenrol | Remove a contact/deal from a sequence |
 | crm.sequences.manage-team | Manage team (non-personal) sequences |
+
+**Rate limiting:** manual enrol (`crm.sequences.enrol`) and the pause/resume/unenrol lifecycle actions are panel actions behind the named `panel-action` rate limiter; outbound step sends (`SequenceStepMail`, comms) run on the throttled `notifications` mail queue. Per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
 
 ## Access Contract
 

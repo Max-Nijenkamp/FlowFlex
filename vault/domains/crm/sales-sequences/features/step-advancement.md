@@ -6,7 +6,7 @@ feature: step-advancement
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Step Advancement
@@ -53,6 +53,17 @@ When crm.email detects an inbound reply, it calls `SequenceService::pauseOnReply
 - Consumes: scheduled tick → advance; `EmailReplied` from [[../../email-integration/_module|crm.email]] → `pauseOnReply`
 - Feeds: `SequenceStepMail` queued (email step); task-step request → [[../../activities/_module|crm.activities]]; `SequenceCompleted` *(assumed)* at last step
 - Shared entity: contacts
+
+## Test Checklist
+
+### Unit
+- [ ] Next `next_step_at` computed from the next step's `wait_days`; the last step sets `status = completed`
+- [ ] Step dispatch by type: `email` → mail, `call`/`task` → activity, `wait` → cursor-only
+
+### Feature (Pest)
+- [ ] `advanceDue()` executes due steps in order with `wait_days` gaps; running twice in one window advances once (idempotent, transactional cursor)
+- [ ] `pauseOnReply(contactId)` moves the enrolment to `paused`; resume/unenrol restore control
+- [ ] Per-enrolment try/catch isolates a failing enrolment; the batch continues; tenant context preserved on the queue
 
 ## Related
 

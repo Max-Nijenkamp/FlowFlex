@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Milestones
@@ -14,13 +14,12 @@ Key project checkpoints with target dates. Visible on the Gantt chart and projec
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `projects.milestones` |
-| priority | p2 |
-| panel | projects |
-| permission-prefix | `projects.milestones` |
-| tables | `proj_milestones`, `proj_milestone_tasks` |
+`projects.milestones`
+
+**Priority:** p2  
+**Panel:** projects  
+**Permission prefix:** `projects.milestones`  
+**Tables:** `proj_milestones`, `proj_milestone_tasks`
 
 ## Dependencies
 
@@ -61,7 +60,8 @@ tests/Feature/Projects/MilestoneTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot see, edit, or achieve company B's milestones.
+- [ ] Module gating: artifacts hidden when `projects.milestones` inactive.
 - [ ] Progress % updates when a linked task completes.
 - [ ] Cross-project task link rejected.
 - [ ] Status command: open past target → missed; 7-day reminder fires once.

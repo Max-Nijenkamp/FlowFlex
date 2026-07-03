@@ -5,12 +5,37 @@ type: module
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Permissions Seeder
 
 `foundation.permissions` — creates permission strings, the module catalog, and (non-prod) demo data on install. Idempotent.
+
+## Module-key
+
+`foundation.permissions`
+
+**Priority:** v1-core (M0)  
+**Panel:** none (backend — artisan seeders)  
+**Permission prefix:** none of its own (it *seeds* the `core.*` permission universe other modules consume)  
+**Tables:** none owned (writes Spatie permission tables + the module catalog — foundation/core shared)
+
+## Dependencies
+
+| Type | Module | Why |
+|---|---|---|
+| Hard | [[../laravel-scaffold/_module\|foundation.scaffold]] | base `companies` / `users` / `admins` tables |
+| Hard | [[../multi-tenancy-layer/_module\|foundation.tenancy]] | team-scoped seeding (`team_id = company_id`) |
+| Hard | [[../filament-panels/_module\|foundation.panels]] | `web` / `admin` guards the permissions attach to |
+
+## Core Features
+
+- `PermissionSeeder` — core permission strings, idempotent upserts + `permission:cache-reset` — see [[./features/permission-seeding|Permission Seeding]]
+- `ModuleCatalogSeeder` — the module catalog other domains gate on
+- `LocalDevSeeder` (non-prod only) — "FlowFlex Demo" company + three working logins — see [[./features/demo-data-seeding|Demo Data Seeding]]
+- Owner permission auto-sync (`syncPermissions(web-guard permissions)`)
+- Refuses to run demo seeding in production (`RuntimeException`)
 
 ## Seeder chain (verified in `database/seeders/`)
 
@@ -43,6 +68,8 @@ Also seeds: the "FlowFlex Demo" company (active, setup complete), the `owner` ro
 
 ## Test Checklist (verified)
 
+- [ ] Tenant isolation: permissions/roles seed under `team_id = company_id` (Spatie teams) — no cross-tenant role bleed; the `LocalDevSeeder` demo tenant is isolated from any other seeded company
+- [ ] Module gating: n/a — `foundation.permissions` is always-on; it *seeds* the module catalog other modules gate on
 - [x] `PermissionSeeder` idempotent (`tests/Feature/SeederTest.php`)
 - [x] Owner role has every permission after seed
 - [x] `LocalDevSeeder` refuses to run in production

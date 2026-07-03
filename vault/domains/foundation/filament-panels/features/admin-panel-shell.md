@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Admin Panel Shell (`/admin`)
@@ -38,6 +38,17 @@ The FlowFlex-staff console — separate `admin` guard, `Admin` model, no company
 
 - Consumes: `admins` table ([[../../laravel-scaffold/data-model]]); cross-tenant read views.
 - Feeds: mount point for staff-console resources.
+
+## Test Checklist
+
+### Unit
+- [ ] `AdminPanelProvider` registers the `admin` guard + `Admin` model with no CompanyScope
+
+### Feature (Pest)
+- [ ] Staff `Admin` authenticates on `/admin`; a tenant `User` is rejected (`PanelAuthTest`)
+
+### Livewire
+- [ ] `/admin` renders the staff shell for an authenticated Admin; unauthenticated → login
 
 ## Unknowns
 

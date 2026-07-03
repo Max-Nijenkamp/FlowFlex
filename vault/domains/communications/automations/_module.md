@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Automations
@@ -16,13 +16,12 @@ Auto-reply rules, conversation routing, and keyword chatbot flows for the shared
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `comms.automations` |
-| priority | p2 |
-| panel | comms |
-| permission-prefix | `comms.automations` |
-| tables | `comms_automation_rules`, `comms_chatbot_flows` |
+`comms.automations`
+
+**Priority:** p2  
+**Panel:** comms  
+**Permission prefix:** `comms.automations`  
+**Tables:** `comms_automation_rules`, `comms_chatbot_flows`
 
 ## Dependencies
 
@@ -66,7 +65,8 @@ tests/Feature/Comms/{CommsAutomationTest,ChatbotFlowTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A rules never evaluate against company B conversations; engine runs under the conversation's company context.
+- [ ] Module gating: artifacts hidden when `comms.automations` inactive.
 - [ ] Rules run in order; stop-on-match halts.
 - [ ] Away message only outside business hours, once per conversation/day.
 - [ ] Auto-reply doesn't re-trigger the engine (loop guard).

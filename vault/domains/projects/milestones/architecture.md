@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Milestones — Architecture
@@ -39,20 +39,28 @@ None cross-domain. Progress is a same-domain call; reminders use the notificatio
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Projects
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `MilestoneResource` | Projects | #1 CRUD | achieve action, progress column, cross-project list |
-| `MilestoneTimelineWidget` | Projects | #6 widget | on project view page |
+| `MilestoneResource` | #1 CRUD resource | tweaks: custom-header-actions (achieve) | progress column, status chip (plain enum — not spatie states), cross-project list filterable by status/date |
+| `MilestoneTimelineWidget` | #6 dashboard widget | [[../../../architecture/patterns/page-blueprints#Dashboard]] | horizontal timeline of markers on the project view page |
 
-### Access contract
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('projects.milestones.view-any') && BillingService::hasModule('projects.milestones')`
+per [[../../../architecture/filament-patterns]] #1. The `achieve` header action additionally requires
+`projects.milestones.achieve`. The `MilestoneTimelineWidget` is a widget, not a page — it inherits its host
+page's gate but restates the module check so it cannot render when `projects.milestones` is inactive.
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('projects.milestones.view-any')
-        && BillingService::hasModule('projects.milestones');
-}
-```
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Milestone CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Achieve / link-tasks (`AchieveMilestoneAction`, `LinkTasksAction`) | Optimistic | plain-enum status write + join rows on the milestone record — `updated_at` stale-check; no spatie state machine, so no pessimistic lock ([[../../../architecture/patterns/optimistic-locking]]) |
+| Scheduled maintenance (`MilestoneStatusCommand`: open→missed, 7-day reminder) | n/a | Single-writer background command per company; idempotent via status re-check + `reminded_at` once-guard — no interactive-editor contention |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

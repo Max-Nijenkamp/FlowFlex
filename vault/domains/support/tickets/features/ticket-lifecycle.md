@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Ticket Lifecycle
@@ -40,6 +40,23 @@ The status machine every ticket moves through, plus reply threading and resoluti
 - Consumes: customer inbound reply (webhook) → `waiting_on_customer → in_progress` + SLA resume.
 - Feeds: `TicketResolved` → [[../../support-analytics/_module|support.analytics]] (CSAT), marketing CSAT (P3).
 - Shared entity: `crm_contacts` (requester) owned by [[../../../crm/contacts/_module|crm.contacts]].
+
+## Test Checklist
+
+### Unit
+- [ ] Reopen-window guard: a `closed` ticket older than the window (14d *(assumed)*) rejects reopen
+- [ ] `first_response_at` stamps only on the first agent public reply, never on an internal note
+
+### Feature (Pest)
+- [ ] Resolve fires `TicketResolved` with the contract payload and stamps `resolved_at`
+- [ ] Public reply queues requester mail; internal note is silent (no mail)
+- [ ] Customer inbound reply flips `waiting_on_customer → in_progress` and resumes the SLA clock
+- [ ] Invalid transition throws (e.g. `closed → resolved`); concurrent double-resolve rejected via row lock
+- [ ] Tenant isolation: company A cannot transition or reply to a company B ticket
+
+### Livewire
+- [ ] Status transition action is guarded + confirmed; invalid transition shows an error toast
+- [ ] Reply composer public/internal toggle routes to `TicketService::reply`; resolve denied without `support.tickets.resolve`
 
 ## Unknowns
 

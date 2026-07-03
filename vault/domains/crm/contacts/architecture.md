@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Contacts — Architecture
@@ -38,13 +38,25 @@ Interface→Service: `ContactServiceInterface` → `ContactService`.
 
 **Nav group:** Contacts
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `ContactResource` | #1 CRUD resource | search, filters: owner/account/stage/tag; lifecycle stage quick-move; excel export |
-| Contact view page | #2 detail with tabs | Overview, Activities (soft-dep), Deals (soft-dep), Files |
-| `AccountResource` | #1 CRUD resource | view shows contacts + deals + LTV |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `ContactResource` | #1 CRUD resource | tweaks: state-badge-column (lifecycle stage), custom-header-actions (change-lifecycle quick-move, export), view-page-tabs | search, filters: owner / account / stage / tag; excel export |
+| Contact view page | #2 record detail with tabs | tweaks: view-page-tabs, relation-manager-timeline (Activities tab, soft-dep — [[../../../architecture/patterns/page-blueprints#Inbox / Chat / Conversation]] bubble cues) | Overview, Activities (soft-dep), Deals (soft-dep), Files |
+| `AccountResource` | #1 CRUD resource | tweaks: view-page-tabs | view shows contacts + deals + LTV |
 
-**Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('crm.contacts.view-any') && BillingService::hasModule('crm.contacts')` per [[../../../architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[../../../architecture/ui-strategy]]).
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('crm.contacts.view-any') && BillingService::hasModule('crm.contacts')`
+per [[../../../architecture/filament-patterns]] #1. Custom pages MUST state this explicitly — Filament does not auto-gate them. Other domains read contacts via `ContactService::findOrCreateByEmail`, not a public/portal surface; this module ships no guest-facing page.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Contact / Account CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Lifecycle stage move (`moveLifecycleStage`) | Optimistic | plain enum column, any-direction, no state machine (spec: "no state machine; any stage move allowed") — `updated_at` stale-check ([[../../../architecture/patterns/optimistic-locking]]) |
+| Contact merge (`ContactService::merge`) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on both records, reassign related rows, soft-delete the merged record — prevents concurrent merge/edit races ([[../../../architecture/patterns/states]]) |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

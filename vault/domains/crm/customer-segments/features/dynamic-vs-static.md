@@ -6,7 +6,7 @@ feature: dynamic-vs-static
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Dynamic vs Static Segments
@@ -48,6 +48,19 @@ Both types are resolved through the same audience API, `SegmentService::contacts
 - Consumes: contact-change events *(assumed)* → re-evaluate dynamic segment counts; scheduled tick → `RefreshSegmentCountsCommand`
 - Feeds: resolved audience via `SegmentService::contacts()` → [[../../sales-sequences/_module|crm.sequences]], marketing, broadcast
 - Shared entity: contacts
+
+## Test Checklist
+
+### Unit
+- [ ] Dynamic resolves via a scoped query at read time (never materialised); static reads the membership join
+- [ ] Duplicate static member rejected by the unique `(segment_id, contact_id)` index
+
+### Feature (Pest)
+- [ ] `SegmentService::contacts()` returns the same audience shape for dynamic and static segments
+- [ ] Tenant isolation: a compiled dynamic query never reaches another company's contacts even with a cross-tenant id in `conditions`
+
+### Livewire
+- [ ] `type` toggle reveals the builder (dynamic) vs the member list (static); edit denied without `crm.segments.update`
 
 ## Related
 

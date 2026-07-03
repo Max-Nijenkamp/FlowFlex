@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Canned Responses
@@ -65,7 +65,8 @@ tests/Feature/Support/CannedResponseTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A agents never see or insert company B canned responses
+- [ ] Module gating: artifacts hidden when `support.canned` inactive
 - [ ] Placeholder substitution (customer/agent/ticket number); unknown left literal
 - [ ] Personal response invisible to other agents; shared visible
 - [ ] Duplicate shortcut rejected

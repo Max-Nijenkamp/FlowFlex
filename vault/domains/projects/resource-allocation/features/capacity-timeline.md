@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Capacity Timeline
@@ -39,6 +39,20 @@ A Gantt-style view of who is on which project when, with free-capacity forecast 
 - Consumes: nothing.
 - Feeds: overlay data to projects.workload (read).
 - Shared entity: `proj_time_entries` (projects.time), `users`.
+
+## Test Checklist
+
+### Unit
+- [ ] `availableCapacity(from, to)` computes per-user free % across overlapping allocations.
+- [ ] Plan-vs-actual overlay is omitted when `projects.time` is inactive.
+
+### Feature (Pest)
+- [ ] `utilisation(userId, from, to)` returns planned and actual (actual from time entries when active) with no N+1.
+- [ ] A user from another company cannot load the timeline (tenant scope).
+
+### Livewire
+- [ ] `AllocationTimelinePage` denied without `projects.resources.view-any`; hidden when `projects.resources` inactive.
+- [ ] Over-allocated cells are flagged red in the rendered timeline.
 
 ## Unknowns
 

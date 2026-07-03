@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Template Authoring
@@ -38,6 +38,20 @@ Build and edit reusable project templates; save an existing project as a templat
 
 - Consumes / Feeds: nothing.
 - Shared entity: `proj_projects` (read, for save-as-template).
+
+## Test Checklist
+
+### Unit
+- [ ] Save-as-template computes each task/milestone `day_offset` from the project start date.
+
+### Feature (Pest)
+- [ ] Create a template with ordered sections/tasks/milestones persists to all four `proj_template_*` tables (tenant-scoped).
+- [ ] Editing a system template copies it into the acting company first (copy-on-edit); the shared system row is never mutated.
+- [ ] Create/edit requires `projects.templates.create` / `.update`; company A's template is invisible to company B.
+
+### Livewire
+- [ ] `ProjectTemplateResource` denied without `projects.templates.view-any`; hidden when `projects.templates` inactive.
+- [ ] A system template renders read-only with a "Duplicate to edit" action.
 
 ## Unknowns
 

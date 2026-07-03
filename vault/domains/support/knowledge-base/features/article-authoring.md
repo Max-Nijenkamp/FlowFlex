@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Article Authoring
@@ -40,6 +40,22 @@ Agents write, categorise, version, and publish help articles.
 - Consumes: nothing.
 - Feeds: `KbService::suggestFor` reads these articles for [[../../tickets/_module|support.tickets]] reply suggestions (soft).
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Slug auto-generates and stays unique per company
+- [ ] Revision append caps at 20 *(assumed)*, oldest dropped
+- [ ] Body purified on save (XSS fixture stripped)
+
+### Feature (Pest)
+- [ ] Publish stamps `published_at` and makes the article publicly visible; unpublish reverses it
+- [ ] Editing a published article appends the prior body to `revisions`
+- [ ] Tenant isolation: cannot open or edit another company's article
+
+### Livewire
+- [ ] Publish/unpublish action denied without `support.kb.publish`; state badge reflects status
+- [ ] Category management denied without `support.kb.manage-categories`
 
 ## Unknowns
 

@@ -6,7 +6,7 @@ feature: invoice-creation
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Invoice Creation from Won Deal
@@ -70,3 +70,16 @@ When `finance.invoicing` is inactive:
 - Consumes: nothing.
 - Feeds: `DealWon` → finance.invoicing `CreateInvoiceStubListener` creates the draft invoice; manual `CreateInvoiceAction` triggers the same finance path on demand.
 - Shared entity: invoice records owned by finance.invoicing; line items sourced from this module's `crm_deal_products`.
+
+## Test Checklist
+
+### Unit
+- [ ] Line-item preview maps `crm_deal_products` → invoice-stub lines; empty-products deal surfaces a warning
+
+### Feature (Pest)
+- [ ] `CreateInvoiceAction` creates exactly one Finance draft invoice (not auto-sent) via the owning finance path
+- [ ] Action hidden when `finance.invoicing` inactive; `DealWon` fires unconsumed with no error
+- [ ] Tenant isolation: action on a company A deal never writes a company B invoice
+
+### Livewire
+- [ ] Action visible only when `status=won` && `hasModule('finance.invoicing')`; denied without `crm.deals.update`

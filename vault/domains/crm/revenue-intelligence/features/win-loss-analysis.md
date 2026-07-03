@@ -6,7 +6,7 @@ feature: win-loss-analysis
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Win/Loss Analysis
@@ -63,6 +63,20 @@ erDiagram
 - Consumes: `DealWon` / `DealLost` (close outcomes) → win/loss row + analysis refresh
 - Feeds: analysis surfaced on dashboard; no outbound cross-domain events
 - Shared entity: `crm_deals` (owned by Deals — read-only here)
+
+## Test Checklist
+
+### Unit
+- [ ] Conversion-funnel percentages and velocity stats correct over fixtures
+- [ ] Reason / competitor breakdown aggregates by count correctly
+
+### Feature (Pest)
+- [ ] Deal close writes a `crm_win_loss` row (outcome/reason/competitor/notes) via the same-domain `DealService` call
+- [ ] `analysis(from,to)` results cached per range at `company:{id}:crm:winloss:{from}:{to}` (TTL 1h)
+- [ ] Tenant isolation: analysis only aggregates the company's own closed deals
+
+### Livewire
+- [ ] `WinLossPage` date-range filter updates charts; drill into reason/competitor; gated on `crm.revenue-intelligence.view-any`
 
 ## Notes
 

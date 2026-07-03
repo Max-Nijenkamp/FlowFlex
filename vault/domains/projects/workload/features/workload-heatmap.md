@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Workload Heat-map
@@ -39,6 +39,22 @@ Members × days grid of task load, colour-coded by capacity, with drag-to-rebala
 - Consumes: nothing.
 - Feeds: nothing (mutations flow into projects.tasks).
 - Shared entity: `proj_tasks` (projects.tasks), HR capacity (hr.profiles), `proj_resource_allocations` (projects.resources).
+
+## Test Checklist
+
+### Unit
+- [ ] Cell total sums only `todo`/`in_progress` task `estimated_hours` bucketed on the due date.
+- [ ] Colour level boundaries correct at 80% and 100% of daily capacity (green / amber / red).
+
+### Feature (Pest)
+- [ ] `WorkloadService::grid` builds the members × days grid in one aggregate query (no N+1) for a fixture.
+- [ ] Capacity resolves from HR profile when `hr.profiles` active; falls back to 8h/day default otherwise.
+- [ ] Non-member of the project cannot load `WorkloadService::grid` (membership + tenant scope).
+- [ ] Drag reassign routes through `UpdateTaskAction` (task `updated_at` advances; `projects.tasks.update` enforced; stale write rejected).
+
+### Livewire
+- [ ] `WorkloadPage` denied without `projects.workload.view`; hidden when `projects.workload` inactive.
+- [ ] Rejected reassign reverts the cell and shows an error toast (no silent write).
 
 ## Unknowns
 

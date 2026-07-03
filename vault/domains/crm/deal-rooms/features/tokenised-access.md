@@ -6,7 +6,7 @@ feature: tokenised-access
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Tokenised Access
@@ -53,6 +53,15 @@ erDiagram
 - Consumes: room assets read from Deals / Contacts / Quotes (owning-service APIs)
 - Feeds: `DealRoomViewed` / engagement events → consumed by revenue-intelligence (deal health)
 - Shared entity: `crm_deals` (owned by Deals)
+
+## Test Checklist
+
+### Unit
+- [ ] `publicView(token)` rejects an expired (`expires_at` past) or revoked (`revoked_at` set) token → 404
+
+### Feature (Pest)
+- [ ] A token resolves only its own room and derives company context; a cross-room token is denied
+- [ ] Public route is rate-limited; documents are delivered via signed temp URLs (raw media path never exposed)
 
 ## Notes
 

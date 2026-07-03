@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Public Help Centre
@@ -40,6 +40,17 @@ Customer-facing, unauthenticated portal for browsing and searching published art
 - Consumes: nothing (public reads).
 - Feeds: deflects tickets away from [[../../tickets/_module|support.tickets]] (indirect).
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Company resolves from the help-centre slug; unknown slug 404s
+
+### Feature (Pest)
+- [ ] Public index + article routes serve published-only articles for the resolved company; a draft 404s
+- [ ] Public search returns published + company-scoped hits only; no draft / cross-company leak
+- [ ] `RecordFeedbackAction` / `RecordArticleViewAction` increment counters and are throttled by the named limiter (excess requests rejected)
+- [ ] Rendered article body is the purified stored HTML (no script execution)
 
 ## Unknowns
 

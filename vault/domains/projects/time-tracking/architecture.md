@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Time Tracking — Architecture
@@ -30,24 +30,31 @@ None cross-domain. Billable hours flow to finance via CSV export (v1).
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Time
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `TimeEntryResource` | Time | #1 CRUD | filters project/user/date/billable; approve action |
-| `TimesheetPage` | Time | #9 report page | weekly grid users × days |
-| `ProjectTimeReportPage` | Time | #9 report page | logged vs estimate, billable split, CSV export |
-| Timer widget | (task view + kanban card) | — | start/stop |
+| `TimeEntryResource` | #1 CRUD resource | tweaks: custom-header-actions (approve week) | list filters project/user/date/billable; CSV bulk export names the `exports` rate limiter ([[security]]) |
+| `TimesheetPage` | #9 report custom page | [[../../../architecture/patterns/page-blueprints#Report Builder / Query UI]] | weekly grid users × days; week navigator; approve-week action |
+| `ProjectTimeReportPage` | #9 report custom page | [[../../../architecture/patterns/page-blueprints#Report Builder / Query UI]] | logged vs estimate, billable split; CSV export names the `exports` rate limiter ([[security]]) |
+| Timer control | embedded Livewire component *(not a standalone page — hosted on the projects.tasks task view + projects.kanban card)* | — | start/stop one running timer per user |
 
-### Access contract
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('projects.time.view-any') && BillingService::hasModule('projects.time')`
+per [[../../../architecture/filament-patterns]] #1. `TimesheetPage` and `ProjectTimeReportPage` are custom pages and
+MUST state this explicitly — Filament does not auto-gate custom pages. Own-data scope: without `projects.time.view-any`
+a user logs/sees only their own entries (`projects.time.log-own`); the export action additionally requires
+`projects.time.export`.
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('projects.time.view-any')
-        && BillingService::hasModule('projects.time');
-}
-```
+## Concurrency
 
-Own-data scope: users log/see their own time unless they hold `projects.time.view-any`.
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Time-entry CRUD (manual log / edit, `minutes_logged` int) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Timer start/stop (one running timer per user) | Pessimistic | `DB::transaction()` + `lockForUpdate()` single-running-timer guard → `TimerAlreadyRunningException` ([[../../../architecture/patterns/states]]) |
+| Week approval (`ApproveWeekAction` stamps every entry) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read, validate (approver ≠ owner), write per [[../../../architecture/patterns/states]] |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

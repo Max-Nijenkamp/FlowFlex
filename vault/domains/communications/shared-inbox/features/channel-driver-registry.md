@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Channel Driver Registry
@@ -37,6 +37,17 @@ The extension seam that keeps the inbox channel-agnostic. Each channel module pl
 - Consumes: driver registrations from `comms.email` / `comms.whatsapp` / `comms.sms`.
 - Feeds: the send + inbound pipelines for every channel.
 - Shared entity: `comms_channels` (owned here; channel modules FK to it from their config tables).
+
+## Test Checklist
+
+### Unit
+- [ ] `ChannelDriverRegistry::register` binds a driver by type; resolving an unregistered type throws
+- [ ] `capabilities()` shape validated (supports-media, has-send-window flags)
+
+### Feature (Pest)
+- [ ] `InboxService::send` resolves the conversation's channel type to the registered driver and dispatches
+- [ ] Send to an inactive channel is rejected
+- [ ] Adding a new channel type is additive — registering a driver requires no inbox code change (fake driver test)
 
 ## Related
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Entry & Timer
@@ -37,6 +37,21 @@ Log time manually or via a start/stop timer against a task/project.
 
 - Consumes / Feeds: nothing (entries consumed read-side by projects/resources).
 - Shared entity: `proj_tasks`, `proj_projects`, `users`.
+
+## Test Checklist
+
+### Unit
+- [ ] Stop timer computes `minutes_logged` as an integer from `timer_started_at` → now (no float/decimal-hour math).
+- [ ] `LogTimeData` rejects a future-dated entry and a `minutes_logged` < 1.
+
+### Feature (Pest)
+- [ ] Start a timer, stop it → a single entry is created with correct minutes; the running-timer marker clears.
+- [ ] Starting a second timer while one runs raises `TimerAlreadyRunningException` (pessimistic single-running-timer guard holds under concurrent starts).
+- [ ] Tenant + own-data scope: a user can only log against member tasks/projects; company A cannot log against company B.
+
+### Livewire
+- [ ] Timer control / `TimeEntryResource` requires `projects.time.log-own`; hidden when `projects.time` inactive.
+- [ ] Second-timer / future-date attempts surface an error toast (no entry written).
 
 ## Unknowns
 

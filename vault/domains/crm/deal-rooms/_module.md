@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # CRM Deal Rooms
@@ -14,15 +14,14 @@ A shared digital space for buyer and seller during a deal — documents, a mutua
 
 > This module is planned for rebuild. Prior "shipped/complete" references reflect the stripped codebase; see [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]] for context.
 
-## Module Key
+## Module-key
 
-```
-module-key:        crm.deal-rooms
-priority:          v1
-panel:             crm
-permission-prefix: crm.deal-rooms
-tables:            [crm_deal_rooms, crm_deal_room_documents, crm_deal_room_action_items, crm_deal_room_stakeholders]
-```
+`crm.deal-rooms`
+
+**Priority:** v1  
+**Panel:** crm  
+**Permission prefix:** `crm.deal-rooms`  
+**Tables:** `crm_deal_rooms`, `crm_deal_room_documents`, `crm_deal_room_action_items`, `crm_deal_room_stakeholders`
 
 ## Dependencies
 
@@ -66,7 +65,8 @@ tests/Feature/CRM/{DealRoomAccessTest,DealRoomEngagementTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating enforced.
+- [ ] Tenant isolation: company A cannot see or manage company B's deal rooms
+- [ ] Module gating: artifacts hidden when `crm.deal-rooms` inactive
 - [ ] Public token resolves only its own room; expired / revoked → 404.
 - [ ] Document URL is temp-signed; raw media path never exposed.
 - [ ] View tracking increments once per view event.

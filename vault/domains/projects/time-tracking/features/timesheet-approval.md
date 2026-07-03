@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Timesheet & Approval
@@ -37,6 +37,21 @@ Weekly timesheet grid and manager week-level approval.
 
 - Consumes / Feeds: nothing.
 - Shared entity: `users`.
+
+## Test Checklist
+
+### Unit
+- [ ] Week-total roll-up sums `minutes_logged` (int) per user/day correctly across a week boundary.
+- [ ] `ApproveWeekAction` rejects self-approval (approver ≠ entry owner).
+
+### Feature (Pest)
+- [ ] Approving a week stamps `approved_by` / `approved_at` on every entry in the week and no entry outside it.
+- [ ] Concurrent approval of the same week is serialised (pessimistic lock) — no double-stamp or lost update.
+- [ ] Tenant + scope: viewing/approving another user's week requires `projects.time.approve`; company A cannot approve company B's entries.
+
+### Livewire
+- [ ] Grid shows own week with `log-own`; team grid + approve action require `projects.time.approve`.
+- [ ] Self-approval attempt is blocked with an error toast (no stamp written).
 
 ## Unknowns
 

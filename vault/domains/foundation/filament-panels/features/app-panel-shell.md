@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # App Panel Shell (`/app`)
@@ -39,6 +39,18 @@ The tenant-facing Filament 5 shell every domain's resources plug into — Switch
 
 - Consumes: RBAC permissions (nav visibility), company branding, subscription status.
 - Feeds: the mount point for all `/app` domain UIs.
+
+## Test Checklist
+
+### Unit
+- [ ] `AppPanelProvider` registers `web` guard, CompanyScope, and the persistent auth-middleware chain
+
+### Feature (Pest)
+- [ ] Authenticated `User` reaches `/app`; `SetCompanyContext` runs on every request
+- [ ] Suspended company blocked by `EnsureSubscriptionActive`; setup-incomplete → wizard
+
+### Livewire
+- [ ] A Livewire table `$refresh` POST keeps tenant context (no null-team 403) — persistent middleware
 
 ## Unknowns
 

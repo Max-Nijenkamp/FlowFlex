@@ -18,6 +18,10 @@ Bugs, spec issues, and missing details discovered during build sessions.
 | [[gap-switchboard-expansion-spec-missing]] | low | All | frontend | §14–25 pages built in-system with *(assumed)* copy — regenerated design bundle never landed; diff + swap when it arrives | 2026-06-12 |
 | [[gap-bank-accounts-import-page-not-in-manifest]] | low | finance | finance.bank-accounts | ImportStatementPage in Filament Artifacts but absent from Build Manifest | 2026-07-03 |
 | [[gap-two-panel-matcher-ui-row-missing]] | low | finance | finance.bank-accounts | Bank-rec + payment-run are two-panel matchers with no ui-strategy row; cite #9* — needs ADR | 2026-07-03 |
+| [[gap-projects-estimated-hours-unit-mismatch]] | medium | projects | projects.tasks | estimated_hours decimal vs platform minutes-int convention — migrate or exempt via ADR | 2026-07-03 |
+| [[gap-canaccess-verb-not-in-permission-table]] | medium | All | communications.email-channel | canAccess() cites verbs missing from security.md permission tables (9 modules so far incl. crm) — needs vault-wide lint + ADR | 2026-07-03 |
+| [[gap-crm-contracts-renewals-page-not-in-manifest]] | low | crm | crm.contracts | Renewals queue page + renew verb declared but ContractRenewalsPage absent from Build Manifest | 2026-07-03 |
+| [[gap-crm-money-pii-conventions]] | medium | crm | crm.referral-program | Reward money in jsonb blob (not minor-unit int); lead phone lacks E.164 + encryption decision | 2026-07-03 |
 
 All 7 audit gaps resolved at spec level 2026-06-11 (see below). Code-level enforcement is carried into each module build via the Definition of Done. Full per-spec worklist: [[build/security-audit-2026-06-11]].
 

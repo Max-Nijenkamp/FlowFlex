@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Workload
@@ -14,13 +14,12 @@ Team capacity view showing each member's task load per day; identifies overloade
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `projects.workload` |
-| priority | p2 |
-| panel | projects |
-| permission-prefix | `projects.workload` |
-| tables | *(none — reads `proj_tasks` + capacity source)* |
+`projects.workload`
+
+**Priority:** p2  
+**Panel:** projects  
+**Permission prefix:** `projects.workload`  
+**Tables:** *(none — reads `proj_tasks` + capacity source)*
 
 ## Dependencies
 
@@ -56,7 +55,9 @@ tests/Feature/Projects/WorkloadTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot render or rebalance company B's tasks/capacity on the grid.
+- [ ] Module gating: artifacts hidden when `projects.workload` inactive.
+- [ ] Project-membership scoping: non-member cannot open the workload grid for a project.
 - [ ] Cell sums only `todo`/`in_progress` task hours on the due date.
 - [ ] Colour level boundaries at 80%/100% of capacity.
 - [ ] HR capacity used when active; 8h default otherwise.

@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Shared Inbox — Security
@@ -17,9 +17,12 @@ updated: 2026-06-20
 | `comms.inbox.view-any` | View conversations + messages |
 | `comms.inbox.reply` | Send outbound replies / internal notes |
 | `comms.inbox.assign` | Assign conversations to team members |
+| `comms.inbox.change-status` | Transition status open / pending / resolved *(assumed — status change had no explicit verb)* |
+| `comms.inbox.snooze` | Snooze / reopen a conversation *(assumed)* |
 | `comms.inbox.manage-channels` | Activate / deactivate channels |
 
-See [[../../../security/authn-authz]].
+**Verb-per-command:** `change-status` and `snooze` cover the `open ⇄ pending ⇄ resolved ⇄ snoozed` transitions
+in `InboxService::setStatus` / `snooze` ([[./architecture]] Services). Seeded in `PermissionSeeder`. See [[../../../security/authn-authz]].
 
 ## Access Contract
 
@@ -39,6 +42,7 @@ public static function canAccess(): bool
 ## Webhook & Rate Limiting (medium — [[../../../build/security-audit-2026-06-11]])
 
 - Inbound channel webhook controllers (in the channel modules) must be **signature-verified** and behind a **throttle / rate limiter** to protect the inbound pipeline from flooding.
+- **Outbound send** (`InboxService::send`, the `comms.inbox.reply` action) is external outbound comms — it carries the `panel-action` rate limiter ([[../../../architecture/security]]); the channel driver's own provider limits apply downstream.
 - Body content is HTML-purified (`ezyang/htmlpurifier`) before storage.
 
 ## Upload Contract (medium)

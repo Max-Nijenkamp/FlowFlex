@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Realtime Messaging
@@ -40,6 +40,21 @@ Live message delivery, presence, typing indicators, and unread counts via Reverb
 - Consumes: nothing.
 - Feeds: `InternalMessagePosted` Reverb broadcast (UI only); @mention → `core.notifications`.
 - Shared entity: none owned elsewhere (except `users`).
+
+## Test Checklist
+
+### Unit
+- [ ] Unread count derived from `last_read_at`; `MarkReadAction` clears it
+- [ ] Feed cursor pagination ordered on `(channel_id, created_at)`
+
+### Feature (Pest)
+- [ ] `InternalChatService::post` persists then broadcasts `InternalMessagePosted` on the channel's presence channel
+- [ ] Reverb channel auth rejects a non-member from the presence channel (`routes/channels.php`)
+- [ ] Message body purified before store; tenant isolation on the feed
+
+### Livewire
+- [ ] Typing whisper + optimistic append on send; focus channel marks read
+- [ ] Page denied without `comms.internal.use`
 
 ## Related
 

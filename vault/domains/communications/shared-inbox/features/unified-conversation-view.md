@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Unified Conversation View
@@ -41,6 +41,22 @@ The three-panel inbox: conversation list (all channels) → message thread → c
 - Consumes: channel drivers' normalised `InboundMessageData` (email/whatsapp/sms modules).
 - Feeds: `MessageReceived` Reverb broadcast (UI only, not a bus event).
 - Shared entity: `crm_contacts` (owned by CRM, read-only auto-link).
+
+## Test Checklist
+
+### Unit
+- [ ] Composer capabilities derive from the resolved `ChannelDriver::capabilities()` (WhatsApp shows template picker outside the 24h window)
+- [ ] List sort/filter: conversations ordered by `last_message_at`, filtered by status/assignee/channel
+
+### Feature (Pest)
+- [ ] Sending a reply routes through `InboxService::send` → correct driver and appends an outbound message
+- [ ] Internal note is stored but never dispatched to a driver
+- [ ] Tenant isolation: agent cannot open a conversation from another company (404/denied)
+
+### Livewire
+- [ ] Reply action denied without `comms.inbox.reply`; assign denied without `comms.inbox.assign`
+- [ ] Live arrival: `MessageReceived` broadcast appends a new message to the open thread
+- [ ] Empty state shows the "connect a channel" CTA when no channel is connected
 
 ## Related
 

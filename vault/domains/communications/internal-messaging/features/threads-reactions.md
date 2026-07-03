@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Threads, Reactions & Mentions
@@ -39,6 +39,20 @@ Threaded replies, emoji reactions, @mentions with notifications, and membership-
 - Consumes: user directory (RBAC).
 - Feeds: @mention → `core.notifications`.
 - Shared entity: `users` (RBAC, read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] `ToggleReactionAction` toggles `{emoji: [user_ids]}` in the `reactions` jsonb (add then remove)
+- [ ] @mention parsing extracts mentioned user ids from the body
+
+### Feature (Pest)
+- [ ] Concurrent reactions from two users on one message both persist (row lock — no lost jsonb update)
+- [ ] @mention fires a `core.notifications` notification (that module writes its own rows)
+- [ ] Search is post-filtered to the user's member channels — a non-member never sees a hit
+
+### Livewire
+- [ ] Reaction chip toggles; reply opens the thread pane; @autocomplete lists company users only
 
 ## Related
 

@@ -6,7 +6,7 @@ feature: ab-testing
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — A/B Testing
@@ -42,6 +42,20 @@ Per-step tracking (open/click/reply) is attributed per variant. `SequenceService
 - Consumes: `EmailTracked` / `EmailReplied` from [[../../email-integration/_module|crm.email]] → per-variant attribution
 - Feeds: variant-aware `SequenceStepMail` (send) via [[step-advancement|step-advancement]]
 - Shared entity: none (variant data owned here)
+
+## Test Checklist
+
+### Unit
+- [ ] Random split assigns a variant per A/B step into `variant_map`; the assignment stays stable for the enrolment's lifetime
+- [ ] `performance()` returns a per-variant open/click/reply breakdown
+
+### Feature (Pest)
+- [ ] `advanceDue()` reads `variant_map` and queues the assigned variant's `SequenceStepMail`
+- [ ] Invalid variant config rejected at save
+- [ ] Tenant isolation: variant stats aggregate only the company's own enrolments
+
+### Livewire
+- [ ] Two-variant editor on the email step saves both variants; results widget shows per-variant columns; gated on the sequence-manage permission
 
 ## Related
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Breach Monitoring
@@ -39,6 +39,22 @@ Live watch on SLA timers with warning-before-breach alerts and a compliance widg
 - Consumes: ticket status transitions (same-domain) drive met events.
 - Feeds: breach/warning notifications → core.notifications; compliance feeds [[../../support-analytics/_module|support.analytics]] SLA widget.
 - Shared entity: `sup_tickets` (read), company settings (read).
+
+## Test Checklist
+
+### Unit
+- [ ] Elapsed-minutes math excludes `waiting_on_customer` and (when flagged) out-of-business-hours windows, honouring company timezone
+- [ ] 80% threshold triggers `warning_sent`; past target triggers `*_breached`
+
+### Feature (Pest)
+- [ ] `CheckSlaTimersCommand` emits each of met / warning / breach at most once per ticket (unique `(ticket, type)` guard); 5-min reruns are idempotent
+- [ ] Breach notifies assignee + manager, warning notifies assignee, via `core.notifications` — no direct cross-domain write
+- [ ] Compliance report returns correct % over a fixture window
+- [ ] Tenant isolation: the command never crosses company boundaries
+
+### Livewire
+- [ ] `SlaMonitorPage` `canAccess()` denies without `support.sla.view` / inactive module
+- [ ] A ticket crossing a threshold recolours its row live (Reverb) and sorts by time-to-breach
 
 ## Unknowns
 

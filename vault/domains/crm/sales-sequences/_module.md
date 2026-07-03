@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Sales Sequences
@@ -16,13 +16,12 @@ Automated outreach sequences — multi-step email/call cadences for sales reps t
 
 ## Module-key
 
-```
-key:               crm.sequences
-priority:          v1
-panel:             crm
-permission-prefix: crm.sequences
-tables:            crm_sequences, crm_sequence_steps, crm_sequence_enrolments
-```
+`crm.sequences`
+
+**Priority:** v1  
+**Panel:** crm  
+**Permission prefix:** `crm.sequences`  
+**Tables:** `crm_sequences`, `crm_sequence_steps`, `crm_sequence_enrolments`
 
 ## Dependencies
 
@@ -77,7 +76,8 @@ tests/Feature/CRM/{SequenceAdvanceTest,SequenceTriggerTest,SequencePauseTest}.ph
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating enforced.
+- [ ] Tenant isolation: company A cannot see/advance company B enrolments
+- [ ] Module gating: artifacts hidden when `crm.sequences` inactive
 - [ ] Double enrolment rejected; re-enrol after completion allowed.
 - [ ] Advance executes email/task/wait steps in order with wait_days gaps.
 - [ ] Advance idempotent (run twice in window = one step).

@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # SMS Channel — Security
@@ -14,11 +14,11 @@ updated: 2026-06-20
 
 | Permission | Grants |
 |---|---|
-| `comms.sms.manage` | Connect provider, credentials, view opt-out list |
+| `comms.sms.view-any` | View SMS config + opt-out list (resource access) *(assumed — required by the `canAccess()` contract; previously only `manage` was listed)* |
+| `comms.sms.manage` | Connect provider, credentials, test-send |
 
-Messaging is gated by inbox permissions (`comms.inbox.reply`).
-
-See [[../../../security/authn-authz]].
+Messaging is gated by inbox permissions (`comms.inbox.reply`). Opt-outs are written by the STOP webhook via
+`OptOutService` (no user verb). Seeded in `PermissionSeeder`. See [[../../../security/authn-authz]].
 
 ## Access Contract
 
@@ -38,6 +38,7 @@ public static function canAccess(): bool
 
 - Inbound + status webhook **signature-verified**.
 - **Throttle / rate limiter** on `POST /webhooks/comms/sms`.
+- **Test-send** header action calls the provider API — it carries the `panel-action` rate limiter ([[../../../architecture/security]]); outbound sends via the inbox inherit its send throttle.
 
 ## Compliance — Opt-out
 

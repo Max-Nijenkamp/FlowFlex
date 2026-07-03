@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Automation Rules
@@ -40,6 +40,22 @@ Build event-triggered rules (conditions → actions) that fire on ticket lifecyc
 - Consumes: ticket lifecycle events (same-domain), SLA warning (soft), canned responses (soft).
 - Feeds: escalation notifications → core.notifications.
 - Shared entity: `sup_tickets` (read + mutate via service).
+
+## Test Checklist
+
+### Unit
+- [ ] Condition AND-match: a rule matches only when every condition passes (keyword / category / priority operators)
+- [ ] `stop_processing` on a matching rule halts evaluation of lower-ordered rules
+
+### Feature (Pest)
+- [ ] Rules evaluate in `order`; a matching rule executes its actions and writes a `sup_automation_logs` row
+- [ ] Each action type routes through `TicketService` (assign / set-priority / tag / escalate) — engine never writes `sup_tickets` directly
+- [ ] Loop guard: a rule-driven ticket update does not re-enter `AutomationEngine::evaluate`
+- [ ] Tenant isolation: a company-A rule never evaluates or acts on a company-B ticket
+
+### Livewire
+- [ ] Condition/action repeaters reject an unknown field / operator / action type (registry validation)
+- [ ] Reorder + active-toggle persist; resource denied without `support.automations.manage`
 
 ## Unknowns
 

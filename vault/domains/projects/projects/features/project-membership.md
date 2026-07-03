@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Membership & Visibility
@@ -38,6 +38,20 @@ Project members and their roles; membership gates who can see a project.
 
 - Consumes / Feeds: nothing (no events).
 - Shared entity: `users`.
+
+## Test Checklist
+
+### Unit
+- [ ] Role assignment restricted to `owner` / `member` / `viewer`; creator resolves to `owner`.
+- [ ] Unique `(project_id, user_id)` rule prevents duplicate membership rows.
+
+### Feature (Pest)
+- [ ] Member-scoped listing: a non-member without `projects.projects.view-any` cannot see or open the project.
+- [ ] Add/remove member and role change require `projects.projects.manage-members`.
+- [ ] Tenant isolation: company A cannot add/list company B's project members.
+
+### Livewire
+- [ ] Members relation manager hides its add/remove/role actions without `projects.projects.manage-members`.
 
 ## Unknowns
 

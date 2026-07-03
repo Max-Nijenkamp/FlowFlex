@@ -6,7 +6,7 @@ feature: lifecycle-stages
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Lifecycle Stages
@@ -68,3 +68,18 @@ Any transition is valid — no guard on direction. Stage value must be in the en
 - Consumes: `DealWon` (crm.deals) → may auto-advance to `customer`; `InvoicePaid` (finance.invoicing) → confirm `customer`. Both update this module's OWN `crm_contacts` via a listener.
 - Feeds: nothing fired specifically for stage change.
 - Shared entity: `crm_contacts` — FlowFlex has no separate Lead model; a "lead" is `lifecycle_stage = lead`, so this field is the funnel other domains read.
+
+## Test Checklist
+
+### Unit
+- [ ] `moveLifecycleStage` accepts any enum value in the set and rejects a value outside it
+- [ ] Any-direction move is allowed (no guard) — e.g. `customer` → `lead` succeeds
+
+### Feature (Pest)
+- [ ] `DealWon` / `InvoicePaid` listeners advance the OWN contact to `customer`; a null account is a no-op
+- [ ] Stage change writes only `crm_contacts` and is tenant-scoped — never touches another company's rows
+- [ ] Concurrent stage edit resolves via the `updated_at` stale-check (optimistic), surfacing a conflict on the losing write
+
+### Livewire
+- [ ] Inline quick-move select changes stage and requires `crm.contacts.update` / `crm.contacts.change-lifecycle`
+- [ ] Filter tabs (All / Leads / Opportunities / Customers) re-filter the table correctly

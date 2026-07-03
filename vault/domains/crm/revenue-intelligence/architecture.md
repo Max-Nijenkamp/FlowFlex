@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Revenue Intelligence — Architecture
@@ -30,15 +30,28 @@ None fired or consumed. Win/loss capture is same-domain (direct service call).
 
 ## Filament Artifacts
 
-Nav group: **Intelligence**.
+**Nav group:** Intelligence
 
-| # | Artifact | ui-strategy row | Notes |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| 1 | `DealHealthResource` | CRUD (read-only) | At-risk queue sorted by score, factor breakdown. |
-| 9 | `WinLossPage` | Report custom page | Apex charts: reasons, competitors, funnel. |
-| 6 | `RevenueIntelligenceDashboard` | Dashboard page | Velocity, conversion, health distribution. |
+| `DealHealthResource` | #1 CRUD resource | tweaks: read-only-flow-owned (scores written by the `DealHealthService` recalc job — `canCreate(): false`) | at-risk queue sorted by score, factor breakdown |
+| `WinLossPage` | #9 Report custom page | [[../../../architecture/patterns/page-blueprints#Report Builder / Query UI]] | apex charts: reasons, competitors, funnel; date-range filter |
+| `RevenueIntelligenceDashboard` | #6 Dashboard page | [[../../../architecture/patterns/page-blueprints#Dashboard]] | velocity, conversion, health distribution; widget polling 30–60s |
 
-**Access contract**: `canAccess()` = `can('crm.revenue-intelligence.view-any') && hasModule('crm.revenue-intelligence')`. See [[../../../architecture/filament-patterns]].
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('crm.revenue-intelligence.view-any') && BillingService::hasModule('crm.revenue-intelligence')`
+per [[../../../architecture/filament-patterns]] #1. `WinLossPage` and `RevenueIntelligenceDashboard` are custom pages
+and MUST state this explicitly — Filament does not auto-gate custom pages.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Deal-health recalc (`RecalculateDealHealthCommand`) | n-a | Derived scores — single nightly writer, idempotent per-deal upsert keyed by `deal_id`; no concurrent user edits |
+| Win/loss row on deal close (direct service call from `DealService`) | n-a | Append-only, one row per closed deal keyed by `deal_id`; single writer on the close path |
+| `DealHealthResource` / `WinLossPage` / dashboard | n-a | Read-only surfaces — no user writes |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

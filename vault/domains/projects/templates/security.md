@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Templates — Security
@@ -15,9 +15,12 @@ updated: 2026-06-20
 | Permission | Grants |
 |---|---|
 | `projects.templates.view-any` | View templates |
-| `projects.templates.create` | Create/edit templates + save-as-template |
+| `projects.templates.create` | Create templates + save-as-template + duplicate-to-edit a system template |
 | `projects.templates.update` | Edit company templates |
-| `projects.templates.instantiate` | Create a project from a template |
+| `projects.templates.delete` | Soft-delete a company template |
+| `projects.templates.instantiate` | Create a project from a template (the instantiate command verb) |
+
+Seeded in `PermissionSeeder`. **Instantiate**, **save-as-template**, and **duplicate-to-edit** each map to a verb above (`instantiate` / `create`). Instantiation creates records only (no comms, money, files, or external calls), so it needs no rate limiter; the target modules' own create rights are enforced inside their owning actions.
 
 ## Access Contract
 

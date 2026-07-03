@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Cost Tracking
@@ -35,6 +35,15 @@ Records the per-message SMS cost reported by the provider, so spend is visible (
 - Consumes: provider status callback.
 - Feeds: cost data read by [[../../comms-analytics/_module|comms.analytics]].
 - Shared entity: `comms_messages.meta` (owned by [[../../shared-inbox/_module|comms.inbox]]).
+
+## Test Checklist
+
+### Unit
+- [ ] Provider price parsed into `cost_cents` integer via `brick/money` (no float math)
+
+### Feature (Pest)
+- [ ] Delivery callback records `cost_cents` into the inbox-owned `comms_messages.meta`
+- [ ] Cost is read-only — no billing charge raised in this module; tenant-scoped read
 
 ## Related
 

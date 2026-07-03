@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Workload — Architecture
@@ -26,21 +26,26 @@ None.
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Projects
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `WorkloadPage` | Projects | #5-style heat-map custom page | Livewire + Alpine grid; drag-to-reassign; filters in header; polling 60s |
+| `WorkloadPage` | #18 Heat-map / matrix custom page | [[../../../architecture/patterns/page-blueprints#Heat-map / Matrix]] | Livewire + Alpine/CSS grid (members × days); colour by % capacity; drag-to-reassign; filters in header; polling 60s |
 
-### Access contract
+**Access contract (mandatory):** `WorkloadPage` gates on
+`canAccess() = Auth::user()->can('projects.workload.view') && BillingService::hasModule('projects.workload')`
+per [[../../../architecture/filament-patterns]] #1. It is a custom page and MUST state this explicitly — Filament
+does not auto-gate custom pages. Drag mutations additionally require `projects.tasks.update` (enforced inside
+`UpdateTaskAction`, which owns the write).
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('projects.workload.view')
-        && BillingService::hasModule('projects.workload');
-}
-```
+## Concurrency
 
-Drag mutations additionally require `projects.tasks.update`.
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Drag reassign / reschedule (via `UpdateTaskAction`) | Optimistic (delegated) | Delegates to projects.tasks `UpdateTaskAction` — `updated_at` stale-check on the task record; a rejected write reverts the cell and toasts ([[../../../architecture/patterns/optimistic-locking]]) |
+| Grid read (`WorkloadService::grid`) | n/a | Read-only derived view — Workload owns no tables and holds no writable state |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## No Tables
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Inbound Parsing
@@ -38,6 +38,17 @@ Incoming emails become shared-inbox conversations: verify â†’ resolve channel â†
 - Consumes: provider inbound webhook.
 - Feeds: `InboxService::handleInbound` (inbox owns the row).
 - Shared entity: `comms_messages`, `comms_conversations` (owned by [[../../shared-inbox/_module|comms.inbox]]).
+
+## Test Checklist
+
+### Unit
+- [ ] Parser maps HTML/plain + attachments + headers to `InboundMessageData`; HTML purified
+- [ ] Spam-score over threshold flags the mail for drop
+
+### Feature (Pest)
+- [ ] Signed webhook with a known `inbound_token` resolves the channel and calls `InboxService::handleInbound`
+- [ ] Unknown token is dropped (no message written); bad signature fails closed
+- [ ] Tenant isolation: token resolves to its own company; mail never lands in another company's inbox
 
 ## Related
 

@@ -61,16 +61,32 @@ Consumer: `support.analytics` `SendCsatSurveyListener` (v1); marketing CSAT (P3)
 
 **Nav group:** Tickets
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `TicketResource` | #1 CRUD resource | tweaks: state-badge-column, custom-header-actions (resolve / assign / merge) | filters: status/priority/assignee/category |
+| `TicketInboxPage` | #8 inbox custom page | [[../../../architecture/patterns/page-blueprints#Inbox / Chat / Conversation]] | three-panel email-client layout; Reverb broadcast for new tickets/replies (collaborative queue) |
+| `TicketStatsWidget` | #6 dashboard widget | [[../../../architecture/patterns/page-blueprints#Dashboard]] | open, SLA-breach, avg first response; polling 30–60s |
+| `TicketCategoryResource` | #1 CRUD resource | (base resource — no non-CRUD tweaks) | default assignee + SLA policy per category |
+
+Public ticket form: Vue + Inertia `/support/new` *(assumed: optional embed)* — ui-strategy row #16 (guest/scoped guard, not a Filament artifact).
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('support.tickets.view-any') && BillingService::hasModule('support.tickets')`
+per [[../../../architecture/filament-patterns]] #1. `TicketInboxPage` is a custom page and MUST state this explicitly — Filament does not auto-gate custom pages. The optional public ticket form (`/support/new`) is Vue+Inertia per [[../../../architecture/ui-strategy]] under a guest/scoped-portal guard and rate limiter, not a Filament artifact.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
 |---|---|---|
-| `TicketResource` | #1 CRUD resource | filters: status/priority/assignee/category |
-| `TicketInboxPage` | #8 inbox custom page | three-panel email-client layout; Reverb broadcast for new tickets/replies (collaborative queue) |
-| `TicketStatsWidget` | #6 widget | open, SLA-breach, avg first response |
-| `TicketCategoryResource` | #1 CRUD resource | default assignee + SLA policy per category |
+| Ticket CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Category CRUD | Optimistic | `updated_at` stale-check ([[../../../architecture/patterns/optimistic-locking]]) |
+| Status transition (resolve / close / reopen / waiting-toggle) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read, validate, write per [[../../../architecture/patterns/states]] |
+| Merge (reassign replies, close source) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on both tickets, re-read open-ish guard, then reassign replies + stamp `merged_into_id` |
+| Reply append (public / internal note / inbound) | n/a | append-only insert into `sup_ticket_replies` — no in-place mutation of an existing row; `first_response_at` stamp guarded once |
 
-Public ticket form: Vue + Inertia `/support/new` *(assumed: optional embed)* — ui-strategy row #16.
-
-**Access contract:** every artifact gates on `canAccess() = Auth::user()->can('support.tickets.view-any') && BillingService::hasModule('support.tickets')` per [[../../../architecture/filament-patterns]] #1 — custom pages state it explicitly. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[../../../architecture/ui-strategy]]).
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

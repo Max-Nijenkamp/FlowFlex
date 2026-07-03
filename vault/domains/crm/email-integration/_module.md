@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # CRM Email Integration
@@ -16,13 +16,12 @@ Planned bi-directional email sync with Gmail/Outlook. Emails are auto-linked to 
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `crm.email` |
-| priority | v1 |
-| panel | crm |
-| permission-prefix | `crm.email` |
-| tables | `crm_email_connections`, `crm_emails` |
+`crm.email`
+
+**Priority:** v1  
+**Panel:** crm  
+**Permission prefix:** `crm.email`  
+**Tables:** `crm_email_connections`, `crm_emails`
 
 ## Dependencies
 
@@ -72,7 +71,8 @@ tests/Feature/CRM/{EmailSyncTest,EmailVisibilityTest,EmailTrackingTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot see or sync company B's mailboxes/emails
+- [ ] Module gating: artifacts hidden when `crm.email` inactive
 - [ ] OAuth tokens stored as ciphertext in DB; disconnect revokes.
 - [ ] Sync dedupes on `message_id` (run twice = no duplicates).
 - [ ] Inbound matched to contact by address; unmatched stored unlinked *(assumed)*.

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Price Management — Architecture
@@ -36,17 +36,31 @@ None fired, none consumed.
 
 ## Filament Artifacts
 
-Nav group: **Settings**.
+**Nav group:** Settings
 
-| Artifact | ui-strategy row | Purpose |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `ProductResource` | #1 CRUD resource | tweaks: inline-relation-repeater (volume-discount tiers relation manager) | catalogue with an active toggle; unique SKU per company; `cost_cents` role-restricted |
+| `PriceBookResource` | #1 CRUD resource | tweaks: inline-relation-repeater (price-book entries with promo `valid_from`/`valid_until` windows) | price books; single-default invariant per company |
+| `VolumeDiscountResource` | #1 CRUD resource | standard resource (also usable as a relation manager on `ProductResource`) | volume tiers `(min_quantity, discount_percent)` |
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('crm.pricing.view-any') && BillingService::hasModule('crm.pricing')`
+per [[../../../architecture/filament-patterns]] #1. There are no custom pages or public/portal surfaces. Cost and
+margin data is company-confidential — `manage-price-books` is role-restricted so `cost_cents` is not exposed to
+line reps (see [[./security]]).
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
 |---|---|---|
-| `ProductResource` | #1 CRUD | Catalogue with an active toggle. |
-| `PriceBookResource` | #1 CRUD | Price books; entries relation manager with promo windows. |
-| `VolumeDiscountResource` | #1 CRUD | Volume tiers (standalone or as a relation manager on Product). |
+| Product CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Price book / entry CRUD (money — `price_cents`) | Optimistic | `updated_at` stale-check — price config is ordinary CRUD, not a money mutation ([[../../../architecture/patterns/optimistic-locking]]) |
+| Volume discount tier CRUD | Optimistic | `updated_at` stale-check ([[../../../architecture/patterns/optimistic-locking]]) |
+| Price-book assignment (`AssignPriceBookAction`) | Optimistic | `updated_at` stale-check on the assignment row ([[../../../architecture/patterns/optimistic-locking]]) |
+| CPQ resolution (`PricingService::resolve`) | n-a | read-only compute over own price tables — returns a DTO, writes no rows |
 
-Follows [[../../../architecture/ui-strategy]] and [[../../../architecture/filament-patterns]].
-
-**Access contract:** `canAccess()` = `can('crm.pricing.view-any') && hasModule('crm.pricing')`.
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

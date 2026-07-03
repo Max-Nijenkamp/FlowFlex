@@ -6,7 +6,7 @@ feature: calendar-sync
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Calendar Sync
@@ -68,3 +68,14 @@ erDiagram
 - Consumes: calendar OAuth grant from a core/integrations provider *(assumed)* → stores encrypted token
 - Feeds: pushes confirmed booking `.ics` details into the external calendar (external system, not a domain event)
 - Shared entity: rep/user identity (foundation)
+
+## Test Checklist
+
+### Unit
+- [ ] `calendar_connection` round-trips through the `encrypted` cast (never persisted in plaintext)
+- [ ] `slots()` subtracts external busy times in addition to working hours, buffers, and existing bookings
+
+### Feature (Pest)
+- [ ] Absent connection degrades gracefully to working-hours-only availability (v1 behaviour)
+- [ ] A confirmed booking is pushed to the connected external calendar; a connection/token-refresh failure surfaces on `AvailabilityPage` without breaking booking
+- [ ] Outbound provider calls respect the named rate limiter / backoff and stay tenant-scoped to the connecting rep

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Broadcast — Architecture
@@ -39,20 +39,28 @@ None fired or consumed. Sending goes through channel drivers; audiences via read
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy row | Notes |
+**Nav group:** Broadcast
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `BroadcastResource` | Broadcast | #1 CRUD resource | audience builder + composer + preview; delivery funnel on the view page. |
-| `BroadcastStatsWidget` | Broadcast | #6 widget | funnel per broadcast. |
+| `BroadcastResource` | #1 CRUD resource | tweaks: view-page-tabs (compose / preview / funnel), state-badge-column (broadcast state), custom-header-actions (send / schedule) | audience builder + composer + preview; delivery funnel on the view page |
+| `BroadcastStatsWidget` | #6 dashboard widget | [[../../../architecture/patterns/page-blueprints#Dashboard]] | funnel per broadcast; polling 30–60s |
 
-### Access contract
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('comms.broadcast.view-any') && BillingService::hasModule('comms.broadcast')`
+per [[../../../architecture/filament-patterns]] #1. The send / schedule header actions additionally require
+`comms.broadcast.send`; create/edit require `comms.broadcast.create` ([[./security]]). Both are standard
+Filament artifacts (auto-gated); no custom page.
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('comms.broadcast.view-any')
-        && BillingService::hasModule('comms.broadcast');
-}
-```
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Broadcast draft CRUD (compose, audience, schedule time) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| State transition (`draft → scheduled → sending → sent / failed`) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read, validate, write per [[../../../architecture/patterns/states]] — the `scheduled → sending` claim guarantees a single dispatch |
+| Recipient batch send (per-recipient status) | Pessimistic | each recipient row claimed `pending → sending` under `lockForUpdate` so a mid-send resume never double-sends |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Time Tracking
@@ -14,13 +14,12 @@ Log time against tasks and projects — manual entry or timer-based. Feeds proje
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `projects.time` |
-| priority | p2 |
-| panel | projects |
-| permission-prefix | `projects.time` |
-| tables | `proj_time_entries` |
+`projects.time`
+
+**Priority:** p2  
+**Panel:** projects  
+**Permission prefix:** `projects.time`  
+**Tables:** `proj_time_entries`
 
 ## Dependencies
 
@@ -62,7 +61,9 @@ tests/Feature/Projects/{TimeTrackingTest,TimerTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating + own-data scoping.
+- [ ] Tenant isolation: company A cannot see/log/approve company B's time entries.
+- [ ] Module gating: artifacts hidden when `projects.time` inactive.
+- [ ] Own-data scoping: without `view-any`, a user sees/logs only their own entries.
 - [ ] Second concurrent timer rejected.
 - [ ] Stop timer computes minutes correctly.
 - [ ] Future-dated entry rejected.

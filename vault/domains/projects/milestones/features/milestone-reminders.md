@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Overdue & Reminders
@@ -37,6 +37,17 @@ Scheduled milestone status maintenance and 7-day reminders.
 - Consumes: nothing.
 - Feeds: `NotificationService::notify` → core.notifications delivers the reminder.
 - Shared entity: `users` (owners).
+
+## Test Checklist
+
+### Unit
+- [ ] Reminder window predicate: only milestones exactly 7 days from `target_date` and still `open` are selected.
+- [ ] Overdue predicate: `open` milestone past `target_date` flips to `missed`.
+
+### Feature (Pest)
+- [ ] `MilestoneStatusCommand` flips overdue `open` milestones to `missed` and leaves `achieved` ones untouched.
+- [ ] 7-day reminder sends once via `NotificationService`; a second run does not re-send (`reminded_at` once-guard).
+- [ ] Command runs per company under `WithCompanyContext` — company A's job never touches company B's milestones (tenant isolation).
 
 ## Unknowns
 

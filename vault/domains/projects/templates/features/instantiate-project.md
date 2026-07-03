@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Instantiate from Template
@@ -39,6 +39,20 @@ A wizard that materialises a full project (sections, tasks, milestones) from a t
 - Consumes: nothing.
 - Feeds: creates real records via projects.projects / projects.tasks / projects.milestones actions.
 - Shared entity: `proj_projects`, `proj_tasks`, `proj_milestones` (owned by their modules).
+
+## Test Checklist
+
+### Unit
+- [ ] Due-date computation = `start_date + day_offset` per task and milestone (calendar days v1).
+
+### Feature (Pest)
+- [ ] Instantiate creates project + sections + tasks + milestones with correct offsets, delegating to the owning-module actions (never a direct cross-table write).
+- [ ] Instantiation is atomic: a mid-way failure rolls back the whole set (nothing persisted).
+- [ ] Requires `projects.templates.instantiate`; a system template instantiates without cross-tenant leakage.
+
+### Livewire
+- [ ] `CreateProjectFromTemplatePage` denied without `projects.templates.view-any` / `.instantiate`; hidden when `projects.templates` inactive.
+- [ ] Wizard preview shows computed due dates live from the chosen start date; confirm deep-links to the new project.
 
 ## Unknowns
 

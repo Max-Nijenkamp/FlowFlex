@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Kanban Board
@@ -38,6 +38,22 @@ Visual pipeline board — one column per stage, deal cards dragged between stage
 - Consumes: nothing.
 - Feeds: `DealStageChanged` (ShouldBroadcast) → consumed by other viewers' boards ([[realtime-sync]]).
 - Shared entity: `crm_deals` owned by crm.deals; the board is a read+command view over them.
+
+## Test Checklist
+
+### Unit
+- [ ] `BoardData` groups deals under the correct stage and computes weighted totals per stage via brick/money
+- [ ] Days-in-stage derived from `stage_entered_at`
+
+### Feature (Pest)
+- [ ] `PipelineService::board` loads deals + stages in one query (no N+1) scoped to the acting company
+- [ ] Drag move delegates to `DealService::moveToStage`; a closed-deal move is rejected through that path
+- [ ] Board filters (owner / value range / tag) restrict cards; no cross-tenant deals or stages appear
+
+### Livewire
+- [ ] `PipelineBoardPage` denies `canAccess` without `crm.pipeline.view` + active module
+- [ ] Dragging a card issues the move; on rejection the card snaps back (server re-render)
+- [ ] Quick-add deal from a column header creates the deal in that stage
 
 ## Related
 

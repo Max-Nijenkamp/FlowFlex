@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: planned
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Projects
@@ -14,13 +14,12 @@ Project records with goals, ownership, status, team members, and budget tracking
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `projects.projects` |
-| priority | p2 |
-| panel | projects |
-| permission-prefix | `projects.projects` |
-| tables | `proj_projects`, `proj_project_members` |
+`projects.projects`
+
+**Priority:** p2  
+**Panel:** projects  
+**Permission prefix:** `projects.projects`  
+**Tables:** `proj_projects`, `proj_project_members`
 
 ## Dependencies
 
@@ -62,7 +61,8 @@ tests/Feature/Projects/{ProjectTest,ProjectVisibilityTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot see/edit company B's projects or members.
+- [ ] Module gating: artifacts hidden when `projects.projects` inactive.
 - [ ] Non-member cannot see project without `view-any`.
 - [ ] Health math fixtures (on-track / at-risk / off-track boundaries).
 - [ ] Target before start rejected.

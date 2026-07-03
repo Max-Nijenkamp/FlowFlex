@@ -6,7 +6,7 @@ feature: enrolment-triggers
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Enrolment Triggers
@@ -55,6 +55,17 @@ Both listeners `implements ShouldQueue` + `WithCompanyContext`. If no sequence m
 - Consumes: `DealWon` from crm.deals/finance, `InvoicePaid` from finance, `SegmentEntered` *(assumed)* from [[../../customer-segments/_module|crm.segments]], `DealStageChanged` *(assumed)* → enrol
 - Feeds: enrolment created → picked up by [[step-advancement|step-advancement]]
 - Shared entity: contacts; deals; segments (audiences owned by customer-segments)
+
+## Test Checklist
+
+### Unit
+- [ ] `trigger_type` / `trigger_config` resolves the right enrolment source (manual / stage-change / segment-entry / deal-won / invoice-paid)
+- [ ] A second active enrolment per (contact, sequence) rejected; re-enrol allowed after completion
+
+### Feature (Pest)
+- [ ] `DealWon` → `EnrollInSuccessSequenceListener` enrols account contacts into `deal-won` sequences; no match = no-op
+- [ ] `InvoicePaid` → `TriggerUpsellSequenceListener` enrols per `invoice-paid` rules; listeners run `ShouldQueue` + `WithCompanyContext` (correct tenant)
+- [ ] Manual enrol requires `crm.sequences.enrol`
 
 ## Related
 

@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Shared Inbox
@@ -14,13 +14,12 @@ Unified team inbox aggregating email, WhatsApp, SMS (Instagram/Facebook later *(
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `comms.inbox` |
-| priority | p2 |
-| panel | comms |
-| permission-prefix | `comms.inbox` |
-| tables | `comms_channels`, `comms_conversations`, `comms_messages` |
+`comms.inbox`
+
+**Priority:** p2  
+**Panel:** comms  
+**Permission prefix:** `comms.inbox`  
+**Tables:** `comms_channels`, `comms_conversations`, `comms_messages`
 
 ## Dependencies
 
@@ -79,7 +78,8 @@ tests/Feature/Comms/{InboxThreadingTest,InboxSendTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot see/reply/assign company B conversations; inbound webhook resolves company from the channel before writing.
+- [ ] Module gating: inbox page + channel resource hidden when `comms.inbox` inactive.
 - [ ] Inbound threads onto existing open conversation per `(channel, party)`; new otherwise.
 - [ ] `external_id` dedupe (webhook retry = one message).
 - [ ] Internal note never sent through driver.
