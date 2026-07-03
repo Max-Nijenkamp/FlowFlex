@@ -17,8 +17,6 @@ Bugs, spec issues, and missing details discovered during build sessions.
 |---|---|---|---|---|---|
 | [[gap-filament5-plugins-unavailable]] | low | foundation | foundation.scaffold | 2 of 4 Filament plugins still lack v5 (fullcalendar, tiptap — needed Phase 2+); shield + activitylog resolved via custom resources in core.rbac/core.audit | 2026-06-11 |
 | [[gap-switchboard-expansion-spec-missing]] | low | All | frontend | §14–25 pages built in-system with *(assumed)* copy — regenerated design bundle never landed; diff + swap when it arrives | 2026-06-12 |
-| [[gap-bank-accounts-import-page-not-in-manifest]] | low | finance | finance.bank-accounts | ImportStatementPage in Filament Artifacts but absent from Build Manifest | 2026-07-03 |
-| [[gap-crm-contracts-renewals-page-not-in-manifest]] | low | crm | crm.contracts | Renewals queue page + renew verb declared but ContractRenewalsPage absent from Build Manifest | 2026-07-03 |
 | [[gap-feature-marketing-subscriber-import]] | medium | marketing | marketing.campaigns | No `core.data-import` importer for a marketing subscriber list — blocks the migrate-off-Mailchimp on-ramp (audiences only come from CRM segments) | 2026-07-03 |
 | [[gap-feature-events-attendee-import]] | medium | events | events.registrations | Attendee export specced but no bulk attendee/guest-list import — organizers expect roster upload + bulk QR ticketing | 2026-07-03 |
 | [[gap-feature-projects-task-import-export]] | medium | projects | projects.tasks | No task CSV/Excel import or export — blocks migrate-off-Asana/Monday on-ramp; only time/gantt export exists | 2026-07-03 |

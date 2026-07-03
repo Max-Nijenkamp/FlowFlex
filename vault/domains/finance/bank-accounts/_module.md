@@ -91,8 +91,10 @@ app/Services/Finance/BankService.php
 app/Exceptions/Finance/AmountMismatchException.php
 app/Jobs/Finance/ImportBankStatementJob.php
 app/Filament/Finance/Resources/{BankAccountResource,BankTransactionResource}.php
+app/Filament/Finance/Pages/ImportStatementPage.php
+resources/views/filament/finance/pages/import-statement-page.blade.php
 database/factories/Finance/{BankAccountFactory,BankTransactionFactory}.php
-tests/Feature/Finance/{BankImportTest,ReconciliationTest,BankEncryptionTest}.php
+tests/Feature/Finance/{BankImportTest,ReconciliationTest,BankEncryptionTest,ImportStatementPageTest}.php
 ```
 
 ## Cross-Domain Edges

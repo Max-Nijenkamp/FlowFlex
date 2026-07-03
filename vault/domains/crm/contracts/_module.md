@@ -59,9 +59,11 @@ app/Data/CRM/{CreateContractData,TerminateContractData,ContractData}.php
 app/Services/CRM/ContractService.php
 app/Console/Commands/CRM/ContractLifecycleCommand.php
 app/Filament/CRM/Resources/ContractResource.php
+app/Filament/CRM/Pages/ContractRenewalsPage.php
+resources/views/filament/crm/pages/contract-renewals-page.blade.php
 app/Filament/CRM/Widgets/ContractRenewalWidget.php
 database/factories/CRM/ContractFactory.php
-tests/Feature/CRM/{ContractLifecycleTest,ContractRenewalTest}.php
+tests/Feature/CRM/{ContractLifecycleTest,ContractRenewalTest,ContractRenewalsPageTest}.php
 ```
 
 ## Test Checklist
