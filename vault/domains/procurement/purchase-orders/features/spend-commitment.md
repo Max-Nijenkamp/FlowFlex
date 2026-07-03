@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Spend Commitment Tracking
@@ -38,6 +38,18 @@ Track committed spend (sent, not-yet-received PO totals) vs actual (received), s
 
 - Consumes: PO + receipt data (Operations).
 - Feeds: committed vs actual → [[../../spend-analytics/features/committed-vs-actual|spend analytics]]; budget-vs-actual (finance, read).
+
+## Test Checklist
+
+### Unit
+- [ ] Committed = sent, not-yet-received PO totals; actual = received; brick/money sums
+
+### Feature (Pest)
+- [ ] Report reads `ops_purchase_orders` read-only; receipt updates shift committed -> actual
+- [ ] Tenant isolation on commitment figures
+
+### Livewire
+- [ ] Commitment view renders per budget holder; hidden without permission/module
 
 ## Unknowns
 

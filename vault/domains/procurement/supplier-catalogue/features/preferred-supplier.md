@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Preferred Supplier per Category
@@ -37,6 +37,19 @@ Mark one preferred supplier per category so requisitioners are nudged toward neg
 ## Relations
 
 - Feeds: preferred ranking → requisition picker; "off-preferred" → spend maverick detection.
+
+## Test Checklist
+
+### Unit
+- [ ] One preferred supplier per category -- setting a new one unsets the prior
+
+### Feature (Pest)
+- [ ] Raced preferred toggles converge to exactly one per category (transactional unset+set)
+- [ ] Picker nudges preferred items first *(assumed ordering)*
+- [ ] Tenant isolation on preferences
+
+### Livewire
+- [ ] Preferred toggle renders per category; gated by the catalogue permission
 
 ## Unknowns
 

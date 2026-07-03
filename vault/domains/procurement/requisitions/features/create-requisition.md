@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Create Requisition
@@ -38,6 +38,18 @@ An employee raises a purchase request: line items, justification, department, op
 
 - Feeds: on submit → [[approval-flow]]; on approve → `RequisitionApproved` event.
 - Shared entity: catalogue items (procurement.catalogue), budget lines (finance), departments (HR).
+
+## Test Checklist
+
+### Unit
+- [ ] `CreateRequisitionData` validation: items required, `estimated_cost_cents = sum(items)` integer cents, justification required *(per spec)*
+
+### Feature (Pest)
+- [ ] Draft creation + edit permission-gated and company-scoped; submit moves into the approval flow
+- [ ] Tenant isolation on requisitions
+
+### Livewire
+- [ ] `RequisitionResource` create form validates items repeater + department; draft editable, submitted locked
 
 ## Unknowns
 

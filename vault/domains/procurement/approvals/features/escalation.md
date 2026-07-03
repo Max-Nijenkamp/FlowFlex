@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # SLA Escalation
@@ -37,6 +37,18 @@ Approvals not actioned within `escalation_days` auto-escalate: notify the next l
 
 - Consumes: pending-approval state exposed by [[../../requisitions/_module|requisitions]] / [[../../purchase-orders/_module|POs]].
 - Feeds: notification events → `core.notifications`.
+
+## Test Checklist
+
+### Unit
+- [ ] Staleness: pending action older than `escalation_days` flagged; notify next level + approver's manager
+
+### Feature (Pest)
+- [ ] `EscalateStaleApprovalsCommand` notifies once per stale approval (guard flag); never writes consumer tables
+- [ ] Tenant isolation: scans per company
+
+### Livewire
+- (none -- scheduled command)
 
 ## Unknowns
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Create PO from Requisition
@@ -38,6 +38,19 @@ The entry point for the procurement PO layer: an approved requisition's convert 
 
 - Consumes: `createFromRequisition` result from Operations; requisition link from [[../../requisitions/_module|requisitions]].
 - Feeds: PO into [[sourcing]] → [[po-approval]].
+
+## Test Checklist
+
+### Unit
+- [ ] Conversion payload maps requisition items -> PO lines (integer cents)
+
+### Feature (Pest)
+- [ ] `createFromRequisition` delegates PO creation to Operations' service; procurement layer stores only decoration rows
+- [ ] Raced conversions of one requisition yield one PO (locked transition upstream)
+- [ ] Tenant isolation on the conversion path
+
+### Livewire
+- [ ] Convert action visible on approved requisitions only
 
 ## Unknowns
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Payment Gate
@@ -37,6 +37,18 @@ Block a PO-linked supplier bill from being approved/paid until its 3-way match i
 
 - Consumes: bill approval attempt from [[../../finance/accounts-payable/_module|finance.ap]].
 - Feeds: `MatchFailedException` + `ThreeWayMatchResolved` back to Finance.
+
+## Test Checklist
+
+### Unit
+- [ ] Gate hook raises `MatchFailedException` when match missing or not approved_for_payment
+
+### Feature (Pest)
+- [ ] `ApService::approveBill` on a PO-linked bill blocks until matched/overridden; non-PO bills unaffected
+- [ ] Gate reads match state only -- writes nothing to AP tables
+
+### Livewire
+- (none -- service-layer hook; AP UI surfaces the error message)
 
 ## Unknowns
 

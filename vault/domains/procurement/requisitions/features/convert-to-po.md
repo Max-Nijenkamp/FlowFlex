@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Convert to Purchase Order
@@ -40,6 +40,19 @@ An approved requisition becomes a purchase order in Operations. This module only
 
 - Feeds: `PurchaseOrderService::createFromRequisition` (Operations) creates the PO; procurement's [[../../purchase-orders/_module|PO layer]] then adds sourcing/approval.
 - Consumes: PO id returned by Operations.
+
+## Test Checklist
+
+### Unit
+- [ ] Conversion allowed from `approved` only
+
+### Feature (Pest)
+- [ ] Convert delegates to Operations and records `po_id` on its own row once (locked transition to converted_to_po)
+- [ ] `operations.purchase-orders` inactive -> requisition ends at approved, convert hidden
+- [ ] Tenant isolation on conversion
+
+### Livewire
+- [ ] Convert action gated + visible on approved rows only; resulting PO linked
 
 ## Unknowns
 

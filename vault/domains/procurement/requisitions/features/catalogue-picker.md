@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Catalogue Picker
@@ -38,6 +38,19 @@ Punch-out-style selection: pick approved catalogue items straight into a requisi
 
 - Consumes: catalogue items + supplier status from [[../../supplier-catalogue/_module|procurement.catalogue]].
 - Feeds: nothing.
+
+## Test Checklist
+
+### Unit
+- [ ] Picker pre-fills name, supplier, agreed price from the catalogue item
+
+### Feature (Pest)
+- [ ] Picker lists only eligible items (server-side filter: active + in-window + approved supplier); blacklisted supplier's items absent
+- [ ] `procurement.catalogue` inactive -> free-text items only, no error
+- [ ] Tenant isolation on the picker query
+
+### Livewire
+- [ ] Items repeater integrates the picker; manual override of price allowed *(assumed)* and flagged for savings tracking
 
 ## Unknowns
 

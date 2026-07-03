@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # 3-Way Match Evaluation
@@ -39,6 +39,19 @@ Compare PO, GRN, and supplier bill for a purchase; auto-approve clean matches, f
 
 - Consumes: PO/GRN/bill from Operations + Finance.
 - Feeds: match verdict → [[payment-gate]] + [[discrepancy-resolution]].
+
+## Test Checklist
+
+### Unit
+- [ ] Variance = bill - (GRN accepted qty x PO price) via brick/money integers; tolerance +/-2% or EUR 10 *(assumed)* classifies matched vs flagged
+- [ ] Qty vs amount discrepancy classification
+
+### Feature (Pest)
+- [ ] Match row auto-created once per `(po, grn, bill)` triple when all three exist; within tolerance -> `approved_for_payment = true`
+- [ ] Tenant isolation: matches per company
+
+### Livewire
+- [ ] `ThreeWayMatchResource` filter tabs (matched/flagged) render; read-heavy rows uneditable
 
 ## Unknowns
 

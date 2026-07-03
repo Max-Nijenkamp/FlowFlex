@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Discrepancy Resolution
@@ -39,6 +39,18 @@ Human workflow to clear a flagged match: override-approve (pay despite variance)
 
 - Consumes: match state from [[match-evaluation]].
 - Feeds: `ThreeWayMatchResolved` → finance AP (release/hold).
+
+## Test Checklist
+
+### Unit
+- [ ] Resolution requires notes; override flips `approved_for_payment`, reject does not
+
+### Feature (Pest)
+- [ ] Override is permission-gated (dedicated verb) + audited + fires `ThreeWayMatchResolved` once under race (locked row)
+- [ ] Tenant isolation: resolving another company's match rejected
+
+### Livewire
+- [ ] Resolve actions on flagged rows only; notes required in the modal; hidden without the override permission
 
 ## Unknowns
 

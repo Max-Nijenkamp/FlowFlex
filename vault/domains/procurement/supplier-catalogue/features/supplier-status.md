@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Supplier Status (Approval & Blacklist)
@@ -39,6 +39,18 @@ Per-supplier approval state: approved / pending / blacklisted. Blacklisted suppl
 
 - Feeds: `SupplierGate::isBlocked` → [[../../requisitions/features/catalogue-picker|requisition picker]], [[../../purchase-orders/features/sourcing|PO sourcing]]; status → spend "non-approved supplier" maverick detection.
 - Shared entity: suppliers (operations).
+
+## Test Checklist
+
+### Unit
+- [ ] `SupplierGate::isBlocked` true only for blacklisted; status enum approved/pending/blacklisted
+
+### Feature (Pest)
+- [ ] Blacklisting blocks requisition picker, sourcing, and PO supplier selection through the single gate chokepoint
+- [ ] Status flip audited + locked (no half-flipped reads); tenant isolation enforced
+
+### Livewire
+- [ ] `SupplierStatusResource` status actions gated + confirm; badge renders state
 
 ## Unknowns
 

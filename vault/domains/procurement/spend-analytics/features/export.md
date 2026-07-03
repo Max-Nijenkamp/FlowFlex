@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Spend Report Export
@@ -37,6 +37,18 @@ Export the current spend view to xlsx/pdf for sharing with finance/leadership.
 
 - Consumes: `SpendAnalyticsService::metrics`.
 - Feeds: nothing.
+
+## Test Checklist
+
+### Unit
+- [ ] Export payload mirrors the current dashboard view (range + filters)
+
+### Feature (Pest)
+- [ ] xlsx/pdf export rate-limited (`exports` limiter) and permission-gated
+- [ ] Tenant isolation: export contains own-company data only
+
+### Livewire
+- [ ] Export action on the dashboard header; over-limit surfaces a clear message
 
 ## Unknowns
 

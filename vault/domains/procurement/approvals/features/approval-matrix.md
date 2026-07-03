@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Approval Matrix & Routing
@@ -39,6 +39,19 @@ The authority matrix: rules mapping `(applies_to, category, amount range, level)
 
 - Feeds: `ApprovalMatrix::chainFor` consumed by [[../../requisitions/_module|requisitions]] + [[../../purchase-orders/_module|procurement POs]] (synchronous read).
 - Shared entity: RBAC roles (owned by core.rbac).
+
+## Test Checklist
+
+### Unit
+- [ ] `chainFor(type, amount, category)`: overlapping rules resolve by level order; no matching rule -> defined fallback
+- [ ] Amount-range boundaries inclusive/exclusive per spec
+
+### Feature (Pest)
+- [ ] Rule CRUD company-scoped + permission-gated; chain reflects rules at call time
+- [ ] Tenant isolation: rules never leak across companies
+
+### Livewire
+- [ ] `ApprovalRuleResource` validates range overlaps *(assumed warning)*; hidden without `procurement.approvals` permission/module
 
 ## Unknowns
 

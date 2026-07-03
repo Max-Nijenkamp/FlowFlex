@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Approver Delegation
@@ -39,6 +39,19 @@ An approver going away delegates their approval authority to a colleague for a d
 
 - Feeds: `ApprovalMatrix::resolveApprover` consulted by requisitions/PO approval acts.
 - Shared entity: users (core).
+
+## Test Checklist
+
+### Unit
+- [ ] Delegation active iff today within date range; resolved at act time, not chain-build time
+
+### Feature (Pest)
+- [ ] Delegation added after submission still routes the act to the delegate
+- [ ] Self-delegation and overlapping duplicate delegation rejected *(assumed)*
+- [ ] Tenant isolation on delegations
+
+### Livewire
+- [ ] Delegation form validates range + delegate; hidden without permission/module
 
 ## Unknowns
 

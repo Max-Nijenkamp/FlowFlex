@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Spend Breakdown
@@ -38,6 +38,18 @@ Total spend sliced by supplier, category, and department, with a trend over time
 
 - Consumes: requisition + Operations PO data.
 - Feeds: nothing.
+
+## Test Checklist
+
+### Unit
+- [ ] Slices by supplier/category/department + trend series; brick/money sums; top-suppliers ranking
+
+### Feature (Pest)
+- [ ] Cache key `(company, from, to)`; historical 1h vs current 15min TTL
+- [ ] Tenant isolation on every slice
+
+### Livewire
+- [ ] `SpendAnalyticsDashboard` canAccess() explicit; date filter re-scopes; `SpendBySupplierWidget` renders
 
 ## Unknowns
 

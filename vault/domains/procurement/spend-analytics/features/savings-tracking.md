@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Savings Tracking
@@ -38,6 +38,17 @@ Quantify realised savings: catalogue agreed price vs the actual price paid on th
 
 - Consumes: catalogue agreed prices + PO line actuals.
 - Feeds: nothing.
+
+## Test Checklist
+
+### Unit
+- [ ] Savings = (agreed price - actual paid) x qty via brick/money; negative savings reported as overpayment *(assumed)*
+
+### Feature (Pest)
+- [ ] Only catalogue-linked PO lines counted; tenant isolation enforced
+
+### Livewire
+- [ ] `SavingsWidget` renders realised savings; hidden when catalogue inactive
 
 ## Unknowns
 

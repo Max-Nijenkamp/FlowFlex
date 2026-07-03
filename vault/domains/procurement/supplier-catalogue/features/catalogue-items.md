@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Catalogue Items
@@ -38,6 +38,19 @@ Managed list of products/services with a supplier, negotiated price, validity wi
 
 - Feeds: `CatalogueService::search` → requisition [[../../requisitions/features/catalogue-picker|catalogue picker]]; agreed price → spend [[../../spend-analytics/features/savings-tracking|savings]].
 - Shared entity: suppliers (operations, read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Eligibility: active + within validity window + approved supplier; `agreed_price_cents` integer
+
+### Feature (Pest)
+- [ ] Search excludes non-eligible items server-side (expired window, blocked supplier)
+- [ ] Soft supplier link: ops id when Operations active, local name string otherwise
+- [ ] Tenant isolation + permission on item CRUD
+
+### Livewire
+- [ ] `CatalogueItemResource` validates window/price; guarded delete; hidden without permission/module
 
 ## Unknowns
 

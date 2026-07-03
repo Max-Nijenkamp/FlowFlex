@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Committed vs Actual (+ Budget)
@@ -37,6 +37,18 @@ Show money committed (sent, unreceived POs) alongside actual (received) spend, a
 
 - Consumes: PO/receipt data (Operations); budgets (finance, soft).
 - Feeds: nothing.
+
+## Test Checklist
+
+### Unit
+- [ ] Committed vs actual split; budget-vs-actual only when `finance.budgets` active
+
+### Feature (Pest)
+- [ ] Inactive budgets module -> section hidden, no query, no error
+- [ ] Tenant isolation on aggregates
+
+### Livewire
+- [ ] Widget renders split; hidden without `procurement.spend.view`
 
 ## Unknowns
 

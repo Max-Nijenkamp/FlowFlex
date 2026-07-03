@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Approvals — Architecture
@@ -31,6 +31,26 @@ flowchart LR
 - **Role-based approvers v1** — `approver_role` is a Spatie role name; per-user rules deferred. See [[unknowns]].
 - **Delegations resolved at act time**, not at chain-build time, so a delegation added after submission still applies.
 - **Escalation** is a scheduled command scanning consumer approval tables via a shared read contract (`PendingApproval` read model) — it never writes consumer tables, only fires notifications.
+
+## Filament Artifacts
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `ApprovalRuleResource` | #1 CRUD resource | badge-status, guarded-delete | Matrix rules: applies_to x category x amount range -> approver role |
+| `ApprovalDelegationResource` | #1 CRUD resource | date-range filter | Delegations with validity windows |
+| `PendingApprovalsPage` | #8 inbox custom page ([[../../../architecture/patterns/page-blueprints#Inbox]]) | cross-module queue | Requisitions + POs awaiting the current user, via the `PendingApproval` read model |
+
+Hosted in the **/operations** panel (Procurement nav). Every artifact gates on `canAccess() = Auth::user()->can('procurement.approvals.view-any') && BillingService::hasModule('procurement.approvals')` per [[../../../architecture/filament-patterns]] #1 -- `PendingApprovalsPage` states it explicitly.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Rule / delegation CRUD | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| `chainFor` resolution | n-a | Stateless read; consumers record actions in their own tables under their own locks |
+| `EscalateStaleApprovalsCommand` | n-a | Single scheduled writer; notification-only, never writes consumer tables |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Related
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Budget Check
@@ -38,6 +38,18 @@ On submit, validate the requisition total against the department/budget-line rem
 
 - Consumes: `finance.budgets` read API.
 - Feeds: nothing directly.
+
+## Test Checklist
+
+### Unit
+- [ ] Over-budget comparison: total vs `BudgetService::remaining()`; warning payload
+
+### Feature (Pest)
+- [ ] Warning (not block) surfaces on submit when over; `finance.budgets` inactive -> silent no-op
+- [ ] Tenant isolation: budget read scoped per company
+
+### Livewire
+- [ ] Submit surfaces the warning banner; submit still allowed
 
 ## Unknowns
 

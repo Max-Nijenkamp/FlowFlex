@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Unified Pending Approvals Queue
@@ -39,6 +39,18 @@ One inbox showing everything awaiting the current user's approval — requisitio
 
 - Consumes: pending state + approve/reject services from [[../../requisitions/_module|requisitions]] and [[../../purchase-orders/_module|POs]].
 - Feeds: nothing (delegates writes to owners).
+
+## Test Checklist
+
+### Unit
+- [ ] `PendingApproval` read model merges requisition + PO items for the current user only
+
+### Feature (Pest)
+- [ ] Queue shows only items at the user's current approval level (incl. delegations); acting removes the item
+- [ ] Tenant isolation: never lists another company's approvals
+
+### Livewire
+- [ ] `PendingApprovalsPage` canAccess() explicit; approve/reject inline actions delegate to the owning module's service
 
 ## Unknowns
 

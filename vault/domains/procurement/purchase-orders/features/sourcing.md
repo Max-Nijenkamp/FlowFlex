@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Sourcing / Quote Comparison
@@ -39,6 +39,19 @@ Collect and compare supplier quotes for a PO side-by-side, then select the winne
 
 - Consumes: catalogue + supplier status ([[../../supplier-catalogue/_module]]); PO from Operations.
 - Feeds: selected supplier → PO (via Operations); winning quote → commitment/savings.
+
+## Test Checklist
+
+### Unit
+- [ ] Quote comparison ordering (price, lead time); quotes in integer cents
+
+### Feature (Pest)
+- [ ] `selectQuote` sets the PO supplier via Operations' service (never writes the PO row directly); draft POs only
+- [ ] Raced selects yield one winner (locked); re-select allowed while draft *(assumed)*
+- [ ] Tenant isolation on quotes
+
+### Livewire
+- [ ] `SourcingBoard` canAccess() explicit; side-by-side quotes render; select action confirms
 
 ## Unknowns
 

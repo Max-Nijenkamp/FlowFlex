@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # PO Approval (Final Sign-off)
@@ -39,6 +39,19 @@ A separate approval from the requisition: final sign-off on the priced, sourced 
 
 - Consumes: approval matrix (approvals); PO (Operations).
 - Feeds: `PurchaseApproved` → finance AP (expected bill/commitment) + operations (fulfilment); unblocks Operations' send.
+
+## Test Checklist
+
+### Unit
+- [ ] Chain resolution via `ApprovalMatrix::chainFor('po', amount, category)`
+
+### Feature (Pest)
+- [ ] Final approve stamps `procurement_approved_at` + fires `PurchaseApproved` exactly once (locked)
+- [ ] Send gate: `PurchaseOrderService::send` blocked for procurement-linked POs until approved; unlinked POs unaffected
+- [ ] Approver != requester guard; tenant isolation
+
+### Livewire
+- [ ] Approve action gated to current-level approver; approval trail renders
 
 ## Unknowns
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Supplier Self-Onboarding Portal
@@ -42,6 +42,19 @@ A public surface where an invited supplier submits their own details and documen
 
 - Feeds: pending suppliers → [[supplier-status]] review queue.
 - Consumes: nothing cross-domain (self-contained submission).
+
+## Test Checklist
+
+### Unit
+- [ ] Invite token validation: expiry + supplier binding; submitted docs follow the upload contract (mime/size)
+
+### Feature (Pest)
+- [ ] Portal submission creates pending status + draft items -- nothing active until admin review
+- [ ] Sensitive supplier fields (tax ID, bank/ACH) stored with `encrypted` cast *(per security spec)*; public endpoint rate-limited on the invite/guest guard *(assumed)*
+- [ ] Token never exposes another supplier's data
+
+### Livewire
+- (none -- public Vue + Inertia portal)
 
 ## Unknowns
 
