@@ -15,7 +15,10 @@ arch('all models soft delete')
 
 test('every tenant table migration carries a company_id foreignUlid', function () {
     // Tenant tables = every create_* migration except the platform-level ones.
-    $platformTables = ['companies', 'admins', 'cache', 'jobs', 'password_reset_tokens', 'sessions'];
+    $platformTables = [
+        'companies', 'admins', 'cache', 'jobs', 'password_reset_tokens', 'sessions',
+        'personal_access_tokens', 'permission', // sanctum + spatie infrastructure
+    ];
 
     foreach (glob(database_path('migrations/*_create_*_table.php')) as $file) {
         preg_match('/create_(\w+)_table/', basename($file), $m);

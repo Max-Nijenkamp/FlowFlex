@@ -17,7 +17,7 @@
         "laravel/horizon": "^5.47",
         "laravel/pulse": "^1.7",
         "laravel/reverb": "^1.10",
-        "laravel/sanctum": "^4.3",
+        "laravel/sanctum": "^4.0",
         "laravel/tinker": "^3.0",
         "lorisleiva/laravel-actions": "^2.10",
         "propaganistas/laravel-phone": "^6.0",
