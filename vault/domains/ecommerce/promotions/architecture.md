@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Promotions — Architecture
@@ -31,20 +31,29 @@ None fired/consumed. `DiscountEngine` is called synchronously by orders/checkout
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy | Notes |
+**Nav group:** Marketing
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `CouponResource` | Marketing | simple-resource | usage columns, redemptions relation |
-| `EcPromotionResource` | Marketing | simple-resource | rule-builder repeater |
+| `CouponResource` | #1 CRUD resource | tweaks: relation-manager-timeline (redemptions relation) | usage columns (`used_count` / `usage_limit`); active toggle |
+| `EcPromotionResource` | #1 CRUD resource | tweaks: inline-relation-repeater (rule-builder) | JSONB rule + discount, registry-validated on save |
 
-### Access contract
+**Public storefront (Vue + Inertia):**
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('ecommerce.promotions.view-any')
-        && BillingService::hasModule('ecommerce.promotions');
-}
-```
+- The coupon code field lives on the storefront checkout (Vue + Inertia, [[../../../architecture/ui-strategy]] row #16), which calls `DiscountEngine::apply` server-side — no Filament artifact and no client-side eligibility.
+
+**Access contract (mandatory):** both resources gate on
+`canAccess() = Auth::user()->can('ecommerce.promotions.view-any') && BillingService::hasModule('ecommerce.promotions')`
+per [[../../../architecture/filament-patterns]] #1. Standard CRUD, no custom pages. The storefront coupon surface is guest-guarded in [[../../storefront/_module|storefront]].
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Coupon / promotion CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| `redeem` — `used_count` increment + redemption row | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the coupon row, re-check total + per-customer limits, increment, insert `ec_coupon_redemptions` — concurrent redemptions cannot exceed `usage_limit` (capacity decrement) |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

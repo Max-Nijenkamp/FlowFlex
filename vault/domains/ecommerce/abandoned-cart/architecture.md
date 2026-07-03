@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Abandoned Cart — Architecture
@@ -49,6 +49,16 @@ public static function canAccess(): bool
         && BillingService::hasModule('ecommerce.abandoned-cart');
 }
 ```
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Cart status flips (`detect` / recovery / conversion) | Pessimistic | `lockForUpdate` on the cart row -- a raced recovery + conversion must resolve to one terminal status per the lifecycle enum |
+| Step sends (`advance`) | n-a | Unique `(cart_id, step)` rows make sends idempotent; single scheduled writer |
+| `PruneCartsCommand` | n-a | Single-writer daily delete with 90d guard |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

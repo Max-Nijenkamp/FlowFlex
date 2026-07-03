@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Payments
@@ -14,13 +14,12 @@ Stripe payment processing for orders: checkout intents, capture, refunds, and we
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `ecommerce.payments` |
-| priority | p3 |
-| panel | ecommerce |
-| permission-prefix | `ecommerce.payments` |
-| tables | `ec_payments` |
+`ecommerce.payments`
+
+**Priority:** p3  
+**Panel:** ecommerce  
+**Permission prefix:** `ecommerce.payments`  
+**Tables:** `ec_payments`
 
 ## Dependencies
 
@@ -61,7 +60,8 @@ tests/Feature/Ecommerce/{PaymentWebhookTest,RefundTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: a webhook/refund resolves to the owning company; company A cannot view or refund company B payments.
+- [ ] Module gating: payment resource hidden when `ecommerce.payments` inactive.
 - [ ] Webhook bad signature → 400, no change; success → order paid.
 - [ ] Webhook replay (same intent) idempotent.
 - [ ] Partial refunds capped at remaining; tracked cumulative.

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Recover Cart
@@ -41,6 +41,19 @@ Detect abandoned carts, run the timed recovery-email sequence, and restore a car
 - Consumes: cart snapshot from [[../../storefront/_module|storefront]] (checkout-start capture); order data from [[../../orders/_module|orders]] (read).
 - Feeds: recovery link back into the storefront cart; recovered/converted status internal.
 - Shared entity: `ec_orders` (read), coupons (promotions).
+
+## Test Checklist
+
+### Unit
+- [ ] Inactivity window: active cart past 1h (default) flips abandoned; step schedule due-math (1h/24h/72h)
+
+### Feature (Pest)
+- [ ] Each step sends once (unique `(cart_id, step)` row) even across raced command runs
+- [ ] Signed recovery token restores the session cart; resulting order marks `recovered`; matching order marks `converted` and stops the sequence
+- [ ] Tenant isolation: recovery token never restores another company's cart; sends cite the notifications queue throttle
+
+### Livewire
+- [ ] `AbandonedCartResource` read-only with status + funnel; hidden without `ecommerce.abandoned-cart.view` or module inactive
 
 ## Unknowns
 

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Reviews — Architecture
@@ -49,6 +49,17 @@ public static function canAccess(): bool
         && BillingService::hasModule('ecommerce.reviews');
 }
 ```
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `ReviewService::submit` | Pessimistic | Insert guarded by unique `(order_id, product_id)` dedupe in transaction -- raced double-submit yields one review |
+| `ModerateReviewAction` approve/reject | Pessimistic | Status transition with `lockForUpdate` per patterns/states convention (plain enum, but transition + cache bust must not double-fire) |
+| Merchant reply / review CRUD | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| `ProductRating` cache | n-a | Recompute-on-bust, idempotent |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Orders
@@ -14,14 +14,13 @@ Order management: line items, customer, payment + fulfilment status, and the ord
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `ecommerce.orders` |
-| priority | p3 |
-| panel | ecommerce |
-| permission-prefix | `ecommerce.orders` |
-| tables | `ec_orders`, `ec_order_lines`, `ec_order_events` |
-| fires-events | `CheckoutCompleted` |
+`ecommerce.orders`
+
+**Priority:** p3  
+**Panel:** ecommerce  
+**Permission prefix:** `ecommerce.orders`  
+**Tables:** `ec_orders`, `ec_order_lines`, `ec_order_events`  
+**Fires events:** `CheckoutCompleted`
 
 ## Dependencies
 
@@ -74,7 +73,8 @@ tests/Feature/Ecommerce/{OrderLifecycleTest,OrderTotalsTest,OrderStockTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot view, fulfil, refund, or cancel company B orders.
+- [ ] Module gating: order resource, fulfilment page, and stats widget hidden when `ecommerce.orders` inactive.
 - [ ] Totals math exact (lines + discount + tax + shipping) via `brick/money`.
 - [ ] Price snapshot immune to later product price changes.
 - [ ] Stock reserve on place, deduct on paid, release on cancel.

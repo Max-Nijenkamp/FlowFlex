@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Products — Security
@@ -17,10 +17,14 @@ updated: 2026-06-20
 | `ecommerce.products.view-any` | View products + categories |
 | `ecommerce.products.create` | Create products |
 | `ecommerce.products.update` | Edit products |
+| `ecommerce.products.delete` | Soft-delete a product *(assumed)* |
 | `ecommerce.products.publish` | Publish (draft → active) |
+| `ecommerce.products.archive` | Archive (active → archived) + re-activate *(assumed)* |
 | `ecommerce.products.manage-categories` | Manage the category tree |
 
-See [[../../../../security/authn-authz]].
+Seeded in `PermissionSeeder`. See [[../../../../security/authn-authz]].
+
+**Rate limiting:** publish and archive are plain status flips (no comms, money, files, or external calls) — no dedicated limiter required beyond the panel default. Bulk import runs through `core.import` and inherits its `exports`/import limiter *(assumed)*.
 
 ## Access Contract
 

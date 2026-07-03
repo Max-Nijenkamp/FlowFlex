@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Promotions — Security
@@ -15,9 +15,11 @@ updated: 2026-06-20
 | Permission | Grants |
 |---|---|
 | `ecommerce.promotions.view-any` | View coupons + promotions |
-| `ecommerce.promotions.manage` | Create/edit coupons + promotions |
+| `ecommerce.promotions.manage` | Create/edit coupons + promotions, toggle active |
 
-See [[../../../../security/authn-authz]].
+Seeded in `PermissionSeeder`. `redeem` is not a user-facing action — it runs server-side inside `DiscountEngine` during the checkout/order-paid flow, so it needs no panel permission; its rate limit is the public checkout endpoint's (see [[../orders/_module|orders]] / [[../storefront/_module|storefront]] security). See [[../../../../security/authn-authz]].
+
+**Rate limiting:** coupon/promotion CRUD are plain admin writes (no comms, money mutation, files, or external calls) — panel default suffices. Redemption abuse is bounded by the atomic `usage_limit` check and the storefront's public-checkout limiter.
 
 ## Access Contract
 

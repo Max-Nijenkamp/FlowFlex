@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Configure Storefront
@@ -38,6 +38,18 @@ Merchant configures branding, navigation, checkout/shipping/tax settings, and ma
 - Consumes: category tree (products) for the nav builder.
 - Feeds: settings + pages consumed by the public [[browse-and-cart]] / [[checkout]] surfaces.
 - Shared entity: `ec_categories` (products).
+
+## Test Checklist
+
+### Unit
+- [ ] Settings validation: shipping flat + free-over threshold amounts integer minor units; page slug unique
+
+### Feature (Pest)
+- [ ] Only published `ec_storefront_pages` served publicly; unpublished -> 404
+- [ ] Tenant isolation + permission: settings save gated on the manage verb, own company only
+
+### Livewire
+- [ ] `StorefrontSettingsPage` tabbed form validates and persists `StorefrontSettings`; canAccess() explicit; `StorefrontPageResource` hidden without permission/module
 
 ## Unknowns
 

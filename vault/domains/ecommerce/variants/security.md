@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Variants — Security
@@ -16,7 +16,9 @@ updated: 2026-06-20
 |---|---|
 | `ecommerce.variants.manage` | Define options, generate + bulk-edit variants (under the products umbrella) |
 
-See [[../../../../security/authn-authz]].
+Seeded in `PermissionSeeder`. See [[../../../../security/authn-authz]].
+
+**Rate limiting:** the "Generate variants" and bulk-edit actions write only catalogue rows (no comms, money mutation, file generation, or external calls) — panel default suffices, no dedicated limiter.
 
 ## Access Contract
 

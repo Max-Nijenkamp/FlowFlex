@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Storefront — Architecture
@@ -37,6 +37,17 @@ None fired/consumed. Checkout drives `OrderService::place`, which fires `Checkou
 |---|---|---|---|
 | `StorefrontSettingsPage` | Settings | custom-page (tabbed) | branding, navigation, checkout, shipping, tax |
 | `StorefrontPageResource` | Settings | simple-resource | content pages |
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Checkout order placement | Pessimistic | Delegated to `OrderService::place` (orders module) -- stock decrement under `lockForUpdate`, oversell-safe; storefront re-validates stock/prices server-side at every step |
+| Coupon redemption at order-paid | Pessimistic | Delegated to promotions `redeem` -- atomic `used_count` increment |
+| `StorefrontSettings` / content-page saves | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| Session cart mutations | n-a | Per-session state, no cross-user contention; server never trusts the client cart |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Public Controllers (Vue + Inertia)
 

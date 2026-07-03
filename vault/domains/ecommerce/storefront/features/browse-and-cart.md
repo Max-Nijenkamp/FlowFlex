@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Browse & Cart
@@ -39,6 +39,19 @@ Public catalog browse/search, product page (variants + reviews), and a session c
 - Consumes: catalog + reviews (read APIs of products/variants/reviews).
 - Feeds: cart into [[checkout]].
 - Shared entity: `ec_products`, `ec_variants`, `ec_reviews`.
+
+## Test Checklist
+
+### Unit
+- [ ] Catalog scope: `status = active` + company filter applied to browse and Meilisearch queries
+
+### Feature (Pest)
+- [ ] Product page exposes only approved reviews + average; out-of-stock variants disabled
+- [ ] Cart view re-validates each line against live stock/price -- stale client cart corrected server-side
+- [ ] Tenant isolation: company A storefront never lists company B products
+
+### Livewire
+- (none -- public Vue + Inertia surface, rows 12-16; covered by feature + frontend tests)
 
 ## Unknowns
 

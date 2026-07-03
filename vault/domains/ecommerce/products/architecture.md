@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Products — Architecture
@@ -38,22 +38,30 @@ None fired or consumed directly by the catalogue. Orders fire `CheckoutCompleted
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy | Notes |
+**Nav group:** Catalogue
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `EcProductResource` | Catalogue | simple-resource | Tiptap description, Media Library gallery, publish action, status/category filters. |
-| `EcCategoryResource` | Catalogue | simple-resource | Tree (cycle-checked parent). |
+| `EcProductResource` | #1 CRUD resource | tweaks: state-badge-column (draft/active/archived), custom-header-actions (publish / archive) | Tiptap description (purified), Media Library gallery; status + category filters |
+| `EcCategoryResource` | #1 CRUD resource | (no tweaks — standard CRUD) | cycle-checked parent; tree parent select via `codewithdennis/filament-select-tree` *(assumed)* |
 
-Storefront browse/search is rendered by the [[../../storefront/_module|storefront]] module (Vue + Inertia), not here.
+**Public storefront (Vue + Inertia):**
 
-### Access contract
+- Storefront browse/search is rendered by the [[../../storefront/_module|storefront]] module (Vue + Inertia, [[../../../architecture/ui-strategy]] row #16), reading only `status = active` products — not a Filament artifact here.
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('ecommerce.products.view-any')
-        && BillingService::hasModule('ecommerce.products');
-}
-```
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('ecommerce.products.view-any') && BillingService::hasModule('ecommerce.products')`
+per [[../../../architecture/filament-patterns]] #1. Both resources are standard CRUD (no custom pages). The public storefront surface declares its guest guard in [[../../storefront/_module|storefront]], not here.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Product / category CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Publish / archive status change | Optimistic | plain enum flip (no state-machine, no money/stock mutation) — `updated_at` stale-check ([[../../../architecture/patterns/optimistic-locking]]) |
+| Internal `stock_quantity` decrement (non-ops products) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on `ec_products` — oversell prevention; see [[../../orders/_module|orders]] for the order-side reservation. Ops-backed stock is decremented inside `operations.inventory`'s own pessimistic path via `StockService`, not here |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

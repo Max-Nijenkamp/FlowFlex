@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Apply Discount
@@ -40,6 +40,19 @@ Validate a coupon and layer automatic promotions at checkout via `DiscountEngine
 - Consumes: cart from checkout ([[../../storefront/_module|storefront]] / [[../../orders/_module|orders]]).
 - Feeds: `DiscountResult` → order totals; redemption at order-paid.
 - Shared entity: `ec_orders` (redemption links), segments (crm).
+
+## Test Checklist
+
+### Unit
+- [ ] Validation matrix: expired / over-limit / under-min-order / segment-product mismatch each throws its typed exception
+- [ ] One coupon per order; auto-promotions stack *(assumed)*; DiscountResult totals in brick/money integers
+
+### Feature (Pest)
+- [ ] `redeem` at order-paid atomically increments `used_count` + writes redemption row -- raced checkouts cannot exceed `usage_limit` (pessimistic)
+- [ ] Tenant isolation: coupon codes resolve within the owning company only
+
+### Livewire
+- (none -- engine invoked from public checkout; admin surfaces covered in manage-coupons)
 
 ## Unknowns
 

@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Product Catalogue
@@ -14,13 +14,12 @@ Product records with pricing, images, categories, and inventory linkage — the 
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `ecommerce.products` |
-| priority | p3 |
-| panel | ecommerce |
-| permission-prefix | `ecommerce.products` |
-| tables | `ec_products`, `ec_categories` |
+`ecommerce.products`
+
+**Priority:** p3  
+**Panel:** ecommerce  
+**Permission prefix:** `ecommerce.products`  
+**Tables:** `ec_products`, `ec_categories`
 
 ## Dependencies
 
@@ -64,7 +63,8 @@ tests/Feature/Ecommerce/{ProductTest,ProductStockTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot see, edit, or read stock for company B products/categories.
+- [ ] Module gating: artifacts hidden when `ecommerce.products` inactive.
 - [ ] Duplicate SKU / slug rejected.
 - [ ] Stock API: ops-linked reads `StockService`; internal uses field.
 - [ ] Compare-at must exceed price.

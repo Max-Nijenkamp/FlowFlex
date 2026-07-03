@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Orders — Architecture
@@ -62,23 +62,33 @@ Consumers per [[../../../../architecture/event-bus]]: Finance (record sale — w
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy | Notes |
+**Nav group:** Orders
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `EcOrderResource` | Orders | simple-resource | status filters; fulfil/refund/cancel actions; timeline relation |
-| `OrderFulfilmentPage` | Orders | custom-page (board) | unfulfilled queue, mark-shipped workflow |
-| `OrderStatsWidget` | Orders | widget | orders today, revenue, AOV |
+| `EcOrderResource` | #1 CRUD resource | tweaks: state-badge-column (order status), custom-header-actions (mark-paid / fulfil / refund / cancel), relation-manager-timeline (`ec_order_events`) | status + fulfilment filters; lines table; read-mostly (checkout owns creation) |
+| `OrderFulfilmentPage` | #3 Kanban custom page | [[../../../architecture/patterns/page-blueprints#Kanban]] — read-only queue (unfulfilled · partial), no free drag reorder; expand-to-ship | "Fulfilment" at `/ecommerce/orders/fulfilment`; polling 30s (single-operator queue) *(assumed — not collaborative, no Reverb)* |
+| `OrderStatsWidget` | #6 dashboard widget | [[../../../architecture/patterns/page-blueprints#Dashboard]] | orders today, revenue, AOV; widget polling 30–60s |
 
-Checkout itself is Vue + Inertia, owned by [[../../storefront/_module|storefront]].
+**Public storefront (Vue + Inertia):**
 
-### Access contract
+- Checkout is Vue + Inertia ([[../../../architecture/ui-strategy]] row #16), owned by [[../../storefront/_module|storefront]] — it POSTs `CreateOrderData`; the server re-validates cart stock/prices before `OrderService::place`. Not a Filament artifact here.
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('ecommerce.orders.view-any')
-        && BillingService::hasModule('ecommerce.orders');
-}
-```
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('ecommerce.orders.view-any') && BillingService::hasModule('ecommerce.orders')`
+per [[../../../architecture/filament-patterns]] #1. `OrderFulfilmentPage` is a custom page and MUST state this explicitly — Filament does not auto-gate custom pages; its fulfil action additionally requires `ecommerce.orders.fulfil`. The public checkout surface runs on the guest guard in [[../../storefront/_module|storefront]], not here.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Order note / edit (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| `place` (checkout) — stock reservation | Pessimistic | `DB::transaction()` + `lockForUpdate()` on each product/variant stock row (via `ProductStock`/`StockService`) — oversell prevention; the whole order + line insert is one transaction |
+| `markPaid` / `cancel` / `refund` / `fulfil` state transitions | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the order, re-read, validate, write per [[../../../architecture/patterns/states]]; `markPaid` deducts stock and `cancel`/`refund`(restock) release it inside the same lock |
+| Totals mutation (`brick/money`) | Pessimistic | computed inside the order transaction above — never a bare read-modify-write on money columns |
+| `ec_order_events` append | n/a | append-only timeline — no in-place update, no lock needed |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

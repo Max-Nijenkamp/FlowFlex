@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Product Variants
@@ -14,13 +14,12 @@ Product options (size, colour, material) generating purchasable variants, each w
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `ecommerce.variants` |
-| priority | p3 |
-| panel | ecommerce |
-| permission-prefix | `ecommerce.variants` |
-| tables | `ec_product_options`, `ec_variants` |
+`ecommerce.variants`
+
+**Priority:** p3  
+**Panel:** ecommerce  
+**Permission prefix:** `ecommerce.variants`  
+**Tables:** `ec_product_options`, `ec_variants`
 
 ## Dependencies
 
@@ -56,7 +55,8 @@ tests/Feature/Ecommerce/VariantTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot see or edit company B options/variants.
+- [ ] Module gating: variant relation manager hidden when `ecommerce.variants` inactive.
 - [ ] Generation creates all combinations once; re-run skips existing.
 - [ ] Duplicate combination / SKU rejected.
 - [ ] Price falls back to product when variant price null.

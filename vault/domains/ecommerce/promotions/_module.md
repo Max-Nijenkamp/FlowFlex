@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Promotions & Coupons
@@ -14,13 +14,12 @@ Discount codes, automatic promotions, and sales campaigns — fronted by a singl
 
 ## Module-key
 
-| Field | Value |
-|---|---|
-| key | `ecommerce.promotions` |
-| priority | p3 |
-| panel | ecommerce |
-| permission-prefix | `ecommerce.promotions` |
-| tables | `ec_coupons`, `ec_promotions`, `ec_coupon_redemptions` |
+`ecommerce.promotions`
+
+**Priority:** p3  
+**Panel:** ecommerce  
+**Permission prefix:** `ecommerce.promotions`  
+**Tables:** `ec_coupons`, `ec_promotions`, `ec_coupon_redemptions`
 
 ## Dependencies
 
@@ -62,7 +61,8 @@ tests/Feature/Ecommerce/{DiscountEngineTest,CouponLimitTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating.
+- [ ] Tenant isolation: company A cannot see, edit, or redeem company B coupons/promotions; codes unique per company.
+- [ ] Module gating: coupon + promotion resources hidden when `ecommerce.promotions` inactive.
 - [ ] Coupon validation: expiry, limits (total + per-customer), min order — typed messages.
 - [ ] Concurrent redemption respects `usage_limit` (atomic).
 - [ ] Percent (basis points) + fixed math via `brick/money`.

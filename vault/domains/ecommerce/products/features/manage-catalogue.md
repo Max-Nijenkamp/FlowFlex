@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Manage Catalogue
@@ -42,6 +42,21 @@ Product and category CRUD — the merchant-facing catalogue the storefront sells
 - Consumes: nothing (event-wise).
 - Feeds: supplies priced/stocked lines to [[../../orders/_module|Orders]] and [[../../storefront/_module|Storefront]] via read queries.
 - Shared entity: tax classes owned by `finance.tax-management`; stock items owned by `operations.inventory`.
+
+## Test Checklist
+
+### Unit
+- [ ] Compare-at price rejected when `≤ price_cents`; accepted when strictly greater.
+- [ ] Category cycle detection rejects a parent that is a descendant of the node.
+
+### Feature (Pest)
+- [ ] Duplicate SKU or slug within the same company is rejected; the same SKU in another company is allowed (tenant scope).
+- [ ] Draft and archived products are excluded from storefront/public queries; active products appear.
+- [ ] Rich description is HTMLPurifier-cleaned on save (script/style stripped).
+
+### Livewire
+- [ ] Publish action gated on `ecommerce.products.publish`; hidden/denied without it.
+- [ ] Product form surfaces validation errors (duplicate SKU/slug, compare-at ≤ price) instead of saving.
 
 ## Unknowns
 

@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Orders — Security
@@ -16,11 +16,22 @@ updated: 2026-06-20
 |---|---|
 | `ecommerce.orders.view-any` | View orders |
 | `ecommerce.orders.update` | Edit orders / notes |
+| `ecommerce.orders.mark-paid` | Manual `pending → paid` when payments inactive (fires `CheckoutCompleted`, deducts stock, queues receipt + mail) |
 | `ecommerce.orders.fulfil` | Mark shipped / fulfil |
 | `ecommerce.orders.refund` | Process refunds |
 | `ecommerce.orders.cancel` | Cancel orders |
 
-See [[../../../../security/authn-authz]].
+Seeded in `PermissionSeeder`. See [[../../../../security/authn-authz]].
+
+## Rate Limiting
+
+| Action | Limiter | Why |
+|---|---|---|
+| `mark-paid` (manual) | `panel-action` | queues confirmation mail (comms) + receipt PDF (file generation) + deducts stock (inventory mutation) |
+| `refund` | `panel-action` | calls Stripe (external API) + mutates money; restock mutates inventory |
+| `fulfil` | `panel-action` | may send a shipment/tracking notification *(assumed)*; state mutation |
+
+`panel-action` per [[../../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]. The public checkout `place` endpoint runs on the storefront's guest guard and is rate-limited there (see [[../../storefront/_module|storefront]] security) — its limiter name is reconciled with the public-endpoint registry as a known open task *(assumed)*.
 
 ## Access Contract
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Moderate Review
@@ -40,6 +40,19 @@ Merchant approves or rejects pending reviews and can post a public reply; approv
 - Consumes: nothing.
 - Feeds: approved reviews + refreshed average to [[../../storefront/_module|storefront]].
 - Shared entity: `ec_products`.
+
+## Test Checklist
+
+### Unit
+- [ ] Transition matrix: pending->approved / pending->rejected only; merchant_reply purified
+
+### Feature (Pest)
+- [ ] Approve makes review storefront-visible and busts the `ProductRating` cache (average recomputed)
+- [ ] Reject hides it; raced approve+reject resolves to one final status (locked transition)
+- [ ] Tenant isolation + permission: moderation verbs enforced per company
+
+### Livewire
+- [ ] Moderation-queue tab renders pending reviews; approve/reject actions gated; hidden without `ecommerce.reviews.view-any`
 
 ## Unknowns
 

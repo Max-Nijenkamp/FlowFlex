@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Payments — Architecture
@@ -40,19 +40,28 @@ None fired/consumed on the FlowFlex event bus — payments drives orders via `Or
 
 ## Filament Artifacts
 
-| Artifact | Nav group | ui-strategy | Notes |
+**Nav group:** Orders
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `EcPaymentResource` | Orders | simple-resource (read-only) | refund action; status shown on order view |
+| `EcPaymentResource` | #1 CRUD resource | tweaks: read-only-flow-owned (writes owned by `EcPaymentService` / Stripe webhook — `canCreate(): false`), custom-header-actions (refund) | status badge; refund modal; surfaced on the order view too |
 
-### Access contract
+**Public webhook (not a Filament artifact):**
 
-```php
-public static function canAccess(): bool
-{
-    return Auth::user()->can('ecommerce.payments.view-any')
-        && BillingService::hasModule('ecommerce.payments');
-}
-```
+- `POST /webhooks/ecommerce/stripe` — Stripe signature-verified, `throttle:webhooks`, idempotent on intent id (see [[./security]] and [[./api]]). Public route, no panel gate.
+
+**Access contract (mandatory):** the resource gates on
+`canAccess() = Auth::user()->can('ecommerce.payments.view-any') && BillingService::hasModule('ecommerce.payments')`
+per [[../../../architecture/filament-patterns]] #1. The resource is read-only — all writes flow from `EcPaymentService` (Stripe webhook + refund action); the refund action additionally requires `ecommerce.payments.refund`. The Stripe webhook is a public signed endpoint, not a Filament surface.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Webhook `payment_intent.succeeded` → payment row + `markPaid` | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the payment/order rows; unique `stripe_payment_intent_id` + status guard make replays idempotent (a second delivery of the same intent is a no-op) |
+| `refund` — `refunded_amount_cents` accumulation | Pessimistic | `DB::transaction()` + `lockForUpdate()` on `ec_payments`, re-read remaining, validate cap, write — prevents two concurrent refunds together exceeding the captured amount (money mutation) |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Jobs & Scheduling
 

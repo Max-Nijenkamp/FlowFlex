@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Generate Variants
@@ -41,6 +41,21 @@ Define option types on a product, generate the purchasable variant matrix, and b
 - Consumes: nothing.
 - Feeds: variant lines to [[../../orders/_module|Orders]]; variant selector to [[../../storefront/_module|Storefront]].
 - Shared entity: parent product (`ecommerce.products`).
+
+## Test Checklist
+
+### Unit
+- [ ] Cartesian product of {S,M,L}×{Red,Blue} yields exactly 6 combinations.
+- [ ] More than 3 option types is rejected *(assumed max 3)*.
+
+### Feature (Pest)
+- [ ] Re-running generate is idempotent — existing combinations are preserved, only missing ones created.
+- [ ] Duplicate SKU (per company) or duplicate `(product_id, option_values)` combination is rejected.
+- [ ] A variant with null `price_cents` resolves to the parent product price.
+
+### Livewire
+- [ ] "Generate variants" action is gated on `ecommerce.variants.manage`; denied without it.
+- [ ] Bulk-edit sets price/stock across selected rows and surfaces the duplicate-SKU error inline.
 
 ## Unknowns
 

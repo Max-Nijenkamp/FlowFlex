@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Refund
@@ -40,6 +40,21 @@ Issue a full or partial Stripe refund against a succeeded payment and drive the 
 - Consumes: nothing.
 - Feeds: `OrderService::refund` → order → `refunded` state; optional restock.
 - Shared entity: `ec_orders` (orders), stock (operations via `ProductStock`).
+
+## Test Checklist
+
+### Unit
+- [ ] Remaining refundable = `amount_cents − refunded_amount_cents`; an amount above it is rejected.
+- [ ] Refund allowed only on a `succeeded` payment.
+
+### Feature (Pest)
+- [ ] A partial refund accumulates `refunded_amount_cents` and calls `OrderService::refund` with the restock flag (Stripe mocked, idempotency key sent).
+- [ ] Two concurrent refunds cannot together exceed the captured amount (row lock on `ec_payments`).
+- [ ] Refund denied without `ecommerce.payments.refund`; tenant B cannot refund tenant A's payment.
+
+### Livewire
+- [ ] Refund modal defaults the amount to the remaining refundable and shows the over-refund error inline instead of submitting.
+- [ ] Refund action gated on `ecommerce.payments.refund`; hidden without it.
 
 ## Unknowns
 

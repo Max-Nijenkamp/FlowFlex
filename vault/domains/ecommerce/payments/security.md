@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Payments — Security
@@ -17,7 +17,16 @@ updated: 2026-06-20
 | `ecommerce.payments.view-any` | View payments |
 | `ecommerce.payments.refund` | Process refunds |
 
-See [[../../../../security/authn-authz]].
+Seeded in `PermissionSeeder`. The payment `status` (pending/succeeded/failed) is driven by the signature-verified Stripe webhook, not by a user-triggered transition — so `refund` is the only command action needing a verb. See [[../../../../security/authn-authz]].
+
+## Rate Limiting
+
+| Action / Route | Limiter | Why |
+|---|---|---|
+| `refund` panel action | `panel-action` | calls Stripe (external API) + mutates money |
+| `POST /webhooks/ecommerce/stripe` | `throttle:webhooks` | public signed endpoint (already below) |
+
+`panel-action` / `webhooks` per [[../../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
 
 ## Access Contract
 

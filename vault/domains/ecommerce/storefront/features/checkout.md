@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Checkout
@@ -42,6 +42,19 @@ Turn a validated cart into an order: apply discounts, place via `OrderService`, 
 - Consumes: cart from [[browse-and-cart]].
 - Feeds: `OrderService::place` → order → `CheckoutCompleted` → Finance.
 - Shared entity: `ec_orders`, `ec_payments`, coupons — all owned elsewhere.
+
+## Test Checklist
+
+### Unit
+- [ ] `CreateOrderData` built from validated cart; checkout_config drives required fields/guest toggle
+
+### Feature (Pest)
+- [ ] Server-side re-validation rejects stale stock/prices before placing; oversell prevented by orders-module lock (concurrent checkouts of last unit -> one succeeds)
+- [ ] Payments soft-dep: active -> Stripe intent + confirm; inactive -> order placed `pending`
+- [ ] Discount + tax soft-deps degrade gracefully when inactive; public checkout rate-limited *(assumed guest limiter -- registry reconcile task #7)*
+
+### Livewire
+- (none -- public Vue + Inertia flow)
 
 ## Unknowns
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Manage Coupons
@@ -39,6 +39,19 @@ Create and manage discount codes and automatic promotions, with usage tracking a
 - Consumes: nothing.
 - Feeds: coupons/promotions consumed by [[apply-discount]] at checkout.
 - Shared entity: products/categories (products), segments (crm.customer-segments).
+
+## Test Checklist
+
+### Unit
+- [ ] Auto-promotion JSONB rule registry-validated; unknown rule type rejected
+- [ ] Coupon code unique per company; percent/fixed value validation
+
+### Feature (Pest)
+- [ ] Usage columns reflect `used_count` vs `usage_limit`; redemptions relation lists orders
+- [ ] Tenant isolation + permission: coupons manageable only in own company with the manage verb
+
+### Livewire
+- [ ] Coupon form validates window/limits; canAccess() hides resource without permission or `ecommerce.promotions` inactive
 
 ## Unknowns
 

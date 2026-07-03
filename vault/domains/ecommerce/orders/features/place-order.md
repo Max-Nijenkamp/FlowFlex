@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Place Order
@@ -41,6 +41,21 @@ Turn a validated cart into a priced, stock-reserved order; on payment, fire `Che
 - Consumes: nothing.
 - Feeds: `CheckoutCompleted` → consumed by finance (record sale), analytics (P3).
 - Shared entity: `crm_contacts`, `ec_products`, tax classes, ops stock — all owned elsewhere, reached via their services.
+
+## Test Checklist
+
+### Unit
+- [ ] Totals: subtotal + tax + shipping − discount = grand total, all via `brick/money` (no float drift).
+- [ ] Line snapshot copies unit price + description at place time.
+
+### Feature (Pest)
+- [ ] `place` re-validates against live stock/price and rejects a line whose product price changed or stock is insufficient (client cart untrusted).
+- [ ] Concurrent `place` on the last unit — one order succeeds, the other is rejected (row lock, no oversell).
+- [ ] `markPaid` fires `CheckoutCompleted` once with the exact contract payload (`company_id`, `order_id`, `customer_email`, `total_cents`, `currency`) and deducts stock; snapshot price is immune to a later product price change.
+- [ ] Cancel before paid releases the reserved stock; tenant B cannot mark-paid tenant A's order.
+
+### Livewire
+- [ ] Admin "Mark paid" header action gated on `ecommerce.orders.mark-paid`; hidden when payments module active or without permission.
 
 ## Unknowns
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Fulfil Order
@@ -40,6 +40,21 @@ Work the unfulfilled queue: mark lines shipped, record tracking, handle partial 
 - Consumes: nothing.
 - Feeds: fulfilment completion may trigger a review-request mail (+7d) in [[../../reviews/_module|Reviews]] (reviews' own scheduled command reads fulfilled orders).
 - Shared entity: none written cross-domain.
+
+## Test Checklist
+
+### Unit
+- [ ] Fulfilment status resolves to `partial` when some (not all) physical lines are shipped, `fulfilled` when all are.
+- [ ] Digital-only orders auto-fulfil on paid without a shipping step.
+
+### Feature (Pest)
+- [ ] Only `paid` orders are fulfillable — fulfilling a `pending` order is rejected.
+- [ ] `fulfil` records tracking, appends an `ec_order_events` row, and transitions the order to `fulfilled` when all lines ship.
+- [ ] Tenant B cannot fulfil tenant A's order.
+
+### Livewire
+- [ ] Fulfilment board action gated on `ecommerce.orders.fulfil`; denied without it.
+- [ ] Marking shipped moves the card out of the queue (optimistic) and shows a "partial" badge on a partial ship.
 
 ## Unknowns
 

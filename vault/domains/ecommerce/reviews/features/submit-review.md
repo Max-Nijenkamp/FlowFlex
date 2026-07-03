@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Submit Review
@@ -40,6 +40,20 @@ A customer submits a product review via a signed request-mail link (or openly wh
 - Consumes: fulfilled order (verified check) from [[../../orders/_module|orders]].
 - Feeds: approved reviews + average rating displayed by [[../../storefront/_module|storefront]].
 - Shared entity: `ec_orders`, `ec_products`, `crm_contacts` (soft).
+
+## Test Checklist
+
+### Unit
+- [ ] Verified-purchase check honoured when on; dedupe key `(order_id, product_id)`
+- [ ] Title/body purified before storage
+
+### Feature (Pest)
+- [ ] Double-submit for the same order+product yields one review (unique-key race safe)
+- [ ] New review starts `pending`, invisible on storefront until approved
+- [ ] Public submission + helpful votes rate-limited on the guest guard (over-limit 429)
+
+### Livewire
+- (none -- public Vue surface; admin side covered in moderate-review)
 
 ## Unknowns
 

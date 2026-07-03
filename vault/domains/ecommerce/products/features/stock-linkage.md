@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Stock Linkage
@@ -39,6 +39,17 @@ The single `ProductStock` API that bridges a product to either `operations.inven
 - Consumes: nothing event-wise (synchronous service calls).
 - Feeds: availability + reservation used by [[../../orders/_module|Orders]] and [[../../storefront/_module|Storefront]].
 - Shared entity: `ops_items` / stock ledger owned by `operations.inventory`.
+
+## Test Checklist
+
+### Unit
+- [ ] `ProductStock::available` returns the internal `stock_quantity` when `ops_item_id` is null.
+- [ ] `ops_item_id` and `stock_quantity` are mutually exclusive — setting both is rejected.
+
+### Feature (Pest)
+- [ ] `reserve`/`deduct`/`release` on an ops-backed product route to `StockService` and never write `ops_*` tables directly.
+- [ ] Internal `stock_quantity` decrement under concurrent reserve uses a row lock so two orders cannot oversell the last unit.
+- [ ] Availability for a product linked to a deactivated ops item resolves to zero *(assumed)*.
 
 ## Unknowns
 
