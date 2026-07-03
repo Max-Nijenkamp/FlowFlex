@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Access Provisioning — Architecture
@@ -46,15 +46,30 @@ Both events carry `company_id` as a scalar. This module **fires no cross-domain 
 
 **Nav group:** Access
 
-| Artifact | Kind (ui-strategy row) | Notes |
-|---|---|---|
-| `SystemResource` | #1 CRUD resource | tool catalogue |
-| `AccessGrantResource` | #1 CRUD resource | pending / flagged tabs, grant / revoke actions |
-| `AccessTemplateResource` | #1 CRUD resource | role → systems templates |
-| `AccessReviewPage` | #9 matrix custom page | employees × systems, throttled export |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `SystemResource` | #1 CRUD resource | tweaks: — | tool catalogue; list column `# active grants` |
+| `AccessGrantResource` | #1 CRUD resource | tweaks: state-badge-column, custom-header-actions (grant / revoke) | Pending / Flagged status tabs; row actions call `AccessService::grant` / `::revoke` |
+| `AccessTemplateResource` | #1 CRUD resource | tweaks: inline-relation-repeater (systems) | role → systems templates; jsonb `systems` repeater |
+| `AccessReviewPage` | #18 heat-map / matrix custom page | [[../../../architecture/patterns/page-blueprints#Heat-map / Matrix]] | employees × systems grid; `exports`-throttled snapshot export *(assumed)* |
 
-Pattern reference: [[../../../architecture/patterns/custom-pages]], [[../../../architecture/ui-strategy]].
-Every artifact gates on `canAccess()` — see [[security|access-provisioning.security]].
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('it.access.view-any') && BillingService::hasModule('it.access')`
+per [[../../../architecture/filament-patterns]] #1. `AccessReviewPage` is a custom page and MUST state this
+explicitly — Filament does not auto-gate custom pages. This module exposes no public/portal surface.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| System / template CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Grant creation (duplicate-active guard) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the active `(employee_id, system_id)` to reject a concurrent second live grant per [[../../../architecture/patterns/states]] |
+| Grant advance / revoke status stamp | Optimistic | `updated_at` stale-check on the grant record ([[../../../architecture/patterns/optimistic-locking]]) |
+| Hire pending-grant / offboard flag (queued listeners) | n-a | event-driven single writer under `WithCompanyContext`; template match + `revoke-flagged` flag are idempotent, no concurrent user edit on the same path |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

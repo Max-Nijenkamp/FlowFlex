@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Asset Inventory — Security
@@ -22,6 +22,10 @@ See also [[../../../security/tenancy-isolation]], [[../../../security/authn-auth
 | `it.assets.manage` | Create, edit, delete assets |
 | `it.assets.assign` | Assign / return assets |
 | `it.assets.retire` | Retire assets |
+
+Verb-per-command: `assign` covers the `in_stock → assigned` and return (`assigned → in_stock`)
+transitions; `retire` covers `→ retired`. The offboard-return flag and warranty alert are
+system-triggered (listener / scheduled command), no user command. Seeded in `PermissionSeeder`.
 
 ---
 
@@ -53,4 +57,7 @@ See [[../../../security/tenancy-isolation]] and [[../../../architecture/multi-te
 ## Rate Limiter
 
 > [!warning] Bulk import rate limit (medium — [[../../../build/security-audit-2026-06-11]])
-> Bulk asset import (via core.import) inherits / uses a rate limiter on the import endpoint/action per [[../../../architecture/security]]. Confirm the limiter is applied when wiring the import path so a large upload can't be abused.
+> Bulk asset import (via core.import) mutates inventory, so its in-panel trigger action is throttled by the
+> named **`panel-action`** limiter *(assumed)*; the underlying import endpoint owns the primary limiter in
+> core.import per [[../../../architecture/security]]. Confirm the limiter is applied when wiring the import
+> path so a large upload can't be abused.

@@ -5,12 +5,23 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # IT Helpdesk
 
 Internal IT support ticket system for employees. Report issues, request hardware/software, track resolution. Same pattern as [[../../support/tickets/_module|support.tickets]] but internal-facing (no email-to-ticket, no external requesters). Owns `it_tickets` + `it_ticket_replies`.
+
+---
+
+## Module-key
+
+`it.helpdesk`
+
+**Priority:** p3  
+**Panel:** it  
+**Permission prefix:** `it.helpdesk`  
+**Tables:** `it_tickets`, `it_ticket_replies`
 
 ---
 
@@ -58,7 +69,8 @@ tests/Feature/IT/{ItHelpdeskTest,ItTicketScopeTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see/reply to company B tickets
+- [ ] Module gating: artifacts hidden when `it.helpdesk` inactive
 - [ ] Requester sees own tickets only; IT sees all
 - [ ] Internal reply invisible to requester, no notification
 - [ ] Asset link restricted to requester's assigned assets

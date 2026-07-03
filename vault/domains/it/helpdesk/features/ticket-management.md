@@ -42,6 +42,19 @@ The core CRUD surface for IT tickets — list, create, edit, view. My-tickets vs
 - Feeds: resolve/public-reply → requester notification via core.notifications.
 - Shared entity: requester = `hr_employees` (owned by hr.profiles); `asset_id` = `it_assets` (owned by it.assets).
 
+## Test Checklist
+
+### Unit
+- [ ] `category` / `request_type` / `priority` must be in their allowed sets
+
+### Feature (Pest)
+- [ ] Create ticket stamps sequential `ticket_number`, `status = open`, requester = current employee
+- [ ] Assign sets `assignee_id` + transitions `open → in_progress`
+- [ ] My-tickets tab shows only own tickets; All tab requires `it.helpdesk.view-any`; company B tickets never visible
+
+### Livewire
+- [ ] `ItTicketResource` All tab + assign field hidden without `it.helpdesk.view-any` / `it.helpdesk.assign`; form validates required fields
+
 ## Unknowns
 
 - `*(assumed)*` requester may only link their own assigned asset; staff-vs-requester link scope unconfirmed ([[../unknowns|helpdesk.unknowns]]).

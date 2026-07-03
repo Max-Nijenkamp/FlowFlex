@@ -36,6 +36,16 @@ nothing is silently left open.
 - Feeds: flagged grants into [[access-grants]] (Flagged tab) and the offboarding review of unrevoked access.
 - Shared entity: employee owned by hr.profiles (read via event only).
 
+## Test Checklist
+
+### Unit
+- [ ] Only active grants are selected for flagging (already-revoked grants untouched)
+
+### Feature (Pest)
+- [ ] `EmployeeOffboarded` → all active grants set `revoke-flagged` + an IT notification
+- [ ] Listener runs under `WithCompanyContext`; flags only the event company's grants
+- [ ] Re-delivery is idempotent — already-flagged grants unchanged
+
 ## Unknowns
 
 - Whether flagged grants auto-revoke on a deadline or stay manual until IT completes — `*(assumed: manual, tracked to completion)*`.

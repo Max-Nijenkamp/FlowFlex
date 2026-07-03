@@ -5,12 +5,23 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Software Licences
 
 Track software subscriptions and licences: seats, costs, renewal dates, and utilisation. Avoid over-buying and surprise renewals. Owns `it_licences` and `it_licence_assignments`.
+
+---
+
+## Module-key
+
+`it.licences`
+
+**Priority:** p3  
+**Panel:** it  
+**Permission prefix:** `it.licences`  
+**Tables:** `it_licences`, `it_licence_assignments`
 
 ---
 
@@ -57,7 +68,8 @@ tests/Feature/IT/LicenceTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see/assign company B licences or seats
+- [ ] Module gating: artifacts hidden when `it.licences` inactive
 - [ ] Over-capacity assignment rejected; duplicate active seat rejected
 - [ ] Offboard flags that employee's seats
 - [ ] Renewal alert once per cycle; resets when date changes

@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Access Provisioning
@@ -18,6 +18,17 @@ Owns `it_systems`, `it_access_grants`, `it_access_templates`.
 
 > All work here is **planned**. This module writes ONLY its own tables and never mutates HR data — it
 > reacts to HR events and stays on its side of the boundary. See [[../../../security/data-ownership]].
+
+---
+
+## Module-key
+
+`it.access`
+
+**Priority:** p3  
+**Panel:** it  
+**Permission prefix:** `it.access`  
+**Tables:** `it_systems`, `it_access_grants`, `it_access_templates`
 
 ---
 
@@ -64,7 +75,8 @@ tests/Feature/IT/{AccessProvisioningTest,AccessListenersTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see/grant/revoke company B access grants
+- [ ] Module gating: artifacts hidden when `it.access` inactive
 - [ ] Hire creates pending grants from matching template; no template = none + no error
 - [ ] Offboard flags all active grants; review lists unrevoked
 - [ ] Duplicate active grant rejected

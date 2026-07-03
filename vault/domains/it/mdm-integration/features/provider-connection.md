@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Provider Connection
@@ -40,6 +40,19 @@ Connect the company to an MDM provider (Jamf / Intune / Kandji) by entering cred
 - Consumes: nothing.
 - Feeds: the stored config drives [[device-sync]] (which provider + credentials to pull with).
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] `ConnectMdmData` validation: provider in supported set, api_key required
+
+### Feature (Pest)
+- [ ] Invalid credentials rejected at connect -- nothing stored; valid credentials stored with `encrypted` cast on text column
+- [ ] One connection per company enforced (unique company_id); re-connect replaces, never duplicates
+- [ ] Tenant isolation + permission: `it.mdm.manage-config` required to submit
+
+### Livewire
+- [ ] `MdmConfigPage` canAccess() explicit: hidden without `it.mdm.view-any` or module inactive; connected state masks the key and never re-displays it
 
 ## Unknowns
 

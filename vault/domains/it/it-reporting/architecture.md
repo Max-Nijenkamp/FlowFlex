@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # IT Reporting — Architecture
@@ -83,6 +83,17 @@ Widgets (built on `leandrocfe/filament-apex-charts`), hosted on the dashboard:
 Soft-dep widgets render only when their module is active (`BillingService::hasModule(...)`); an inactive module simply omits its widget from the grid.
 
 Pattern reference: [[../../../architecture/patterns/custom-pages]], [[../../../architecture/ui-strategy]].
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| All read paths (dashboard, widgets, export) | n-a | Read-only analytics over other modules' tables; no writes |
+| Redis aggregate cache writes | n-a | TTL-keyed cache set; last-write-wins is safe (idempotent recompute) |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

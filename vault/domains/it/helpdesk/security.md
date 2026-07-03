@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # IT Helpdesk — Security
@@ -22,6 +22,11 @@ See also [[../../../security/tenancy-isolation]], [[../../../security/authn-auth
 | `it.helpdesk.respond` | Reply to any ticket, add internal notes, resolve (IT staff) |
 | `it.helpdesk.assign` | Assign / reassign tickets to IT team members |
 | `it.helpdesk.view-any` | See all company tickets (IT staff) |
+
+Verb-per-command: the `assign` transition (`open → in_progress`) is gated by `it.helpdesk.assign`; the
+`resolve` transition and reply/internal-note commands are gated by `it.helpdesk.respond` (deliberately
+bundled — respond = reply + internal note + resolve); requester create + own-ticket reply/reopen by
+`it.helpdesk.create-own`. Auto-close is system-triggered. Seeded in `PermissionSeeder`.
 
 ---
 
@@ -49,3 +54,11 @@ Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[../
 - `is_internal` replies are never returned to the requester's view and trigger no notification.
 - Asset link (`asset_id`) for a requester is validated against that requester's own assigned assets before persist ([[data-model|helpdesk.data-model]]).
 - `it.helpdesk` writes only `it_tickets` + `it_ticket_replies`; requester data is read from `hr.profiles` and the asset link is a read/FK to `it.assets` — never cross-domain writes ([[../../../security/data-ownership]]).
+
+---
+
+## Rate Limiting
+
+Public reply and resolve emit a requester notification (comms). Those panel actions are throttled by the
+named **`panel-action`** limiter *(assumed)* so a reply loop cannot spam a requester; core.notifications owns
+delivery-side throttling. See [[../../../architecture/security]].

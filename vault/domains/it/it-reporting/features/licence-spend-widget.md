@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Licence Spend Widget
@@ -42,6 +42,18 @@ Show software licence spend (monthly and annual), seat utilisation rate, and was
 - Reads from `it.licences` (read-only, **soft-dep** — section nulls out and widget hides when inactive).
 - Consumes: nothing.
 - Feeds: nothing (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Waste = (purchased - active) x per-seat cost with brick/money integers; utilisation = active/purchased
+
+### Feature (Pest)
+- [ ] `it.licences` inactive -> `licence_spend` null, section query skipped, no error
+- [ ] Tenant isolation: spend aggregates only own-company licences
+
+### Livewire
+- [ ] Widget absent when `it.licences` inactive; "No licences tracked" empty state; hidden without `it.reporting.view`
 
 ## Unknowns
 

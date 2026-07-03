@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Asset Valuation Widget
@@ -41,6 +41,18 @@ Show total IT asset inventory value plus counts broken down by asset type and st
 - Reads from `it.assets` (read-only). Not soft-dep — this is the module's hard dependency, so the widget always renders.
 - Consumes: nothing.
 - Feeds: nothing (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Value aggregation groups by type and status with brick/money integer minor units (no float math)
+
+### Feature (Pest)
+- [ ] `ItAnalyticsService::metrics` computes asset totals in one grouped query (no per-row iteration)
+- [ ] Tenant isolation: company A's aggregate never includes company B's assets (cache key embeds company_id)
+
+### Livewire
+- [ ] Widget renders totals; zero assets shows "No assets yet" placeholder; hidden without `it.reporting.view`
 
 ## Unknowns
 

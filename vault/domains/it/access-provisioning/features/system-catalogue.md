@@ -38,6 +38,18 @@ grant and template references a system from this list.
 - Feeds: `it_systems` rows referenced by [[access-grants]] and [[access-templates]].
 - Shared entity: none owned elsewhere.
 
+## Test Checklist
+
+### Unit
+- [ ] System requires a name; owner is optional
+
+### Feature (Pest)
+- [ ] Create / edit / delete a system scoped to the company; company B cannot see it
+- [ ] Deleting a system that has active grants blocks or prompts reassign *(assumed)*
+
+### Livewire
+- [ ] `SystemResource` form validates required name; create/edit/delete denied without `it.access.manage-systems`
+
 ## Unknowns
 
 - Delete behaviour when a system has active grants (block vs. reassign) — `*(assumed)*`.

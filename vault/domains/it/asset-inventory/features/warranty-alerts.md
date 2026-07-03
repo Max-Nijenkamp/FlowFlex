@@ -40,6 +40,18 @@ Surface assets whose warranty is about to expire — a dashboard widget plus a d
 - Feeds: an IT warranty-expiry notification via core.notifications (no domain event fired).
 - Shared entity: none beyond this module's `it_assets`.
 
+## Test Checklist
+
+### Unit
+- [ ] 30-day window selects assets with `warranty_expiry` within 30 days and `warranty_alerted = false`
+
+### Feature (Pest)
+- [ ] `WarrantyAlertCommand` notifies IT once and sets `warranty_alerted = true`; a second run does not re-alert
+- [ ] Command runs per-company under `WithCompanyContext`; no cross-tenant leakage
+
+### Livewire
+- [ ] `AssetExpiryWidget` lists assets expiring within 30d and is visible only with `it.assets.view-any`
+
 ## Unknowns
 
 - `*(assumed)*` — 30-day window, once-only alert guarded by `warranty_alerted` (vs. reminders at 30/7/1 days). See [[../unknowns|asset-inventory.unknowns]].

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Asset Inventory — Architecture
@@ -52,11 +52,25 @@ Warranties expiring within 30 days trigger a single notification; the `warranty_
 
 **Nav group:** Assets
 
-| Artifact | Kind (ui-strategy row) | Notes |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `AssetResource` | #1 CRUD resource | tweaks: state-badge-column, custom-header-actions (assign / return / retire), relation-manager-timeline (assignment history) | list filters: type, status, assignee, return-flagged |
+| `AssetExpiryWidget` | #6 dashboard widget | [[../../../architecture/patterns/page-blueprints#Dashboard]] | warranties expiring within 30d; polling 30–60s |
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('it.assets.view-any') && BillingService::hasModule('it.assets')`
+per [[../../../architecture/filament-patterns]] #1. This module has no custom pages (all surfaces are the
+resource + widget) and no public/portal surface. See [[security|asset-inventory.security]].
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
 |---|---|---|
-| `AssetResource` | #1 CRUD resource | filters type/status/assignee; assign/return/retire row actions; assignment-history relation manager |
-| `AssetExpiryWidget` | #6 widget | warranties expiring within 30d |
+| Asset CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]); `asset_tag` uniqueness enforced by the per-company unique index |
+| Assign / return (state transition + holder change) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the asset, re-read status, write the `it_asset_assignments` row per [[../../../architecture/patterns/states]] |
+| Retire | Pessimistic | `DB::transaction()` + `lockForUpdate()` state transition per [[../../../architecture/patterns/states]] |
+| Offboard flag / warranty alert (listener + command) | n-a | event/schedule-driven single writer under `WithCompanyContext`; `return_flagged_at` / `warranty_alerted` once-guards prevent duplicates |
 
-Pattern reference: [[../../../architecture/filament-patterns]], [[../../../architecture/ui-strategy]].
-
-**Access contract:** every artifact gates on `canAccess() = Auth::user()->can('it.assets.view-any') && BillingService::hasModule('it.assets')` per [[../../../architecture/filament-patterns]] #1 — see [[security|asset-inventory.security]].
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].

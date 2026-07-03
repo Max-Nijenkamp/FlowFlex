@@ -41,6 +41,19 @@ CRUD of IT assets — the core inventory entity (laptops, phones, monitors, lice
 - Feeds: nothing (no events fired by plain CRUD).
 - Shared entity: `hr_employees` owned by hr.profiles — referenced as assignee, never written.
 
+## Test Checklist
+
+### Unit
+- [ ] `type` must be in the laptop/desktop/phone/monitor/peripheral set
+
+### Feature (Pest)
+- [ ] Create / edit / soft-delete an asset scoped to the company; company B cannot see it
+- [ ] Duplicate `asset_tag` per company rejected; `serial_number` unique per company where set
+- [ ] Status is set by lifecycle actions, not editable freely on the form
+
+### Livewire
+- [ ] `AssetResource` form validates required name/type/tag + duplicate `asset_tag`; create/edit/delete denied without `it.assets.manage`
+
 ## Unknowns
 
 - `*(assumed)*` — `serial_number` unique per company only where set (nullable). See [[../unknowns|asset-inventory.unknowns]].

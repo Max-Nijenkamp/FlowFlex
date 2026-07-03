@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Compliance Widget
@@ -41,6 +41,18 @@ Show the device compliance rate reported by MDM — the share of enrolled device
 - Reads from `it.mdm` (read-only, **soft-dep** — section nulls out and widget hides when inactive).
 - Consumes: nothing.
 - Feeds: nothing (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Compliance rate = compliant enrolled / total enrolled; zero devices yields empty state, not division error
+
+### Feature (Pest)
+- [ ] `it.mdm` inactive -> `compliance_rate` is null, no query against `it_mdm_devices` runs, no error raised
+- [ ] Tenant isolation: rate computed only over own-company devices
+
+### Livewire
+- [ ] Widget absent when `it.mdm` inactive; renders gauge when active; hidden without `it.reporting.view`
 
 ## Unknowns
 

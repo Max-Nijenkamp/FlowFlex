@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Helpdesk Metrics Widget
@@ -42,6 +42,18 @@ Show IT helpdesk performance — ticket volume over time, average resolution tim
 - Reads from `it.helpdesk` (read-only, **soft-dep** — section nulls out and widget hides when inactive).
 - Consumes: nothing.
 - Feeds: nothing (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Average resolution time computed created->resolved over the selected period only
+
+### Feature (Pest)
+- [ ] `it.helpdesk` inactive -> `helpdesk_series` null, widget section skipped without error
+- [ ] Tenant isolation: series aggregates only own-company tickets
+
+### Livewire
+- [ ] Widget absent when `it.helpdesk` inactive; empty range shows "No tickets in range"; hidden without `it.reporting.view`
 
 ## Unknowns
 

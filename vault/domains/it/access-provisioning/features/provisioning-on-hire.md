@@ -36,6 +36,16 @@ the role template, plus a notification to act on them.
 - Feeds: pending grants into [[access-grants]] (Pending tab).
 - Shared entity: employee + job role owned by hr.profiles (read via event only).
 
+## Test Checklist
+
+### Unit
+- [ ] Template match by job role name selects the correct template; no match yields an empty grant set
+
+### Feature (Pest)
+- [ ] `EmployeeHired` → one pending grant per matching-template system + an IT notification
+- [ ] No matching template = no grants created and no error (safe no-op)
+- [ ] Listener runs under `WithCompanyContext`; grants land only in the event's company
+
 ## Unknowns
 
 - Template match by job role name — `*(assumed: template name matching)*`; rename / multi-role behaviour unspecified.

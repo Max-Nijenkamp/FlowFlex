@@ -41,6 +41,19 @@ Assign a licence seat to an employee, and revoke it. Enforces capacity and one-a
 - Feeds: nothing.
 - Shared entity: `hr_employees` owned by hr.employee-profiles; used read-only as the seat holder.
 
+## Test Checklist
+
+### Unit
+- [ ] Capacity check rejects assignment when active seats ≥ `total_seats`
+
+### Feature (Pest)
+- [ ] Assign writes an active `it_licence_assignments` row; revoke stamps `revoked_at` and frees the seat
+- [ ] Over-capacity assignment rejected ("All seats are in use."); duplicate active seat rejected
+- [ ] Concurrent assignment of the last free seat lets only one win (row lock); actions tenant-scoped
+
+### Livewire
+- [ ] Assign / revoke relation-manager actions gated by `it.licences.assign`; over-capacity / duplicate surface inline validation
+
 ## Unknowns
 
 - None beyond module-level assumptions — see [[../unknowns|software-licences.unknowns]].

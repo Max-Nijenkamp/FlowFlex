@@ -41,6 +41,19 @@ CRUD of a software licence: name, vendor, seats, cost, billing cycle, renewal da
 - Feeds: nothing directly; cost totals are read (report-only) by finance.expenses ([[../_module|module edges]]).
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] `LicenceService::utilisation` computes used/total and `waste_cents = (total − used) × cost_per_seat_cents` via brick/money (no float math)
+- [ ] `total_seats` min 1; `billing_cycle` in monthly/annual
+
+### Feature (Pest)
+- [ ] Create / edit / delete a licence scoped to the company; company B cannot see it
+- [ ] Utilisation bar reflects active assignment count over fixtures
+
+### Livewire
+- [ ] `LicenceResource` form validates required fields; create/edit/delete denied without `it.licences.manage`
+
 ## Unknowns
 
 - `*(assumed)*` billing-cycle set is monthly/annual — see [[../unknowns|software-licences.unknowns]].

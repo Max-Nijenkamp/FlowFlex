@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: IT Dashboard
@@ -42,6 +42,20 @@ The single reporting surface for the IT domain — hosts every IT reporting widg
 - Reads from `it.assets` / `it.licences` / `it.helpdesk` / `it.mdm` / `it.access` (all read-only).
 - Consumes: nothing (recomputes live per request, TTL-cached).
 - Feeds: nothing (read-only dashboard, emits no events).
+
+## Test Checklist
+
+### Unit
+- [ ] Cache key embeds company_id + from/to window; historical range TTL 1h vs current-period 15min
+
+### Feature (Pest)
+- [ ] Soft-dep widgets (licence/helpdesk/compliance) render only when their module is active; inactive module omits its widget with no error
+- [ ] Export action is throttled per company-user (over-limit -> 429) and requires `it.reporting.view`
+- [ ] Tenant isolation: metrics for company A never leak into company B's cached response
+
+### Livewire
+- [ ] `ItDashboardPage` canAccess(): hidden without `it.reporting.view` or with `it.reporting` inactive
+- [ ] Header period filter re-scopes widgets
 
 ## Unknowns
 

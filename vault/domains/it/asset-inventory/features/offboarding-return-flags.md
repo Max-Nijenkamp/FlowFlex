@@ -42,6 +42,16 @@ When an employee is offboarded, flag their assigned assets for return and notify
 - Feeds: an IT notification via core.notifications (no domain event fired back).
 - Shared entity: `hr_employees` (the offboarded employee, identified by id in the payload).
 
+## Test Checklist
+
+### Unit
+- [ ] Only currently-assigned assets of the offboarded employee are selected for flagging
+
+### Feature (Pest)
+- [ ] `EmployeeOffboarded` → assigned assets get `return_flagged_at` + an IT notification
+- [ ] Listener runs under `WithCompanyContext`; flags only the event company's assets, never HR tables
+- [ ] Re-delivery is idempotent — already-flagged assets unchanged
+
 ## Unknowns
 
 - Whether a follow-up reminder is sent if flagged assets are not returned within N days — not specified. See [[../unknowns|asset-inventory.unknowns]].

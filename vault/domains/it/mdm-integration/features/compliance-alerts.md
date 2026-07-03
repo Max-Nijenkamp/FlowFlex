@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Compliance Alerts
@@ -37,6 +37,20 @@ Flag non-compliant devices and notify IT once per state change, resetting when t
 - Consumes: compliance-status transitions detected by [[device-sync]].
 - Feeds: IT notification (in-app/email) — no HR events, no cross-domain event.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Transition detection: alert fires only on `compliance_status` change, not on unchanged non-compliant re-sync
+- [ ] `compliance_alerted` resets on any state change, including recovery
+
+### Feature (Pest)
+- [ ] Device staying non-compliant across multiple hourly syncs notifies IT exactly once
+- [ ] Recovery then re-transition to non-compliant alerts again
+- [ ] Tenant isolation: notification targets only the owning company's IT recipients
+
+### Livewire
+- (none -- background path; compliance state visible via MdmDeviceResource filter)
 
 ## Unknowns
 

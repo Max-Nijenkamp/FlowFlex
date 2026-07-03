@@ -42,6 +42,19 @@ Employee-facing ticket creation. Any user can raise an IT ticket — report a br
 - Feeds: new-ticket + requester replies surface in [[staff-queue]]; staff public replies notify the requester via core.notifications.
 - Shared entity: requester = `hr_employees` (hr.profiles); asset picker source = `it_assets` (it.assets).
 
+## Test Checklist
+
+### Unit
+- [ ] Asset picker options are limited to the requester's own assigned assets
+
+### Feature (Pest)
+- [ ] Any user with `it.helpdesk.create-own` can create a ticket; it starts `open`, requester = self
+- [ ] Requester sees only their own tickets and public replies; internal notes hidden
+- [ ] Attaching another employee's asset is rejected
+
+### Livewire
+- [ ] Create form validates required fields; assign / internal-note controls not shown to a create-own-only user
+
 ## Unknowns
 
 - `*(assumed)*` asset picker restricted to requester's own assigned assets — "assigned to" resolution from it.assets unconfirmed ([[../unknowns|helpdesk.unknowns]]).

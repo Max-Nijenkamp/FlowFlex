@@ -38,6 +38,18 @@ GitHub + AWS + Slack. These drive automatic pending-grant creation on hire.
 - Feeds: templates read by [[provisioning-on-hire]] (`ProvisionOnHireListener` matches by role name).
 - Shared entity: systems owned by [[system-catalogue]].
 
+## Test Checklist
+
+### Unit
+- [ ] Each `systems[]` entry requires a valid `system_id` + access level
+
+### Feature (Pest)
+- [ ] Create a template with role name + systems repeater; each `system_id` must exist in the company
+- [ ] Template CRUD tenant-scoped: company A cannot see/edit company B templates
+
+### Livewire
+- [ ] Form validates role name required + rejects a `system_id` from another company; denied without `it.access.manage-templates`
+
 ## Unknowns
 
 - Template match key by job role name — `*(assumed: template name matching)*`.

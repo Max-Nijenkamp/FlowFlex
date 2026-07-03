@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Device Sync
@@ -38,6 +38,20 @@ Hourly background pull of managed devices from the connected MDM provider into `
 - Consumes: the stored connection from [[provider-connection]] (provider + credentials).
 - Feeds: [[compliance-alerts]] (fires on compliance-status change); populates rows for [[device-actions]].
 - Shared entity: `it_assets` owned by it.assets — read-matched by serial, never written.
+
+## Test Checklist
+
+### Unit
+- [ ] Serial auto-match sets `asset_id` when serials match *(assumed)*; no match leaves it null
+- [ ] Cursor incrementality: only devices changed since `last_synced_at` are requested
+
+### Feature (Pest)
+- [ ] Re-running the job upserts by `(company_id, external_device_id)` -- zero duplicate rows
+- [ ] Compliance-status transition during sync hands off to the alert path
+- [ ] Tenant isolation: sync writes rows only for the owning company's config
+
+### Livewire
+- (none -- background job; results surface in MdmDeviceResource)
 
 ## Unknowns
 

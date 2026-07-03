@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Access Provisioning — Security
@@ -23,6 +23,10 @@ See also [[../../../security/tenancy-isolation]], [[../../../security/authn-auth
 | `it.access.revoke` | Revoke an access grant |
 | `it.access.manage-systems` | Create / edit / delete the system catalogue |
 | `it.access.manage-templates` | Create / edit / delete role access templates |
+| `it.access.export-review` | Export the access-review matrix snapshot *(assumed)* |
+
+Verb-per-command: `grant` / `revoke` cover the grant status transitions; `export-review` gates the matrix
+export command on `AccessReviewPage`. Seeded in `PermissionSeeder`.
 
 ---
 
@@ -54,6 +58,6 @@ See [[../../../security/tenancy-isolation]] and [[../../../architecture/multi-te
 
 ## Rate Limiting
 
-The matrix export action on `AccessReviewPage` is throttled per company-user (a `RateLimiter` keyed on
-`company_id:user_id`) to prevent a full access-audit dump from being pulled in a loop. Flagged medium in
-[[../../../build/security-audit-2026-06-11]]. See [[../../../architecture/security]].
+The matrix export action on `AccessReviewPage` generates a file and is throttled by the named **`exports`**
+rate limiter (keyed on `company_id:user_id`) to prevent a full access-audit dump from being pulled in a
+loop. Flagged medium in [[../../../build/security-audit-2026-06-11]]. See [[../../../architecture/security]].

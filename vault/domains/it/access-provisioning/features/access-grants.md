@@ -39,6 +39,19 @@ granted/revoked dates and status. IT works this list to complete provisioning an
 - Feeds: grant state into the [[access-review-matrix]].
 - Shared entity: employee owned by hr.profiles (read only); system owned by [[system-catalogue]].
 
+## Test Checklist
+
+### Unit
+- [ ] Access level must be in the `admin / user / read` set
+
+### Feature (Pest)
+- [ ] Grant stamps `granted_at` / `granted_by` + writes audit; revoke stamps `revoked_at` / `revoked_by`
+- [ ] Duplicate active `(employee_id, system_id)` grant rejected (concurrent double-grant blocked via row lock)
+- [ ] Grants tenant-scoped: company A cannot grant / revoke company B grants
+
+### Livewire
+- [ ] Pending / Flagged tabs filter by status; Grant / Revoke row actions gated by `it.access.grant` / `it.access.revoke`
+
 ## Unknowns
 
 - Access-level set (`admin / user / read`) — `*(assumed set)*`.

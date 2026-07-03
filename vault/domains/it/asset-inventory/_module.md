@@ -5,12 +5,23 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Asset Inventory
 
 Track IT hardware and software assets (laptops, phones, monitors, licences): assign to employees, track lifecycle, and manage returns. The IT anchor — build first in `/it`. Owns `it_assets` + `it_asset_assignments`.
+
+---
+
+## Module-key
+
+`it.assets`
+
+**Priority:** p3  
+**Panel:** it  
+**Permission prefix:** `it.assets`  
+**Tables:** `it_assets`, `it_asset_assignments`
 
 ---
 
@@ -62,7 +73,8 @@ tests/Feature/IT/{AssetLifecycleTest,OffboardingReturnTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see/assign/retire company B assets
+- [ ] Module gating: artifacts hidden when `it.assets` inactive
 - [ ] Assign only from in_stock; return records condition + history
 - [ ] `EmployeeOffboarded` flags that employee's assets + notifies
 - [ ] Warranty alert once at 30d

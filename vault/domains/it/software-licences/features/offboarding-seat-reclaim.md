@@ -38,6 +38,16 @@ When an employee is offboarded, flag all of their active licence seats for recla
 - Feeds: nothing.
 - Shared entity: `hr_employees` owned by hr.employee-profiles; referenced by `employee_id` scalar only.
 
+## Test Checklist
+
+### Unit
+- [ ] Only active (`revoked_at IS NULL`) seats of the offboarded employee are selected for flagging
+
+### Feature (Pest)
+- [ ] `EmployeeOffboarded` → active seats get `reclaim_flagged_at`; seats stay active until an admin revokes
+- [ ] Listener runs under `WithCompanyContext`; flags only the event company's assignments, never HR tables
+- [ ] Re-delivery is idempotent — already-flagged seats unchanged
+
 ## Unknowns
 
 - `*(assumed)*` reclaim is advisory (flag), not auto-revoke — see [[../unknowns|software-licences.unknowns]].

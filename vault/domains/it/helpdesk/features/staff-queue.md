@@ -41,6 +41,18 @@ The IT-staff triage board — a priority-sorted queue of all open/in-progress ti
 - Feeds: resolve/assign/public-reply → requester notification via core.notifications.
 - Shared entity: requester = `hr_employees` (hr.profiles); `asset_id` = `it_assets` (it.assets).
 
+## Test Checklist
+
+### Unit
+- [ ] Queue ordering sorts urgent → low then oldest-first over a fixture set
+
+### Feature (Pest)
+- [ ] Queue lists all non-closed company tickets regardless of requester (staff scope), never company B's
+- [ ] Assign / reply / resolve from the queue update the ticket + notify the requester on public actions
+
+### Livewire
+- [ ] `ItHelpdeskQueuePage` `canAccess()` denies without `it.helpdesk.view-any`; polling refresh surfaces new tickets
+
 ## Unknowns
 
 - `*(assumed)*` polling interval 30s (no Reverb/websocket realtime planned for internal helpdesk) — see [[../unknowns|helpdesk.unknowns]].

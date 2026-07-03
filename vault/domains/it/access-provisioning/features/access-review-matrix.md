@@ -39,6 +39,19 @@ snapshot for compliance reviews.
 - Feeds: nothing — audit view only.
 - Shared entity: employees owned by hr.profiles (read only); grants from [[access-grants]]; systems from [[system-catalogue]].
 
+## Test Checklist
+
+### Unit
+- [ ] Matrix builder maps each (employee, system) cell to its current grant status / access level
+
+### Feature (Pest)
+- [ ] `AccessReviewQuery::matrix()` returns the correct grid over fixtures in one query (no N+1)
+- [ ] Matrix + export tenant-scoped: company A never sees company B rows
+- [ ] Export throttled by the `exports` limiter per company-user
+
+### Livewire
+- [ ] `AccessReviewPage` renders the grid; `canAccess()` denies without `it.access.view-any`; export denied without `it.access.export-review`
+
 ## Unknowns
 
 - Matrix build via `AccessReviewQuery::matrix()` in one query (no N+1) — `*(assumed)*`.

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Device Actions (Lock / Wipe)
@@ -41,6 +41,20 @@ Remote **lock** and **wipe** actions on a synced device, proxied to the provider
 - Consumes: rows populated by [[device-sync]].
 - Feeds: provider command (lock/wipe) + activity-log audit entry — no cross-domain event, no HR events.
 - Shared entity: `it_assets` owned by it.assets — read for display only.
+
+## Test Checklist
+
+### Unit
+- [ ] `DeviceActionData` validation: action limited to lock|wipe; device must belong to the company
+
+### Feature (Pest)
+- [ ] `TriggerDeviceAction` proxies to the resolved driver and writes an audit entry; raced double-click fires the provider command once (lockForUpdate)
+- [ ] Wipe requires `it.mdm.wipe`; lock requires `it.mdm.lock`; neither deletes the local row
+- [ ] Tenant isolation: acting on another company's device id is rejected
+
+### Livewire
+- [ ] Lock/Wipe row actions render per permission; Wipe shows destructive confirm modal; provider rejection surfaces toast
+- [ ] Resource hidden without `it.mdm.view-any` or with `it.mdm` inactive
 
 ## Unknowns
 

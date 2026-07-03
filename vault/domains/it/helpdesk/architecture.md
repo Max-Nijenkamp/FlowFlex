@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # IT Helpdesk — Architecture
@@ -53,11 +53,30 @@ open → in_progress → resolved → closed
 
 **Nav group:** Helpdesk
 
-| Artifact | Kind (ui-strategy row) | Notes |
-|---|---|---|
-| `ItTicketResource` | #1 simple-resource | My tickets / All (permission) tabs; category + priority + status columns/filters |
-| `ItHelpdeskQueuePage` | #8-style custom page | IT staff queue, priority-sorted, polling 30s |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `ItTicketResource` | #1 CRUD resource | tweaks: state-badge-column, relation-manager-timeline (replies thread), custom-header-actions (assign / resolve) | My tickets / All (permission) tabs; category + priority + status columns/filters |
+| `ItHelpdeskQueuePage` | #8 shared-inbox / work-queue custom page | [[../../../architecture/patterns/page-blueprints#Inbox / Chat / Conversation]] | IT staff queue, priority-sorted; **polling 30s** (no Reverb for internal helpdesk *(assumed)*) |
 
-**Access contract:** every artifact gates on `canAccess() = Auth::user()->can('it.helpdesk.view-any') && BillingService::hasModule('it.helpdesk')` per [[../../../architecture/filament-patterns]] #1 — custom pages state it explicitly. See [[security|helpdesk.security]].
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('it.helpdesk.view-any') && BillingService::hasModule('it.helpdesk')`
+per [[../../../architecture/filament-patterns]] #1. `ItHelpdeskQueuePage` is a custom page and MUST state this
+explicitly — Filament does not auto-gate custom pages. Self-service creation reaches the create form / own
+tickets via `it.helpdesk.create-own` without `view-any`. No public/portal surface (internal-facing). See
+[[security|helpdesk.security]].
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Ticket CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Ticket-number allocation (create) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the per-company counter so `ticket_number` stays sequential and gap-free *(assumed)* |
+| Status transition (assign / resolve / reopen) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read status, write per [[../../../architecture/patterns/states]] |
+| Reply append | n-a | append-only insert into `it_ticket_replies`; no concurrent update on the same row |
+| Auto-close (scheduled command) | n-a | schedule-driven single writer; guarded by `resolved_at` age (>3d) |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 Pattern reference: [[../../../architecture/patterns/custom-pages]], [[../../../architecture/ui-strategy]].

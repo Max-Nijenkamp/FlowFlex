@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Software Licences — Security
@@ -21,6 +21,10 @@ See also [[../../../security/tenancy-isolation]], [[../../../security/authn-auth
 | `it.licences.view-any` | View licences, seats, utilisation, renewals |
 | `it.licences.manage` | Create, edit, delete licence records |
 | `it.licences.assign` | Assign and revoke seats per employee |
+
+Verb-per-command: `assign` covers both the seat-assign and seat-revoke actions (capacity mutations);
+`manage` covers licence CRUD. Renewal alert and offboard reclaim are system-triggered (scheduled command /
+queued listener), no user command. Seeded in `PermissionSeeder`.
 
 ---
 
@@ -47,3 +51,10 @@ Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[../
 - Cross-domain writes never occur: HR data is read-only to this module; the reclaim flag writes only this module's `it_licence_assignments` ([[../../../security/data-ownership]]).
 
 See [[../../../security/tenancy-isolation]] and [[../../../architecture/multi-tenancy]].
+
+---
+
+## Rate Limiting
+
+Seat assign / revoke mutate licence capacity, so those panel actions are throttled by the named
+**`panel-action`** limiter *(assumed)* to prevent a rapid assign/revoke loop. See [[../../../architecture/security]].

@@ -40,6 +40,19 @@ Surface upcoming licence renewals and flagged seats on a dashboard widget, and s
 - Feeds: notifications via core.notifications (renewal-due alert).
 - Shared entity: none.
 
+## Test Checklist
+
+### Unit
+- [ ] 30-day window selects licences with `renewal_date` due and `renewal_alerted_at` unset for the cycle
+
+### Feature (Pest)
+- [ ] `LicenceRenewalAlertCommand` notifies once per cycle and stamps `renewal_alerted_at`; a second run does not re-alert
+- [ ] Changing `renewal_date` clears the guard so the next cycle alerts again
+- [ ] Command runs per-company under `WithCompanyContext`
+
+### Livewire
+- [ ] `LicenceRenewalWidget` lists renewals (next 60d) + flagged seats; visible only with `it.licences.view-any`
+
 ## Unknowns
 
 - `*(assumed)*` 30-day alert lead time and 60-day widget horizon — see [[../unknowns|software-licences.unknowns]].

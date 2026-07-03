@@ -41,6 +41,20 @@ Assign an asset to an employee, return it with a condition note, and retire it �
 - Feeds: nothing fired externally — lifecycle is internal to this module.
 - Shared entity: `hr_employees` (assignee, read-only); `finance.assets` (soft `fin_asset_id` link).
 
+## Test Checklist
+
+### Unit
+- [ ] Assign guard requires `in_stock`; retire guard rejects while `assigned`
+
+### Feature (Pest)
+- [ ] Assign writes an `it_asset_assignments` row + transitions `in_stock → assigned` + mirrors `assigned_to_employee_id`
+- [ ] Return stamps `returned_at` + `condition_note` and transitions `assigned → in_stock`
+- [ ] Concurrent double-assign of the same asset rejected (row lock); retire-while-assigned rejected
+- [ ] Actions tenant-scoped: cannot assign company B's asset or to company B's employee
+
+### Livewire
+- [ ] Assign / Return actions gated by `it.assets.assign`, Retire by `it.assets.retire`; actions disabled outside the valid state
+
 ## Unknowns
 
 - `*(assumed: note only)*` — retire finance disposal hint is a note, not a finance trigger. See [[../unknowns|asset-inventory.unknowns]] (UNVERIFIED).

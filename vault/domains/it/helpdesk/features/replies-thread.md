@@ -42,6 +42,19 @@ The conversation on a ticket — a chronological thread of replies between the r
 - Feeds: public reply → requester notification (core.notifications); reply visible in [[staff-queue]] + [[ticket-management]] detail.
 - Shared entity: author references `users` / `hr_employees`; thread hangs off `it_tickets` (owned here).
 
+## Test Checklist
+
+### Unit
+- [ ] Only `it.helpdesk.respond` holders may set `is_internal = true`; requester replies forced public
+
+### Feature (Pest)
+- [ ] Public reply notifies the requester; internal note notifies no one
+- [ ] Internal notes are excluded from the requester's rendered thread
+- [ ] Requester replying to a `resolved` ticket reopens it (`resolved → in_progress`) *(assumed)*
+
+### Livewire
+- [ ] `is_internal` toggle shown to staff only; reply on any ticket requires `it.helpdesk.respond`, own ticket requires `it.helpdesk.create-own`
+
 ## Unknowns
 
 - `*(assumed)*` only `it.helpdesk.respond` holders may mark a reply internal — see [[../unknowns|helpdesk.unknowns]].

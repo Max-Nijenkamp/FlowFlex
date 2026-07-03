@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # MDM Integration — Architecture
@@ -46,6 +46,19 @@ The cursor makes each run **incremental** — only devices changed since the las
 **Access contract:** every artifact gates on `canAccess() = Auth::user()->can('it.mdm.view-any') && BillingService::hasModule('it.mdm')` per [[../../../architecture/filament-patterns]] #1 — the custom page states it explicitly. See [[security|mdm.security]].
 
 Pattern reference: [[../../../architecture/patterns/custom-pages]], [[../../../architecture/ui-strategy]].
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `SyncMdmDevicesJob` device upsert | n-a | Single-writer scheduled job; upsert keyed on `(company_id, external_device_id)` makes concurrent re-runs duplicate-free |
+| `TriggerDeviceAction` lock / wipe | Pessimistic | `lockForUpdate` on the device row in a transaction — external API command + audit row must not double-fire on a raced click *(assumed)* |
+| `MdmConfigPage` provider credentials save | Optimistic | Version-checked settings save per [[../../../architecture/patterns/optimistic-locking]] |
+| Device action audit rows | n-a | Append-only |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 
