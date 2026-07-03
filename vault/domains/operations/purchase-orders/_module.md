@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Purchase Orders
@@ -76,7 +76,8 @@ tests/Feature/Operations/{PurchaseOrderTest,PoReceiptTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see/send/cancel company B's POs
+- [ ] Module gating: artifacts hidden when `operations.purchase-orders` inactive
 - [ ] PO numbers sequential + unique per company
 - [ ] Totals via brick/money; line cost defaults from supplier catalogue
 - [ ] Status transitions per machine; cancel blocked after any receipt

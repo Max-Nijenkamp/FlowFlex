@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Requisition Conversion
@@ -39,6 +39,20 @@ Turn an approved procurement requisition into a purchase order.
 - Consumes: reads approved requisition data from [[../../../procurement/requisitions/_module|procurement.requisitions]] (read API).
 - Feeds: `requisition_id` back-reference; procurement may observe PO creation to close the requisition (its own write).
 - Shared entity: requisition owned by procurement.
+
+## Test Checklist
+
+### Unit
+- [ ] Prefill maps requisition lines (item, qty) to PO lines; cost defaults from catalogue
+
+### Feature (Pest)
+- [ ] `createFromRequisition` on an approved requisition creates a draft PO with `requisition_id` set
+- [ ] A non-approved requisition is rejected (no PO created)
+- [ ] The requisition is only read, never written by this module (procurement closes it via its own path)
+
+### Livewire
+- [ ] Create-from-requisition action hidden when the procurement module is inactive
+- [ ] Action denied without `operations.purchase-orders.create`
 
 ## Related
 

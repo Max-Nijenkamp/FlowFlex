@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Valuation Report
@@ -39,6 +39,19 @@ Total stock value by warehouse and category, with movement-trend context.
 - Consumes: nothing.
 - Feeds: nothing (terminal reporting surface).
 - Shared entity: inventory tables (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Valuation = on_hand x cost_price_cents via `StockService::valuation`, brick/money, grouped by warehouse + category
+
+### Feature (Pest)
+- [ ] Cache key embeds company + date range; historical vs current TTLs honoured
+- [ ] Excel export rate-limited per user/company (`exports` limiter) and requires `operations.reporting.view`
+- [ ] Tenant isolation: valuation never mixes companies
+
+### Livewire
+- [ ] `OperationsDashboardPage` canAccess() explicit; date filter re-scopes; `ValuationWidget`/`MovementTrendWidget` render
 
 ## Related
 

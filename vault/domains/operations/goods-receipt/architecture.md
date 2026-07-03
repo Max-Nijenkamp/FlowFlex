@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Goods Receipt — Architecture
@@ -49,12 +49,26 @@ Consumes: none.
 
 **Nav group:** Purchasing
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `GoodsReceiptResource` | #1 CRUD resource | GRN list + read-only view; linked from PO view |
-| `ReceiveGoodsPage` | #7 custom page | create-from-PO: lines prefilled with open qty, accept/reject per line, running discrepancy check |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `GoodsReceiptResource` | #1 CRUD resource | tweaks: read-only-flow-owned (writes owned by `GrnService` via `ReceiveGoodsPage`), state-badge-column | GRN list + read-only view; linked from PO view; list filters: PO, warehouse, status |
+| `ReceiveGoodsPage` | #7 wizard custom page | [[../../../architecture/patterns/page-blueprints#Wizard]] *(assumed — a create-from-PO receiving grid framed as a single-flow entry page; not a clean multi-step wizard, see QUESTIONS)* | create-from-PO: lines prefilled with open qty, accept/reject per line, running discrepancy check |
 
-**Access contract:** `canAccess() = Auth::user()->can('operations.goods-receipt.view-any') && BillingService::hasModule('operations.goods-receipt')` per [[../../../architecture/filament-patterns]] #1 — the custom page states it explicitly.
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('operations.goods-receipt.view-any') && BillingService::hasModule('operations.goods-receipt')`
+per [[../../../architecture/filament-patterns]] #1. `ReceiveGoodsPage` is a custom page and MUST state this explicitly — Filament does not auto-gate custom pages. The `create` action additionally requires `operations.goods-receipt.create`. There are no public/portal surfaces — the `operations` panel is authenticated only.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| GRN creation (`GrnService::receive`) | n/a (append-only) | A GRN is a new immutable receipt record with no update path — no concurrent edit of an existing row; the four steps below run inside one `DB::transaction()` (all-or-nothing) |
+| Stock `in` posting (via `StockService::move`) | Pessimistic | `lockForUpdate()` on the stock-level row inside the receive transaction — inventory increment per [[../../../architecture/patterns/optimistic-locking]] pessimistic tier |
+| PO receipt + status update (via `PurchaseOrderService::recordReceipt`) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the PO, re-read `quantity_received`, transition status per [[../../../architecture/patterns/states]] |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

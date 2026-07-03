@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Reserve & Release
@@ -37,6 +37,19 @@ Hold stock for a pending sale/cart without removing it from on-hand.
 - Consumes: reserve/release calls from ecommerce / sales-orders (same pattern as other stock mutators).
 - Feeds: nothing (no event).
 - Shared entity: none beyond `ops_items` / `ops_stock_levels` it owns.
+
+## Test Checklist
+
+### Unit
+- [ ] `reserve` raises `quantity_reserved` and lowers `available`; on-hand unchanged
+- [ ] `release` lowers `quantity_reserved` and cannot drop it below zero
+
+### Feature (Pest)
+- [ ] Reserving beyond available is rejected (no over-reserve)
+- [ ] On-hand only changes on an actual `out` movement, never on reserve/release
+- [ ] Concurrent reserves on the same level serialised via `lockForUpdate` — no over-reservation
+
+<!-- background service contract — no manual UI in v1, so no Livewire cases -->
 
 ## Related
 

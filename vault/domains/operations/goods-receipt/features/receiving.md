@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Receiving
@@ -41,6 +41,22 @@ Receive goods against a PO — prefilled from open quantities, accept/reject per
 - Consumes: nothing.
 - Feeds: `GoodsReceived` → finance.ap (draft bill + 3-way match).
 - Shared entity: `ops_purchase_orders`, `ops_items`, `ops_warehouses`.
+
+## Test Checklist
+
+### Unit
+- [ ] Line prefill computes open qty = ordered − already-received
+- [ ] Over-receipt guard rejects cumulative received > ordered × 1.1 *(assumed 10%)*
+
+### Feature (Pest)
+- [ ] `GrnService::receive` posts GRN + accepted stock `in` at PO cost + PO status update + `GoodsReceived` in one transaction; a failure in any step rolls back all
+- [ ] Partial receipt leaves PO `partially_received`; receiving remaining lines flips it to `received`
+- [ ] Tenant isolation: cannot receive against another company's PO (denied before any write)
+- [ ] Concurrent double-receive of the same PO line serialised via `lockForUpdate` — no double stock post
+
+### Livewire
+- [ ] Picking a PO prefills the line grid with open quantities
+- [ ] Submit denied without `operations.goods-receipt.create`; validation error (split ≠ received) blocks the write
 
 ## Related
 

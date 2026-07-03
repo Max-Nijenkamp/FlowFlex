@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Operations Reporting — Architecture
@@ -46,6 +46,17 @@ Fires none, consumes none. (A future optimisation could invalidate the current-w
 **Access contract:** `canAccess() = Auth::user()->can('operations.reporting.view') && BillingService::hasModule('operations.reporting')` per [[../../../architecture/filament-patterns]] #1 — the custom page states it explicitly.
 
 **Security note** ([[../../../build/security-audit-2026-06-11]]): rate-limit the Excel export action per user/company.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| All dashboard/widget/export paths | n-a | Read-only aggregation over other Operations modules' tables; owns no tables |
+| Redis aggregate cache writes | n-a | TTL-keyed cache set; idempotent recompute, last-write-wins safe |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

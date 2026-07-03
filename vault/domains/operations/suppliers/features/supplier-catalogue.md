@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Supplied-Items Catalogue
@@ -40,6 +40,19 @@ Which items a supplier provides, at what cost, lead time, and vendor SKU — wit
 - Consumes: nothing.
 - Feeds: preferred cost consumed by [[../../purchase-orders/_module|operations.purchase-orders]] as the PO line cost default (read via `PreferredSupplierFor::item`).
 - Shared entity: `ops_items` (operations.inventory).
+
+## Test Checklist
+
+### Unit
+- [ ] `cost_cents` stored as integer minor units; lead_time_days int; supplier_sku per link
+
+### Feature (Pest)
+- [ ] Setting `is_preferred` on a new supplier unsets the prior preferred for that item in the same transaction (raced toggles yield exactly one)
+- [ ] Preferred supplier's cost defaults the PO line unit cost
+- [ ] Tenant isolation: catalogue links own-company suppliers/items only
+
+### Livewire
+- [ ] Supplied-items relation manager adds/edits links; preferred toggle renders; hidden without `operations.suppliers.view-any`
 
 ## Related
 

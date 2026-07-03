@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Quality Check (Accept / Reject)
@@ -40,6 +40,21 @@ Accept or reject received quantities per line, with a reason on rejection. Only 
 - Consumes: nothing.
 - Feeds: accepted totals into `GoodsReceived` (rejected excluded).
 - Shared entity: `ops_po_lines` (operations.purchase-orders).
+
+## Test Checklist
+
+### Unit
+- [ ] `quantity_accepted + quantity_rejected = quantity_received` enforced per line
+- [ ] `reject_reason` required whenever `quantity_rejected > 0`
+
+### Feature (Pest)
+- [ ] Only `quantity_accepted` posts a stock `in` movement; `quantity_rejected` posts nothing
+- [ ] `GoodsReceived` payload carries accepted totals only (rejected excluded)
+- [ ] Discrepancy (received ≠ ordered) is flagged but does not block acceptance
+
+### Livewire
+- [ ] Reason field appears when rejected > 0; submit blocked without it
+- [ ] Totals + discrepancy flags recompute live as the accept/reject split changes
 
 ## Related
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Low-Stock Alerts
@@ -39,6 +39,20 @@ Detect and surface items whose available stock has fallen below their reorder po
 - Consumes: nothing.
 - Feeds: low-stock list feeds the Operations dashboard + can seed a PO (user-initiated).
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] `lowStock()` flags an item when any warehouse `available < reorder_point`
+- [ ] `reorder_point = 0` produces no alert
+
+### Feature (Pest)
+- [ ] Scheduled `EvaluateLowStockJob` evaluates low stock idempotently (no duplicate notifications for the same state)
+- [ ] Live widget query and the job agree on the low-stock set
+- [ ] Tenant isolation: alerts cover only the current company's items
+
+### Livewire
+- [ ] `LowStockWidget` lists low items with a link to start a PO; hidden without `operations.inventory.view-any`
 
 ## Related
 

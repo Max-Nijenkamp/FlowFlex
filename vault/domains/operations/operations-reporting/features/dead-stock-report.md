@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Dead-Stock & Turnover
@@ -39,6 +39,18 @@ Flag items with no movement in N days and compute stock-turnover ratio per item.
 - Consumes: nothing.
 - Feeds: dead-stock list can seed a write-off adjustment (user-initiated).
 - Shared entity: inventory tables (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Dead-stock rule: no movements in N days (default 90 *(assumed)*) AND on-hand > 0; turnover ratio math
+
+### Feature (Pest)
+- [ ] Item with a movement inside the window excluded; zero on-hand excluded
+- [ ] Tenant isolation: lists scoped to own-company stock
+
+### Livewire
+- [ ] `DeadStockWidget` renders list; hidden without `operations.reporting.view`
 
 ## Related
 

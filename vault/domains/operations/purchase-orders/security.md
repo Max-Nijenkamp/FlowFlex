@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Purchase Orders — Security
@@ -15,11 +15,13 @@ updated: 2026-06-20
 | Permission | Description |
 |---|---|
 | `operations.purchase-orders.view-any` | List POs |
-| `operations.purchase-orders.create` | Create a PO |
+| `operations.purchase-orders.create` | Create a PO (incl. create-from-requisition) |
 | `operations.purchase-orders.send` | Send (draft→sent, PDF + mail) |
 | `operations.purchase-orders.cancel` | Cancel a draft/sent PO |
 
 Seeded in `PermissionSeeder`.
+
+**Verb-per-transition check:** `send` covers draft→sent; `cancel` covers draft/sent→cancelled. The `sent → partially_received → received` transitions are driven by GRN's `recordReceipt` (same-domain) and are gated by `operations.goods-receipt.create`, not a separate PO verb.
 
 ---
 
@@ -41,7 +43,11 @@ Per [[../../../architecture/filament-patterns]] #1.
 
 ## Rate Limiting
 
-Per [[../../../build/security-audit-2026-06-11]] (medium): the `send` action and `GeneratePoPdfJob` + `PurchaseOrderMail` dispatch must be throttled per company to prevent PDF-generation / email abuse.
+| Action | Limiter | Why |
+|---|---|---|
+| `send` action (`GeneratePoPdfJob` + `PurchaseOrderMail`) | `panel-action` | Sends comms (supplier email) and generates a file (PO PDF) per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]; per-company throttle prevents PDF/email abuse ([[../../../build/security-audit-2026-06-11]], medium) |
+
+Limiter registry: [[../../../architecture/security]].
 
 ## Data Ownership
 

@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Inventory
@@ -75,7 +75,8 @@ tests/Feature/Operations/{StockMovementTest,ValuationTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot read or move company B's stock
+- [ ] Module gating: artifacts hidden when `operations.inventory` inactive
 - [ ] All level changes produce movement rows; direct level edit impossible (no write path)
 - [ ] Out beyond available rejected (`InsufficientStockException`)
 - [ ] Weighted-average cost update on receipts (fixture math)

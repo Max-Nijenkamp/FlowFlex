@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Goods Receipt — Security
@@ -15,9 +15,21 @@ updated: 2026-06-20
 | Permission | Description |
 |---|---|
 | `operations.goods-receipt.view-any` | List + view GRNs |
-| `operations.goods-receipt.create` | Record a goods receipt against a PO |
+| `operations.goods-receipt.create` | Record a goods receipt against a PO (accept/reject lines) |
 
 Seeded in `PermissionSeeder`.
+
+Receiving is create-only — there is no separate approve/void transition, and quality-check accept/reject happens inside the single `create` action. `create` is therefore the only command verb.
+
+---
+
+## Rate Limiting
+
+| Action | Limiter | Why |
+|---|---|---|
+| `ReceiveGoodsPage` submit (`GrnService::receive`) | `panel-action` | Mutates inventory (posts stock `in` movements) and fires a cross-domain event per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]] |
+
+Limiter registry: [[../../../architecture/security]].
 
 ---
 

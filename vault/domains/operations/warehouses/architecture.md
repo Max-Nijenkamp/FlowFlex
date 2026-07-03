@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Warehouses — Architecture
@@ -38,6 +38,19 @@ None fired, none consumed. Transfers are an intra-domain stock operation; they p
 | `WarehouseTransferResource` | #1 CRUD resource | create form (source, dest, item, qty) + read-only history |
 
 **Access contract:** every artifact gates on `canAccess() = Auth::user()->can('operations.warehouses.view-any') && BillingService::hasModule('operations.warehouses')` per [[../../../architecture/filament-patterns]] #1.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Warehouse CRUD | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| Set default warehouse | Pessimistic | Unset-prior + set-new in one transaction with `lockForUpdate` -- exactly one `is_default` per company |
+| `TransferStockAction` | Pessimistic | One DB transaction; `StockService::move` locks stock rows (`lockForUpdate`) for the out/in pair -- availability check + both movements atomic (inventory-capacity decrement tier) |
+| Transfer history reads | n-a | Read-only |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

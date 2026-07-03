@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Supplier Performance
@@ -39,6 +39,18 @@ On-time delivery rate and order history per supplier, derived from PO and GRN da
 - Consumes: reads PO + GRN rows (same-domain read, not events).
 - Feeds: metrics reused by [[../../operations-reporting/_module|operations.reporting]] supplier section.
 - Shared entity: PO/GRN tables owned by their modules; this feature only reads them.
+
+## Test Checklist
+
+### Unit
+- [ ] `on_time_rate`: GRN `received_at` <= PO `expected_delivery` counts on-time; no GRN yet excluded *(assumed)*
+
+### Feature (Pest)
+- [ ] Performance derived read-only from PO/GRN (no writes); reflects current state on each call
+- [ ] Tenant isolation: metrics computed over own-company POs only
+
+### Livewire
+- [ ] Performance + order-history panels render on supplier view page
 
 ## Related
 

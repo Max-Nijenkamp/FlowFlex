@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Goods Receipt
@@ -71,7 +71,8 @@ tests/Feature/Operations/{GoodsReceiptTest,ThreeWayMatchEventTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot receive against company B's POs
+- [ ] Module gating: artifacts hidden when `operations.goods-receipt` inactive
 - [ ] Accepted qty creates stock movement at PO line cost; rejected does not
 - [ ] accepted + rejected = received enforced; over-receipt beyond tolerance rejected
 - [ ] Partial GRN → PO partially_received; completing GRN → received

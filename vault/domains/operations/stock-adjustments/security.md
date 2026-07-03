@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Stock Adjustments — Security
@@ -16,9 +16,11 @@ updated: 2026-06-20
 |---|---|
 | `operations.adjustments.view-any` | List adjustments + reports |
 | `operations.adjustments.create` | Create an adjustment / run a stocktake |
-| `operations.adjustments.approve` | Approve a pending high-value adjustment |
+| `operations.adjustments.approve` | Approve a pending high-value adjustment (pending-approval → applied) |
 
 Seeded in `PermissionSeeder`.
+
+**Verb-per-transition check:** `create` covers adjustment/stocktake creation; `approve` covers the one meaningful transition (pending-approval → applied). Under-threshold adjustments apply on create (no separate verb).
 
 ---
 
@@ -40,7 +42,12 @@ Per [[../../../architecture/filament-patterns]] #1. The `StocktakePage` custom p
 
 ## Rate Limiting
 
-Per [[../../../build/security-audit-2026-06-11]] (medium): throttle the stocktake bulk submission per company.
+| Action | Limiter | Why |
+|---|---|---|
+| Stocktake bulk submission (`StocktakePage` confirm) | `panel-action` | Mutates inventory (posts a movement per non-zero delta); throttles large bulk-adjustment runs ([[../../../build/security-audit-2026-06-11]], medium) |
+| Write-off report export (Excel) | `exports` | Bulk export per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]] |
+
+Limiter registry: [[../../../architecture/security]].
 
 ## Tenant Isolation & Data Ownership
 

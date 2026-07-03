@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Purchase Orders — Architecture
@@ -48,13 +48,28 @@ Fires none. Consumes none. Receiving is a same-domain `recordReceipt` call from 
 
 **Nav group:** Purchasing
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `PurchaseOrderResource` | #1 CRUD resource | tweaks: inline-relation-repeater (PO lines), state-badge-column, custom-header-actions (send / cancel / create-from-requisition), pdf-preview-panel | receipt-progress columns; create-from-requisition visible only when procurement active |
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('operations.purchase-orders.view-any') && BillingService::hasModule('operations.purchase-orders')`
+per [[../../../architecture/filament-patterns]] #1. Header actions each carry their own permission (`send` / `cancel` / `create`); the create-from-requisition action additionally requires the procurement module active. No public/portal surfaces — the `operations` panel is authenticated only.
+
+**Security note** ([[../../../build/security-audit-2026-06-11]]): the `send` action (PDF render + supplier email) is throttled by the `panel-action` limiter — see [[./security]].
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
 |---|---|---|
-| `PurchaseOrderResource` | #1 CRUD resource | line repeater, send/cancel actions, PDF preview, receipt-progress columns |
+| PO CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Send (`send`, draft→sent) | Pessimistic | `DB::transaction()` + `lockForUpdate()` state transition (assigns `po_number`, queues PDF + mail) per [[../../../architecture/patterns/states]] |
+| Record receipt (`recordReceipt`, →partially_received / received) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the PO, re-read `quantity_received`, transition status per [[../../../architecture/patterns/states]] |
+| Cancel (`cancel`, draft/sent→cancelled) | Pessimistic | `DB::transaction()` + `lockForUpdate()`; re-check no receipt exists before transitioning |
 
-**Access contract:** `canAccess() = Auth::user()->can('operations.purchase-orders.view-any') && BillingService::hasModule('operations.purchase-orders')` per [[../../../architecture/filament-patterns]] #1.
-
-**Security note** ([[../../../build/security-audit-2026-06-11]]): rate-limit the `send` action / `GeneratePoPdfJob` + `PurchaseOrderMail` dispatch (per-company throttle) to prevent PDF/email abuse.
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

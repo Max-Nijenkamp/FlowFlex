@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: GoodsReceived Event (3-Way Match)
@@ -36,6 +36,18 @@ Fire `GoodsReceived` on acceptance so Finance AP can draft a supplier bill and r
 - Consumes: nothing.
 - Feeds: `GoodsReceived` → finance.ap (draft bill + 3-way match).
 - Shared entity: `supplier_id` maps to finance.ap's supplier via `ops_suppliers.fin_supplier_id`.
+
+## Test Checklist
+
+### Unit
+- [ ] Payload builder includes accepted totals only and carries `company_id` as a scalar (never a model)
+
+### Feature (Pest)
+- [ ] `GoodsReceived` fires inside the receive transaction after stock + PO updates (not before)
+- [ ] With finance.ap inactive the event fires unconsumed and raises no error
+- [ ] `accepted_total_cents` computed via brick/money at PO line cost (no float math)
+
+<!-- background event feature — no Livewire surface in this module -->
 
 ## Related
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Item Catalogue
@@ -40,6 +40,22 @@ CRUD of inventory items (SKU, name, unit, cost, reorder point) with per-warehous
 - Consumes: nothing.
 - Feeds: nothing directly; items are referenced by PO lines, GRN lines, supplier catalogue, adjustments.
 - Shared entity: `ops_warehouses` (operations.warehouses).
+
+## Test Checklist
+
+### Unit
+- [ ] `sku` uniqueness validation is scoped per company
+- [ ] Cost entered in euros is stored as integer cents (brick/money, no float)
+
+### Feature (Pest)
+- [ ] Create/edit/delete item writes only `ops_items`; levels panel is read from `ops_stock_levels`, never written by the form
+- [ ] Soft-delete blocked while stock > 0 *(assumed)*
+- [ ] Tenant isolation: company A cannot view or edit company B's items
+- [ ] Stale-save on an item edited elsewhere raises `StaleRecordException`
+
+### Livewire
+- [ ] Duplicate SKU shows inline validation; create denied without `operations.inventory.manage-items`
+- [ ] SKU search + category + low-stock filters narrow the table
 
 ## Related
 

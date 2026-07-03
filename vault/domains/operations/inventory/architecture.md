@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Inventory — Architecture
@@ -40,13 +40,31 @@ Fires none. Consumes none. Cross-module stock effects are same-domain method cal
 
 **Nav group:** Inventory
 
-| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Notes |
-|---|---|---|
-| `ItemResource` | #1 CRUD resource | per-warehouse levels inline (relation), SKU search |
-| `StockMovementResource` | #1 (read-only) | ledger history, filters by item/warehouse/type/date |
-| `LowStockWidget` | #6 widget | items below reorder point |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `ItemResource` | #1 CRUD resource | tweaks: view-page-tabs, inline-relation-repeater (per-warehouse levels, read-only display) | SKU search + category filter; low-stock badge column |
+| `StockMovementResource` | #1 CRUD resource | tweak: read-only-flow-owned (writes owned by `StockService::move`) | append-only ledger history; filters by item / warehouse / type / date |
+| `StockBoardPage` | #18 heat-map / matrix custom page | [[../../../architecture/patterns/page-blueprints#Heat-map / Matrix]] *(assumed — items × warehouses availability matrix; described in [[./features/stock-movements]] but absent from Build Manifest, see QUESTIONS)* | cell = available; row action "record movement" (manual `move`) |
+| `LowStockWidget` | #6 dashboard widget | [[../../../architecture/patterns/page-blueprints#Dashboard]] | items below reorder point; polling 30–60s |
+| `ValuationWidget` | #6 dashboard widget | [[../../../architecture/patterns/page-blueprints#Dashboard]] *(assumed — described in [[./features/valuation]] but absent from Build Manifest, see QUESTIONS)* | total + by-warehouse stock value |
 
-**Access contract:** `canAccess() = Auth::user()->can('operations.inventory.view-any') && BillingService::hasModule('operations.inventory')` per [[../../../architecture/filament-patterns]] #1.
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('operations.inventory.view-any') && BillingService::hasModule('operations.inventory')`
+per [[../../../architecture/filament-patterns]] #1. `StockBoardPage` is a custom page and MUST state this explicitly — Filament does not auto-gate custom pages; its manual-move action additionally requires `operations.inventory.move-stock`. No public/portal surfaces — the `operations` panel is authenticated only.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Item CRUD (`ItemResource` form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Stock move (`StockService::move`) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the `ops_stock_levels` row, re-read available, validate `out`/`transfer-out` ≤ available, then write movement + upsert level — the inventory decrement path per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]] |
+| Reserve / release (`StockService::reserve` / `release`) | Pessimistic | `lockForUpdate()` on the level row inside a transaction; check available before raising `quantity_reserved` |
+| Movement ledger (`ops_stock_movements`) | n/a (append-only) | Ledger rows are immutable — no update/delete path |
+| Valuation / low-stock reads | n/a (read-only) | Derived computations over levels; no writes |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

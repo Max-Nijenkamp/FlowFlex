@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Spend Analytics & Supplier Performance
@@ -39,6 +39,19 @@ Purchasing spend by supplier/category/time, plus supplier on-time and accuracy.
 - Consumes: nothing.
 - Feeds: nothing (terminal reporting surface).
 - Shared entity: PO/supplier/GRN tables (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Spend grouping by supplier/category/period sums PO totals with brick/money integers
+
+### Feature (Pest)
+- [ ] PO / suppliers module inactive -> section hidden, no query, no error (soft dep)
+- [ ] On-time rate reuses `SupplierService::performance` (GRN received_at vs PO expected)
+- [ ] Tenant isolation: spend aggregates own-company POs only
+
+### Livewire
+- [ ] `SpendWidget` renders; hidden without `operations.reporting.view`
 
 ## Related
 

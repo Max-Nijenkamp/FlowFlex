@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Stock Adjustments
@@ -67,7 +67,8 @@ tests/Feature/Operations/{StockAdjustmentTest,StocktakeTest}.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot adjust company B's stock
+- [ ] Module gating: artifacts hidden when `operations.adjustments` inactive
 - [ ] Above-threshold adjustment pending; stock unchanged until approval; approver ≠ adjuster
 - [ ] Applied adjustment creates movement + value impact (brick/money)
 - [ ] Negative beyond available rejected

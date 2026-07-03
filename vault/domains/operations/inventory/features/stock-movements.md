@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Stock Movements Ledger & Stock Board
@@ -40,6 +40,22 @@ The append-only movement ledger plus a per-warehouse stock board — the single 
 - Consumes: same-domain `StockService::move` calls from warehouses (transfer), PO/GRN (receipt), adjustments, and e-commerce/sales when active.
 - Feeds: nothing (no domain event — stock stays inside Operations).
 - Shared entity: `ops_warehouses`.
+
+## Test Checklist
+
+### Unit
+- [ ] `available = on_hand − reserved` derived correctly per level
+- [ ] Movement type set (in / out / transfer-out / transfer-in) maps to the correct sign
+
+### Feature (Pest)
+- [ ] Every `move` writes a ledger row and upserts the level in one transaction
+- [ ] `out`/`transfer-out` beyond available rejected with `InsufficientStockException` (no partial write)
+- [ ] Concurrent moves on the same level serialised via `lockForUpdate` — no oversell
+- [ ] Ledger is append-only: no update/delete path exists
+
+### Livewire
+- [ ] Board cell → move modal posts a movement; over-available move shows error toast and the cell reverts
+- [ ] Manual move denied without `operations.inventory.move-stock`
 
 ## Related
 

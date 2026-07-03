@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Write-Off Report
@@ -39,6 +39,19 @@ Summarise adjustment value impact by reason/period for finance to journal manual
 - Consumes: nothing.
 - Feeds: write-off totals consumed manually by finance.ledger (a human journals them); no event in v1.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Aggregation groups `value_impact_cents` by reason_code + period with brick/money integers
+
+### Feature (Pest)
+- [ ] Report reflects applied adjustments only (pending excluded) *(assumed)*
+- [ ] Excel export cites the `exports` limiter and requires the view permission
+- [ ] Tenant isolation: report scoped to own company
+
+### Livewire
+- [ ] Report view renders grouped totals; export action gated
 
 ## Related
 

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Suppliers — Architecture
@@ -40,6 +40,18 @@ None fired, none consumed. Performance is derived read-only from PO/GRN data.
 | `OpsSupplierResource` | #1 CRUD resource | supplied-items relation manager; performance + order-history panels on view |
 
 **Access contract:** `canAccess() = Auth::user()->can('operations.suppliers.view-any') && BillingService::hasModule('operations.suppliers')` per [[../../../architecture/filament-patterns]] #1.
+
+---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Supplier CRUD (`OpsSupplierResource`) | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| Set supplier-item `is_preferred` | Pessimistic | `lockForUpdate` on the item's supplier rows in one transaction -- exactly one preferred per item under raced toggles |
+| Performance / preferred lookups | n-a | Read-only over PO/GRN data |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

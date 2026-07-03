@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Stocktake
@@ -40,6 +40,19 @@ Bulk count a warehouse; the system computes and applies the deltas against recor
 - Consumes: nothing.
 - Feeds: adjustments into inventory's ledger + the write-off report.
 - Shared entity: `ops_items`, `ops_stock_levels`, `ops_warehouses`.
+
+## Test Checklist
+
+### Unit
+- [ ] Delta = counted - current on-hand per item; zero deltas produce no adjustment
+
+### Feature (Pest)
+- [ ] Non-zero deltas become adjustments with reason `stocktake correction`; over-threshold deltas queue for approval
+- [ ] Bulk submission rate-limited per company; deltas computed at confirm time against then-current levels *(assumed no freeze)*
+- [ ] Tenant isolation: stocktake writes own-company stock only
+
+### Livewire
+- [ ] Stocktake form validates counted quantities; confirm summarises deltas before apply
 
 ## Related
 

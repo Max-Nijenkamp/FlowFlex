@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: PO PDF & Supplier Email
@@ -38,6 +38,18 @@ Generate a PO PDF and email it to the supplier on send.
 - Consumes: nothing.
 - Feeds: nothing (email is outbound to the supplier, not a domain event).
 - Shared entity: `ops_suppliers` (recipient email).
+
+## Test Checklist
+
+### Unit
+- [ ] PDF filename / `pdf_path` scoped to `companies/{id}/`
+
+### Feature (Pest)
+- [ ] Send dispatches `GeneratePoPdfJob` then queues `PurchaseOrderMail` (both `ShouldQueue`)
+- [ ] `panel-action` rate limiter throttles repeated sends per company (throttled send rejected)
+- [ ] Mail renders the stored PDF to the supplier's catalogue email; job failure surfaces on the action
+
+<!-- background jobs — no dedicated Livewire surface beyond the Send action covered in po-lifecycle -->
 
 ## Related
 

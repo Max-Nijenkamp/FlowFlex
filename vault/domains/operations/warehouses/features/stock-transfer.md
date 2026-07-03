@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Stock Transfer
@@ -43,6 +43,19 @@ Move quantity of an item from one warehouse to another as one atomic operation.
 - Consumes: nothing.
 - Feeds: nothing (no domain event; movements are same-domain).
 - Shared entity: `ops_items` / `ops_stock_levels` owned by operations.inventory.
+
+## Test Checklist
+
+### Unit
+- [ ] Validation: destination != source; quantity <= available at source; both checked before any write
+
+### Feature (Pest)
+- [ ] Transfer writes transfer row + transfer-out + transfer-in in ONE transaction -- failure of either movement rolls back all three
+- [ ] Concurrent transfers of the same stock cannot oversell the source (lockForUpdate in `StockService::move`)
+- [ ] Tenant isolation + permission: own-company warehouses only, `operations.warehouses` verbs enforced
+
+### Livewire
+- [ ] Transfer create form validates source/dest/qty; history read-only; canAccess() hides without permission/module
 
 ## Related
 

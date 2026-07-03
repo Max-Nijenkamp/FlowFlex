@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: PO Lifecycle
@@ -44,6 +44,23 @@ Totals via brick/money; line cost defaults from the preferred supplier catalogue
 - Consumes: `recordReceipt` calls from operations.goods-receipt (same domain).
 - Feeds: nothing (no event; the receipt event is GRN's `GoodsReceived`).
 - Shared entity: `ops_suppliers`, `ops_items`.
+
+## Test Checklist
+
+### Unit
+- [ ] PO total = Σ line qty × unit cost via brick/money (no float)
+- [ ] Line cost defaults from the preferred supplier catalogue when present
+
+### Feature (Pest)
+- [ ] Status machine: `draft→sent→partially_received→received`; illegal transitions rejected
+- [ ] Cancel blocked once any receipt exists
+- [ ] PO number assigned on send is sequential + unique per company
+- [ ] Tenant isolation: company A cannot send or cancel company B's PO
+- [ ] Concurrent send/cancel on one PO serialised via `lockForUpdate` (single state transition wins)
+
+### Livewire
+- [ ] `send` / `cancel` actions gated by their permissions; cancel-after-receipt shows the rejection
+- [ ] Adding a line auto-fills unit cost from catalogue; missing cost surfaces the "No cost known" message
 
 ## Related
 

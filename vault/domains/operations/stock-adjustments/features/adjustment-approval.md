@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Adjustment & Approval
@@ -39,6 +39,20 @@ Record a single stock correction; high-value ones wait for a second signer befor
 - Consumes: nothing.
 - Feeds: applied movements into inventory's ledger; value impacts into the write-off report.
 - Shared entity: `ops_items`, `ops_warehouses`.
+
+## Test Checklist
+
+### Unit
+- [ ] `value_impact_cents` = delta x item cost (brick/money); threshold routing applied vs pending-approval
+- [ ] Validation: negative delta beyond available rejected; notes required for theft/write-off
+
+### Feature (Pest)
+- [ ] Under-threshold adjustment applies immediately via `StockService::move(adjust)` (pessimistic stock lock)
+- [ ] Over-threshold stays pending, stock untouched; `approve` by a second user flips to applied + posts movement; approver = adjuster rejected
+- [ ] Tenant isolation + permission: adjust/approve verbs enforced per company
+
+### Livewire
+- [ ] Approval action visible only to approvers; pending badge renders; canAccess() hides without permission/module
 
 ## Related
 
