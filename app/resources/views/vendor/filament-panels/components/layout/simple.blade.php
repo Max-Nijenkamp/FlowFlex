@@ -26,6 +26,12 @@
     <div @class(['fi-simple-layout', 'ff-auth-split' => $isSplit])>
         {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::SIMPLE_LAYOUT_START, scopes: $renderHookScopes) }}
 
+        @if (filament()->hasDarkMode() && ! filament()->hasDarkModeForced())
+            <div class="ff-auth-theme-switcher">
+                <x-filament-panels::theme-switcher />
+            </div>
+        @endif
+
         @if ($isSplit)
             <aside class="ff-auth-brand" aria-hidden="true">
                 <div class="ff-auth-brand-glow"></div>

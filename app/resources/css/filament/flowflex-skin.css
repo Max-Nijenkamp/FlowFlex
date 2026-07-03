@@ -298,6 +298,55 @@
     .ff-auth-brand { display: none; }
 }
 
+/* Guest theme toggle, top-right of the auth shell */
+.ff-auth-theme-switcher {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 20;
+    display: flex;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 10px;
+    background: rgb(17 24 39 / 0.06);
+    backdrop-filter: blur(4px);
+}
+
+.dark .ff-auth-theme-switcher {
+    background: rgb(255 255 255 / 0.08);
+}
+
+/* ---- Auth dark mode -------------------------------------------------------- */
+.dark .fi-simple-layout {
+    background-color: #0b0f19;
+    background-image:
+        radial-gradient(48rem 30rem at 15% -10%, rgb(var(--primary-500) / 0.14), transparent 60%),
+        linear-gradient(to bottom, transparent, #0e1320);
+}
+
+.dark .ff-auth-split .fi-simple-main-ctn {
+    background-color: #0b0f19;
+    background-image:
+        radial-gradient(46rem 32rem at 45% -12%, rgb(var(--primary-500) / 0.2), transparent 60%),
+        radial-gradient(38rem 26rem at 95% 115%, rgb(var(--primary-500) / 0.1), transparent 58%),
+        linear-gradient(160deg, #101624 0%, #0b0f19 55%, #090c14 100%);
+}
+
+.dark .fi-simple-main {
+    background-color: #111827;
+    border-color: rgb(255 255 255 / 0.08);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 28px 56px -32px rgb(0 0 0 / 0.6);
+}
+
+.dark .fi-simple-main::before {
+    color: rgb(255 255 255 / 0.4);
+}
+
+/* Brand panel is dark in both modes — hairline it against the dark canvas */
+.dark .ff-auth-brand {
+    border-right: 1px solid rgb(255 255 255 / 0.06);
+}
+
 /* ---- Dark mode: keep ink sidebar, deepen canvas --------------------------- */
 .dark .fi-body,
 .dark .fi-main-ctn {
