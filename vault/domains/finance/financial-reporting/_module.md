@@ -15,7 +15,7 @@ tables: []
 permission-prefix: finance.reporting
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Financial Reporting
@@ -60,7 +60,8 @@ The module renders the three core financial statements over any period — Profi
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: statements read only the acting company's ledger; company A cannot see company B figures
+- [ ] Module gating: artifacts hidden when `finance.reporting` inactive
 - [ ] P&L net profit matches GL fixture math (brick/money)
 - [ ] Balance sheet balances; imbalance raises alert
 - [ ] Comparison columns correct vs prior period + budget

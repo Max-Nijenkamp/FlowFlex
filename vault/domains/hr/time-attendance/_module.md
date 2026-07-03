@@ -5,17 +5,29 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Time & Attendance
 
 Clock-in/out, timesheet management, overtime tracking, and approval workflow. Intended to integrate with Payroll for hourly employees. This is a rebuild blueprint — HR domain code was stripped per [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]]. Nothing below is built, shipped, or tested yet.
 
-- Module key: `hr.time` · Panel: `hr` · Priority: v1
-- Permission prefix: `hr.time` · Encrypted fields: none
+---
 
-## Intended Behavior
+## Module-key
+
+`hr.time`
+
+**Priority:** v1  
+**Panel:** hr  
+**Permission prefix:** `hr.time`  
+**Tables:** `hr_time_entries`, `hr_timesheets`
+
+Nav group: Leave. Encrypted fields: none.
+
+---
+
+## Core Features
 
 - Clock-in/clock-out: manual entry or timer-based (in self-service portal).
 - Weekly timesheet: employee fills in hours per day per project/task.
@@ -56,15 +68,7 @@ Clock-in/out, timesheet management, overtime tracking, and approval workflow. In
 - [[features/timesheet-approval-workflow]] — submit / approve / reject
 - [[features/overtime-detection]] — overtime flagging
 
-## Filament
-
-**Nav group:** Leave
-
-| Artifact | Kind ([[../../../architecture/patterns/states|ui-strategy]] row) | Notes |
-|---|---|---|
-| `TimesheetResource` | #1 CRUD resource | pending-approval tab; approve/reject actions |
-| `TimeEntryResource` | #1 CRUD resource | entries list, filters by employee/date |
-| Clock widget (self-service dashboard) | #6 widget | clock in/out button + running timer |
+Filament artifacts (`TimesheetResource`, `TimeEntryResource`, `ClockWidget`) and their access contract now live in [[architecture#Filament Artifacts]].
 
 ## Build Manifest
 
@@ -83,6 +87,18 @@ app/Filament/HR/Widgets/ClockWidget.php
 database/factories/HR/{TimeEntryFactory,TimesheetFactory}.php
 tests/Feature/HR/{TimeTrackingTest,TimesheetApprovalTest}.php
 ```
+
+## Test Checklist
+
+- [ ] Tenant isolation: company A cannot see, log, or approve company B time entries or timesheets
+- [ ] Module gating: artifacts hidden when `hr.time` inactive
+- [ ] `clockIn` while already clocked in throws `AlreadyClockedInException`
+- [ ] Overtime flagged when hours exceed the company standard workday
+- [ ] Approval requires `hr.time.approve` with approver ≠ owner (audited)
+- [ ] Approved timesheet fires `TimesheetApproved` with contract payload (approved minutes, `company_id` scalar)
+- [ ] Employees log/view/submit own entries only (`log-own` / `submit-own`)
+- [ ] Timesheet export names the `exports` limiter
+- [ ] Timesheet transition serialized by `lockForUpdate`; entry CRUD stale-write raises `StaleRecordException`
 
 ## Related
 

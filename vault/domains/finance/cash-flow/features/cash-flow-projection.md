@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — 13-Week Cash Flow Projection
@@ -36,5 +36,21 @@ The core treasury view: a 13-week rolling grid of opening/inflow/outflow/closing
 ## Relations
 - Consumes: `InvoicePaid` (finance.invoicing) — effect is indirect: paid invoices simply drop out of the next `rebuild()` (no direct write on the event).
 - Feeds: `LowCashAlertWidget` breach notifications. In-domain service calls (`rebuild`, `projection`).
+
+## Test Checklist
+
+### Unit
+- [ ] Weekly chaining: `closing = opening + inflows − outflows`, week 1 opening from bank balance, each later week opens at prior closing (brick/money, integer cents)
+- [ ] Scenario shift moves inflows ± 2 weeks only; outflows unchanged
+- [ ] Threshold-breach detection flags a week only when projected balance falls below the low-cash threshold
+
+### Feature (Pest)
+- [ ] `rebuild()` full delete + regenerate is deterministic: open invoice lands in the week of its due date, paid invoice drops out, AP bills/payroll/manual items add outflows; re-run yields identical projected rows
+- [ ] AP-sourced outflows appear only when `finance.ap` active; otherwise outflows come from manual items
+- [ ] `LowCashAlertCommand` fires once per breach week (flag guard suppresses re-alert on second run); tenant isolation on source reads (company A cannot read company B invoices/bank balances)
+
+### Livewire
+- [ ] `CashFlowPage` renders the 13-week grid + chart and toggles scenario; `canAccess` denied without `finance.cashflow.view-any`
+- [ ] `AddManualItemAction` validates type/amount/date and appends a manual item; blocked without `finance.cashflow.manage-items`
 
 See [[../architecture]], [[../api]], [[../data-model]].

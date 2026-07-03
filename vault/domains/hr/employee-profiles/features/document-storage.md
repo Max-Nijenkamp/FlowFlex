@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Document Storage
@@ -44,6 +44,19 @@ Store employee documents and profile photo via Media Library (`spatie/laravel-me
 - Consumes: none.
 - Feeds: none.
 - Shared entity: reads core.files (Media Library) storage config.
+
+## Test Checklist
+
+### Unit
+- [ ] Upload validation enforces the document type/size whitelist (see [[../security]])
+
+### Feature (Pest)
+- [ ] Uploading a document attaches a media record to the employee under the `companies/{id}/` scoped path
+- [ ] A disallowed file type/size is rejected
+- [ ] Tenant isolation: company A cannot read/download company B employee documents
+
+### Livewire
+- [ ] Documents tab visible with `hr.employees.view`; upload action requires `hr.employees.update`
 
 ## Related
 

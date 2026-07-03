@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Exchange Rates
@@ -36,5 +36,20 @@ Effective-dated exchange rates with conversion to base currency.
 ## Relations
 - Consumes: no events.
 - Feeds: no events. Read by finance.invoicing / finance.ap / finance.expenses via `CurrencyService::rateFor` / `toBase`.
+
+## Test Checklist
+
+### Unit
+- [ ] `rateFor(from, to, date)` returns the most recent rate with `effective_date ≤ date`; throws `MissingExchangeRateException` when none exists
+- [ ] `toBase(Money, date)` converts a foreign amount at the locked transaction-date rate; JPY (0 minor units) and BHD (3) round-trip correctly via brick/money
+
+### Feature (Pest)
+- [ ] Duplicate `(company, from, to, effective_date)` rate insert is rejected by the unique constraint
+- [ ] Rate history is retained (new effective-dated row rather than an edit); lookup resolves the correct historical rate for a back-dated transaction
+- [ ] Tenant isolation: company A's rate lookups never resolve company B's rates
+
+### Livewire
+- [ ] `ExchangeRateResource` form validates a manual rate entry and surfaces the unique-constraint violation; `canAccess` denied without `finance.currency.manage`
+- [ ] `CurrencyResource` activates/deactivates a currency and shows the active state badge
 
 See [[../api]], [[../data-model]], [[../architecture]].

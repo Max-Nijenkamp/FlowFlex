@@ -45,7 +45,7 @@ Display of `national_id` / `date_of_birth` will be gated behind `hr.employees.vi
 
 ## Rate Limiting
 
-The export action (medium-severity audit note) will cite a throttle, e.g. `RateLimiter 'hr-export'` per-user/company, per architecture/security.md.
+The roster export action (pxlrbt/filament-excel, medium-severity audit note) cites the named `exports` rate limiter (per-user/company) per [[../../../architecture/security]] and [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]. Any other panel action that sends comms / mutates money / generates files cites `panel-action`; none apply here beyond export.
 
 ## Related
 

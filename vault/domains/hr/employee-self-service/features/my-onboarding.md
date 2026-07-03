@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # My Onboarding
@@ -42,5 +42,18 @@ updated: 2026-07-02
 - Consumes: none (renders hr.onboarding plan live via service).
 - Feeds: task-complete handled by hr.onboarding (no own event fired).
 - Shared entity: reads hr.onboarding plan / tasks.
+
+## Test Checklist
+
+### Unit
+- [ ] The onboarding tile/page renders only when `hr.onboarding` is active (soft-dep gating)
+
+### Feature (Pest)
+- [ ] Own plan + tasks are scoped to `auth()->user()->employee`
+- [ ] Completing an employee-role task routes through hr.onboarding's service (never a direct write)
+- [ ] Self-scope isolation: employee A cannot view or complete employee B's onboarding tasks
+
+### Livewire
+- [ ] Page/tile hidden when `hr.onboarding` inactive; complete-task action gated on the onboarding task-complete permission
 
 [[../_module]]

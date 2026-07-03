@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Encrypted DEI attributes
@@ -46,6 +46,16 @@ Store self-declared diversity attributes such that individual values are never r
 - Consumes: none
 - Feeds: none outbound — decrypted set is consumed only in-process by [[anonymized-snapshots]], then discarded
 - Shared entity: `hr_employees` (FK owner of each attribute row)
+
+## Test Checklist
+
+### Unit
+- [ ] Unique `(employee_id, dimension)` constraint — a second value for the same dimension upserts, never duplicates
+
+### Feature (Pest)
+- [ ] `hr_dei_attributes.value` is persisted as ciphertext (raw DB column is not the plaintext value)
+- [ ] No permission (not even a would-be `view-any`) resolves to a query that returns an individual `value`; the column is never indexed or SQL-filtered
+- [ ] Value is decryptable only transiently inside `GenerateDeiSnapshotsCommand`, then discarded (no request-path decryption)
 
 ## Related
 

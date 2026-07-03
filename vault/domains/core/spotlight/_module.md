@@ -5,17 +5,24 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Spotlight
 
 Panel-scoped ⌘K / Ctrl+K quick-search palette. A Livewire overlay, rendered on every authenticated panel page, that jumps to navigation, offers quick-create actions, and runs the panel's global search — all `canAccess()`-filtered. Built platform capability (no flat spec existed; reconstructed from code).
 
-- **module-key:** `core.spotlight` *(assumed)* · **panel:** all panels · **priority:** v1-core *(assumed)*
-- **fires-events:** none · **consumes-events:** none
+## Module-key
 
-## What it does
+`core.spotlight` *(assumed)*
+
+**Priority:** v1-core *(assumed)*  
+**Panel:** all panels (chrome overlay via render hooks)  
+**Permission prefix:** `core.spotlight` (no permissions — mirrors each panel's own `canAccess()` boundary)  
+**Tables:** none of its own — stateless read-only navigation/search overlay  
+**Events:** fires none · consumes none
+
+## Core Features
 
 - ⌘K / Ctrl+K opens an Alpine overlay teleported to `<body>`; ESC closes, up/down navigate, Enter activates.
 - Three result sources, all `canAccess()`-filtered: panel **Resources** (nav + quick-create), panel **Pages** (nav), and the panel **global search provider** (query ≥2 chars).
@@ -45,6 +52,15 @@ resources/views/livewire/spotlight.blade.php
 app/Providers/AppServiceProvider.php   (registers BODY_END palette + GLOBAL_SEARCH_BEFORE trigger)
 tests/Feature/SpotlightTest.php
 ```
+
+## Test Checklist
+
+- [ ] Tenant isolation: a user in company A's panel sees only company A records (results drawn from that one panel's `CompanyScope`-filtered sources)
+- [ ] Module gating: n/a (platform chrome, always active — mirrors each panel's `canAccess()`)
+- [ ] Results are `canAccess()`-filtered: a resource/page the user cannot access never appears
+- [ ] Renders on an authenticated panel page; NOT on login (no panel user)
+- [ ] Panel context restored mid-Livewire-update (null-panel pitfall) — results resolve for the right panel
+- [ ] Quick-create only offered when `hasPage('create') && canCreate()`
 
 ## Cross-Domain Edges
 

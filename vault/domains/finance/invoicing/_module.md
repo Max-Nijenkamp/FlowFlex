@@ -15,7 +15,7 @@ tables: [fin_invoices, fin_invoice_lines, fin_payments, fin_customers]
 permission-prefix: finance.invoicing
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Invoicing
@@ -23,6 +23,15 @@ updated: 2026-06-20
 Customer invoice creation, sending, payment tracking, and recurring invoice automation. Core revenue tracking for every SME.
 
 > Rebuild blueprint. Code was stripped to the [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; nothing here is built yet. This spec is the source of truth for the rebuild.
+
+## Module-key
+
+`finance.invoicing`
+
+**Priority:** v1-core  
+**Panel:** finance  
+**Permission prefix:** `finance.invoicing`  
+**Tables:** `fin_invoices`, `fin_invoice_lines`, `fin_payments`, `fin_customers`
 
 ## Purpose
 
@@ -72,7 +81,8 @@ See [[../../../architecture/queue-jobs]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see, send, pay, or void company B invoices/customers
+- [ ] Module gating: artifacts hidden when `finance.invoicing` inactive
 - [ ] Totals: lines + tax + discount exact via brick/money (incl. rounding fixture)
 - [ ] Send assigns gap-free sequential number under concurrency
 - [ ] Partial payment → `partially_paid`; completing payment fires `InvoicePaid` with contract payload

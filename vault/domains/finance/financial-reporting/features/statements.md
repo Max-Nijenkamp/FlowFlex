@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Core Financial Statements
@@ -37,5 +37,21 @@ P&L, balance sheet, and cash flow statement, each with comparison columns, drill
 ## Relations
 - Consumes: no events.
 - Feeds: no events; scheduled email delivery deferred to analytics.exports (P3). In-domain / cross-domain read calls into ledger and budgets only.
+
+## Test Checklist
+
+### Unit
+- [ ] P&L subtotals + net profit sum correctly from section rows (brick/money, integer cents); comparison deltas vs prior period / budget derived last
+- [ ] Balance-sheet `balances` assertion true when `assets_cents == liabilities_cents + equity_cents`, false on an imbalanced fixture
+
+### Feature (Pest)
+- [ ] `profitLoss` / `balanceSheet` / `cashFlow` match GL fixture math; drill-down lines sum exactly back to their statement line
+- [ ] Balance-sheet imbalance raises the data-corruption alarm (Sentry) rather than rendering silently corrupt figures
+- [ ] Closed/historical period served from the 1 h cache; current period computed live; tenant isolation on the ledger read (company A cannot read company B journal lines)
+- [ ] vs-budget comparison column present only when `finance.budgets` active; fiscal-year period boundaries honour Company Settings
+
+### Livewire
+- [ ] Each report page renders its statement + comparison columns and drills a line down to journal entries; `canAccess` denied without `finance.reporting.view-any`
+- [ ] Excel / PDF export actions require `finance.reporting.export` and are governed by the `exports` rate limiter
 
 See [[../architecture]], [[../api]], [[../data-model]], [[../security]].

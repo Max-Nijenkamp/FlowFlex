@@ -44,6 +44,21 @@ One-click activation and deactivation of optional modules, delegating entirely t
 - Feeds: indirectly — the `activateModule()` call causes **core.billing** to fire `ModuleActivated`, consumed downstream by [[../../rbac/_module|core.rbac]] (widen assignable permission set) and core.notifications. The marketplace itself fires no events; it delegates.
 - Shared entity: **company module subscriptions** owned by [[../../billing-engine/_module|core.billing]] — mutated only through its service.
 
+## Test Checklist
+
+### Unit
+- [ ] Card control resolves to "Deactivate" for an active paid module, "Activate" for an inactive one, and "included" (no control) for a free-core module
+
+### Feature (Pest)
+- [ ] Activate delegates to `BillingServiceInterface::activateModule()` → `hasModule` true + card flips active (marketplace writes no subscription row itself)
+- [ ] Deactivate gates access off but retains data; a free-core module cannot be deactivated
+- [ ] Billing exception during activate leaves the card state unchanged (no partial write)
+- [ ] Tenant isolation: activating for company A never changes company B's subscription state
+
+### Livewire
+- [ ] Activate/deactivate action opens a confirm modal and requires `core.billing.activate-module` / `deactivate-module`
+- [ ] Non-owner (permission-only) is denied the activate control (owner-only in practice)
+
 ## Unknowns
 
 - None beyond the owner-vs-permission gate already recorded in [[../decisions]].

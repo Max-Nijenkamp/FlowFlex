@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Spotlight — Security
@@ -13,6 +13,10 @@ updated: 2026-06-20
 Parent: [[_module]]
 
 Spotlight surfaces navigation and records fast, so its filtering is a security boundary, not a convenience.
+
+## Permissions
+
+None — Spotlight defines no permission strings. It has no commands, state transitions, or writes; authorization is entirely delegated to each panel's own `canAccess()` boundary (below). `core.spotlight` is platform chrome (always active), so there is no module-gating verb either.
 
 ## Every result is `canAccess()`-filtered
 

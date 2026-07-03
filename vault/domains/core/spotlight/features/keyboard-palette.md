@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Spotlight — Keyboard Palette
@@ -54,6 +54,21 @@ CSS classes `ff-spotlight-overlay` (backdrop) / `ff-spotlight` (panel). View: `r
 - Consumes: none (no domain events).
 - Feeds: none.
 - Shared entity: reads every panel's own Resources/Pages/search provider read-only — those entities are owned by their respective domain modules; Spotlight never mutates them, only links to them.
+
+## Test Checklist
+
+### Unit
+- [ ] Result grouping caps: nav 8 / quick-create 5 / global-search 6 per category
+- [ ] Quick-create entry produced only when `hasPage('create') && canCreate()`
+
+### Feature (Pest)
+- [ ] `getResults()` restores panel context (`setCurrentPanel`) and returns only `canAccess()`-permitted entries
+- [ ] Results scoped to the bound `panelId` — no cross-panel/cross-tenant aggregation
+- [ ] Global-search group appears only for query ≥2 chars
+
+### Livewire
+- [ ] Component renders on an authenticated panel page and NOT on login (no panel user)
+- [ ] Arrow keys move the active highlight; Enter navigates to the selected result; ESC closes
 
 ## Related
 

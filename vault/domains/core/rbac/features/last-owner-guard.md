@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # RBAC — Last-Owner & Built-in Role Guardrails
@@ -56,6 +56,21 @@ flowchart TD
 ## Relations
 
 - Consumes: nothing. Feeds: nothing cross-domain — the guardrails are internal invariants of RBAC.
+
+## Test Checklist
+
+### Unit
+- [ ] "Would-strip-final-owner" predicate is true only when the change leaves zero users with `owner`
+- [ ] Built-in-role check matches exactly `owner`/`admin`/`manager`/`employee`
+
+### Feature (Pest)
+- [ ] `AssignRolesAction` demoting the sole owner throws `CannotRemoveLastOwnerException`; assignment aborts
+- [ ] `DeleteRoleAction` on a built-in role throws `CannotDeleteBuiltInRoleException`
+- [ ] `DeleteRoleAction` on a custom role that still has users assigned is refused *(assumed)*
+- [ ] Two concurrent demotions of the two remaining owners cannot both succeed (row lock leaves ≥1 owner)
+
+### Livewire
+- [ ] The demote/delete action is blocked on `UserResource`/`RoleResource` with the exception message shown
 
 ## Related
 

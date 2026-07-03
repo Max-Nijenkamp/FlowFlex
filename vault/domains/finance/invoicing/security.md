@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Invoicing — Security
@@ -27,7 +27,15 @@ per [[../../../architecture/filament-patterns]] #1 — custom pages state it exp
 
 ## Rate limiting
 
-A per-user/per-company rate limiter (`RateLimiter::for`) is intended on the export action and the PDF-generation endpoint, per [[../../../architecture/api-design]] and [[../../../architecture/security]].
+Named limiters per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]:
+
+- **Send** (`finance.invoicing.send`) sends customer email and generates a PDF → `panel-action` limiter.
+- **Record payment** (`finance.invoicing.record-payment`) mutates money and posts a GL entry → `panel-action` limiter.
+- **Void** (`finance.invoicing.void`) can post a ledger reversal → `panel-action` limiter.
+- **Invoice list Excel export** (`pxlrbt/filament-excel`) → `exports` limiter.
+- **Payment reminder mail** is dispatched by the scheduled `SendPaymentReminderCommand` (queued, not a panel action).
+
+See [[../../../architecture/api-design]] and [[../../../architecture/security]].
 
 ## Integrity controls
 

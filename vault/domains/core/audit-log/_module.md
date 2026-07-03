@@ -12,8 +12,15 @@ updated: 2026-06-20
 
 Full activity trail across all FlowFlex domains via Spatie Activity Log. Every write operation in every domain routes through `AuditLogger::log()` — no domain writes directly to the log table. Always-free core module.
 
-- **module-key:** `core.audit` · **panel:** app + admin · **priority:** v1-core
-- **fires-events:** none · **consumes-events:** none
+## Module-key
+
+`core.audit`
+
+**Priority:** v1-core  
+**Panel:** app + admin  
+**Permission prefix:** `core.audit`  
+**Tables:** `activity_log`  
+**Events:** fires none · consumes none
 
 ## Sibling notes
 
@@ -46,6 +53,7 @@ Full activity trail across all FlowFlex domains via Spatie Activity Log. Every w
 ## Test Checklist
 
 - [ ] Tenant isolation: company A logs invisible to company B
+- [ ] Module gating: `AuditLogResource` hidden when `core.audit` inactive
 - [ ] `AuditLogger::log` sets `company_id` from context automatically
 - [ ] Encrypted/PII field values never appear in `properties` (denylist test)
 - [ ] State transition writes a `state-transition` log row with from/to

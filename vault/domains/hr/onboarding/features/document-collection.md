@@ -53,3 +53,16 @@ Request signed documents from a new hire (contract, ID, tax forms) as part of on
 - Shared entity: reads core.files Media Library.
 
 > UNVERIFIED: no dedicated document table or signed-status tracking is defined in the spec — see [[../unknowns]].
+
+## Test Checklist
+
+### Unit
+- [ ] Document task status moves pending → collected on record
+
+### Feature (Pest)
+- [ ] Marking a document task collected updates its `hr_onboarding_plan_tasks` row
+- [ ] Upload rejected on disallowed file type/size (core.files whitelist, `companies/{id}/` path)
+
+### Livewire
+- [ ] Upload / mark-collected action available on the document checklist
+- [ ] Action denied without `hr.onboarding.update`

@@ -5,15 +5,22 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Invitation System
 
 Team-member invitation flow: an owner/admin sends an email invite → the recipient registers via a public token link → the correct role is assigned automatically under the company team. This is the **only** way new users join a company workspace — there is no open self-registration (see [[decisions]]).
 
-- **module-key:** `core.invitations` · **panel:** app · **priority:** v1-core
-- **fires-events:** none · **consumes-events:** none
+## Module-key
+
+`core.invitations`
+
+**Priority:** v1-core  
+**Panel:** app  
+**Permission prefix:** `core.invitations`  
+**Tables:** `user_invitations`  
+**Fires events:** `InvitationAccepted` *(assumed — see UNVERIFIED note below)* · consumes none
 
 ## Sibling notes
 
@@ -46,6 +53,7 @@ Team-member invitation flow: an owner/admin sends an email invite → the recipi
 ## Test Checklist
 
 - [ ] Tenant isolation: invites of company A invisible to company B
+- [ ] Module gating: `InvitationResource` hidden when `core.invitations` inactive
 - [ ] Accept flow creates user with correct `company_id` + role under correct team
 - [ ] Expired token → 404/invalid page, no acceptance
 - [ ] Revoked token unusable; resend invalidates old token

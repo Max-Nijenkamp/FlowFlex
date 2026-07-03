@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Send Invite
@@ -45,3 +45,17 @@ Owner/admin invites a team member from `InvitationResource` in `/app`.
 - Consumes: none.
 - Feeds: none at send time — a pending invite fires no cross-domain effect until it is accepted (see [[accept-flow]]).
 - Shared entity: **roles** owned by [[../../rbac/_module|core.rbac]] (read-only for the role picker); **users** owned by the platform/RBAC layer (read-only for duplicate detection).
+
+## Test Checklist
+
+### Unit
+- [ ] `CreateInvitationData` validates email + role; a duplicate pending invite for the same email/company is rejected
+
+### Feature (Pest)
+- [ ] Tenant isolation: invites of company A invisible to company B
+- [ ] `SendInvitationAction` creates a row with a UUID token + 7-day expiry and queues `InvitationMail` on `notifications` (never sent synchronously)
+- [ ] `ResendInvitationAction` rotates the token, invalidating the old link (pessimistic row lock)
+
+### Livewire
+- [ ] Resend/Revoke actions require `core.invitations.resend` / `.revoke`; `canAccess()` gated on `view-any` + module active
+- [ ] The invite modal rejects a duplicate pending email inline

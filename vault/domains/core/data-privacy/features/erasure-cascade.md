@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Erasure Cascade
@@ -42,3 +42,14 @@ Soft-delete → anonymise → schedule hard delete, per table family.
 - Consumes: PII-table + eraser registrations pushed into `PersonalDataRegistry` by each domain's ServiceProvider (read-only registry).
 - Feeds: an erasure trigger per subject/table-family → consumed by each owning domain's eraser (which writes its own tables). *(mechanism assumed — see UNVERIFIED above)*
 - Shared entity: PII table/field + legal-hold definitions are owned by the source domains and by [[../../../architecture/data-lifecycle]]; this feature reads them and writes only its own `dsar_requests`.
+
+## Test Checklist
+
+### Unit
+- [ ] Per-family cascade rule selects anonymise vs hard-delete vs skip (legal hold) for a given table family
+
+### Feature (Pest)
+- [ ] `hr_employees` anonymised per rule; FlowFlex-issued invoices untouched (legal hold); emergency contacts hard-deleted
+- [ ] Erasure blocked by an open legal hold takes the `rejected` path with the reason recorded
+- [ ] `dsar_requests` row survives (status updated), never hard-deleted with tenant data
+- [ ] Job idempotent — re-running the erasure produces the same end state

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Reconciliation
@@ -39,5 +39,18 @@ Imported transactions are matched against posted journal lines (invoices, expens
 - Consumes: no events; reads journal lines posted by finance.ledger (`LedgerService::post` upstream)
 - Feeds: no cross-domain events
 - in-domain: consumes transactions from [[csv-import]]; reads GL lines from finance.ledger read side (never writes `fin_journal_*`)
+
+## Test Checklist
+
+### Unit
+- [ ] `suggestMatches` returns journal lines with exact amount within the ±5-day window *(assumed)* and excludes out-of-window / mismatched-amount lines
+- [ ] `balanceComparison` computes `diff = bank − gl` via brick/money (signed integer minor units)
+
+### Feature (Pest)
+- [ ] `reconcile` links a transaction to a journal line and stamps `reconciled_at` under a pessimistic lock; a mismatched amount throws `AmountMismatchException` and links nothing
+- [ ] `unreconcile` clears the link and returns the txn to the open list; tenant isolation — cannot match against another company's transactions or journal lines
+
+### Livewire
+- [ ] `ReconciliationPage` renders the two-panel matcher (unreconciled left, suggestions right) + balance strip and links on click; `canAccess` / action denied without `finance.bank.reconcile`
 
 See [[../api]], [[../data-model]], [[../../general-ledger/_module]].

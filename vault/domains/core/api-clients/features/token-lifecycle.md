@@ -38,3 +38,19 @@ Parent: [[../_module]] · See [[../architecture]] · [[../security]]
 - Consumes: none.
 - Feeds: none (issues credentials; fires no events).
 - Shared entity: Sanctum `personal_access_tokens` (framework table, this module is its sole writer here); company scope derives from the token's owning per-company service user *(assumed)*.
+
+## Test Checklist
+
+### Unit
+- [ ] Created token is persisted only as a SHA-256 hash; the returned plain value never appears in the row
+- [ ] `expires_at` defaults to now + 90 days when not supplied *(assumed — per [[../../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]])*
+
+### Feature (Pest)
+- [ ] `CreateApiTokenAction` returns the plain token once, binds it to the issuing user's `company_id`, and stores only the hash
+- [ ] `RevokeApiTokenAction` → subsequent request with that token returns 401 immediately; `RevokeAllApiTokensAction` clears every token for the company
+- [ ] Expired token (`expires_at` in the past) authenticates as 401
+- [ ] `RotateApiTokenAction` issues a replacement with identical abilities + company binding and revokes the original after the grace window (concurrent double-rotate rejected via row lock)
+
+### Livewire
+- [ ] Create action reveals the copy-once modal exactly once; the secret is never re-shown on the list
+- [ ] Duplicate token name (per company) and past `expires_at` fail form validation; create/rotate/revoke denied without the matching `core.api.*` permission

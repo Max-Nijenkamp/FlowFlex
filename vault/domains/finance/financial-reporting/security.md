@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Financial Reporting — Security
@@ -29,9 +29,13 @@ UNVERIFIED: the source spec lists the permission set as `finance.reporting.view`
 
 `export` gates the Excel/PDF export actions on each report.
 
+## Rate Limiting
+
+- **`exports` rate limiter** (named, per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]] and [[../../../architecture/security]]): the Excel/PDF export actions on all three report pages carry the `exports` limiter to prevent export abuse / resource exhaustion.
+
 ## Integrity & abuse controls
 
-- **Export rate limiter** (medium, per [[../../../security/authn-authz]]): report export actions carry a rate limiter to prevent export abuse / resource exhaustion.
+- Report export actions are gated on `finance.reporting.export` and rate-limited via the named `exports` limiter (see above).
 - **Balance assertion**: the balance sheet asserts assets = liabilities + equity; an imbalance raises a Sentry alarm rather than rendering silently corrupt figures.
 - The module owns no tables and never writes to the ledger — it is read-only over source data.
 - Tenant isolation inherited from source-table `company_id` scope — see [[../../../security/tenancy-isolation]].

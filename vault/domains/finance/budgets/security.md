@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Budgets — Security
@@ -23,9 +23,9 @@ per [[../../../architecture/filament-patterns]] #1 — the custom variance page 
 
 ## Permissions
 
-`finance.budgets.view-any` · `finance.budgets.create` · `finance.budgets.update` · `finance.budgets.approve`
+`finance.budgets.view-any` · `finance.budgets.create` · `finance.budgets.update` · `finance.budgets.approve` · `finance.budgets.revise`
 
-`approve` gates the draft → approved transition; once approved, lines are immutable and edits require `revise()` (a new version).
+`approve` gates the draft → approved transition; once approved, lines are immutable and edits require `revise()` (a new version) gated by `finance.budgets.revise`. `copyFromYear` bootstraps a new draft budget and is covered by `create`.
 
 ## Integrity controls
 

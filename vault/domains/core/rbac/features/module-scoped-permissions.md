@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Module-Scoped Role Permissions
@@ -48,6 +48,20 @@ bounded to the company's currently-active modules**.
 
 - Consumes: `ModuleActivated` → widen assignable set; `ModuleDeactivated` → suspend that module's grants.
 - Feeds: the effective permissions every `canAccess()` reads.
+
+## Test Checklist
+
+### Unit
+- [ ] Assignable set = `core.*` ∪ active paid-module permissions; inactive-module permissions excluded
+- [ ] `owner` role is exempt from the module-scoped bound
+
+### Feature (Pest)
+- [ ] Granting an inactive-module permission is rejected server-side in `CreateRoleAction`/`AssignRolesAction`
+- [ ] `ModuleDeactivated` suspends (does not delete) that module's grants on existing roles; `ModuleActivated` restores them
+- [ ] Effective `canAccess()` for a user denies a suspended permission until reactivation
+
+### Livewire
+- [ ] Role builder renders only active-module groups; inactive modules show the "activate in marketplace" hint row
 
 ## Related
 

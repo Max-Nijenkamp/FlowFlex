@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Onboarding Steps
@@ -49,6 +49,22 @@ Progress persists between steps (Livewire session state); resume lands on the fi
 
 - Feeds: activated modules → [[../../workspace-hub/_module|hub]] tiles + [[../../rbac/features/module-scoped-permissions|assignable permissions]].
 - Consumes: nothing.
+
+## Test Checklist
+
+### Unit
+- [ ] First-incomplete-step computation resumes at the right step from the presence of settings/invites/activation
+- [ ] Skip on steps 4–5 marks them complete without side effects
+
+### Feature (Pest)
+- [ ] Steps 2–3 persist into the company settings classes
+- [ ] Step 4 activates the chosen module via `BillingService`; step 5 queues invitations
+- [ ] `CompleteSetupAction` sets `companies.setup_completed_at` and redirects to the Workspace Hub
+- [ ] Wizard only ever writes the authenticated owner's own company (tenant isolation)
+
+### Livewire
+- [ ] Owner with null `setup_completed_at` reaches `SetupWizardPage`; a completed owner is redirected away
+- [ ] Non-owner cannot access the page; per-step validation blocks next until valid
 
 ## Related
 

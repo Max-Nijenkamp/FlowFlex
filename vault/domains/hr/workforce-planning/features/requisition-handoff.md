@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Requisition Handoff
@@ -46,6 +46,16 @@ Convert an approved planned role into a recruitment requisition when the Recruit
 - Consumes: none
 - Feeds: hands off to `hr.recruitment` job-requisitions at approve time (direct service integration, **not** a fired event per spec) → recruitment creates a requisition; per index edge `workforce -.requisitions.-> recruitment`
 - Shared entity: `hr_planned_roles.requisition_id` links to the recruitment requisition
+
+## Test Checklist
+
+### Unit
+- [ ] Approve with `hr.recruitment` active creates a requisition and stores `requisition_id`
+- [ ] Approve without `hr.recruitment` leaves `requisition_id` null (manual status only)
+
+### Feature (Pest)
+- [ ] `ApprovePlannedRoleAction` handoff creates exactly one requisition; concurrent double-approve serialized by `lockForUpdate` (no duplicate)
+- [ ] Requisition-creation failure rolls back the approval *(assumed)*
 
 ## Related
 

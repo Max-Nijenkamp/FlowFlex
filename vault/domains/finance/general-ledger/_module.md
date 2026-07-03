@@ -15,7 +15,7 @@ tables: [fin_accounts, fin_journal_entries, fin_journal_lines, fin_fiscal_period
 permission-prefix: finance.ledger
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # General Ledger
@@ -23,6 +23,15 @@ updated: 2026-06-20
 Chart of accounts, double-entry journal entries, and trial balance. All financial transactions from other modules are intended to post journal entries here. The source of truth for all financial reporting — the Finance anchor, intended to be built first in `/finance`.
 
 > Rebuild blueprint. Code was stripped to the [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; nothing here is built yet. This spec is the source of truth for the rebuild.
+
+## Module-key
+
+`finance.ledger`
+
+**Priority:** v1-core  
+**Panel:** finance  
+**Permission prefix:** `finance.ledger`  
+**Tables:** `fin_accounts`, `fin_journal_entries`, `fin_journal_lines`, `fin_fiscal_periods`
 
 ## Purpose
 
@@ -60,7 +69,8 @@ See [[../../../architecture/caching]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see, post to, or reverse company B accounts/journals
+- [ ] Module gating: artifacts hidden when `finance.ledger` inactive
 - [ ] Unbalanced entry rejected (`UnbalancedEntryException`)
 - [ ] Posting into closed period rejected (`ClosedPeriodException`); listener retries
 - [ ] Posted entries immutable — no update/delete path; reversal creates mirror

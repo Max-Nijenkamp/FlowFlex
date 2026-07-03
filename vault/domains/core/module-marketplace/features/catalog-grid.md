@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Catalog Grid (browse · search · price preview)
@@ -47,6 +47,21 @@ The browse surface of the marketplace: every available module rendered as cards 
 - Consumes: no events at render — reads billing catalog + subscription state synchronously.
 - Feeds: none (mutations live in [[activate-deactivate]]).
 - Shared entity: **module catalog** + **company subscriptions** owned by [[../../billing-engine/_module|core.billing]] (read-only here).
+
+## Test Checklist
+
+### Unit
+- [ ] Price preview = unit price × active user count via `brick/money` (no float math)
+- [ ] Search matches on name / key / domain; free-core modules resolve to "included" (no control)
+
+### Feature (Pest)
+- [ ] Grid lists only `is_active` catalog modules, grouped by domain
+- [ ] Price preview reflects the company's current active user count
+- [ ] Tenant isolation: company A's activation state never renders on company B's grid
+
+### Livewire
+- [ ] 300ms-debounced search narrows cards; empty result shows the filtered-out state
+- [ ] Page denied without `core.marketplace.view-any` + `BillingService::hasModule('core.marketplace')`
 
 ## Unknowns
 

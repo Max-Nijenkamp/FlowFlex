@@ -5,15 +5,22 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Webhooks
 
 Configurable outbound webhooks on domain events. Companies register endpoints, subscribe to events (employee hired, invoice paid, deal won), and receive signed HTTP POST payloads. A universal dispatcher listens to the event-bus map generically and delivers via a retrying queued job.
 
-- **module-key:** `core.webhooks` · **panel:** app · **priority:** v1
-- **fires-events:** none · **consumes-events:** none (listens to the whole event-bus map generically)
+## Module-key
+
+`core.webhooks`
+
+**Priority:** v1  
+**Panel:** app  
+**Permission prefix:** `core.webhooks`  
+**Tables:** `webhook_endpoints`, `webhook_deliveries`  
+**Events:** fires none · consumes none as fixed contracts — the `WebhookDispatcher` listens to the whole [[../../../architecture/event-bus]] map generically
 
 ## Sibling notes
 
@@ -51,8 +58,9 @@ Subscribable events come from whichever domain modules are built — the dispatc
 - [ ] Signature header verifies with `hash_equals` against the secret
 - [ ] Non-2xx response retries with backoff, then recorded failed
 - [ ] 20 consecutive failures auto-disable + notify
-- [ ] Secret displayed once, stored encrypted, rotate works
+- [ ] Secret displayed once, stored encrypted, rotate works (rotate holds a lock — no double-rotate)
 - [ ] Non-HTTPS URL rejected
+- [ ] `test` and `rotate` actions carry their own permission + `panel-action` rate limiter
 
 ## Build Manifest (corrected to flat paths)
 

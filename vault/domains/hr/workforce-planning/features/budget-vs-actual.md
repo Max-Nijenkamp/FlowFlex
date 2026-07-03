@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Budget vs Actual
@@ -49,6 +49,20 @@ Compare planned headcount and cost against actual active employees and departmen
 - Consumes: none (reads Finance budget read API directly, `*(assumed)*`; no event subscription)
 - Feeds: none (dashboard view only)
 - Shared entity: `hr_employees` (read-only headcount), `finance.budgets` department budget (read-only, soft-dep)
+
+## Test Checklist
+
+### Unit
+- [ ] `planVsActual(period)` returns per-department target vs current active headcount
+- [ ] Budget impact = planned headcount × avg salary computed via `brick/money`; scenario multiplier presets applied
+
+### Feature (Pest)
+- [ ] Budget-comparison column hidden when `finance.budgets` is unbuilt
+- [ ] Computation is tenant-scoped — company A sees only its own plan-vs-actual
+
+### Livewire
+- [ ] `WorkforcePlanningDashboard` `canAccess()` gated by `hr.workforce.view-any` + `hasModule('hr.workforce')`
+- [ ] Scenario toggle switches the active preset and recomputes the view
 
 ## Related
 

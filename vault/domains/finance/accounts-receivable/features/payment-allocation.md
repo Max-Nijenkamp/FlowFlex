@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Payment Allocation
@@ -36,5 +36,18 @@ Apply a single customer payment across multiple open invoices.
 - Consumes: none directly
 - Feeds: each `InvoiceService::recordPayment` may fire `InvoicePaid` (owned by finance.invoicing) when a balance completes
 - In-domain: `ArService::allocatePayment` orchestrates the split and busts the aging cache
+
+## Test Checklist
+
+### Unit
+- [ ] Cross-field validation: `sum(allocations.amount_cents) === amount_cents` (brick/money integer cents)
+- [ ] Each allocation is rejected when it exceeds that invoice's open balance
+
+### Feature (Pest)
+- [ ] `allocatePayment` records per-invoice payments through `InvoiceService::recordPayment` (never writes `fin_payments`/`fin_invoices` directly) under a pessimistic money lock, and busts the aging cache
+- [ ] Partial allocations update each invoice's state; over-allocation across the batch is rejected; tenant isolation — cannot allocate against another company's invoices; `allocate-payment` permission enforced
+
+### Livewire
+- [ ] The allocation action live-validates the running sum against the payment total and blocks submit on mismatch; `canAccess` / action denied without `finance.ar.allocate-payment`
 
 See [[../api]], [[../architecture]].

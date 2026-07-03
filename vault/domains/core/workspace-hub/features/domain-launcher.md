@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Domain Launcher
@@ -43,6 +43,21 @@ The tile grid at the heart of the hub.
 - Consumes: no domain events at render time — it queries activation + permissions synchronously per request. (A build may optionally consume `ModuleActivated`/`ModuleDeactivated` from core.billing to warm a cached tile list — *(assumed)*, not required.)
 - Feeds: none — selecting a tile is client-side navigation, not a cross-domain event.
 - Shared entity: **module activation** owned by [[../../billing-engine/_module|core.billing]] and **access permissions** owned by [[../../rbac/_module|core.rbac]] — both read-only here.
+
+## Test Checklist
+
+### Unit
+- [ ] Tile set = active-modules ∩ `access.<domain>` permissions; a tile shows if ANY of the domain's modules is active and permitted
+- [ ] Ordering places recency/favourites first, then alphabetical *(assumed)*
+
+### Feature (Pest)
+- [ ] A domain inactive for the company yields no tile even if the user holds `access.<domain>`
+- [ ] A user lacking `access.<domain>` sees no tile even when the module is active
+- [ ] Lookups run under the current company context — company A's user never sees company B's domains
+
+### Livewire
+- [ ] Empty state shows the marketplace CTA for owners and "ask your admin" for non-owners
+- [ ] Hub denied to a user without `core.hub.view`; admin/staff never render the hub
 
 ## Related
 

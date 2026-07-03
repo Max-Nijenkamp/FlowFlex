@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Export (PNG/PDF)
@@ -44,8 +44,21 @@ Download the rendered org chart as an image or PDF.
 - Feeds: none
 - Shared entity: reads the rendered tree (from hr.profiles data — `hr_employees`, `hr_departments`).
 
+## Test Checklist
+
+### Unit
+- [ ] Export targets the current (possibly department-filtered) tree, not always the full company tree
+
+### Feature (Pest)
+- [ ] Export generates a downloadable file for the rendered tree (PDF via spatie/laravel-pdf; PNG/CSV per *(assumed)* mechanism)
+- [ ] Export is throttled by the named `exports` rate limiter (see [[../security]])
+- [ ] Tenant isolation: an export contains only the acting company's employees
+
+### Livewire
+- [ ] Export action gated on `hr.org.export`; disabled when the tree is empty
+
 ## Related
 
-- Permissions: `hr.org.view`
+- Permissions: `hr.org.view`, `hr.org.export`
 - [[../_module]]
 - [[../unknowns]]

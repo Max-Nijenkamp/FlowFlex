@@ -53,3 +53,14 @@ Automatically start an onboarding plan for a new employee, with no manual step.
 
 > [!warning] UNVERIFIED
 > A dedicated plan-started event is assumed, not confirmed by the spec.
+
+## Test Checklist
+
+### Unit
+- [ ] Template selection precedence: department template → company default → none
+- [ ] No matching template returns a no-op (no plan, no exception)
+
+### Feature (Pest)
+- [ ] `EmployeeHired` starts a plan, materializes plan tasks, and queues `WelcomeMail`
+- [ ] Listener runs under `WithCompanyContext` — plan is written to the hire's company only
+- [ ] Duplicate `EmployeeHired` does not create a second plan for the same employee *(assumed guard)*

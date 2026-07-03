@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: System Status Page
@@ -35,6 +35,17 @@ The simplified, owner-facing health surface in `/app` — a custom Filament page
 - Consumes: none (no domain events) — reads health-check results directly.
 - Feeds: none.
 - Shared entity: `spatie/laravel-health` results (owned by this module's config wiring); `BillingService::hasModule` gate (owned by [[../../billing-engine/_module]], read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Overall status derives red if any single registered check fails
+
+### Feature (Pest)
+- [ ] `canAccess()` owner-only — denied to a non-owner and when `core.health` inactive
+
+### Livewire
+- [ ] Page renders green/red per check + last-checked timestamp; polls every 60s; a failing check renders red without breaking the page
 
 ## Related
 

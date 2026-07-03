@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Forecasting — Architecture
@@ -29,5 +29,29 @@ Each forecast carries a `scenario` (base / optimistic / pessimistic). The compar
 ## Three-way comparison
 
 `comparison(forecastId, period)` assembles, per account/period: projected (from forecast lines), actual (summed from journal lines), and budgeted (from budgets). Accuracy is tracked over closed periods via a MAPE-style metric *(assumed)*.
+
+## Filament Artifacts
+
+**Nav group:** Planning *(assumed)*
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `ForecastResource` | #1 CRUD resource | tweaks: custom-header-actions (seed-from-actuals), inline-relation-repeater (projected-line grid per account/period) | list filters: scenario, fiscal year; assumptions register (jsonb) editor |
+| `ForecastComparisonPage` | #9 custom page | [[../../../architecture/patterns/page-blueprints#Report Builder / Query UI]] — scenarios side by side + three-way projected/actual/budget columns per account/period (apex charts); budget columns hidden when budgets inactive; realtime none | `/finance/forecasting/comparison` |
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('finance.forecasting.view-any') && BillingService::hasModule('finance.forecasting')`
+per [[../../../architecture/filament-patterns]] #1. `ForecastComparisonPage` is a custom page and MUST state this
+explicitly — Filament does not auto-gate custom pages. No public/portal surface in this module.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Forecast + line CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Seed-from-actuals (trailing-actuals read → bulk-generate projected lines) | n-a | read-only ledger scan; generated lines are a derived/append bulk populate into own `fin_forecast_lines`, then refined under the Optimistic path above — the seed writes no ledger/source data |
+| Three-way comparison (`comparison()`) | n-a | read-only computation over ledger + budget + forecast lines — no writes |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 See [[../../../architecture/patterns/interface-service]], [[../../../architecture/patterns/custom-pages]], [[data-model]], [[api]].

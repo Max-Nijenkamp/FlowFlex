@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Fixed Assets — Security
@@ -26,6 +26,10 @@ per [[../../../architecture/filament-patterns]] #1 — the custom page (`Depreci
 `finance.assets.view-any` · `finance.assets.create` · `finance.assets.update` · `finance.assets.run-depreciation` · `finance.assets.dispose`
 
 `run-depreciation` and `dispose` are the privileged write operations — both post irreversible entries to the ledger.
+
+## Rate Limiting
+
+- `DepreciationRunPage` post action (`run-depreciation`) and the `FixedAssetResource` dispose action (`dispose`) both mutate money by posting entries to the GL → each carries the `panel-action` rate limiter per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]] and [[../../../architecture/security]].
 
 ## Integrity controls
 

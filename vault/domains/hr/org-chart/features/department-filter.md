@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Department Filter
@@ -41,6 +41,19 @@ Let users prune the org tree to a single department.
 - Consumes: none
 - Feeds: none
 - Shared entity: reads `hr_departments` (owned by hr.profiles).
+
+## Test Checklist
+
+### Unit
+- [ ] `OrgChartService::tree($departmentId)` returns only that department's subtree; `null` returns the full company tree
+
+### Feature (Pest)
+- [ ] Selecting a department prunes the rendered tree to that department
+- [ ] Clearing the filter restores the full company tree
+- [ ] Tenant isolation: department options list only the acting company's departments
+
+### Livewire
+- [ ] Choosing a department re-renders the pruned tree; the filter is hidden/disabled when no departments exist
 
 ## Related
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Column Mapping
@@ -39,3 +39,17 @@ The create flow is an upload + mapping wizard: after uploading a CSV/XLSX, the u
 - Consumes: none (module fires/consumes no domain events).
 - Feeds: none.
 - Shared entity: importer templates + required-field definitions are owned by each target domain module (e.g. `hr.employees`, `crm.contacts`); this feature reads them read-only via the registry.
+
+## Test Checklist
+
+### Unit
+- [ ] Create rejected when a required target field is unmapped (`CreateImportData.column_map` validation)
+- [ ] `column_map` persisted as jsonb on `data_imports`
+
+### Feature (Pest)
+- [ ] Validation preview checks the first 10 rows via the target Create DTO without writing any target rows
+- [ ] An unreadable/malformed file is rejected at create
+
+### Livewire
+- [ ] Wizard blocks **Start import** until all required fields are mapped; target dropdown lists only active-module targets
+- [ ] `canAccess()` denied without `core.import.create` or when `core.import` inactive

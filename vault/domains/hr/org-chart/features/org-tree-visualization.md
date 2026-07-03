@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Org Tree Visualization
@@ -45,6 +45,21 @@ Render the manager hierarchy as an interactive, auto-generated tree on `OrgChart
   > May simply re-query live rows on each render rather than react to these events. No confirmed event subscription. *(assumed)*
 - Feeds: none
 - Shared entity: reads `hr_employees`, `hr_departments` (owned by hr.profiles).
+
+## Test Checklist
+
+### Unit
+- [ ] `OrgChartService::tree` assembles nodes by `manager_id` and renders all roots for a multi-root company
+- [ ] Tree is built from a single query + in-memory assembly (no recursive N+1)
+
+### Feature (Pest)
+- [ ] Tree build issues one hierarchy query (N+1 / query-count assertion)
+- [ ] Multi-root company renders every top-level manager
+- [ ] Tenant isolation: the tree contains only the acting company's employees
+
+### Livewire
+- [ ] `OrgChartPage` `canAccess()` denies without `hr.org.view` or when `hr.org` inactive
+- [ ] Search highlights the matching node; click navigates to the employee profile
 
 ## Related
 

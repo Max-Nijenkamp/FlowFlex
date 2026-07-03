@@ -5,18 +5,24 @@ type: module
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Roles & Permissions
 
 Role management UI for company admins. Create custom roles, assign permissions per module, and manage user role assignments. Backed by `spatie/laravel-permission` (team scoping `team_id = company_id`) with `bezhansalleh/filament-shield` for the Filament UI. Always-free core module.
 
-- **module-key:** `core.rbac` · **panel:** app · **priority:** v1-core
-- **fires-events:** none · **consumes-events:** none
-- **tables:** none of its own — uses the four Spatie permission tables
+## Module-key
 
-## What it does
+`core.rbac`
+
+**Priority:** v1-core  
+**Panel:** app  
+**Permission prefix:** `core.rbac`  
+**Tables:** none of its own — uses the four Spatie permission tables (`roles`, `permissions`, `model_has_roles`, `role_has_permissions`), `team_id = company_id`  
+**Events:** fires none · consumes `ModuleActivated`, `ModuleDeactivated` (recompute assignable-permission set) · `OwnershipTransferred` fired on transfer *(assumed)*
+
+## Core Features
 
 - Built-in roles: `owner` (singular — see below), `admin`, `manager`, `employee`.
 - **Exactly one owner per company.** Ownership is a single, transferable seat — never duplicated. Canonical
@@ -71,3 +77,15 @@ tests/Feature/Core/{RoleManagementTest,RoleIsolationTest}.php
 ```
 
 > Spec listed `app/Data/Core/...`, `app/Actions/Core/...`, `app/Exceptions/Core/...`. Real layout is **flat** (no `Core/` subdir) — corrected above. The two exception classes were confirmed present in `app/Exceptions/`.
+>
+> `TransferOwnershipAction` and the `OwnershipTransferred` event are referenced by [[features/ownership]] and [[security]] but are **not yet in this manifest** *(assumed — pending build confirmation)*.
+
+## Test Checklist
+
+- [ ] Tenant isolation: company A's roles/assignments are invisible and unusable to company B (`team_id = company_id`); role names may repeat across companies
+- [ ] Module gating: n/a (platform module, always active — always-free core)
+- [ ] Demoting/removing the sole `owner` throws `CannotRemoveLastOwnerException`; ownership only changes via atomic transfer
+- [ ] Deleting a built-in role (`owner`/`admin`/`manager`/`employee`) throws `CannotDeleteBuiltInRoleException`
+- [ ] A permission for an inactive module cannot be granted (server-side reject in `CreateRoleAction`/`AssignRolesAction`)
+- [ ] `ModuleDeactivated` suspends that module's grants (kept inert); reactivation restores them
+- [ ] `syncPermissions`/`assignRole` busts the Spatie permission cache within the same request

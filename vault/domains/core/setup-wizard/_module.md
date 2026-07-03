@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Setup Wizard
@@ -15,8 +15,15 @@ welcome/owner → company profile → localisation → **choose modules** → te
 ~5 minutes and ending on the [[../workspace-hub/_module|Workspace Hub]]. Custom Filament page in `/app`,
 **not** a public Vue flow (see [[decisions]]). Owns no tables: completion tracked on `companies.setup_completed_at`.
 
-- **module-key:** `core.setup` · **panel:** app · **priority:** v1
-- **fires-events:** none · **consumes-events:** none
+## Module-key
+
+`core.setup`
+
+**Priority:** v1  
+**Panel:** app  
+**Permission prefix:** `core.setup`  
+**Tables:** none of its own — completion tracked on `companies.setup_completed_at`  
+**Events:** fires none · consumes none
 
 ## Sibling notes
 
@@ -58,6 +65,8 @@ step. Non-owners never see it. Ends by dropping the owner on the [[../workspace-
 
 ## Test Checklist
 
+- [ ] Tenant isolation: wizard only writes the authenticated owner's own company (settings/invites/activation company-scoped)
+- [ ] Module gating: n/a (platform module, always active)
 - [ ] Owner first login redirects to wizard; non-owner does not
 - [ ] Completed wizard (`setup_completed_at` set) never redirects again
 - [ ] Step 1–2 persist into settings classes

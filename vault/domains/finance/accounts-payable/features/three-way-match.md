@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # 3-Way Match
@@ -43,6 +43,19 @@ Gate payment on a match between **bill ↔ purchase order ↔ goods receipt** be
 
 > [!warning] UNVERIFIED
 > Depends on unbuilt Procurement/Operations modules (`purchase-orders`, `goods-receipt`). The `GoodsReceived` payload and PO/GRN read-API contracts do not exist yet — they will be added when procurement is built. Treat this whole dependency as speculative.
+
+## Test Checklist
+
+### Unit
+- [ ] Match compares bill vs PO vs goods receipt on quantity and price and returns pass/fail with a mismatch reason
+- [ ] Match gate reports "bypassed" when procurement/operations modules are inactive
+
+### Feature (Pest)
+- [ ] Consuming `GoodsReceived` drafts a `fin_bills` row and attempts the match (queued, `WithCompanyContext`, tenant-scoped)
+- [ ] A qty/price/PO mismatch throws `MatchFailedException` and blocks scheduling; a clean match lets the bill proceed to [[bill-approval]]
+
+### Livewire
+- [ ] The match-status badge/panel renders on the `BillResource` view (matched / mismatch reason); visible with `finance.ap.view-any`
 
 ## Related
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Settings Tabs
@@ -50,3 +50,18 @@ Parent: [[../_module]] · See [[../architecture]] · [[../security]]
 - Consumes: none.
 - Feeds: no events. Every other module **reads** this config read-only via `app(CompanyLocaleSettings::class)` etc. (locale, currency, business config); those modules never keep their own copy.
 - Shared entity: this module **owns** the workspace locale/currency/business/branding config that the rest of the platform treats as shared read-only reference data.
+
+## Test Checklist
+
+### Unit
+- [ ] Validation rules reject a non-IANA timezone, an unsupported locale, and a bad hex color
+- [ ] Slug uniqueness enforced across companies
+
+### Feature (Pest)
+- [ ] Tenant isolation: company A's settings change does not affect company B
+- [ ] Saving the Locale tab busts the spatie settings cache; `SetLocale` picks up the new locale on the next request
+- [ ] Currency change affects new money formatting only, not stored amounts
+
+### Livewire
+- [ ] `canAccess()` denied to a non-owner even with the permission (owner-only) and when `core.settings` inactive
+- [ ] Each tab saves independently; Identity upload fields hidden when `core.files` inactive *(assumed)*

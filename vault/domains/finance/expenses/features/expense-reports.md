@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Expense Reports
@@ -34,5 +34,19 @@ Reports (`fin_expense_reports`) group multiple expenses for bulk submission and 
 ## Relations
 - Consumes: no cross-domain events.
 - Feeds: no report-level cross-domain events — approving member expenses fires `ExpenseApproved` per approval-workflow (consumed by hr.payroll). `submitReport` cascades submit to member drafts in-domain.
+
+## Test Checklist
+
+### Unit
+- [ ] Report status transitions (`draft → submitted → approved | rejected`) validated
+- [ ] Only `draft` member expenses are eligible for the bulk-submit cascade
+
+### Feature (Pest)
+- [ ] `submitReport(reportId)` transitions the report and cascades submit to all contained draft expenses in one transaction
+- [ ] CSV export lists only the report's member expenses (amounts via brick/money); tenant isolation — company A cannot open or export company B reports
+
+### Livewire
+- [ ] `ExpenseReportResource` bulk-submit and CSV export actions are gated by their permissions and scoped to the tenant
+- [ ] `canAccess` denied without `finance.expenses.view-any` and when `finance.expenses` inactive
 
 See [[../api]], [[../data-model]].

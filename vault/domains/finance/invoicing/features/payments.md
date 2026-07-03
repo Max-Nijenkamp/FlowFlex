@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Payments
@@ -36,5 +36,20 @@ Payments are recorded against an invoice (`fin_payments`); partial payments are 
 - Consumes: none directly
 - Feeds: `InvoicePaid` (fired when a payment completes the balance) → consumed by finance.ar, finance.cashflow, CRM
 - In-domain: `LedgerService::post` for the AR/cash entry; `InvoicePaid` is consumed indirectly by finance.ar payment-allocation and finance.currency (FX realised gain/loss)
+
+## Test Checklist
+
+### Unit
+- [ ] `amount_cents` ≤ open balance validation (brick/money, integer minor units); overpayment rejected with "Payment exceeds the open balance."
+- [ ] Payment below balance yields `partially_paid`; payment completing balance yields `paid`
+
+### Feature (Pest)
+- [ ] `recordPayment` posts a balanced GL entry (AR ↓ / cash ↑) via `LedgerService::post` and moves invoice state under `DB::transaction()` + `lockForUpdate()`
+- [ ] Payment completing the balance fires `InvoicePaid` with the contract payload; partial payment does not fire it
+- [ ] Concurrency: two simultaneous payments on one invoice cannot overpay (row lock re-reads balance); tenant isolation on the invoice read
+
+### Livewire
+- [ ] Record-payment slide-over validates amount, defaults to open balance, and is gated by `finance.invoicing.record-payment`
+- [ ] Payments relation manager lists prior payments for the tenant only
 
 See [[../api]], [[../data-model]], [[../../general-ledger/_module]].

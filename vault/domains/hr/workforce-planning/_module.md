@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Workforce Planning
@@ -14,9 +14,22 @@ Headcount planning, hire forecasts, and open role pipeline. Plan future team str
 
 > Rebuild blueprint. HR code was stripped to the app/admin shell per [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]]. Nothing here is built, shipped, or tested — this is the intended design to rebuild against.
 
-**Module key:** `hr.workforce` · **Priority:** v1 · **Nav group:** Analytics
+---
 
-## Intended Behavior
+## Module-key
+
+`hr.workforce`
+
+**Priority:** v1  
+**Panel:** hr  
+**Permission prefix:** `hr.workforce`  
+**Tables:** `hr_headcount_plans`, `hr_planned_roles`
+
+Nav group: Analytics. Encrypted fields: none.
+
+---
+
+## Core Features
 
 - Headcount plan: target headcount per department per period (quarter/year).
 - Planned vs actual headcount tracking.
@@ -26,6 +39,8 @@ Headcount planning, hire forecasts, and open role pipeline. Plan future team str
 - Budget impact: planned headcount × average salary vs department budget.
 - Scenario planning: best/expected/worst-case growth.
 - Org growth visualisation over time.
+
+See [[features/headcount-plans]], [[features/planned-roles]], [[features/budget-vs-actual]], [[features/requisition-handoff]].
 
 ## Dependencies
 
@@ -65,6 +80,17 @@ app/Filament/HR/Pages/WorkforcePlanningDashboard.php
 database/factories/HR/{HeadcountPlanFactory,PlannedRoleFactory}.php
 tests/Feature/HR/WorkforcePlanningTest.php
 ```
+
+## Test Checklist
+
+- [ ] Tenant isolation: company A cannot see, edit, or approve company B headcount plans or planned roles
+- [ ] Module gating: artifacts hidden when `hr.workforce` inactive
+- [ ] `planVsActual` computes per-department target vs current active headcount
+- [ ] `ApprovePlannedRoleAction` sets `approved` and, when `hr.recruitment` is active, creates + links one requisition (`requisition_id`); manual status without it
+- [ ] Double-approve serialized by `lockForUpdate` — never creates two requisitions
+- [ ] `MarkRoleFilledAction` sets `filled`
+- [ ] Budget columns are integer minor units via `brick/money`; budget-vs-actual column hidden when `finance.budgets` unbuilt
+- [ ] CRUD stale-write raises `StaleRecordException`
 
 ## Data Ownership
 

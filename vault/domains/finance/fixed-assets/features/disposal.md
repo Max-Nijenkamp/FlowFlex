@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Disposal
@@ -39,5 +39,19 @@ UNVERIFIED: the specific GL accounts the disposal gain/loss posts to are not enu
 ## Relations
 - Consumes: no events.
 - Feeds: no events. In-domain service call `dispose(DisposeAssetData)`; cross-domain call to `LedgerService::post`.
+
+## Test Checklist
+
+### Unit
+- [ ] `gain/loss = proceeds − NBV` where `NBV = cost − accumulated_depreciation` (brick/money, integer cents)
+- [ ] `DisposeAssetData` validates `disposal_proceeds_cents ≥ 0` and `disposed_at ≥ purchase_date`
+
+### Feature (Pest)
+- [ ] `dispose` posts the gain/loss GL entry via `LedgerService::post`, sets `status = disposed`, stamps `disposed_at` + `disposal_proceeds_cents`, all under `DB::transaction` + `lockForUpdate`
+- [ ] A second disposal of the same asset throws `AlreadyDisposedException` (re-read under lock)
+- [ ] Tenant isolation: company A cannot dispose company B assets
+
+### Livewire
+- [ ] Dispose action on `FixedAssetResource` shows computed gain/loss before confirm and is blocked without `finance.assets.dispose`; governed by the `panel-action` rate limiter
 
 See [[../architecture]], [[../api]], [[../security]].

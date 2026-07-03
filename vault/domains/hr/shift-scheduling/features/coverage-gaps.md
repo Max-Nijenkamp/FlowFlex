@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Coverage Gaps
@@ -47,6 +47,18 @@ Surface shifts with no assigned employee so managers can fill them before publis
 - Consumes: none directly *(gaps can be created by [[leave-conflict-blocking]] unassigning employees on approved leave)*
 - Feeds: none
 - Shared entity: `hr_employees` (read via EmployeeService)
+
+## Test Checklist
+
+### Unit
+- [ ] `coverageGaps(weekStart)` returns only shifts with a null `employee_id` for that week
+
+### Feature (Pest)
+- [ ] Leave-driven unassignment ([[leave-conflict-blocking]]) surfaces new gaps for the week
+- [ ] Company A cannot see company B coverage gaps
+
+### Livewire
+- [ ] Gaps visible with `hr.shifts.view-any`; filling a gap requires `hr.shifts.update`
 
 ## Related
 

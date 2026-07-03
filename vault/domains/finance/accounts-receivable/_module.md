@@ -15,7 +15,7 @@ tables: [fin_ar_dunning_rules, fin_ar_writeoffs]
 permission-prefix: finance.ar
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Accounts Receivable
@@ -66,7 +66,8 @@ See [[../../../architecture/caching]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot age company B invoices, edit its dunning rules, allocate against or write off its invoices
+- [ ] Module gating: artifacts hidden when `finance.ar` inactive
 - [ ] Aging buckets correct at boundary days (30/31, 90/91)
 - [ ] Dunning fires escalation levels in order, once each, stops on payment
 - [ ] `InvoicePaid` resets dunning level + busts aging cache

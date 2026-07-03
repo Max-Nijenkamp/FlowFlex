@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Locale Selection & SetLocale Middleware
@@ -37,6 +37,15 @@ Per-request locale selection: the `SetLocale` middleware reads the company's cho
 - Shared entity: `CompanyLocaleSettings` — config data **owned by [[../../company-settings/_module]]** (core.settings); i18n reads it read-only.
 
 > [!warning] UNVERIFIED — [[../_module]] notes the `SetLocale` middleware may already be provided by foundation.panels and merely extended here; the exact ownership split (foundation vs. i18n) is not confirmed against code.
+
+## Test Checklist
+
+### Unit
+- [ ] `SetLocale` resolves the company locale from `CompanyLocaleSettings` and calls `app()->setLocale()`
+
+### Feature (Pest)
+- [ ] Changing the company locale switches translation strings on the next request
+- [ ] A missing translation key falls back to `en`
 
 ## Related
 

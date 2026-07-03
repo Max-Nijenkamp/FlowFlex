@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Health Endpoint
@@ -40,3 +40,13 @@ Parent: [[../_module]] · See [[../architecture]] · [[../security]]
 - Consumes: none (no domain events).
 - Feeds: none — no domain events fired. External uptime/monitoring tooling and [[system-status-page]] poll it, but that is HTTP polling, not an event contract.
 - Shared entity: none — reads infrastructure components, owns no shared domain entity.
+
+## Test Checklist
+
+### Unit
+- [ ] The registered checks list includes database, Redis, Meilisearch, Horizon, disk, queue-depth (`domain-events`, `notifications`), environment
+
+### Feature (Pest)
+- [ ] `GET /health` returns JSON with all registered checks
+- [ ] A stopped Redis (faked) renders that check red and degrades the overall status
+- [ ] Anonymous caller gets minimal status only (no component topology); the throttle limiter is applied

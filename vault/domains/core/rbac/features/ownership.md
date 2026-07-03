@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Company Ownership — single owner, transferable
@@ -44,6 +44,21 @@ updated: 2026-06-20
 ## Relations
 
 - Consumes: nothing. Feeds: an `OwnershipTransferred` event *(assumed)* → audit log + notifications.
+
+## Test Checklist
+
+### Unit
+- [ ] Exactly-one-owner invariant: a second `owner` assignment is rejected; canonical owner = holder of `owner` role
+
+### Feature (Pest)
+- [ ] `TransferOwnershipAction` promotes the new owner and demotes the previous one atomically — never zero or two owners
+- [ ] Concurrent transfers on the same company serialize under lock; final state has exactly one owner
+- [ ] Transfer to a non-member / unverified user is rejected
+- [ ] Owner cannot delete their account or leave without transferring first
+
+### Livewire
+- [ ] Transfer-ownership modal requires typed company-name confirmation; visible only to the current owner
+- [ ] Non-owner cannot see or invoke the transfer action
 
 ## Unknowns
 

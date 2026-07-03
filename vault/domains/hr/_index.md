@@ -1,10 +1,14 @@
 ---
 type: domain-index
 domain: hr
+domain-key: hr
+panel: hr
+phase: v1
+module-count: 15
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # HR & People — Domain MOC
@@ -32,23 +36,23 @@ Related stack: [[../../infrastructure/_moc|Infrastructure]] · [[../../security/
 
 ## Modules
 
-| Module | Key | Priority | Build status | Depends on (intra-domain) |
-|---|---|---|---|---|
-| [[employee-profiles/_module\|Employee Profiles]] | `hr.profiles` | v1-core | planned | — (anchor) |
-| [[leave-management/_module\|Leave Management]] | `hr.leave` | v1-core | planned | profiles |
-| [[onboarding/_module\|Onboarding]] | `hr.onboarding` | v1-core | planned | profiles |
-| [[payroll/_module\|Payroll]] | `hr.payroll` | v1-core | planned | profiles |
-| [[org-chart/_module\|Org Chart]] | `hr.org` | v1 | planned | profiles |
-| [[employee-self-service/_module\|Employee Self-Service]] | `hr.self-service` | v1 | planned | profiles |
-| [[recruitment/_module\|Recruitment]] | `hr.recruitment` | v1 | planned | profiles |
-| [[performance-reviews/_module\|Performance Reviews]] | `hr.performance` | v1 | planned | profiles |
-| [[time-attendance/_module\|Time & Attendance]] | `hr.time` | v1 | planned | profiles |
-| [[shift-scheduling/_module\|Shift Scheduling]] | `hr.shifts` | v1 | planned | profiles |
-| [[compensation-benefits/_module\|Compensation & Benefits]] | `hr.compensation` | v1 | planned | profiles, payroll |
-| [[hr-analytics/_module\|HR Analytics]] | `hr.analytics` | v1 | planned | profiles |
-| [[workforce-planning/_module\|Workforce Planning]] | `hr.workforce` | v1 | planned | profiles |
-| [[employee-feedback/_module\|Employee Feedback]] | `hr.feedback` | v1 | planned | profiles |
-| [[dei-metrics/_module\|DEI Metrics]] | `hr.dei` | v1 | planned | profiles |
+| Module | Key | Priority | Build status | Depends on (intra-domain) | Kind highlights |
+|---|---|---|---|---|---|
+| [[employee-profiles/_module\|Employee Profiles]] | `hr.profiles` | v1-core | planned | — (anchor) | resource + view-tabs + widget (#1/#2/#6) |
+| [[leave-management/_module\|Leave Management]] | `hr.leave` | v1-core | planned | profiles | resource + calendar (#4) + widget |
+| [[onboarding/_module\|Onboarding]] | `hr.onboarding` | v1-core | planned | profiles | resource + widget (#1/#6) |
+| [[payroll/_module\|Payroll]] | `hr.payroll` | v1-core | planned | profiles | resource + new-run wizard + widget (#1/#6) |
+| [[org-chart/_module\|Org Chart]] | `hr.org` | v1 | planned | profiles | org tree custom-page (#11) |
+| [[employee-self-service/_module\|Employee Self-Service]] | `hr.self-service` | v1 | planned | profiles | dashboard + custom pages (#6/#7/#17) |
+| [[recruitment/_module\|Recruitment]] | `hr.recruitment` | v1 | planned | profiles | resource + kanban pipeline (#3) |
+| [[performance-reviews/_module\|Performance Reviews]] | `hr.performance` | v1 | planned | profiles | resource + goals grid (#1/#17) |
+| [[time-attendance/_module\|Time & Attendance]] | `hr.time` | v1 | planned | profiles | resource + clock widget (#1/#6) |
+| [[shift-scheduling/_module\|Shift Scheduling]] | `hr.shifts` | v1 | planned | profiles | calendar (#4) + resource |
+| [[compensation-benefits/_module\|Compensation & Benefits]] | `hr.compensation` | v1 | planned | profiles, payroll | resource + comp wizard (#1/#7) |
+| [[hr-analytics/_module\|HR Analytics]] | `hr.analytics` | v1 | planned | profiles | dashboard + widgets (#6) |
+| [[workforce-planning/_module\|Workforce Planning]] | `hr.workforce` | v1 | planned | profiles | resource + dashboard (#1/#6) |
+| [[employee-feedback/_module\|Employee Feedback]] | `hr.feedback` | v1 | planned | profiles | resource + recognition grid (#1/#17) |
+| [[dei-metrics/_module\|DEI Metrics]] | `hr.dei` | v1 | planned | profiles | dashboard (#6) |
 
 Build order: profiles → org → self-service → leave → onboarding → payroll → rest ([[../../build/BUILD-ORDER]]).
 

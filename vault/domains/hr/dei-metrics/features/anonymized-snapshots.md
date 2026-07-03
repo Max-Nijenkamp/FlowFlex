@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Anonymized snapshots
@@ -46,6 +46,18 @@ Produce periodic, pre-aggregated, suppressed snapshots so dashboards never touch
 - Consumes: `hr_dei_attributes` in-process (not an event) — decrypt, aggregate, suppress groups below N *(assumed N=5, configurable)*, then discard individuals
 - Feeds: none outbound — snapshots are a one-way aggregate sink read only by the DEI dashboard
 - Shared entity: none (no FK from snapshots back to individuals, by design)
+
+## Test Checklist
+
+### Unit
+- [ ] Suppression boundary: a group of size N−1 is suppressed, size N is kept (N=5 *(assumed)*)
+- [ ] Aggregate counts by dimension match the underlying (decrypted, in-job) attribute set
+
+### Feature (Pest)
+- [ ] `DeiSnapshotService::generate` aggregates + suppresses **before** writing `hr_dei_snapshots` — no sub-N group count ever reaches storage
+- [ ] Re-running a period is idempotent (upsert on `(company, period, dimension)`) — no duplicate snapshot rows
+- [ ] Decrypted individuals are discarded after aggregation; snapshot holds only `breakdown` aggregates
+- [ ] Tenant isolation: a company's snapshot aggregates only that company's attributes
 
 ## Related
 

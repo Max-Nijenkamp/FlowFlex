@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — AR Aging Report
@@ -37,5 +37,18 @@ updated: 2026-06-20
 - Consumes: `InvoicePaid` from finance.invoicing → busts the `ar-aging` cache
 - Feeds: nothing
 - In-domain: `ArService::aging`, `ArService::dso(period)` compute the buckets and KPIs
+
+## Test Checklist
+
+### Unit
+- [ ] Bucketing assigns an open balance to `current | 1–30 | 31–60 | 61–90 | 90+` correctly at boundary days (30/31, 60/61, 90/91)
+- [ ] DSO and AR turnover computed via brick/money (integer minor units) over fixture balances
+
+### Feature (Pest)
+- [ ] `aging(?customerId)` computes buckets from `fin_invoices` + `fin_payments` fixtures, optionally scoped to one customer
+- [ ] The `ar-aging` cache busts on `InvoicePaid`, payment allocation, and write-off; tenant isolation — company A never reads company B balances
+
+### Livewire
+- [ ] `ArAgingPage` renders bucket columns + DSO/turnover KPIs and drills a bucket to its invoices; `canAccess` denied without `finance.ar.view-any`
 
 See [[../api]], [[../data-model]].

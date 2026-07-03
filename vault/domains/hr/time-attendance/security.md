@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Security — Time & Attendance
@@ -22,6 +22,14 @@ Planned. Authorization via Spatie permissions (not Policies) per [[../../../secu
 - Own-data scope: employees log/view/submit only their own entries (`log-own`, `submit-own`).
 - Approval requires `hr.time.approve`; **approver ≠ owner** is enforced and audited.
 - Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia).
+
+## Rate Limiting
+
+| Action | Limiter | Category |
+|---|---|---|
+| Timesheet export (payroll integration) | `exports` | file generation |
+
+Named limiter per [[../../../architecture/security]] and [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
 
 ## Tenancy
 

@@ -54,3 +54,18 @@ The per-employee checklist of onboarding tasks, completed or skipped over the co
 - Consumes: none.
 - Feeds: completing the last task sets plan `completed_at` (internal).
 - Shared entity: reads `hr_employees` (owned by hr.profiles).
+
+## Test Checklist
+
+### Unit
+- [ ] `progress($planId)` returns % of tasks complete or skipped
+- [ ] Closing the last remaining task sets plan `completed_at`; a non-final close leaves it null
+
+### Feature (Pest)
+- [ ] `completeTask` sets status + `completed_by`/`completed_at`
+- [ ] Company A cannot complete a plan task belonging to company B (tenant isolation)
+- [ ] Complete denied without `hr.onboarding.complete-task`
+
+### Livewire
+- [ ] Complete/skip action on the plan view updates the row and re-computes %
+- [ ] Actions hidden without `hr.onboarding.complete-task`

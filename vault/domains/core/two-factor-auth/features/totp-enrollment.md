@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Two-Factor Auth — TOTP Enrollment & Challenge
@@ -39,6 +39,21 @@ Self-service TOTP enrollment and the login-time challenge, using Filament's buil
 - Shared entity: the `users` / `admins` records themselves (identity), owned by the auth/foundation layer; 2FA only writes its own added columns on them.
 
 > [!warning] UNVERIFIED — whether an enrollment/recovery notification is actually dispatched to [[../../notifications/_module]] is a soft-dependency assumption in [[../_module]], not confirmed against code.
+
+## Test Checklist
+
+### Unit
+- [ ] Enrollment confirmation rejects an incorrect/expired 6-digit code; accepts the current TOTP
+- [ ] A recovery code is single-use — a spent code fails on re-submission
+
+### Feature (Pest)
+- [ ] Enrollment persists `app_authentication_secret` + `app_authentication_recovery_codes` as encrypted `text` on the user's own row
+- [ ] Enrollment and challenge are blocked until the email is verified (`->emailVerification()` gate) on both `/app` and `/admin`
+- [ ] A valid recovery code establishes a session when the TOTP device is unavailable
+
+### Livewire
+- [ ] Challenge page rejects an invalid code with an inline error and offers the recovery-code fallback
+- [ ] A user cannot enroll/challenge on behalf of another user (own session only)
 
 ## Related
 

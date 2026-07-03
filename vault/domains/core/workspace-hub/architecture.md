@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Workspace Hub — Architecture
@@ -38,6 +38,26 @@ Two viable shapes (decide at build — [[unknowns]]):
 2. **Multi-panel**: hub links out to per-domain Filament panels (`/hr`, `/finance`, …) as in the earlier design.
 
 The hub abstraction works either way; it is the launcher/router.
+
+## Filament Artifacts
+
+**Nav group:** (none — the hub is the tenant's default post-login landing route, not a nav entry)
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `WorkspaceHubPage` | #17 Gallery / directory grid custom page | [[../../../architecture/patterns/page-blueprints#Gallery / Directory Grid]] | responsive domain-tile grid = activated modules ∩ user access permissions; skeleton on load; empty/partial states per [[../../../architecture/patterns/ux-states]] |
+
+**Access contract (mandatory):** `WorkspaceHubPage` is a custom page and MUST state its gate explicitly — Filament does not auto-gate custom pages:
+`canAccess() = Auth::user()->can('core.hub.view')` on the **web** guard only (admin/staff never reach the hub — they land on the staff console)
+per [[../../../architecture/filament-patterns]] #1. `core.hub` is a platform module (always active) — no `BillingService::hasModule('core.hub')` gate; instead each **tile** is filtered by activation ∩ the domain's `access.<domain>` permission, and each domain's own routes stay guarded independently (defence in depth — the hub is a launcher, not the gate). See [[security]].
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| (none) | n/a | Workspace Hub owns no tables and performs no writes — a read-only launcher composing *activation ∩ permission* per request; there is no concurrent-edit surface |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Related
 

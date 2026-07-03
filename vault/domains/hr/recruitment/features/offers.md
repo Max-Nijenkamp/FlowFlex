@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Offers
@@ -50,6 +50,20 @@ Generate, send, and track offer letters with salary and start-date fields.
 - Consumes: none
 - Feeds: none *(acceptance advances the applicant toward hire; conversion handled in [[applicant-to-employee-conversion]])*
 - Shared entity: none
+
+## Test Checklist
+
+### Unit
+- [ ] `start_date` must be `after:today`; `salary_cents` handled via `brick/money`
+- [ ] Offer status transitions valid only along `draft → sent → accepted` / `declined`
+
+### Feature (Pest)
+- [ ] `sendOffer` moves `draft → sent`, sets `sent_at`, queues `OfferMail` (`panel-action` comms limiter)
+- [ ] `salary_raw` encrypted at rest; acceptance records `accepted_at`; company A cannot see company B offers
+
+### Livewire
+- [ ] Create/send/manage denied without `hr.recruitment.manage-offers`
+- [ ] Salary masked unless the viewer is authorized
 
 ## Related
 

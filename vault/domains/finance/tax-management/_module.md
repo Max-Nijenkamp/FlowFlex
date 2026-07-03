@@ -15,7 +15,7 @@ tables: [fin_tax_rates, fin_tax_classes, fin_tax_periods]
 permission-prefix: finance.tax
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Tax Management
@@ -23,6 +23,15 @@ updated: 2026-06-20
 Tax rate configuration, VAT/GST calculation on invoices and bills, and tax period reporting. EU VAT-focused for the primary market.
 
 > Rebuild blueprint. Code was stripped to the [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; nothing here is built yet. This spec is the source of truth for the rebuild.
+
+## Module-key
+
+`finance.tax`
+
+**Priority:** v1  
+**Panel:** finance  
+**Permission prefix:** `finance.tax`  
+**Tables:** `fin_tax_rates`, `fin_tax_classes`, `fin_tax_periods`
 
 ## Purpose
 
@@ -53,7 +62,8 @@ A single tax engine for the Finance domain. `TaxCalculator` is the one sanctione
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see, edit, or file company B tax rates/periods
+- [ ] Module gating: artifacts hidden when `finance.tax` inactive
 - [ ] Tax math: 21% on €99.99 line exact via basis points + brick/money
 - [ ] Reverse charge yields zero tax + flag carried to invoice line
 - [ ] Period summary: output − input = net payable over fixtures

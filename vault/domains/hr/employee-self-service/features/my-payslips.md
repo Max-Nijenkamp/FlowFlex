@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # My Payslips
@@ -42,5 +42,18 @@ updated: 2026-07-02
 - Consumes: none.
 - Feeds: none.
 - Shared entity: reads hr.payroll payslips.
+
+## Test Checklist
+
+### Unit
+- [ ] The payslip tile/page renders only when `hr.payroll` is active (soft-dep gating)
+
+### Feature (Pest)
+- [ ] Payslip list + PDF stream are scoped to `auth()->user()->employee`
+- [ ] Self-scope isolation: employee A cannot download employee B's payslip via any route
+- [ ] Download is throttled by the named `exports` rate limiter (file stream — see [[../security]])
+
+### Livewire
+- [ ] Page/tile hidden when `hr.payroll` inactive; download restricted to own payslips
 
 [[../_module]]

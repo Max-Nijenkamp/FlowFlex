@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Monthly Invoicing
@@ -41,3 +41,17 @@ Monthly invoice calculation: `sum(module_price_per_user) × active_user_count`, 
 - Consumes: none directly for generation (cron-triggered).
 - Feeds: an `open` invoice transition triggers `InvoiceMail` (notifications queue) — delivery infrastructure only, no cross-domain event.
 - Shared entity: `module_catalog` pricing (owned here, read by [[../../module-marketplace/_module]]).
+
+## Test Checklist
+
+### Unit
+- [ ] Invoice total = `sum(module_price_per_user) × active_user_count` via brick/money, correct to the cent
+- [ ] Each line snapshots `module_key` / `module_name` / `user_count` / `unit_price_cents` / `line_total_cents` at billing time
+
+### Feature (Pest)
+- [ ] `GenerateMonthlyInvoicesCommand` idempotent — running twice produces one invoice per `(company_id, period_start)`
+- [ ] Tenant isolation: company A's invoices invisible to company B
+
+### Livewire
+- [ ] `BillingResource` list is read-only (no create/edit/delete); invoice-PDF download action present
+- [ ] `canAccess()` denied without `core.billing.view-any` or when `core.billing` inactive

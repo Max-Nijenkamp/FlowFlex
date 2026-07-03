@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Module Marketplace — Security
@@ -21,6 +21,10 @@ Parent: [[_module]]
 `canAccess() = Auth::user()->can('core.marketplace.view-any') && BillingService::hasModule('core.marketplace')` per [[../../../architecture/filament-patterns]] #1.
 
 **Owner-only** in practice — permission alone is insufficient (see [[decisions]]). See [[../../../security/authn-authz]].
+
+## Rate Limiting
+
+The activate / deactivate card actions delegate to `BillingServiceInterface` (which calls external Stripe subscription APIs). They carry the `panel-action` named limiter at the marketplace surface; the billing mutation itself is rate-limited by [[../billing-engine/security|core.billing]].
 
 ## Tenancy
 

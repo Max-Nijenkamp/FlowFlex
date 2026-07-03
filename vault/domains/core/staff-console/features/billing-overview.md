@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Billing Overview
@@ -35,6 +35,20 @@ Cross-company invoice visibility for FlowFlex staff — every invoice across all
 - Consumes: none (no domain events). Invoice state is produced by [[../../billing-engine/_module]] (which may consume Stripe webhooks); staff-console only reads the resulting rows.
 - Feeds: none.
 - Shared entity: `billing_invoices` (owned by [[../../billing-engine/_module]]) — read-only reference here.
+
+## Test Checklist
+
+### Unit
+- [ ] Status filter maps to the correct invoice states (paid / open / past-due)
+
+### Feature (Pest)
+- [ ] Cross-company list spans every tenant's invoices (admin, `CompanyScope` no-ops); per-company relation manager scopes to one company
+- [ ] Resource is read-only — no create/edit/delete route is exposed (`canCreate(): false`)
+- [ ] `stripe_customer_id` is surfaced without being decrypted/edited here
+
+### Livewire
+- [ ] `ListBillingInvoices` denied to a non-admin; admin sees the filtered table
+- [ ] No mutation action is present on the invoice rows
 
 ## Related
 

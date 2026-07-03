@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Benefits Catalog
@@ -50,6 +50,19 @@ Define the available benefits a company offers (health insurance, pension, gym, 
 - Consumes: none
 - Feeds: none — catalog entries referenced by [[benefit-enrollment]] and read by payroll at run time *(assumed)*
 - Shared entity: none
+
+## Test Checklist
+
+### Unit
+- [ ] `type` validated against the set (insurance / pension / allowance); cost fields stored as integer cents (no float)
+
+### Feature (Pest)
+- [ ] Create/update/soft-delete a benefit persists `cost_per_month_cents` + `employer_contribution_cents` as `bigint`
+- [ ] Company A cannot see or edit company B benefits
+
+### Livewire
+- [ ] Create/edit denied without `hr.compensation.manage-benefits`; resource hidden when `hr.compensation` inactive
+- [ ] Form validation blocks an invalid `type` and negative amounts
 
 ## Related
 

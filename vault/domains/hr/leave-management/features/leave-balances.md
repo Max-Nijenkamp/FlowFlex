@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Leave Balances
@@ -43,6 +43,21 @@ Per employee, per leave type, per year ledger of allocated / taken / pending day
 - Consumes: none directly *(mutated in-process by [[leave-request-workflow]] submit/approve/reject and by [[accrual-jobs]])*
 - Feeds: none
 - Shared entity: `hr_employees` (read via EmployeeService)
+
+## Test Checklist
+
+### Unit
+- [ ] `remaining_days = allocated − taken − pending` computed correctly
+- [ ] `allocated_days = accrual + carry-over + manual adjustment`
+
+### Feature (Pest)
+- [ ] Submit decrements available into `pending_days`; reject/cancel releases it back
+- [ ] Approve moves `pending → taken`
+- [ ] `submit()` throws `InsufficientLeaveBalanceException` when balance is too low
+- [ ] Tenant isolation: managers see only their own company's balances
+
+### Livewire
+- [ ] `LeaveBalanceResource` is read-only (no create/edit action); visible with `hr.leave.view`
 
 ## Related
 

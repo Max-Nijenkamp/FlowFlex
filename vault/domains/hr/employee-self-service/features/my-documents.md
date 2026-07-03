@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # My Documents
@@ -39,5 +39,18 @@ updated: 2026-07-02
 - Consumes: none.
 - Feeds: none.
 - Shared entity: reads core.files Media Library (own docs).
+
+## Test Checklist
+
+### Unit
+- [ ] The document list is read-only — no upload affordance is exposed *(assumed)*
+
+### Feature (Pest)
+- [ ] Media list + download are scoped to `auth()->user()->employee`
+- [ ] Self-scope isolation: employee A cannot download employee B's documents
+- [ ] Download is throttled by the named `exports` rate limiter (file stream — see [[../security]])
+
+### Livewire
+- [ ] `MyDocumentsPage` `canAccess()` denies without `hr.self-service.view` or when the module is inactive
 
 [[../_module]]

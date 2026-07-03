@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Upload Security
@@ -40,3 +40,14 @@ Validates uploads and gates file access.
 - Consumes: none (no domain events); reads the max-file-size setting owned by [[../company-settings/_module]].
 - Feeds: none directly. GDPR erasure of person-related media is driven by [[../data-privacy/erasure-cascade]] per [[../../../architecture/data-lifecycle]] — data-privacy triggers, file-storage/owning domain removes its own media.
 - Shared entity: per-company max file size is reference config owned by [[../company-settings/_module]] (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] MIME + extension must agree — a mismatch is rejected
+- [ ] Disallowed extension (`.php` / `.exe`) rejected
+
+### Feature (Pest)
+- [ ] Per-company max size enforced from Company Settings — an oversize file is rejected
+- [ ] `TemporaryUrlAction` issues a 1h-TTL pre-signed URL that expires after the TTL
+- [ ] Tenant isolation: company A cannot resolve a temporary URL for company B media *(assumed ownership check in the action)*

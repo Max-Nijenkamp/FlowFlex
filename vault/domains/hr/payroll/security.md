@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Payroll — Security
@@ -35,7 +35,13 @@ canAccess() = Auth::user()->can('hr.payroll.view-any') && BillingService::hasMod
 
 ## Rate Limiting
 
-A named throttle is intended on payslip PDF download / export actions per architecture/security.md (medium-severity item from the 2026-06-11 audit).
+| Action | Limiter | Category |
+|---|---|---|
+| Payslip PDF download / export | `exports` | file generation |
+| `PayslipMail` send (on approve) | `panel-action` | comms |
+| Approve run (fires `PayrollRunApproved`) | `panel-action` | money mutation |
+
+Named limiters per [[../../../architecture/security]] and [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
 
 ---
 

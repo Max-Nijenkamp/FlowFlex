@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Shift Scheduling
@@ -14,14 +14,22 @@ Shift creation, team schedule publishing, swap requests, and coverage gap detect
 
 > **Rebuild blueprint.** HR domain code was stripped under [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]]. Nothing below is built, shipped, or tested yet — this spec is the intended rebuild target. `build-status: planned`.
 
-- **Module key:** `hr.shifts` · **Panel:** hr · **Nav group:** Leave · **Priority:** v1
-- **Tables:** `hr_shifts`, `hr_shift_swap_requests`
-- **Consumes:** `LeaveRequestApproved` (from hr.leave) · **Fires:** none
-- **Encrypted fields:** none
+---
+
+## Module-key
+
+`hr.shifts`
+
+**Priority:** v1  
+**Panel:** hr  
+**Permission prefix:** `hr.shifts`  
+**Tables:** `hr_shifts`, `hr_shift_swap_requests`
+
+Nav group: Leave. Consumes `LeaveRequestApproved` (from hr.leave); fires none. Encrypted fields: none.
 
 ---
 
-## Intended Behavior
+## Core Features
 
 - Managers create shifts (start/end time, role, optional employee assignment) and lay them out on a weekly per-team calendar.
 - Schedules move draft → published; on publish, assigned employees are to be notified.
@@ -29,6 +37,8 @@ Shift creation, team schedule publishing, swap requests, and coverage gap detect
 - Unassigned shifts surface as coverage gaps so managers can fill them.
 - Copying the previous week's schedule is intended to cut weekly setup effort.
 - Approved leave should make an employee unassignable for the leave range, and an incoming `LeaveRequestApproved` should unassign them from existing shifts in range.
+
+See [[features/shift-calendar]], [[features/shift-assignment]], [[features/swap-requests]], [[features/leave-conflict-blocking]], [[features/coverage-gaps]].
 
 ---
 
@@ -86,6 +96,19 @@ app/Filament/HR/Resources/ShiftSwapRequestResource.php
 database/factories/HR/{ShiftFactory,ShiftSwapRequestFactory}.php
 tests/Feature/HR/{ShiftSchedulingTest,ShiftSwapTest,LeaveBlockingTest}.php
 ```
+
+---
+
+## Test Checklist
+
+- [ ] Tenant isolation: company A cannot see, assign, or publish company B shifts or swap requests
+- [ ] Module gating: artifacts hidden when `hr.shifts` inactive
+- [ ] Overlapping-shift assignment rejected (`ShiftConflictException`); assigning an employee on approved leave rejected (`EmployeeOnLeaveException`)
+- [ ] `publishWeek` flips that week's drafts → published and notifies assigned employees (`panel-action` limiter)
+- [ ] `copyWeek` copies shifts as drafts and skips employees on leave
+- [ ] Swap approval reassigns both shifts atomically under `lockForUpdate`
+- [ ] `LeaveRequestApproved` unassigns overlapping shifts and flags coverage gaps (listener under `WithCompanyContext`)
+- [ ] CRUD stale-write raises `StaleRecordException`
 
 ---
 

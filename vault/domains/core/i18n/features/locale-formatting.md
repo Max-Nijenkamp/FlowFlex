@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Locale Formatting
@@ -42,3 +42,13 @@ Per-company date, number, and money formatting.
 - Shared entity: `CompanyLocaleSettings` — reference/config data **owned by [[../../company-settings/_module]]** (core.settings); i18n reads it, never writes it.
 
 > [!warning] UNVERIFIED — the `LocaleFormatter::date()/::number()/::money()` API surface is marked *(assumed)* in [[../_module]] / [[../architecture]]; the exact method set is inferred from the flat spec, not confirmed against code.
+
+## Test Checklist
+
+### Unit
+- [ ] `date()` renders per the company date-format setting and converts UTC → company TZ, round-tripping correctly
+- [ ] `number()` / `money()` respect decimal + thousands separators and currency symbol position/decimals
+
+### Feature (Pest)
+- [ ] Formatting reads `CompanyLocaleSettings` for the current company (tenant-scoped); company A's format does not leak into company B's output
+- [ ] `money()` uses brick/money integer minor units — no float drift

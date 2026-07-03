@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # DEI Metrics — Security (CRITICAL)
@@ -34,7 +34,7 @@ This module handles **highly sensitive, self-declared diversity attributes**. Ev
 
 - `hr.dei.view-dashboard` — HR leadership; gates the aggregate dashboard.
 - `hr.dei.submit-own` — all employees; self-service opt-in only.
-- Every Filament artifact gates on `canAccess() = Auth::user()->can('hr.dei.view-any') && BillingService::hasModule('hr.dei')`.
+- There is deliberately **no** `view-any` permission — individual attributes are never rendered anywhere. `DeiDashboardPage` gates on `canAccess() = Auth::user()->can('hr.dei.view-dashboard') && BillingService::hasModule('hr.dei')`; the self-service DEI section gates on `hr.dei.submit-own` (own record only).
 - Pattern: [[../../../security/authn-authz]]
 
 ## Tenancy

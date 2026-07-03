@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Importer Registry
@@ -39,3 +39,13 @@ Import targets are pluggable. Each domain module registers its importer class + 
 - Consumes: none (no domain events).
 - Feeds: none.
 - Shared entity: the importer classes are owned by their respective target domain modules (`hr.employees`, `crm.contacts`, expense items, products); the registry only holds references to them.
+
+## Test Checklist
+
+### Unit
+- [ ] `register($key, $importer)` stores the key → importer class reference
+- [ ] `available()` filters registered importers by `hasModule`
+
+### Feature (Pest)
+- [ ] `available()` excludes targets whose module is inactive (module gating)
+- [ ] `ImporterInterface` template + required-fields are surfaced to the wizard for a registered active target

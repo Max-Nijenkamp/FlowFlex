@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Consent Log
@@ -39,3 +39,15 @@ Tracks consent given/withdrawn per data category per user.
 - Consumes: none defined *(assumed — consent give/withdraw could be fed by portal or auth flows; not specified in current notes)*.
 - Feeds: none directly — the log is read by the [[erasure-cascade]] and [[dsar-queue]] features as evidence.
 - Shared entity: `users` identity is owned elsewhere (platform/auth); read-only here.
+
+## Test Checklist
+
+### Unit
+- [ ] Active vs withdrawn derived from `withdrawn_at` null/non-null
+
+### Feature (Pest)
+- [ ] Tenant isolation: `consent_logs` company-scoped — company A's records invisible to company B
+- [ ] Withdrawal sets `withdrawn_at` once; the record is retained as audit evidence (never hard-deleted)
+
+### Livewire
+- [ ] Consent log is read-mostly; filters (category / active-only) narrow the table; `canAccess()` gated on `core.privacy.view-any` + module active

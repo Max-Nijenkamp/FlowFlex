@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Payroll
@@ -17,7 +17,18 @@ Payroll run management, payslip generation, deduction tracking, and employer cos
 
 ---
 
-## Intended Behavior
+## Module-key
+
+`hr.payroll`
+
+**Priority:** v1 *(assumed)*  
+**Panel:** hr  
+**Permission prefix:** `hr.payroll`  
+**Tables:** `hr_payroll_employees`, `hr_payroll_runs`, `hr_payslips`, `hr_deduction_types`
+
+---
+
+## Core Features
 
 - Per-employee payroll record (stub created by `EmployeeHired`, `incomplete` until salary entered): salary, IBAN, tax parameters.
 - Payroll run collects `ready` employees, applies salary/deductions/bonuses, generates payslips.
@@ -27,9 +38,11 @@ Payroll run management, payslip generation, deduction tracking, and employer cos
 - Approved run fires `PayrollRunApproved` → Finance posts the GL journal entry.
 - All amounts integer minor units (cents) via `brick/money`; salary, IBAN, and payslip amounts encrypted.
 
+See [[features/payroll-run-lifecycle]], [[features/payslip-generation]], [[features/deductions]], [[features/salary-iban-encryption]], [[features/ledger-journal-posting]], [[features/event-driven-inputs]].
+
 ---
 
-## Dependency Summary
+## Dependencies
 
 | Type | Module | Why |
 |---|---|---|
@@ -106,6 +119,21 @@ app/Filament/HR/Widgets/PayrollRunWidget.php
 database/factories/HR/{PayrollEmployeeFactory,PayrollRunFactory,PayslipFactory,DeductionTypeFactory}.php
 tests/Feature/HR/{PayrollRunTest,PayslipCalculationTest,PayrollListenersTest,PayrollEncryptionTest}.php
 ```
+
+---
+
+## Test Checklist
+
+- [ ] Tenant isolation: company A cannot see, run, or approve company B payroll runs, payslips, or payroll-employee records
+- [ ] Module gating: artifacts hidden when `hr.payroll` inactive
+- [ ] Four-eyes: approver ≠ run creator → `CannotApproveOwnRunException`
+- [ ] `processRun` on a run with incomplete profiles throws `IncompletePayrollProfileException` listing blockers
+- [ ] Approve fires `PayrollRunApproved` with contract payload (period totals, currency); queues `PayslipMail`
+- [ ] Payslip generation is idempotent on `(payroll_run_id, employee_id)` — re-run safe
+- [ ] Deduction math (percent + flat) exact via `brick/money`, no float drift
+- [ ] `salary_raw`, `iban`, `amounts_raw` encrypted; decryption gated by `hr.payroll.view-sensitive`
+- [ ] Self-service payslip access is own-scope only
+- [ ] Concurrent run-transition blocked by `lockForUpdate`; CRUD stale-write raises `StaleRecordException`
 
 ---
 

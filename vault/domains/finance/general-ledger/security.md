@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # General Ledger — Security
@@ -24,6 +24,12 @@ per [[../../../architecture/filament-patterns]] #1 — custom pages (`TrialBalan
 ## Permissions
 
 `finance.ledger.view-any` · `finance.ledger.view` · `finance.ledger.post-manual` · `finance.ledger.reverse` · `finance.ledger.manage-accounts` · `finance.ledger.close-period`
+
+`post-manual` gates manual journal creation; `reverse` gates a reversal (mirror) entry; `manage-accounts` gates chart-of-accounts CRUD; `close-period` gates both the close and reopen of a fiscal period (single owner-level verb *(assumed)*).
+
+## Rate Limiting
+
+The money-mutating panel actions — manual posting (`post-manual`) and reversal (`reverse`) — carry the named `panel-action` rate limiter per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]] (mutates financial truth). Period close/reopen likewise uses `panel-action`.
 
 ## Integrity controls
 

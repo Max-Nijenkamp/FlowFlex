@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Cash Flow — Security
@@ -28,6 +28,10 @@ UNVERIFIED: the source spec lists the permission set as `finance.cashflow.view` 
 `finance.cashflow.view` · `finance.cashflow.manage-items`
 
 `manage-items` gates `AddManualItemAction` (adding/editing manual inflow/outflow items).
+
+## Rate Limiting
+
+- `AddManualItemAction` mutates money (adds/edits cash items) → carries the `panel-action` rate limiter per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]] and [[../../../architecture/security]].
 
 ## Integrity controls
 

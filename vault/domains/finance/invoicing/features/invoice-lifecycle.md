@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Invoice Lifecycle (State Machine)
@@ -44,5 +44,20 @@ Column: `fin_invoices.status` — `InvoiceState` (`spatie/laravel-model-states`)
 
 - Feeds: `InvoicePaid` → consumed by [[../../accounts-receivable/_module|finance.ar]] (aging cache bust, dunning reset), [[../../cash-flow/_module|finance.cashflow]] (drop paid inflow), and CRM account rollups.
 - In-domain: each transition side-effects a GL post via [[../../general-ledger/_module|finance.ledger]] (direct service call, no event).
+
+## Test Checklist
+
+### Unit
+- [ ] State machine: legal transitions accepted (`draft→sent`, `sent→partially_paid→paid`, `sent/overdue→voided`); illegal ones rejected
+- [ ] `void` of a `paid` invoice throws `CannotVoidPaidInvoiceException`
+
+### Feature (Pest)
+- [ ] Send assigns a gap-free sequential number under concurrency (advisory/row lock), queues PDF + mail, flips to `sent`
+- [ ] Void of a `sent`/`overdue` invoice posts a ledger reversal; void of `draft` posts nothing; paid rejected
+- [ ] Tenant + permission: user without `finance.invoicing.send` cannot send; company A cannot transition company B invoices; stale-write on a concurrently edited draft raises `StaleRecordException`
+
+### Livewire
+- [ ] `InvoiceResource` Send / Void header actions are gated by their permissions and disabled on `paid` rows; status badge reflects state
+- [ ] `canAccess` denied without `finance.invoicing.view-any` and when `finance.invoicing` inactive
 
 See [[../api]], [[../architecture]], [[../../../../architecture/patterns/states]].

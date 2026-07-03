@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Financial Reporting — Architecture
@@ -29,6 +29,29 @@ Closed/historical periods cache for 1 h under `company:{id}:finance:pl:{period}`
 
 ## Export
 
-Each report exports to Excel (`pxlrbt/filament-excel`) and PDF (`spatie/laravel-pdf`). Export actions carry a rate limiter to prevent export abuse / resource exhaustion. Scheduled email delivery is P3, deferred to analytics.exports.
+Each report exports to Excel (`pxlrbt/filament-excel`) and PDF (`spatie/laravel-pdf`). Export actions carry the `exports` rate limiter to prevent export abuse / resource exhaustion. Scheduled email delivery is P3, deferred to analytics.exports.
+
+## Filament Artifacts
+
+**Nav group:** Reports *(assumed)*
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `ProfitLossPage` | #9 report custom page | [[../../../architecture/patterns/page-blueprints#Report Builder / Query UI]] — revenue/COGS/expenses/net-profit rows, comparison columns (prior period, budget when active), drill-down to journal entries; realtime none | `/finance/reports/pnl`; Excel + PDF export actions carry the `exports` rate limiter |
+| `BalanceSheetPage` | #9 report custom page | [[../../../architecture/patterns/page-blueprints#Report Builder / Query UI]] — assets/liabilities/equity as-of snapshot, asserts `assets = liabilities + equity`; realtime none | `/finance/reports/balance-sheet`; Excel + PDF export actions carry the `exports` rate limiter |
+| `CashFlowStatementPage` | #9 report custom page | [[../../../architecture/patterns/page-blueprints#Report Builder / Query UI]] — operating/investing/financing sections (indirect method *(assumed)*); realtime none | `/finance/reports/cash-flow`; Excel + PDF export actions carry the `exports` rate limiter |
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('finance.reporting.view-any') && BillingService::hasModule('finance.reporting')`
+per [[../../../architecture/filament-patterns]] #1. `ProfitLossPage`, `BalanceSheetPage`, and `CashFlowStatementPage` are custom pages and MUST state this explicitly — Filament does not auto-gate custom pages. No public/portal surface in this module.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Statement rendering (P&L / balance sheet / cash flow) | n-a | read-only derived computation over ledger `fin_journal_*` + `fin_accounts`; the module owns no tables and writes nothing |
+| Excel / PDF export | n-a | read-only file generation from the computed statement — no persisted writes |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 See [[../../../architecture/patterns/custom-pages]], [[../../../architecture/packages]], [[data-model]], [[api]].

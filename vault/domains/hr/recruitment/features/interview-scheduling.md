@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Interview Scheduling
@@ -48,6 +48,20 @@ Schedule interviews for applicants: date/time, interviewers, and interview type;
 - Consumes: none
 - Feeds: none
 - Shared entity: platform users (interviewers) read via the user directory
+
+## Test Checklist
+
+### Unit
+- [ ] `outcome` constrained to `pass` / `fail` / `pending`; `type` to video / phone / on-site
+- [ ] `interviewers` stored as a jsonb array of user ids
+
+### Feature (Pest)
+- [ ] Scheduling an interview queues the interviewer notification mail
+- [ ] Company A cannot see or edit company B interviews
+
+### Livewire
+- [ ] Schedule/edit denied without `hr.recruitment.update`
+- [ ] Interviewer multi-select persists selected user ids
 
 ## Related
 

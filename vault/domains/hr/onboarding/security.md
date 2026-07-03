@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Onboarding — Security
@@ -14,7 +14,9 @@ See [[../../../security/authn-authz]] and [[../../../security/encryption]].
 
 ## Permissions
 
-`hr.onboarding.view-any` · `hr.onboarding.view` · `hr.onboarding.create` · `hr.onboarding.update` · `hr.onboarding.complete-task` · `hr.onboarding.manage-templates`
+`hr.onboarding.view-any` · `hr.onboarding.view` · `hr.onboarding.create` · `hr.onboarding.update` · `hr.onboarding.complete-task` · `hr.onboarding.skip-task` · `hr.onboarding.manage-templates`
+
+`complete-task` and `skip-task` are separate verbs for the two plan-task header actions in [[architecture]] (custom-header-actions tweak). Welcome mail and milestone reminders are event/scheduled-driven queued mail, not panel actions — no panel-action rate limiter applies.
 
 ## Authorization
 

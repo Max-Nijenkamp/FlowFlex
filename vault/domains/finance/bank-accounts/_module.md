@@ -15,7 +15,7 @@ tables: [fin_bank_accounts, fin_bank_transactions]
 permission-prefix: finance.bank
 encrypted-fields: ["fin_bank_accounts.iban", "fin_bank_accounts.account_number"]
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Bank Accounts
@@ -61,7 +61,8 @@ See [[../../../architecture/queue-jobs]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see, import into, or reconcile company B bank accounts/transactions
+- [ ] Module gating: artifacts hidden when `finance.bank` inactive
 - [ ] IBAN/account number ciphertext in DB; masked display; `view-sensitive` gates full value
 - [ ] Re-importing same statement creates zero duplicates (hash dedupe)
 - [ ] Reconcile with mismatched amount rejected

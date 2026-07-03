@@ -5,15 +5,22 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Internationalisation
 
 Locale, timezone, and date/number/currency format management per company. All format settings are inherited from Company Settings — no module maintains its own locale. This is a thin module: a `SetLocale` middleware plus a `LocaleFormatter` support class over storage owned by core.settings.
 
-- **module-key:** `core.i18n` · **panel:** app · **priority:** v1
-- **fires-events:** none · **consumes-events:** none
+## Module-key
+
+`core.i18n`
+
+**Priority:** v1  
+**Panel:** app (no standalone surface — locale controls are a Company Settings tab)  
+**Permission prefix:** none (rides on `core.settings.update`)  
+**Tables:** none (storage is `CompanyLocaleSettings`, owned by core.settings)  
+**Events:** fires none · consumes none
 
 ## Sibling notes
 
@@ -45,6 +52,8 @@ Covered by `core.settings.update` — no separate keys. The settings form is gat
 
 ## Test Checklist
 
+- [ ] Tenant isolation: locale/format settings are company-scoped (via core.settings); one company's locale cannot affect another's
+- [ ] Module gating: n/a (platform module — no standalone gated surface; middleware/formatter always active)
 - [ ] Locale change switches translation strings on next request
 - [ ] Date rendered per company date-format setting
 - [ ] Number/money formatting respects separators + symbol position

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Review Forms & State Machine
@@ -53,5 +53,19 @@ The per-cycle state machine that locks submissions and freezes ratings at the ri
 - Consumes: none
 - Feeds: none directly — finalise triggers [[pdf-export]] and freezes ratings for [[self-and-manager-reviews]]
 - Shared entity: `hr_employees` (hr.profiles) for reviewer/reviewee routing
+
+## Test Checklist
+
+### Unit
+- [ ] Transitions valid only along `draft → active → calibration → finalised`; illegal jumps rejected
+- [ ] `active → calibration` sets the submission-lock flag
+
+### Feature (Pest)
+- [ ] Submitting after `active → calibration` throws `ReviewLockedException`
+- [ ] `calibration → finalised` freezes ratings and triggers PDF generation
+
+### Livewire
+- [ ] Transition actions gated: manage-cycles for draft→active / active→calibration, calibrate for calibration→finalised
+- [ ] Review form is editable only while the cycle is `active`, read-only in `calibration`, frozen when `finalised`
 
 Back to [[../_module]].

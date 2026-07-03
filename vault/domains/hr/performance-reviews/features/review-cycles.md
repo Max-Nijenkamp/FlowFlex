@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Review Cycles
@@ -53,5 +53,19 @@ Configurable review cycles that scope a round of reviews across the company.
 - Consumes: none
 - Feeds: `review-completed` *(assumed)* → could surface in hr.feedback review context (per index `performance -.feeds.-> feedback`)
 - Shared entity: `hr_employees` + manager chain (hr.profiles / org)
+
+## Test Checklist
+
+### Unit
+- [ ] Activation with no active employees throws `EmptyCycleException`
+- [ ] Review matrix = one self + one manager row per active employee (peers added by manager)
+
+### Feature (Pest)
+- [ ] `activateCycle` generates the review rows and sends due notifications
+- [ ] Cycle advances `draft → active → calibration → finalised`; company A cannot touch company B cycles
+
+### Livewire
+- [ ] Create/activate denied without `hr.performance.manage-cycles`; finalise denied without `hr.performance.calibrate`
+- [ ] Completion-% column reflects submitted/total reviews
 
 Back to [[../_module]].

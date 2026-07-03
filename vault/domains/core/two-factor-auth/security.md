@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Two-Factor Auth — Security
@@ -13,6 +13,14 @@ updated: 2026-06-20
 Parent: [[_module]]
 
 2FA is a security control in its own right; this note records its own hardening properties.
+
+## Permissions
+
+None — 2FA is self-service and defines no permission strings. There is no command action or state transition to gate; authorization is the user's own authenticated session behind the `->emailVerification()` gate. `core.2fa` is a platform auth capability (always active), so there is no module-gating verb either.
+
+## Rate limiting
+
+The TOTP challenge and recovery-code redemption are login-security surfaces and are throttled by the framework login/auth throttle (failed-attempt limiting), not a panel-action limiter — there is no comms/money/file/external-API side effect on this module's own paths.
 
 ## TOTP, self-service
 

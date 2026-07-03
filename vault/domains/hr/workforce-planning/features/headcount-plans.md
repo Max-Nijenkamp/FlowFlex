@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Headcount Plans
@@ -47,6 +47,19 @@ Set a target headcount per department per period (quarter or year), against a bu
 - Consumes: none
 - Feeds: none (parent record; planned roles hang off it)
 - Shared entity: `hr_employees` / department reference (read-only, for department selection)
+
+## Test Checklist
+
+### Unit
+- [ ] One plan per `(company_id, department_id, period)`; duplicate rejected
+- [ ] `department_id` null renders as a company-wide plan; negative `target_headcount` rejected
+
+### Feature (Pest)
+- [ ] Creating a duplicate `(company, department, period)` plan is rejected on save
+- [ ] Company A cannot see or edit company B headcount plans
+
+### Livewire
+- [ ] Create requires `hr.workforce.create`; edit requires `hr.workforce.update`; visible with `hr.workforce.view-any`
 
 ## Related
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: DSAR Queue
@@ -40,3 +40,17 @@ Logs and processes data-subject access + erasure requests.
 - Feeds: `DSARRequestSubmitted` (fired on create) → consumed by Notifications (deadline/ack) now, Legal in P3.
 - Consumes: none.
 - Shared entity: DSAR contact email + retention window are reference config owned by [[../company-settings/_module]] (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] `due_at = created_at + 30 days` on create
+- [ ] State transitions guarded: `received → in-progress → completed`/`rejected` only
+
+### Feature (Pest)
+- [ ] Tenant isolation: company A's DSAR invisible to company B
+- [ ] Create fires `DSARRequestSubmitted`; `DsarDeadlineReminderCommand` fires at `due_at-7d` and `due_at-1d` once each
+- [ ] Process dispatches the access/erasure job (pessimistic transition); Reject records the reason
+
+### Livewire
+- [ ] Process/Reject actions require `core.privacy.process`; `canAccess()` gated on `core.privacy.view-any` + module active

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Signed Delivery
@@ -40,3 +40,17 @@ Every outbound payload is HMAC-signed.
 - Consumes: the raw payload from any domain event (via the `WebhookDispatcher`) — read-only, delivered as-sent.
 - Feeds: an external HTTP endpoint (outside FlowFlex); no internal event emitted.
 - Shared entity: `webhook_endpoints.secret` (owned here); receivers hold their own copy to verify.
+
+## Test Checklist
+
+### Unit
+- [ ] `X-FlowFlex-Signature` equals HMAC-SHA256 of the raw payload keyed by the endpoint secret
+- [ ] A tampered payload / wrong secret fails `hash_equals` verification
+
+### Feature (Pest)
+- [ ] `DeliverWebhookJob` sets the signature header on the outbound POST; the secret is read from the encrypted column
+- [ ] `RotateWebhookSecretAction` returns a new plaintext once, re-encrypts at rest, and holds a lock (no double-rotate); old signatures no longer verify
+
+### Livewire
+- [ ] Rotate action shows the new secret once (copy-once modal) and requires `core.webhooks.rotate`
+- [ ] Secret field is masked after first reveal; rotate denied when `core.webhooks` inactive

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Overtime Detection
@@ -47,6 +47,15 @@ Flag worked hours beyond the standard workday so payroll can apply overtime pay.
 - Consumes: none
 - Feeds: none directly *(contributes `total_minutes`/`overtime_minutes` to the `TimesheetApproved` payload consumed by [[../../payroll/_module|hr.payroll]])*
 - Shared entity: standard-workday setting (company settings)
+
+## Test Checklist
+
+### Unit
+- [ ] Hours over the standard workday set `is_overtime = true`; standard workday read from company settings *(assumed: 8h default)*
+- [ ] Hours at or under the standard workday leave `is_overtime = false`
+
+### Feature (Pest)
+- [ ] Clock-out beyond the standard workday flags overtime and surfaces `overtime_minutes` in `TimesheetData` for the approval/payroll view
 
 ## Related
 

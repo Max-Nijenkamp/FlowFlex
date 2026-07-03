@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Security — Compensation & Benefits
@@ -16,10 +16,16 @@ Salary data is sensitive: amounts are encrypted at rest and salary display sits 
 
 - `hr.compensation.view-any`
 - `hr.compensation.manage-bands`
-- `hr.compensation.adjust-salary`
+- `hr.compensation.adjust-salary` — single + bulk comp-review adjustment (money mutation)
 - `hr.compensation.manage-benefits`
 - `hr.compensation.enroll`
+- `hr.compensation.unenroll` *(assumed)* — distinct command verb for ending an enrollment
 - Salary display additionally behind `hr.payroll.view-sensitive`.
+
+## Rate Limiting
+
+- `adjustSalary` and `bulkAdjust` (comp review) mutate money → each names the `panel-action` rate limiter per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
+- Any comp-review bulk import/export path names the `exports` limiter.
 
 ## Authorization
 

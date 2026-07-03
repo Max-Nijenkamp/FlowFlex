@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Self-declaration
@@ -46,6 +46,21 @@ Let employees opt in and declare their own diversity attributes via HR self-serv
 - Consumes: none
 - Feeds: none outbound (privacy — no DEI data leaves the module); writes a consent log to core.privacy at submit time
 - Shared entity: `hr_employees` (read-only, to bind the acting employee)
+
+## Test Checklist
+
+### Unit
+- [ ] Consent unticked → `SubmitDeiAttributesData` validation rejects submission
+- [ ] A value outside the dimension's allowed option list is rejected; a disallowed-for-jurisdiction dimension is rejected
+
+### Feature (Pest)
+- [ ] `SubmitOwnDeiAttributesAction` writes `hr_dei_attributes` (encrypted `value`) + a consent log for the acting employee only
+- [ ] An employee cannot declare attributes for another employee (own-record only)
+- [ ] Tenant isolation: submission binds to the acting employee's company; company A cannot write company B rows
+
+### Livewire
+- [ ] Consent checkbox gates the submit button — disabled until ticked
+- [ ] Validation error ("consent required" / value not in allowed list) surfaces inline; section hidden without `hr.dei.submit-own`
 
 ## Related
 

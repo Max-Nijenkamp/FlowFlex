@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Workforce Planning — Security
@@ -14,7 +14,7 @@ Intended access model. Not yet built (see [[_module]]).
 
 ## Permissions
 
-`hr.workforce.view-any` · `hr.workforce.create` · `hr.workforce.update` · `hr.workforce.approve-role`
+`hr.workforce.view-any` · `hr.workforce.create` · `hr.workforce.update` · `hr.workforce.approve-role` · `hr.workforce.mark-filled` *(assumed — command verb for `MarkRoleFilledAction`)*
 
 ## Authorization
 

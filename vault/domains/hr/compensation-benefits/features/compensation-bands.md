@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Compensation Bands
@@ -51,6 +51,21 @@ Define min/mid/max salary per job grade, per department, and compare bands again
 - Consumes: none
 - Feeds: none
 - Shared entity: `department` and employees (hr.profiles) for band scoping and compa-ratio
+
+## Test Checklist
+
+### Unit
+- [ ] Cross-field rule rejects `min > mid` and `mid > max` with the "min ≤ mid ≤ max" message
+- [ ] Compa-ratio = salary ÷ midpoint via `brick/money` (no float); returns `null` with no matching band
+
+### Feature (Pest)
+- [ ] Duplicate `(company_id, job_grade, department_id)` rejected; `department_id` null = company-wide band
+- [ ] Compa-ratio comparison exposes band level only, never exact salaries
+- [ ] Company A cannot see or edit company B bands
+
+### Livewire
+- [ ] Create/edit denied without `hr.compensation.manage-bands`; resource hidden when `hr.compensation` inactive
+- [ ] Band-builder form surfaces the min ≤ mid ≤ max and duplicate errors
 
 ## Related
 

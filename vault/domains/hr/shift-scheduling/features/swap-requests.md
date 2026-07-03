@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Swap Requests
@@ -49,6 +49,19 @@ Let an employee swap a shift with a colleague, subject to manager approval.
 - Consumes: none
 - Feeds: none
 - Shared entity: `hr_employees` (read via EmployeeService)
+
+## Test Checklist
+
+### Unit
+- [ ] Status flow valid only along `pending → accepted → approved` / `declined`
+- [ ] `requestSwap` requires the recipient to have no conflict on the shift date
+
+### Feature (Pest)
+- [ ] `approveSwap` reassigns both shifts atomically under `lockForUpdate` and sets `manager_approved_at`
+- [ ] Decline terminates the request; company A cannot see or act on company B swap requests
+
+### Livewire
+- [ ] Request requires `hr.shifts.request-swap`; recipient accept requires `hr.shifts.accept-swap`; approve requires `hr.shifts.approve-swap`
 
 ## Related
 

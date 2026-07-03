@@ -5,15 +5,22 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Health Monitoring
 
 System health checks, a Laravel Pulse metrics dashboard, and Horizon queue monitoring — surfaced to company owners (simplified `SystemStatusPage` in `/app`) and to FlowFlex staff (full Pulse/Horizon dashboards in `/admin`). A configuration module: no tables, no DTOs, no services of its own.
 
-- **module-key:** `core.health` · **panel:** app + admin · **priority:** v1
-- **fires-events:** none · **consumes-events:** none
+## Module-key
+
+`core.health`
+
+**Priority:** v1  
+**Panel:** app + admin  
+**Permission prefix:** `core.health`  
+**Tables:** none (configuration-only — health data ephemeral, Redis-backed Pulse/Horizon)  
+**Events:** fires none · consumes none
 
 ## Sibling notes
 
@@ -40,6 +47,8 @@ No `data-model.md` — all health data is ephemeral (Redis-backed Pulse, Horizon
 
 ## Test Checklist
 
+- [ ] Tenant isolation: health data is infra-level (not per-tenant); `SystemStatusPage` owner-scoped, no cross-company leakage
+- [ ] Module gating: `SystemStatusPage` hidden when `core.health` inactive
 - [ ] `GET /health` returns JSON with all registered checks
 - [ ] `/horizon` + `/pulse` inaccessible to tenant non-owner users
 - [ ] `SystemStatusPage` gated by `core.health.view` (owner)

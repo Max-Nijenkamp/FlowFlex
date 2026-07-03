@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Employment Lifecycle (State Machine)
@@ -51,6 +51,22 @@ Full transition table + Mermaid diagram in [[../architecture]].
 
 > [!warning] UNVERIFIED
 > IT deprovisioning as an `EmployeeOffboarded` consumer is a P3 soft integration and not confirmed by any built spec.
+
+## Test Checklist
+
+### Unit
+- [ ] State machine allows only legal transitions (`active ↔ on_leave`, `active ↔ suspended`, any non-terminal → `terminated`); illegal transitions throw
+- [ ] `terminated` is terminal — no outward transition
+
+### Feature (Pest)
+- [ ] `offboard` transitions to `terminated` and fires `EmployeeOffboarded`
+- [ ] An illegal transition is rejected with a message; the record is unchanged
+- [ ] Transition takes a pessimistic lock (`DB::transaction` + `lockForUpdate`) — concurrent double-transition is serialized ([[../architecture]])
+- [ ] Each transition writes an activitylog entry
+
+### Livewire
+- [ ] Only legal transition actions render for the current state
+- [ ] Transition actions denied without `hr.employees.update`
 
 ## Related
 

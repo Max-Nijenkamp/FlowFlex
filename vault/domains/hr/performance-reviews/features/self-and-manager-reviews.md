@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Self & Manager Reviews (360)
@@ -53,5 +53,19 @@ The review submissions themselves: self-assessment, manager review, and peer (36
 - Consumes: none
 - Feeds: `review-completed` *(assumed)* → surfaces in hr.feedback review context (per index `performance -.feeds.-> feedback`)
 - Shared entity: `hr_employees` + manager chain (hr.profiles) for reviewer assignment
+
+## Test Checklist
+
+### Unit
+- [ ] On activation, self + manager rows auto-generate per active employee; peers added by manager
+- [ ] `SubmitReviewData` validates rating within the cycle's scale
+
+### Feature (Pest)
+- [ ] Reviewer submits own assigned review while cycle is `active`; another reviewer's review → `NotYourReviewException`
+- [ ] Submit after lock → `ReviewLockedException`; HR calibrates ratings only in `calibration` state
+
+### Livewire
+- [ ] Submit action gated by `hr.performance.submit`; calibration side-by-side view gated by `hr.performance.calibrate`
+- [ ] Peer reviewer identity is never shown to the reviewee *(assumed)*
 
 Back to [[../_module]].

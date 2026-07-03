@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Ledger Journal Posting
@@ -44,5 +44,14 @@ Hand off an approved payroll run to Finance for GL journal posting.
 - Consumes: none
 - Feeds: `PayrollRunApproved` → consumed by `finance.ledger` (posts the GL journal entry)
 - Shared entity: none
+
+## Test Checklist
+
+### Unit
+- [ ] `PayrollRunApproved` payload built from the run carries period totals + currency, `company_id` as a scalar
+
+### Feature (Pest)
+- [ ] Approving a run fires `PayrollRunApproved` exactly once with the correct payload
+- [ ] Event fires unconsumed (no error) when `finance.ledger` is unbuilt — FlowFlex never writes finance tables
 
 Back to [[../_module]].

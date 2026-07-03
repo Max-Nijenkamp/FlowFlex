@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: DEI dashboard (aggregates)
@@ -47,6 +47,21 @@ Present representation, pay-equity, hiring, and promotion equity to HR leadershi
 - Consumes: none (reads own snapshots; pay-equity/hiring sections read `hr.compensation` / `hr.recruitment` read APIs, `*(assumed)*`)
 - Feeds: none outbound (privacy — DEI aggregates stay in the module)
 - Shared entity: `hr_dei_snapshots` (own), band-level compensation + recruitment funnel data (read-only, soft-dep)
+
+## Test Checklist
+
+### Unit
+- [ ] A snapshot group flagged suppressed maps to an "insufficient group size" placeholder, not a number
+- [ ] Pay-equity uses `salary_band` only — never an exact salary value
+
+### Feature (Pest)
+- [ ] Dashboard reads `hr_dei_snapshots` only — no code path live-decrypts `hr_dei_attributes` at request time
+- [ ] Pay-equity section hidden without `hr.compensation`; hiring/promotion section hidden without `hr.recruitment`
+- [ ] Tenant isolation: company A's dashboard renders only company A snapshots
+
+### Livewire
+- [ ] `canAccess()` denies without `hr.dei.view-dashboard` or when `hr.dei` module inactive
+- [ ] Suppressed groups render the placeholder; empty period shows the "run the quarterly job" first-use state
 
 ## Related
 

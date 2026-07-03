@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Tax Period Report & VAT Return
@@ -35,5 +35,21 @@ Period summary of output vs input tax, plus VAT return preparation and filing.
 ## Relations
 - Consumes: no cross-domain events; pulls period totals by reading the owning modules' tax data.
 - Feeds: no events — filing is own-domain state only. OSS summary only, no filing integration in v1 *(assumed)*.
+
+## Test Checklist
+
+### Unit
+- [ ] `periodSummary(period)` computes `output − input = net_payable` in integer minor units (brick/money) over fixtures
+- [ ] Period key accepts both `YYYY-Qn` and `YYYY-MM`, unique per company
+
+### Feature (Pest)
+- [ ] `filePeriod(period)` snapshots `output_tax_cents` / `input_tax_cents` / `net_payable_cents`, sets status `filed`, and blocks rate-affecting recomputation afterwards
+- [ ] Filing requires `finance.tax.file-period`; a user without it is denied
+- [ ] Tenant isolation: a period summary reads only the acting company's invoicing/AP/expenses tax data
+- [ ] VAT-return export is throttled by the `exports` limiter
+
+### Livewire
+- [ ] `TaxReturnPage` renders the period selector + output/input/net summary and the file action; `canAccess` denied without `finance.tax.view-any`
+- [ ] Re-filing an already-filed period surfaces the "already filed / recompute blocked" error state
 
 See [[../api]], [[../security]], [[../data-model]].

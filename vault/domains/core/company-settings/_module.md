@@ -5,15 +5,22 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Company Settings
 
 Source of truth for workspace configuration: timezone, locale, currency, branding, and business identity. All other modules read settings from here — they never maintain their own locale or currency config. Always-free core module, cannot be deactivated.
 
-- **module-key:** `core.settings` · **panel:** app · **priority:** v1-core
-- **fires-events:** none · **consumes-events:** none
+## Module-key
+
+`core.settings`
+
+**Priority:** v1-core  
+**Panel:** app  
+**Permission prefix:** `core.settings`  
+**Tables:** none (stored via `spatie/laravel-settings`, scoped by `company_id`)  
+**Events:** fires none · consumes none
 
 ## Sibling notes
 
@@ -50,6 +57,7 @@ No custom tables — stored via `spatie/laravel-settings` in its `settings` tabl
 ## Test Checklist
 
 - [ ] Tenant isolation: company A settings change does not affect company B
+- [ ] Module gating: n/a (platform module, always active — cannot be deactivated)
 - [ ] Locale change reflects in `SetLocale` middleware on next request
 - [ ] Currency change affects new money formatting, not stored amounts
 - [ ] Slug uniqueness enforced across companies

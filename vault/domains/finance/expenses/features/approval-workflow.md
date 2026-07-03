@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Approval Workflow (State Machine)
@@ -40,5 +40,20 @@ Column: `fin_expenses.status` — `ExpenseState` (`spatie/laravel-model-states`)
 ## Relations
 - Consumes: payroll listener confirm can drive `approved→reimbursed` (reimbursement paid via hr.payroll).
 - Feeds: fires `ExpenseApproved` on approval → consumed by hr.payroll for reimbursement. v1 is single-approver *(assumed)*; the employee → manager → finance chain is a later hook.
+
+## Test Checklist
+
+### Unit
+- [ ] State machine: legal transitions accepted (`draft→submitted`, `submitted→approved|rejected`, `approved→reimbursed`); illegal ones rejected
+- [ ] Reject without a reason is rejected
+
+### Feature (Pest)
+- [ ] Approve by a non-submitter posts a balanced GL entry (expense account / reimbursable liability) via `LedgerService::post` and fires `ExpenseApproved` with the contract payload
+- [ ] Approver = submitter throws `CannotApproveOwnExpenseException`
+- [ ] Reject records the reason and notifies the submitter; reimburse clears the liability; tenant isolation on every transition
+
+### Livewire
+- [ ] `ExpenseResource` submit/approve/reject/reimburse actions are gated by their permissions and hidden for the submitter on their own record
+- [ ] `canAccess` denied without `finance.expenses.view-any` and when `finance.expenses` inactive
 
 See [[../api]], [[../architecture]], [[../../../../architecture/patterns/states]].

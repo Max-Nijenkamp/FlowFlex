@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Inbox Bell
@@ -40,3 +40,18 @@ The in-app notification bell in every panel.
 - Consumes: `NotificationCreated` broadcast (internal) → live badge update; upstream domain events land via this module's listeners (see [[realtime-broadcast]]).
 - Feeds: none (terminal UI surface).
 - Shared entity: `notifications` table (Laravel-standard, extended with `company_id`) — owned here.
+
+## Test Checklist
+
+### Unit
+- [ ] Unread-count query returns only rows with `read_at` null for the authenticated `notifiable_id`
+- [ ] Domain grouping buckets notifications by their source domain
+
+### Feature (Pest)
+- [ ] `MarkAllReadAction` sets `read_at` on every unread row for the user and none for other users
+- [ ] Company A user cannot mark-read / delete a company B notification (scoped to `notifiable_id` + `company_id`)
+- [ ] Marking one item read decrements the unread count; delete removes it from the list
+
+### Livewire
+- [ ] Bell renders unread badge; opening the panel and clicking an item marks it read and follows `action_url`
+- [ ] Empty state shows "You're all caught up" when no unread notifications

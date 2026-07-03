@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Pulse Dashboard
@@ -40,3 +40,12 @@ Laravel Pulse + Horizon admin dashboards.
 - Consumes: none (no domain events).
 - Feeds: none — no domain events fired. Sentry ingests exceptions tagged `company_id` + `user_id`, but that is error telemetry, not a domain-event contract.
 - Shared entity: none — operates on infrastructure/telemetry, owns and shares no domain entity.
+
+## Test Checklist
+
+### Unit
+- [ ] Sentry scope tags include `company_id` + `user_id` *(config assertion)*
+
+### Feature (Pest)
+- [ ] `/pulse` and `/horizon` inaccessible to a tenant non-owner user (admin guard enforced)
+- [ ] A Sentry test event carries the `company_id` + `user_id` tags

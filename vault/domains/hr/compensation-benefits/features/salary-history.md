@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Salary History
@@ -51,6 +51,23 @@ Append-only audit trail of every salary change (who changed, when, old → new, 
 - Consumes: none
 - Feeds: none — a comp-change event to payroll is *(assumed)*, not yet specified; payroll reads the updated profile salary directly
 - Shared entity: `hr_employees` (hr.profiles); payroll profile salary (hr.payroll)
+
+## Test Checklist
+
+### Unit
+- [ ] `AdjustSalaryData` validates `new_salary_cents >= 0` and `reason` in the set (hire / promotion / comp-review / correction)
+- [ ] `salary_band` derived as a coarse band, never the exact amount
+
+### Feature (Pest)
+- [ ] `adjustSalary` updates the payroll profile and appends exactly one `hr_salary_history` row in one transaction; failure rolls back both; concurrent adjust rejected via `lockForUpdate`
+- [ ] Append-only invariant: no update or delete path mutates an existing history row
+- [ ] `bulkAdjust` processes rows with per-row try/catch, returning a `BulkResult` where a bad row does not roll back good rows
+- [ ] `amount_raw` persisted encrypted (ciphertext in the DB column)
+- [ ] Company A cannot read company B salary history
+
+### Livewire
+- [ ] `SalaryHistoryRelationManager` is read-only (no create/edit/delete actions rendered)
+- [ ] Decrypted amounts hidden without `hr.payroll.view-sensitive`; adjust action denied without `hr.compensation.adjust-salary`
 
 ## Related
 

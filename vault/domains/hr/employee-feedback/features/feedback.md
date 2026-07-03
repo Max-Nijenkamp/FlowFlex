@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feedback Records
@@ -50,5 +50,21 @@ Lightweight feedback from one employee to another: praise, constructive, or coac
 - Consumes: performance-review context signals from `hr.performance` (soft — feedback links to a goal/cycle; standalone otherwise)
 - Feeds: public praise → [[recognition-feed]]; recipient notification via core.notifications
 - Shared entity: `hr_employees` (hr.profiles), `hr_review_goals` (hr.performance)
+
+## Test Checklist
+
+### Unit
+- [ ] Visibility is forced by type: constructive → private, praise → public-capable, coaching note → manager-chain
+- [ ] Self-feedback (`from == to`) is rejected
+
+### Feature (Pest)
+- [ ] `GiveFeedbackAction` creates the record and notifies the recipient
+- [ ] Public praise lands on the recognition feed; constructive/coaching never appear on it
+- [ ] Visibility scope enforced in query (not just UI): constructive readable only by sender, recipient, and HR `view-any`
+- [ ] Tenant isolation: company A cannot read company B feedback
+
+### Livewire
+- [ ] Give form gated on `hr.feedback.give`; visibility field auto-set (and locked) by chosen type
+- [ ] Self-feedback attempt surfaces the rejection message
 
 Back to [[../_module]].

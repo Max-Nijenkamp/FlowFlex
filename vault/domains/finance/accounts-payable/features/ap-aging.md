@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # AP Aging Report
@@ -37,6 +37,19 @@ Bucket outstanding supplier liabilities by age: **current, 30, 60, 90+ days**.
 - Consumes: no events
 - Feeds: no events (surfaces data for human decisions only)
 - in-domain: reads bills produced by [[bill-approval]]; informs [[payment-runs]] prioritisation
+
+## Test Checklist
+
+### Unit
+- [ ] Age bucketing assigns an unpaid bill to `current | 30 | 60 | 90+` at boundary days (30/31, 60/61, 90/91) from its due date
+- [ ] Per-bucket and footer totals sum via brick/money (integer minor units, no float math)
+
+### Feature (Pest)
+- [ ] `aging()` buckets only unpaid `fin_bills` and excludes paid/voided bills from GL fixtures
+- [ ] Tenant isolation: company A's aging query never includes company B bills
+
+### Livewire
+- [ ] `ApAgingPage` renders the bucket table and drills into a bill row; `canAccess` denied without `finance.ap.view-any`
 
 ## Related
 

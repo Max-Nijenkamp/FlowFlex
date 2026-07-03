@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Module Gating
@@ -41,3 +41,14 @@ The central access gate for every optional domain module.
 - Consumes: none.
 - Feeds: `ModuleActivated` → consumed by [[../../notifications/_module]] (`NotifyModuleActivatedListener`, notifies owner/admins). Also read by [[../rbac/_module]] to scope assignable permissions to active modules.
 - Shared entity: `module_catalog` (owned here); the active-module set is the shared fact every `canAccess()` and the RBAC permission scope depend on.
+
+## Test Checklist
+
+### Unit
+- [ ] `hasModule` returns the cached value; a free core module cannot be deactivated
+
+### Feature (Pest)
+- [ ] `hasModule` true after `activateModule`, false after `deactivateModule`, within one request (cache bust)
+- [ ] Tenant isolation: company A's activation is invisible to company B
+- [ ] Double-activate guarded (pessimistic lock) — no duplicate subscription row; reactivation creates a new row preserving history
+- [ ] `activateModule` fires `ModuleActivated`

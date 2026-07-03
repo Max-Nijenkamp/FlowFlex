@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Accrual & Carry-Over Jobs
@@ -45,6 +45,17 @@ Scheduled background commands that build leave balances over time: monthly accru
 - Consumes: none *(scheduler-driven, not event-driven)*
 - Feeds: none
 - Shared entity: `hr_employees` (read via EmployeeService)
+
+## Test Checklist
+
+### Unit
+- [ ] Monthly accrual amount derived from `hr_leave_types.accrual_days_per_year`
+- [ ] Carry-over capped by `carry_over_days`
+
+### Feature (Pest)
+- [ ] `AccrueLeaveBalancesCommand` is idempotent — running twice yields the same balances (upsert on `(company, employee, type, year)`)
+- [ ] `CarryOverLeaveBalancesCommand` carries unused days up to the cap and skips already-carried rows
+- [ ] Commands run per-company under `WithCompanyContext`; a company only accrues its own employees (tenant isolation)
 
 ## Related
 

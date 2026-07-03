@@ -5,17 +5,24 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Two-Factor Authentication
 
 Self-service TOTP two-factor authentication with recovery codes, wired into Filament's multi-factor auth on both the `/app` (web users) and `/admin` (staff) panels. Paired with mandatory email verification — no portal access without a verified email. Encrypted secret + recovery-code storage. Built platform capability (no flat spec existed; reconstructed from code).
 
-- **module-key:** `core.2fa` *(assumed)* · **panel:** app + admin · **priority:** v1-core *(assumed)*
-- **fires-events:** none · **consumes-events:** none
+## Module-key
 
-## What it does
+`core.2fa` *(assumed)*
+
+**Priority:** v1-core *(assumed)*  
+**Panel:** app + admin (panel auth layer, not a nav surface)  
+**Permission prefix:** none (self-service — enforced at the panel auth layer, no permission strings)  
+**Tables:** none of its own — encrypted `app_authentication_secret` + `app_authentication_recovery_codes` columns added to `users` and `admins`  
+**Events:** fires none · consumes none
+
+## Core Features
 
 - `->multiFactorAuthentication(AppAuthentication::make()->recoverable())` on both `AppPanelProvider` and `AdminPanelProvider`.
 - Each provider calls `->emailVerification()` immediately before it — 2FA sits behind a verified-email gate.
@@ -50,6 +57,15 @@ database/migrations/2026_06_11_220000_add_two_factor_columns_to_admins_table.php
 ```
 
 > [!warning] UNVERIFIED — needs confirmation: exact `AppPanelProvider` / `AdminPanelProvider` paths under `app/Providers/Filament/` (registration lines confirmed at ~49 / ~43; enclosing file path assumed to be the conventional Filament location).
+
+## Test Checklist
+
+- [ ] Tenant isolation: a user reads/writes only their own `app_authentication_secret` / recovery codes (own row) — never another user's or another company's
+- [ ] Module gating: n/a (platform auth capability, always active — enforced at the panel auth layer)
+- [ ] Email-verification gate blocks enrollment/challenge until the email is verified (both `/app` and `/admin`)
+- [ ] Enrollment persists the TOTP secret + recovery codes as encrypted `text` (never plaintext at rest)
+- [ ] Enrollment QR renders a scannable single-encoded data URI (QR-fix unwrap) in imagick-less environments
+- [ ] A valid recovery code establishes a session when the authenticator device is lost; a spent code is rejected
 
 ## Cross-Domain Edges
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Error Report
@@ -40,3 +40,16 @@ An import **never aborts on a row failure**. Each failing row is captured with i
 - Consumes: none.
 - Feeds: none (no domain events fired).
 - Shared entity: the error-report CSV is a tenant-scoped file whose storage path contract is owned by [[../file-storage/_module]]; this feature reads/writes only the path string on its own `data_imports` row.
+
+## Test Checklist
+
+### Unit
+- [ ] `success_rows` / `error_rows` counters computed correctly; a row failure increments `error_rows` and does not abort the import
+
+### Feature (Pest)
+- [ ] A failing row is recorded in the error-report CSV (tenant-scoped path via `FileStorageService`); the import continues to `complete`
+- [ ] An infrastructure failure moves the import to `failed`; row-level errors alone do not
+- [ ] Error report and source file land under `companies/{company_id}/` only (tenant isolation)
+
+### Livewire
+- [ ] View page shows live counts and a download button only when `error_report_path` is set; `canAccess()` gated on `core.import.view-any` + module active

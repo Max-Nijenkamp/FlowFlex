@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Recruitment — Security
@@ -51,7 +51,13 @@ Public submission goes through a **guest / unauthenticated** controller (no Sanc
 
 ## Rate limiter (medium)
 
-Named `RateLimiter` (e.g. `public-apply`) keyed per IP + per requisition. Remove the `*(assumed)*` marker once the concrete limiter is named per architecture/security.md.
+| Action | Limiter | Category |
+|---|---|---|
+| Public application submission | `public-apply` (keyed per IP + per requisition) | public token endpoint |
+| `sendOffer` → `OfferMail` | `panel-action` | comms |
+| Rejection → `RejectionMail` | `panel-action` | comms |
+
+Named limiters per [[../../../architecture/security]] and [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
 
 ## Upload contract (medium)
 

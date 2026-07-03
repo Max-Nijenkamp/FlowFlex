@@ -5,15 +5,23 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Module Marketplace
 
 The activation UI for optional FlowFlex modules. Company owners and admins browse available modules, see pricing, and activate/deactivate with one click. Pure UI over [[../billing-engine/_module]] — no business logic of its own.
 
-- **module-key:** `core.marketplace` · **panel:** app · **priority:** v1-core
-- **fires-events:** none · **consumes-events:** none
+## Module-key
+
+`core.marketplace`
+
+**Priority:** v1-core
+**Panel:** app
+**Permission prefix:** `core.marketplace`
+**Tables:** none of its own (reads billing's `module_catalog` (Sushi) + `company_module_subscriptions`)
+
+**fires-events:** none · **consumes-events:** none
 
 ## Sibling notes
 
@@ -51,6 +59,8 @@ Reuses `ActivateModuleData` from core.billing. Output DTO: `MarketplaceModuleDat
 
 ## Test Checklist
 
+- [ ] Tenant isolation: company A's activation state (`company_module_subscriptions`) never renders on company B's marketplace
+- [ ] Module gating: `ModuleMarketplacePage` hidden when `core.marketplace` inactive
 - [ ] Page lists only `is_active` catalog modules
 - [ ] Activate → module accessible (hasModule true) + appears as active card
 - [ ] Deactivate → resource hidden in domain panel, data retained

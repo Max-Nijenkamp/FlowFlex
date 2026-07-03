@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Dunning
@@ -47,3 +47,13 @@ Payment-failure retry + suspension flow.
 
 > [!warning] UNVERIFIED
 > Dunning schedule "3 attempts over 14 days" and the `subscription_status` enum being a simple column (not a spatie state machine) are `*(assumed)*` in the source notes. See [[../unknowns]].
+
+## Test Checklist
+
+### Unit
+- [ ] Dunning schedule computes 3 retry windows over 14 days *(assumed)* from the past-due timestamp
+
+### Feature (Pest)
+- [ ] Payment failure moves invoice `open → past_due` and starts the dunning schedule
+- [ ] Retry success moves `past_due → paid` and cancels dunning
+- [ ] Dunning exhaustion moves `past_due → uncollectible`, fires `CompanySubscriptionSuspended`, and sets company `subscription_status → suspended` (pessimistic row lock — concurrent/duplicate webhook not double-processed)

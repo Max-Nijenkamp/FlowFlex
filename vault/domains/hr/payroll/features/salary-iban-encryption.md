@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Salary, IBAN & Amount Encryption
@@ -46,5 +46,15 @@ Protect sensitive compensation data while keeping money math exact and reporting
 - Consumes: none
 - Feeds: none
 - Shared entity: none (data-protection concern local to payroll tables)
+
+## Test Checklist
+
+### Unit
+- [ ] `UpdatePayrollEmployeeData` rejects `salary_cents < 0` and an invalid IBAN (custom rule)
+- [ ] `salary_band` derives the correct coarse band from `salary_raw` without exposing the raw value
+
+### Feature (Pest)
+- [ ] `salary_raw`, `iban`, `amounts_raw` round-trip through the `encrypted` cast (ciphertext at rest, plaintext in app)
+- [ ] Reveal of raw salary/IBAN denied without `hr.payroll.view-sensitive`; `salary_band` readable with `hr.payroll.view`
 
 Back to [[../_module]].

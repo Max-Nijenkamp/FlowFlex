@@ -15,7 +15,7 @@ tables: [fin_fixed_assets, fin_depreciation_entries]
 permission-prefix: finance.assets
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Fixed Assets
@@ -61,7 +61,8 @@ See [[../../../architecture/queue-jobs]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see, depreciate, or dispose company B assets
+- [ ] Module gating: artifacts hidden when `finance.assets` inactive
 - [ ] Straight-line schedule sums exactly to cost − salvage (rounding absorbed in final period)
 - [ ] Declining-balance never depreciates below salvage
 - [ ] Monthly run idempotent; per-asset failure doesn't stop batch

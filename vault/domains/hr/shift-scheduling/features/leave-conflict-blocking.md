@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Leave Conflict Blocking
@@ -47,6 +47,16 @@ Keep employees off shifts that overlap approved leave, both at assignment time a
 - Consumes: `LeaveRequestApproved` from `hr.leave` → `BlockShiftsOnLeaveListener` (queued, `WithCompanyContext`) unassigns the employee from draft/published shifts in range, flags gaps, notifies the manager
 - Feeds: none (fires no events)
 - Shared entity: `hr_employees` (read via EmployeeService); approved leave read via LeaveService
+
+## Test Checklist
+
+### Unit
+- [ ] `createShift` blocks assignment when the employee has approved leave on the date
+- [ ] `copyWeek` skips employees on leave in the target week
+
+### Feature (Pest)
+- [ ] `BlockShiftsOnLeaveListener` on `LeaveRequestApproved` unassigns overlapping draft/published shifts, flags gaps, and notifies the manager
+- [ ] Listener runs under `WithCompanyContext` (tenant-scoped); affected shifts locked with `lockForUpdate`
 
 ## Related
 

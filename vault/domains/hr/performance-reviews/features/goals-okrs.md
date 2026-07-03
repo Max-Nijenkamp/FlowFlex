@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Goals & OKRs
@@ -51,5 +51,19 @@ SMART goals linked to a review, with employee-updated progress.
 - Consumes: none
 - Feeds: none — goals stay within HR; a `related_goal_id` link is read by hr.feedback ([[../../employee-feedback/_module|feedback]])
 - Shared entity: `hr_employees` (hr.profiles) as goal owner
+
+## Test Checklist
+
+### Unit
+- [ ] `progress_percent` constrained to 0–100 (out-of-range rejected)
+- [ ] Goal requires both `review_id` and `employee_id`
+
+### Feature (Pest)
+- [ ] Employee updates own goal progress; updating another employee's goal denied (ownership)
+- [ ] HR/manager sets a `rating` during calibration
+
+### Livewire
+- [ ] `MyGoalsPage` denied without `hr.performance.submit` + ownership of the `employee_id`
+- [ ] Progress control writes `progress_percent`; invalid value blocked
 
 Back to [[../_module]].

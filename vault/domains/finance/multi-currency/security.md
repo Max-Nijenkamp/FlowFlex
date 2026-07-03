@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Multi-Currency — Security
@@ -31,5 +31,10 @@ per [[../../../architecture/filament-patterns]] #1 — the FX gain/loss report c
 - Exchange rates are immutable history (new effective-dated rows rather than edits); rate lookup is most-recent ≤ date.
 - `RevalueOpenBalancesCommand` is idempotent per (period, currency) via a unique guard.
 - Tenant isolation enforced on every table via `company_id` — see [[../../../security/tenancy-isolation]] and [[../../../security/authn-authz]].
+
+## Rate Limiting
+
+- When the deferred **API rate feed** is enabled *(assumed: manual entry v1, API hook later)*, the outbound exchange-rate fetch calls an external FX provider and is throttled by the named `panel-action` limiter (external-API category per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]). Failures are non-fatal — the last effective-dated rate remains authoritative.
+- `finance.currency.manage` gates any manual "fetch latest rates" action; the same `panel-action` limiter applies.
 
 No encrypted fields in this module.

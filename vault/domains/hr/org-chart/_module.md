@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Org Chart
@@ -14,14 +14,20 @@ Visual interactive org chart driven by the manager hierarchy on employee profile
 
 > Rebuild blueprint. All HR code was stripped per [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]]. Nothing here is built, shipped, or tested — this spec is the intended target.
 
-- **module-key:** `hr.org`
-- **panel:** hr · **nav group:** Employees
-- **priority:** v1
-- **pattern:** [[../../../architecture/patterns/custom-pages|custom-pages]]
+## Module-key
+
+`hr.org`
+
+**Priority:** v1  
+**Panel:** hr  
+**Permission prefix:** `hr.org`  
+**Tables:** None — read-only view module; reads `hr_employees`, `hr_departments` (owned by [[../employee-profiles/_module|hr.profiles]])
+
+**Pattern:** [[../../../architecture/patterns/custom-pages|custom-pages]] · **Nav group:** Employees
 
 ---
 
-## Intended Behavior
+## Core Features
 
 - Auto-generated from `hr_employees.manager_id` hierarchy — no separate data entry.
 - Interactive tree: expand/collapse nodes, click to view employee profile.
@@ -30,6 +36,8 @@ Visual interactive org chart driven by the manager hierarchy on employee profile
 - Download as PNG/PDF.
 - Manager reassignment via tree-select field (`codewithdennis/filament-select-tree`).
 - Handles multi-root (companies with multiple top-level managers).
+
+See features: [[features/org-tree-visualization]] · [[features/department-filter]] · [[features/manager-reassignment]] · [[features/export]].
 
 ---
 
@@ -73,7 +81,7 @@ Owns **no tables** — pure view module. Reads `hr_employees` + `hr_departments`
 
 ---
 
-## Test Checklist (intended)
+## Test Checklist
 
 - [ ] Tenant isolation: tree contains only current company employees
 - [ ] Module gating: page hidden when `hr.org` inactive

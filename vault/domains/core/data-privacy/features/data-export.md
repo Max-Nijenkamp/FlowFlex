@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Data Export
@@ -40,3 +40,16 @@ Full-company and per-subject dataset export.
 - Consumes: registrations pushed into `PersonalDataRegistry` by every module's ServiceProvider (declaring their PII tables) — a read-only registry, not an event.
 - Feeds: none directly (completion updates the DSAR row consumed by the [[dsar-queue]] notification path).
 - Shared entity: the PII table/field definitions are owned by each source domain module and read via the registry; the export ZIP's storage path contract is owned by [[../file-storage/_module]].
+
+## Test Checklist
+
+### Unit
+- [ ] `PersonalDataRegistry::tablesFor($email)` resolves only registered PII tables for the subject
+
+### Feature (Pest)
+- [ ] Access request produces a ZIP containing rows for the subject across registered tables only, stored tenant-scoped via `FileStorageService`
+- [ ] Full-company export reads registered models read-only and writes only the ZIP (no cross-domain table writes)
+- [ ] Export rate-limited — a second export within N minutes is throttled (`exports` limiter)
+
+### Livewire
+- [ ] `DataExportPage` owner-only: `canAccess()` denied to a non-owner and when `core.privacy` inactive; poll swaps to the download link when the ZIP is ready

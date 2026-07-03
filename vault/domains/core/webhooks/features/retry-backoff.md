@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Retry & Backoff
@@ -40,3 +40,14 @@ Automatic retries with exponential backoff on delivery failure.
 - Consumes: delivery outcome (2xx vs non-2xx/timeout) from the outbound POST.
 - Feeds: auto-disable triggers an owner notification via [[../../notifications/_module]] (delivery infrastructure); no cross-domain server event emitted.
 - Shared entity: `webhook_endpoints` counters (owned here).
+
+## Test Checklist
+
+### Unit
+- [ ] Backoff schedule is `[30, 120, 600]` with `tries = 4` (3 retries after the first attempt)
+- [ ] Non-2xx / timeout increments `consecutive_failures`; a 2xx resets it to 0
+
+### Feature (Pest)
+- [ ] A failing endpoint retries per backoff then records the delivery failed after the last attempt
+- [ ] The 20th consecutive failure auto-disables the endpoint (`is_active = false`) and notifies the owner
+- [ ] Concurrent deliveries incrementing `consecutive_failures` under lock do not double-count or race the auto-disable

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Turnover & Attrition
@@ -47,5 +47,18 @@ Turnover rate = terminations / average headcount over the selected period. Surfa
 - Consumes: `EmployeeOffboarded` from `hr.profiles` → refresh turnover projection *(assumed — may recompute live per request)*
 - Feeds: none (read-only dashboards)
 - Shared entity: `hr_employees` (read-only)
+
+## Test Checklist
+
+### Unit
+- [ ] `turnover_rate = terminations / average headcount` over the period, validated against fixture data
+- [ ] Zero average headcount (denominator 0) renders "—" / no-terminations state, not a divide error
+
+### Feature (Pest)
+- [ ] Turnover computed over the selected period is company-scoped — excludes other companies' terminations
+
+### Livewire
+- [ ] `TurnoverWidget` `canView()`-gated on `hr.analytics.view` + module active
+- [ ] Changing the header period filter recomputes the rate
 
 Parent: [[../_module]]

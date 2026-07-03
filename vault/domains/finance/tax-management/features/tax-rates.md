@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Tax Rates & Classes
@@ -36,5 +36,19 @@ Configuration of the rates and classes that drive line-level tax math across con
 ## Relations
 - Consumes: no cross-domain events.
 - Feeds: no events — consumed by read: invoicing / AP / expenses call `TaxCalculator::forLine` and store their own line tax; this feature only supplies rate config.
+
+## Test Checklist
+
+### Unit
+- [ ] `TaxCalculator::forLine(amountCents, rate)` = `amountCents × rate_basis_points / 10000` exact via brick/money (21% on a €99.99 line), line-level rounding consistent with invoicing
+- [ ] Reverse-charge rate yields zero tax and carries the reverse-charge flag to the line
+
+### Feature (Pest)
+- [ ] A rate referenced by an invoice/bill line cannot be hard-deleted — soft-delete only
+- [ ] Tax class maps to its `default_rate_id`; toggling active hides a rate from new selection without deleting history
+- [ ] Tenant isolation: company A's rates/classes are never visible or selectable for company B
+
+### Livewire
+- [ ] `TaxRateResource` form validates `rate_basis_points`, type, and jurisdiction; `canAccess` denied without `finance.tax.manage-rates`
 
 See [[../api]], [[../data-model]], [[../architecture]].

@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Health Monitoring — Security
@@ -14,7 +14,7 @@ Parent: [[_module]]
 
 ## Permissions
 
-`core.health.view` — owner only, in `/app` (`SystemStatusPage`). `/pulse` and `/horizon` gate on the admin guard (+ owner for Horizon read *(assumed: staff-only in v1, simpler)*).
+`core.health.view-any` (open `SystemStatusPage`) · `core.health.view` — owner only, in `/app` (`SystemStatusPage`). `/pulse` and `/horizon` gate on the admin guard (+ owner for Horizon read *(assumed: staff-only in v1, simpler)*). Read-only module — no state transitions or command actions; `GET /health` carries a throttle limiter (below).
 
 ## Authorization
 

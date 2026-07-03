@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Benefit Enrollment
@@ -50,6 +50,20 @@ Employees select benefits during onboarding or open enrollment; HR manages enrol
 - Consumes: none
 - Feeds: none — active enrollments read by payroll at run time *(assumed: payroll pulls costs, no event)*
 - Shared entity: `hr_employees` (hr.profiles), `hr_benefits` ([[benefits-catalog]])
+
+## Test Checklist
+
+### Unit
+- [ ] `EnrollBenefitData` rejects an inactive benefit and a non-existent employee/benefit
+
+### Feature (Pest)
+- [ ] `enroll` creates an active `hr_employee_benefits` row; second enroll in the same benefit rejected via unique-active `(employee_id, benefit_id)` constraint (concurrent double-enroll rejected via row lock)
+- [ ] `unenroll` sets `unenrolled_at`; re-enrolling after unenroll is then allowed
+- [ ] Company A cannot enroll/unenroll against company B employees or benefits
+
+### Livewire
+- [ ] Enroll/unenroll actions denied without `hr.compensation.enroll`; resource hidden when `hr.compensation` inactive
+- [ ] Enroll form validation surfaces already-enrolled / inactive-benefit errors
 
 ## Related
 

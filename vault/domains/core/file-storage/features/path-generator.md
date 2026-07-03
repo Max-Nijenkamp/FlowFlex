@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Path Generator
@@ -40,3 +40,13 @@ Enforces tenant-segregated storage paths for all media.
 - Consumes: none (no domain events) — invoked in-process by any domain's media store.
 - Feeds: none.
 - Shared entity: the owner model (polymorphic `model_type`/`model_id`) is owned by another domain; referenced read-only to build the path, never written.
+
+## Test Checklist
+
+### Unit
+- [ ] `pathFor($model, $filename)` builds `companies/{company_id}/{table}/{model_id}/{filename}`
+- [ ] Conversions and responsive images also carry the `companies/{company_id}/` prefix
+
+### Feature (Pest)
+- [ ] Every stored file (original + conversion) path starts with `companies/{company_id}/` (tenant isolation)
+- [ ] Missing `company_id` in context fails closed — no unscoped write *(assumed fail-closed guard)*

@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Invitation System — Security
@@ -27,6 +27,11 @@ per [[../../../architecture/filament-patterns]] #1. See [[../../../security/auth
 - Token is a UUID, **single-use**, 7-day expiry — short-lived by design, so it is stored plain (not hashed).
 - Resend rotates the token and invalidates the old one; revoke closes the invite before acceptance.
 - The public accept route is **rate-limited** (`login` limiter) — see [[../../../architecture/security]].
+
+## Rate limiting
+
+- Public accept route `/register/invite/{token}`: `login` limiter (above).
+- **Send invite** (`SendInvitationAction`) and **Resend** (`ResendInvitationAction`) send email — both carry the `panel-action` rate limiter (comms action per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]). Invite mail is always queued on `notifications`, never sent synchronously.
 
 ## Tenancy
 

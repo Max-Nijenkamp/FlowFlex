@@ -15,7 +15,7 @@ tables: [fin_cashflow_projections, fin_cashflow_items]
 permission-prefix: finance.cashflow
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Cash Flow
@@ -65,7 +65,8 @@ See [[../../../architecture/queue-jobs]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see or edit company B projections or manual items
+- [ ] Module gating: artifacts hidden when `finance.cashflow` inactive
 - [ ] Weekly closing = opening + inflows − outflows chained over 13 weeks (brick/money)
 - [ ] Open invoice lands in week of due date; paid invoice drops out on rebuild
 - [ ] AP outflows appear only when module active

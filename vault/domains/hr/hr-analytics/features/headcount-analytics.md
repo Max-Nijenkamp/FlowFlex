@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Headcount Analytics
@@ -52,5 +52,20 @@ Rendered as apex-chart widgets on the dashboard with a header period filter, 60s
 - Consumes: `EmployeeHired` / `EmployeeOffboarded` from `hr.profiles` → refresh headcount/tenure projections *(assumed — may instead recompute live per request)*
 - Feeds: none (read-only dashboards)
 - Shared entity: `hr_employees` (read-only)
+
+## Test Checklist
+
+### Unit
+- [ ] `headcount_series[]`, `dept_breakdown[]`, `hires_per_month[]`, `tenure_histogram[]` compute correctly from fixture employees
+- [ ] Zero-headcount period yields the empty-state series, not an error
+
+### Feature (Pest)
+- [ ] `HrAnalyticsService::metrics` aggregates are N+1-free (query-count assertion)
+- [ ] Metrics are scoped to the current company — company A metrics never include company B employees
+- [ ] Chart export (PNG/CSV) is throttled by the named `exports` rate limiter (see [[../security]])
+
+### Livewire
+- [ ] Widgets `canView()`-gated on `hr.analytics.view` + module active
+- [ ] Changing the header period filter re-scopes all charts
 
 Parent: [[../_module]]

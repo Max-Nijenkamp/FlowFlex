@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Recruitment
@@ -14,7 +14,16 @@ Job requisitions, applicant tracking pipeline, interview scheduling, and offer m
 
 > **Rebuild blueprint.** HR domain code was stripped under [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]]. Nothing below is built, shipped, or tested — everything is `planned`. This spec is the rebuild target.
 
-Priority: `v1` · Panel: `hr` · Permission prefix: `hr.recruitment`
+---
+
+## Module-key
+
+`hr.recruitment`
+
+**Priority:** v1  
+**Panel:** hr  
+**Permission prefix:** `hr.recruitment`  
+**Tables:** `hr_job_requisitions`, `hr_applicants`, `hr_interviews`, `hr_offers`
 
 ---
 
@@ -30,7 +39,7 @@ Priority: `v1` · Panel: `hr` · Permission prefix: `hr.recruitment`
 
 ---
 
-## Intended Behavior
+## Core Features
 
 - Job requisitions: open role requests approved by HR, linked to department and headcount plan.
 - Job posting: publish to careers page (Inertia Vue, public); optional LinkedIn/Indeed export deferred to P2 *(assumed: link-out only in v1)*.
@@ -39,6 +48,8 @@ Priority: `v1` · Panel: `hr` · Permission prefix: `hr.recruitment`
 - Offer letter generation: template-based, salary/start-date fields; encrypted salary.
 - Convert applicant to employee on hire (calls `EmployeeService::hire` — `EmployeeHired` fires from hr.profiles, not from here).
 - Public application form stores applicant + CV; GDPR: applicant data retained 12 months then purged *(assumed)*.
+
+See [[features/job-requisitions]], [[features/applicant-pipeline-kanban]], [[features/interview-scheduling]], [[features/offers]], [[features/applicant-to-employee-conversion]].
 
 ---
 
@@ -89,6 +100,19 @@ app/Filament/HR/Pages/ApplicantPipelinePage.php
 database/factories/HR/{JobRequisitionFactory,ApplicantFactory,InterviewFactory,OfferFactory}.php
 tests/Feature/HR/{RecruitmentPipelineTest,PublicApplyTest,HireConversionTest}.php
 ```
+
+---
+
+## Test Checklist
+
+- [ ] Tenant isolation: company A cannot see or manage company B requisitions, applicants, interviews, or offers; public apply resolves the company from the requisition slug with no cross-tenant leakage
+- [ ] Module gating: artifacts hidden when `hr.recruitment` inactive
+- [ ] Invalid pipeline jump (e.g. `applied → offer`) rejected by the state machine
+- [ ] Hire on an accepted offer converts applicant → employee via `EmployeeService::hire` and auto-closes the requisition when headcount filled
+- [ ] `hr_offers.salary_raw` encrypted; arithmetic via `brick/money`
+- [ ] Public apply stores applicant + CV (pdf/docx ≤ 10MB, `companies/{id}/recruitment/` private disk); `public-apply` limiter enforced
+- [ ] `PurgeStaleApplicantsCommand` purges rejected/withdrawn applicants > 12 months (date guard) *(assumed)*
+- [ ] Pipeline / hire transitions serialized by `lockForUpdate`; CRUD stale-write raises `StaleRecordException`
 
 ---
 

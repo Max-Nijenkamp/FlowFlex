@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Endpoint Management
@@ -42,6 +42,21 @@ CRUD for outbound webhook endpoints: register a URL, pick which domain events to
 - Consumes: none (config surface).
 - Feeds: registered endpoints drive `DeliverWebhookJob` on any subscribed domain event ([[signed-delivery]], [[retry-backoff]]).
 - Shared entity: the [[../../../architecture/event-bus]] map (read) and the active-module set owned by [[../billing-engine/_module]] (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] `CreateWebhookEndpointData` rejects a non-HTTPS URL and an event outside the event-bus map / from an inactive module
+- [ ] Subscribable-event list is filtered to active modules only
+
+### Feature (Pest)
+- [ ] Creating an endpoint stores an encrypted secret and reveals the plaintext exactly once
+- [ ] Company A cannot see or edit company B's endpoints (`CompanyScope`); resource hidden when `core.webhooks` inactive
+- [ ] Stale-`updated_at` edit surfaces the conflict notification (optimistic lock)
+
+### Livewire
+- [ ] Non-HTTPS URL is rejected inline ("Webhook URLs must use HTTPS")
+- [ ] "Send test" row action denied without `core.webhooks.test`; create/edit denied without the matching permission
 
 ## Unknowns
 

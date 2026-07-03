@@ -15,7 +15,7 @@ tables: [fin_expenses, fin_expense_categories, fin_expense_reports]
 permission-prefix: finance.expenses
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Expenses
@@ -23,6 +23,15 @@ updated: 2026-06-20
 Employee expense submission with receipt upload, category tagging, approval workflow, and reimbursement tracking. Feeds into Accounts Payable and the General Ledger.
 
 > Rebuild blueprint. Code was stripped to the [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; nothing here is built yet. This spec is the source of truth for the rebuild.
+
+## Module-key
+
+`finance.expenses`
+
+**Priority:** v1-core  
+**Panel:** finance  
+**Permission prefix:** `finance.expenses`  
+**Tables:** `fin_expenses`, `fin_expense_categories`, `fin_expense_reports`
 
 ## Purpose
 
@@ -55,7 +64,8 @@ Employees submit expenses with receipts; approvers (never the submitter) approve
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see, approve, or reimburse company B expenses/reports/categories
+- [ ] Module gating: artifacts hidden when `finance.expenses` inactive
 - [ ] Own-data: submitter sees own expenses; `view-any` sees all
 - [ ] Approve fires `ExpenseApproved` with contract payload + posts balanced GL entry
 - [ ] Approver ≠ submitter enforced

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # My Leave
@@ -42,5 +42,18 @@ updated: 2026-07-02
 - Consumes: none (renders hr.leave data live via service).
 - Feeds: leave submission handled by hr.leave (no own event fired).
 - Shared entity: reads hr.leave balances / requests.
+
+## Test Checklist
+
+### Unit
+- [ ] The leave tile/page renders only when `hr.leave` is active (soft-dep gating)
+
+### Feature (Pest)
+- [ ] Balance + request history are scoped to `auth()->user()->employee`
+- [ ] Submitting a request routes through hr.leave's service (never a direct write)
+- [ ] Self-scope isolation: employee A cannot see employee B's balance or requests
+
+### Livewire
+- [ ] Page/tile hidden when `hr.leave` inactive; submit action gated on the hr.leave submit permission
 
 [[../_module]]

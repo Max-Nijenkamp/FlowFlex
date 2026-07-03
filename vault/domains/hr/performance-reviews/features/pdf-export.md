@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — PDF Export
@@ -52,5 +52,15 @@ Report visible to the owning employee after finalisation and to HR (`hr.performa
 - Consumes: none (triggered internally by cycle finalise)
 - Feeds: none — `ReviewDueReminderCommand` sends reminders via core.notifications
 - Shared entity: `hr_employees` (hr.profiles) for report recipient
+
+## Test Checklist
+
+### Unit
+- [ ] `GenerateReviewReportPdfJob` targets the `exports` queue and overwrites the prior file per employee
+
+### Feature (Pest)
+- [ ] Finalising a cycle dispatches exactly one PDF job per employee
+- [ ] Report visible to the owning employee post-finalisation and to HR (`view` / `view-any`); not before finalisation
+- [ ] `ReviewDueReminderCommand` reminds once per 3d / overdue threshold
 
 Back to [[../_module]].

@@ -5,15 +5,22 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Data Import
 
 CSV/Excel import for bulk data entry across domains. Column-mapping UI, validation preview, downloadable error reporting, and background processing on the `imports` Horizon queue.
 
-- **module-key:** `core.import` · **panel:** app · **priority:** v1
-- **fires-events:** none · **consumes-events:** none
+## Module-key
+
+`core.import`
+
+**Priority:** v1  
+**Panel:** app  
+**Permission prefix:** `core.import`  
+**Tables:** `data_imports`  
+**Events:** fires none · consumes none
 
 ## Sibling notes
 

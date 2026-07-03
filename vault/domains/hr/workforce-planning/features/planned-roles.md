@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Planned Roles
@@ -47,6 +47,19 @@ Hire forecast: planned new roles under a headcount plan, with target start dates
 - Consumes: none
 - Feeds: on approve, `ApprovePlannedRoleAction` hands off to `hr.recruitment` (creates a requisition) — see [[requisition-handoff]]
 - Shared entity: `hr_headcount_plans` (own parent record)
+
+## Test Checklist
+
+### Unit
+- [ ] Status lifecycle valid only along `planned → approved → filled`
+- [ ] Each role belongs to a parent `hr_headcount_plans`
+
+### Feature (Pest)
+- [ ] `ApprovePlannedRoleAction` sets `approved`; `MarkRoleFilledAction` sets `filled`
+- [ ] Company A cannot see or act on company B planned roles
+
+### Livewire
+- [ ] Approve action requires `hr.workforce.approve-role`; Mark Filled requires `hr.workforce.mark-filled` *(assumed)*; create/edit gated by create/update
 
 ## Related
 

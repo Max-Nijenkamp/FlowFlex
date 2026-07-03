@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Leave Types
@@ -41,6 +41,21 @@ Per-company configurable leave categories (annual, sick, parental, unpaid, custo
 - Consumes: none
 - Feeds: none *(reference data read by [[leave-balances]], [[leave-request-workflow]], [[accrual-jobs]] within this module)*
 - Shared entity: none
+
+## Test Checklist
+
+### Unit
+- [ ] `requires_approval = false` type marks a submitted request auto-approved (skips approval step)
+- [ ] `accrual_days_per_year = 0` yields no accrual for that type
+
+### Feature (Pest)
+- [ ] Create/edit a leave type persists accrual, carry-over cap, `requires_approval`, color
+- [ ] A request against a non-approval type is approved on submit end-to-end
+- [ ] Tenant isolation: company A cannot see/edit company B leave types
+
+### Livewire
+- [ ] `LeaveTypeResource` create/edit/delete gated on `hr.leave.manage-types`
+- [ ] Form validation surfaces on missing name / invalid accrual values
 
 ## Related
 

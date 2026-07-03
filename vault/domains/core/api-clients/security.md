@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # API Clients — Security
@@ -14,9 +14,9 @@ Parent: [[_module]] · See also [[architecture]] · [[api]]
 
 ## Permissions
 
-`core.api.view-any` · `core.api.create` · `core.api.revoke`
+`core.api.view-any` · `core.api.create` · `core.api.rotate` · `core.api.revoke`
 
-Only admins manage tokens.
+One permission per token command: `create`, `rotate` (per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]), and `revoke` (covers single + revoke-all). Only admins manage tokens.
 
 ## Authorization
 
@@ -40,6 +40,18 @@ The plain token is returned exactly once at creation (copy-once modal) and store
 
 Requests execute in the context of the token's owning user, so company A's token cannot read company B's data. Tokens are intended to belong to a dedicated per-company service user *(assumed)* so integrations survive staff turnover. See [[../../../security/tenancy-isolation]].
 
+## Token expiry, rotation & company binding
+
+Per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]:
+
+- New tokens default to **90-day expiry** *(assumed — tunable)*; an expiry-warning notification fires 14 days out via `core.notifications`.
+- `POST /api/v1/auth/tokens/{id}/rotate` issues a replacement with the same abilities + company binding and revokes the original (7-day grace overlap). Gated by `core.api.rotate`.
+- A token is **explicitly bound to the issuing user's `company_id`** at creation; middleware sets the permission team context from the token's company, not the current user's, and tokens are revoked on company detach/offboarding. See [[../../../architecture/multi-tenancy]].
+
 ## Rate limiting
 
-Per-token throttles via the `api` / `api-write` limiters return 429 + `Retry-After` on exhaustion (see [[../../../architecture/security]]).
+- **REST edge:** per-token throttles via the `api` / `api-write` limiters return 429 + `Retry-After` on exhaustion.
+- **Per-company quota:** the `api-company` limiter (1000 req/min per `company_id` *(assumed)*) layers on top of per-token limits — one tenant's tokens cannot starve others; quota state in `X-RateLimit-Company-*` headers.
+- **Panel actions:** the credential-issuing header actions (create / rotate) name the `panel-action` limiter (30/min per user) since they mint secrets — per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
+
+See [[../../../architecture/security]] and [[../../../architecture/api-design]].

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Expense Policy
@@ -34,5 +34,19 @@ Per-category spend limits drive a policy flag.
 ## Relations
 - Consumes: no cross-domain events.
 - Feeds: no cross-domain events — provides limit + GL-account config consumed in-domain by the expense submit/approval flow.
+
+## Test Checklist
+
+### Unit
+- [ ] Over-limit flag set when `amount_cents` exceeds the category `limit_per_transaction_cents` (brick/money); null limit never flags
+- [ ] Flag is advisory — an over-limit expense still submits (not blocked) *(assumed)*
+
+### Feature (Pest)
+- [ ] On submit, `is_over_limit` is persisted per the category limit comparison; category with no limit leaves it false
+- [ ] Category maps to its `gl_account_id`; tenant isolation — company A cannot read/edit company B categories
+
+### Livewire
+- [ ] `ExpenseCategoryResource` create/edit validates the limit + GL-account fields; the over-limit badge surfaces on the related `ExpenseResource`
+- [ ] `canAccess` / manage requires `finance.expenses.manage-categories`; hidden when `finance.expenses` inactive
 
 See [[../api]], [[../data-model]], [[../architecture]].

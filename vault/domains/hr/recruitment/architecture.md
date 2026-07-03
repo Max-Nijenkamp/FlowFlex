@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Recruitment — Architecture
@@ -102,19 +102,35 @@ Queue infra: [[../../../infrastructure/queue-horizon]]. Mail: [[../../../infrast
 
 ---
 
-## Filament artifacts
+## Filament Artifacts
 
-Nav group: **Employees**.
+**Nav group:** Employees
 
-| Artifact | Kind | Notes |
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `JobRequisitionResource` | #1 CRUD resource | tweaks: state-badge-column (draft/open/closed), custom-header-actions (publish toggle) | auto-closes when headcount filled during hire |
+| `ApplicantPipelinePage` | #3 Kanban custom page | [[../../../architecture/patterns/page-blueprints#Kanban]] | per-requisition columns by state; drag = `moveStage`; **realtime deviation**: polling 30s instead of the blueprint's Reverb default (not collaborative enough) — justified in [[security]] |
+| `ApplicantResource` | #1 CRUD resource | tweaks: state-badge-column, pdf-preview-panel (CV preview) | list + CV preview |
+| `InterviewResource` | #1 CRUD resource | — | schedule + outcome |
+| `OfferResource` | #1 CRUD resource | tweaks: state-badge-column (draft/sent/accepted/declined), custom-header-actions (send offer) | encrypted salary; send names the `panel-action` comms limiter |
+
+Public careers pages are Vue + Inertia (`/careers`, `/careers/{slug}`, `/careers/{slug}/apply`) — ui-strategy rows #12/#16, guest guard (not Filament).
+
+**Access contract (mandatory):** every Filament artifact gates on
+`canAccess() = Auth::user()->can('hr.recruitment.view-any') && BillingService::hasModule('hr.recruitment')`
+per [[../../../architecture/filament-patterns]] #1. `ApplicantPipelinePage` is a custom page and MUST state this explicitly — Filament does not auto-gate custom pages. Pipeline moves require `hr.recruitment.update`, the hire transition `hr.recruitment.hire`, offer actions `hr.recruitment.manage-offers`. Offer/rejection mails name the `panel-action` (comms) limiter; the public apply path uses a guest guard + the `public-apply` limiter and the CV upload contract per [[security]].
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
 |---|---|---|
-| `JobRequisitionResource` | CRUD | publish toggle |
-| `ApplicantPipelinePage` | Kanban custom page | per-requisition columns by state; drag = `moveStage`; polling 30s (not collaborative enough for Reverb) |
-| `ApplicantResource` | CRUD | list + CV preview |
-| `InterviewResource` | CRUD | schedule + outcome |
-| `OfferResource` | CRUD | create, send, track |
+| Requisition / applicant / interview / offer CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Public apply (create applicant) | Optimistic | new-record create; no stale target — guest path, `public-apply` limiter guards abuse |
+| Applicant pipeline transition (`moveStage`) | Pessimistic | `DB::transaction()` + `lockForUpdate()`, re-read, validate per [[../../../architecture/patterns/states]] |
+| Offer status transition (send / accept / decline) | Pessimistic | `DB::transaction()` + `lockForUpdate()` per [[../../../architecture/patterns/states]] |
+| Hire (`offer → hired`, headcount decrement + requisition auto-close) | Pessimistic | requisition locked `lockForUpdate`; capacity decrement; delegates to `EmployeeService::hire` |
 
-Public careers pages: Vue + Inertia (`/careers`, `/careers/{slug}`).
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ---
 

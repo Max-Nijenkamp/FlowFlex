@@ -5,27 +5,32 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Org Chart — Security
 
 ## Permissions
 
-- `hr.org.view` — view the org chart
-- `hr.org.reassign` — reassign managers via the tree-select field
+- `hr.org.view` — view the org chart (the module is a single custom page, so `view` gates it — there is no list/`view-any` split)
+- `hr.org.reassign` — reassign managers via the tree-select field (delegates the write to hr.profiles' `EmployeeService::update`)
+- `hr.org.export` — download the chart as PNG/PDF/CSV *(assumed)*
 
 Permission prefix: `hr.org`.
 
 ## Authorization
 
-Every artifact gates on:
+`OrgChartPage` (custom page) gates on:
 
 ```
-canAccess() = Auth::user()->can('hr.org.view-any') && BillingService::hasModule('hr.org')
+canAccess() = Auth::user()->can('hr.org.view') && BillingService::hasModule('hr.org')
 ```
 
-per [[../../../architecture/filament-patterns|filament-patterns]] #1. Custom pages must state this explicitly. Public/portal surfaces (if any) use a guest or scoped-portal guard per [[../../../architecture/ui-strategy]]. See [[../../../security/authn-authz]].
+per [[../../../architecture/filament-patterns|filament-patterns]] #1 — custom pages state this explicitly. The reassign action additionally requires `hr.org.reassign`; the export action requires `hr.org.export`. Public/portal surfaces (if any) use a guest or scoped-portal guard per [[../../../architecture/ui-strategy]]. See [[../../../security/authn-authz]].
+
+## Rate Limiting
+
+The export action generates a file and therefore cites the named `exports` rate limiter (per-user/company) per [[../../../architecture/security]] and [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]. No comms, money, or inventory mutations in this module.
 
 ## Tenancy
 

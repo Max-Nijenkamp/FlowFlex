@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Onboarding
@@ -14,11 +14,20 @@ Structured onboarding for new hires — task checklists, document collection, eq
 
 > **Build status: planned.** HR code was stripped per [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]]. This spec is the rebuild blueprint — nothing here is built, shipped, or tested yet.
 
-`module-key: hr.onboarding` · `panel: hr` · `priority: v1-core` · `permission-prefix: hr.onboarding`
+---
+
+## Module-key
+
+`hr.onboarding`
+
+**Priority:** v1-core  
+**Panel:** hr  
+**Permission prefix:** `hr.onboarding`  
+**Tables:** `hr_onboarding_templates`, `hr_onboarding_tasks`, `hr_onboarding_plans`, `hr_onboarding_plan_tasks`
 
 ---
 
-## Intended Behavior
+## Core Features
 
 - Reusable onboarding templates: task checklists per department/role.
 - Task types: HR / IT / manager / employee self-service.
@@ -27,6 +36,8 @@ Structured onboarding for new hires — task checklists, document collection, eq
 - Progress dashboard for HR (all active onboardings, % complete).
 - Welcome email on plan start with self-service portal link.
 - 30/60/90 day milestone check-in reminders.
+
+See features: [[features/onboarding-templates]] · [[features/task-checklists]] · [[features/plan-generation-on-hire]] · [[features/document-collection]] · [[features/equipment-requests]] · [[features/progress-dashboard]] · [[features/welcome-email]] · [[features/milestone-checkins]].
 
 ---
 
@@ -102,13 +113,24 @@ tests/Feature/HR/{OnboardingFlowTest,OnboardingListenerTest}.php
 
 ---
 
-## Test Checklist (intended)
+## Test Checklist
 
 - [ ] Tenant isolation: plans of company A invisible to company B
-- [ ] Module gating verified
+- [ ] Module gating: artifacts hidden when `hr.onboarding` inactive
 - [ ] `EmployeeHired` starts default plan; no template = no-op, no error
 - [ ] Department template preferred over company default
 - [ ] Completing last task sets `completed_at`
 - [ ] Employee-role task completable via self-service (when active)
 - [ ] Welcome mail queued on start
 - [ ] Milestone reminders fire once per milestone
+
+Per-feature detail lives in each `features/*.md` Test Checklist.
+
+---
+
+## Related
+
+- [[architecture]] · [[data-model]] · [[api]] · [[security]] · [[unknowns]]
+- [[../employee-profiles/_module]] · [[../employee-self-service/_module]]
+- [[../../core/notifications/_module]]
+- [[../../../architecture/event-bus]] · [[../../../architecture/ui-strategy]]

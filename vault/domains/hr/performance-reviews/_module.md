@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Performance Reviews
@@ -15,15 +15,22 @@ updated: 2026-07-02
 
 Structured review cycles with 360 feedback, self-assessments, goal tracking, and rating calibration. Intended to replace manual review processes done in spreadsheets or email.
 
-- **module-key:** `hr.performance`
-- **panel:** hr — Nav group: Performance
-- **priority:** v1
-- **tables:** `hr_review_cycles`, `hr_reviews`, `hr_review_goals`
-- **patterns:** [[../../../architecture/patterns/states|states]], [[../../../architecture/packages|pdf]]
+---
+
+## Module-key
+
+`hr.performance`
+
+**Priority:** v1  
+**Panel:** hr  
+**Permission prefix:** `hr.performance`  
+**Tables:** `hr_review_cycles`, `hr_reviews`, `hr_review_goals`
+
+Patterns: [[../../../architecture/patterns/states|states]], [[../../../architecture/packages|pdf]]. Nav group: Performance.
 
 ---
 
-## Intended Behavior
+## Core Features
 
 - Configurable review cycles (annual, bi-annual, quarterly).
 - Review types: self-assessment, manager review, peer review (360).
@@ -33,6 +40,8 @@ Structured review cycles with 360 feedback, self-assessments, goal tracking, and
 - Per-employee PDF report of the cycle outcome.
 - Due-review notifications to employees and managers.
 - Visibility rules by role (reviewer / reviewee / manager / HR) — see [[security]].
+
+See [[features/review-cycles]], [[features/review-forms-state-machine]], [[features/goals-okrs]], [[features/self-and-manager-reviews]], [[features/pdf-export]].
 
 ---
 
@@ -99,6 +108,19 @@ app/Filament/HR/Pages/MyGoalsPage.php
 database/factories/HR/{ReviewCycleFactory,ReviewFactory,ReviewGoalFactory}.php
 tests/Feature/HR/{ReviewCycleTest,ReviewSubmissionTest,CalibrationTest}.php
 ```
+
+---
+
+## Test Checklist
+
+- [ ] Tenant isolation: company A cannot see, submit, or calibrate company B review cycles, reviews, or goals
+- [ ] Module gating: artifacts hidden when `hr.performance` inactive
+- [ ] `activateCycle` with no active employees throws `EmptyCycleException`
+- [ ] Submitting after the cycle leaves `active` throws `ReviewLockedException`; a reviewer submitting another's review throws `NotYourReviewException`
+- [ ] Reviewee sees results only after the cycle is `finalised`; peer reviewer identity hidden *(assumed)*
+- [ ] Finalise freezes ratings and dispatches one `GenerateReviewReportPdfJob` per employee (`exports` limiter)
+- [ ] Goal `progress_percent` constrained to 0–100
+- [ ] Cycle transition serialized by `lockForUpdate`; CRUD stale-write raises `StaleRecordException`
 
 ---
 

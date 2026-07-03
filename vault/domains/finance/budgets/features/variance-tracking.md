@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Budget vs Actual Variance
@@ -35,5 +35,20 @@ Live variance of actuals (from the ledger) against budgeted figures, with over-b
 ## Relations
 - Consumes: reacts to in-period journal posting only as a cache-bust signal (no event payload written back).
 - Feeds: `BudgetVarianceAlertCommand` emits notifications (monthly, 2nd 08:00, once per budget/period, threshold 10% *(assumed)*). In-domain service calls to compute variance.
+
+## Test Checklist
+
+### Unit
+- [ ] `variance_cents = actual_cents − budgeted_cents` per account/period (brick/money, integer cents); `variance_percent` derived last
+- [ ] Threshold-breach detection flags a period only when variance % exceeds the configured threshold (default 10% *(assumed)*)
+
+### Feature (Pest)
+- [ ] `variance(budgetId, period)` sums ledger journal lines per account/period against budgeted lines from GL fixtures
+- [ ] `BudgetVarianceAlertCommand` notifies once per (budget, period) over threshold; the flag guard suppresses re-alerting on a second run
+- [ ] Variance cache busts on in-period journal posting or a budget edit; tenant isolation on the ledger read (company A cannot read company B actuals)
+
+### Livewire
+- [ ] `BudgetVariancePage` renders the budgeted/actual/variance grid and drills down to contributing journal entries; `canAccess` denied without `finance.budgets.view-any`
+- [ ] `BudgetVarianceWidget` surfaces only over-budget accounts for the tenant
 
 See [[../architecture]], [[../api]], [[../data-model]], [[budget-versioning]].

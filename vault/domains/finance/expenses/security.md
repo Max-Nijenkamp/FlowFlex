@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Expenses — Security
@@ -24,6 +24,19 @@ per [[../../../architecture/filament-patterns]] #1 — custom pages state it exp
 ## Permissions
 
 `finance.expenses.view-any` · `finance.expenses.view` · `finance.expenses.submit` · `finance.expenses.approve` · `finance.expenses.reimburse` · `finance.expenses.manage-categories`
+
+`approve` gates both the approve and reject transitions (single approver verb *(assumed)*); `reimburse` gates the reimbursement transition; `manage-categories` gates category CRUD.
+
+## Rate Limiting
+
+Named limiters per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]:
+
+- **Approve** (`finance.expenses.approve`) mutates money (posts a GL entry) and fires `ExpenseApproved` → `panel-action` limiter.
+- **Reject** sends a submitter notification (comms) → `panel-action` limiter.
+- **Reimburse** (`finance.expenses.reimburse`) mutates money (clears the GL liability) → `panel-action` limiter.
+- **CSV export** (payroll / accounting reconciliation) generates a file → `exports` limiter.
+
+See [[../../../architecture/api-design]] and [[../../../architecture/security]].
 
 ## Upload contract
 

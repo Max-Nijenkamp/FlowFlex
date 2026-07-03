@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Recognition Feed
@@ -46,5 +46,18 @@ Public praise wall visible to the team.
 - Consumes: none directly — reflects public praise created in [[feedback]]
 - Feeds: none *(recognition-to-notifications feed is on the feedback record's create path, not this read page)*
 - Shared entity: `hr_employees` (hr.profiles) for giver/recipient display
+
+## Test Checklist
+
+### Unit
+- [ ] Feed query returns only `visibility = public` praise; constructive/coaching-note rows are excluded
+
+### Feature (Pest)
+- [ ] Only public praise appears on the feed; a constructive record created in [[feedback]] never surfaces here
+- [ ] Tenant isolation: the feed shows only the acting company's praise
+
+### Livewire
+- [ ] `RecognitionFeedPage` `canAccess()` denies without `hr.feedback.view-any` or when `hr.feedback` inactive
+- [ ] Polling refresh renders newly posted public praise
 
 Follows [[../../../architecture/patterns/custom-pages]]. Back to [[../_module]].

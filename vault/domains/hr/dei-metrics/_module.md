@@ -14,11 +14,21 @@ Diversity, Equity, and Inclusion metrics and reporting — representation, pay e
 
 > Build status: **planned**. HR code was stripped in [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]]; this spec folder is the rebuild blueprint. Nothing here is built, shipped, or tested.
 
-`module-key: hr.dei` · `priority: v1` · panel `hr` · nav group **Analytics**
+---
+
+## Module-key
+
+`hr.dei`
+
+**Priority:** v1  
+**Panel:** hr  
+**Permission prefix:** `hr.dei`  
+**Tables:** `hr_dei_attributes`, `hr_dei_snapshots`  
+**Nav group:** Analytics
 
 ---
 
-## Purpose
+## Core Features
 
 - Collect self-declared diversity attributes (opt-in, consent-logged) — gender, age band, ethnicity (where legally collectable), disability status.
 - Produce **aggregated** representation and equity reporting: composition by level/department/role, pay gap by dimension (band-level, never exact salaries), hiring/promotion equity.
@@ -95,4 +105,14 @@ Owns two tenant-scoped tables: `hr_dei_attributes` (encrypted `value`, individua
 | Reads | `salary_band` / hiring funnel | `hr.compensation` / `hr.recruitment` | pay-equity + hiring-equity dashboard sections *(assumed)*; hidden without the soft-dep |
 | Fires | none outbound | — | privacy — no DEI data leaves the module |
 
+## Test Checklist
+
+- [ ] Tenant isolation: company A cannot read company B's DEI attributes or snapshots
+- [ ] Module gating: `DeiDashboardPage` and the self-service DEI section hidden when `hr.dei` inactive
+- [ ] No individual attribute value is ever rendered — no permission (not even a would-be `view-any`) exposes a raw `hr_dei_attributes.value`
+- [ ] Suppression boundary: a group of size N−1 is suppressed, size N is shown (k-anonymity, N=5 *(assumed)*)
+- [ ] Consent required to submit; withdrawal hard-deletes the owner's attribute rows and logs the event
+- [ ] Snapshot job aggregates + suppresses **before** storage; re-running a period is idempotent (upsert on `(company, period, dimension)`)
+- [ ] `hr_dei_attributes.value` stored encrypted (ciphertext in the DB column); never indexed or SQL-filtered
+- [ ] Pay-equity / hiring sections hidden when `hr.compensation` / `hr.recruitment` inactive
 

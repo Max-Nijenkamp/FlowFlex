@@ -51,3 +51,26 @@ flowchart TD
     Tbl --> Admin[/admin cross-company view/]
     Prune[PruneAuditLogCommand daily 04:30] -->|delete < retention cutoff| Tbl
 ```
+
+## Filament Artifacts
+
+**Nav group:** Settings *(assumed)*
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `AuditLogResource` (/app) | #1 CRUD resource | tweaks: read-only-flow-owned (`AuditLogger` owns all writes → `canCreate(): false`, no edit/delete) | `rmsramos/activitylog`-provided, configured; filters: domain (`log_name`), action type, causer, date range, subject; company-scoped |
+| Cross-company log view (/admin) | #1 CRUD resource | tweaks: read-only-flow-owned | admin-guard only; bypasses tenant scope (`withoutGlobalScope`) — FlowFlex staff review across all companies |
+
+**Access contract (mandatory):** the `/app` resource gates on
+`canAccess() = Auth::user()->can('core.audit.view-any') && BillingService::hasModule('core.audit')`
+per [[../../../architecture/filament-patterns]] #1. The resource is read-only (no create/edit/delete). The `/admin` cross-company variant gates on the admin guard only (FlowFlex staff) and is never exposed in a company panel — see [[security]]. This is a backend-observability module; no Vue/portal surfaces.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `AuditLogger::log` insert | n/a | Append-only — each call inserts one immutable log row; no update path, no concurrent-edit surface |
+| `PruneAuditLogCommand` delete | n/a | Delete-only `WHERE created_at < cutoff`, naturally idempotent; no contended row |
+| Log browser (read) | n/a | Read-only surface — no writes |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].

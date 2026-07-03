@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Time Entries (Clock-in/out & Manual Logging)
@@ -50,6 +50,20 @@ Capture worked time per employee per day, either via a timer (clock-in/out) or m
 - Consumes: none
 - Feeds: none directly *(entries roll up into `hr_timesheets`; the timesheet fires `TimesheetApproved` — see [[timesheet-approval-workflow]])*
 - Shared entity: `hr_employees` (read via EmployeeService)
+
+## Test Checklist
+
+### Unit
+- [ ] `total_minutes = span − break_minutes` computed in integer minutes (never float hours)
+- [ ] `logEntry` validation: clock_out after clock_in, break < span, date not future *(assumed)*
+
+### Feature (Pest)
+- [ ] Double clock-in throws `AlreadyClockedInException`; clock-out computes totals + overtime flag
+- [ ] Company A cannot see or edit company B time entries
+
+### Livewire
+- [ ] Logging own entry requires `hr.time.log-own`; correcting another employee's entry requires `hr.time.manage`
+- [ ] Clock widget in/out toggles the running timer
 
 ## Related
 

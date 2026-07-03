@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Fiscal Period Lock
@@ -34,5 +34,19 @@ Prevents retroactive edits by locking closed periods (`fin_fiscal_periods`).
 ## Relations
 - Consumes: `PayrollRunApproved` (hr.payroll) indirectly — `PostPayrollJournalEntryListener` posts into the GL and retries when it hits a closed period.
 - Feeds: `ClosedPeriodException` raised by `LedgerService::post` for any entry dated inside a closed period; consumed in-domain by posting flows and by the payroll listener's retry logic.
+
+## Test Checklist
+
+### Unit
+- [ ] Period-membership check: an `entry_date` inside a `closed` period is flagged; the same date inside an `open` period passes
+
+### Feature (Pest)
+- [ ] `LedgerService::post` with an `entry_date` in a closed period throws `ClosedPeriodException`; posting into an open period succeeds
+- [ ] `closePeriod` / `reopenPeriod` are gated by `finance.ledger.close-period`, write under `DB::transaction()` + `lockForUpdate()`, and are audited
+- [ ] Tenant isolation: company A cannot close/reopen or post into company B's fiscal periods
+
+### Livewire
+- [ ] `FiscalPeriodResource` close/reopen toggle action runs the transition and surfaces `ClosedPeriodException` messaging on a blocked post
+- [ ] `canAccess` denied without `finance.ledger.close-period` and when `finance.ledger` inactive
 
 See [[../api]], [[../security]].

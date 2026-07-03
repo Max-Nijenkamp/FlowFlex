@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Automated Dunning
@@ -36,5 +36,18 @@ Escalating reminder emails chase overdue customers per aging bucket.
 - Consumes: `InvoicePaid` from finance.invoicing → resets `last_dunning_level` + busts the aging cache
 - Feeds: `DunningMail` (queued mailable, email) → customer reminder
 - In-domain: `ProcessDunningCommand` reads active rules in `escalation_level` order
+
+## Test Checklist
+
+### Unit
+- [ ] Rule evaluation selects the next `escalation_level` for an overdue invoice by `days_overdue` threshold, in order (friendly → firm → final)
+- [ ] The `last_dunning_level` guard prevents re-selecting a level already sent
+
+### Feature (Pest)
+- [ ] `ProcessDunningCommand` fires each escalation level exactly once per invoice and queues `DunningMail`; a second same-day run sends nothing
+- [ ] `InvoicePaid` resets `last_dunning_level` and stops the sequence; the dunning send is throttled by its named rate limiter; tenant isolation on the overdue-invoice selection
+
+### Livewire
+- [ ] `DunningRuleResource` rejects a duplicate `escalation_level` per company on save; `canAccess` / edit denied without `finance.ar.manage-dunning`
 
 See [[../api]], [[../architecture]].

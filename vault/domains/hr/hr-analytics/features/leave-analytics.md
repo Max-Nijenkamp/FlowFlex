@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Leave Analytics
@@ -47,5 +47,17 @@ Average days taken vs allocated per leave type, via `LeaveUtilisationWidget`. Th
 - Consumes: `LeaveRequestApproved` from `hr.leave` → refresh utilisation projection *(assumed — may recompute live per request)*
 - Feeds: none (read-only dashboards)
 - Shared entity: `hr_leave_requests` (read-only)
+
+## Test Checklist
+
+### Unit
+- [ ] `leave_utilisation[]` = average days taken vs allocated per leave type, computed from fixtures
+
+### Feature (Pest)
+- [ ] Utilisation aggregated from `hr_leave_requests` is company-scoped
+- [ ] Widget is hidden entirely when `hr.leave` is inactive (soft-dep degraded behavior)
+
+### Livewire
+- [ ] `LeaveUtilisationWidget` omitted from the dashboard grid when `hr.leave` inactive; visible + `canView()`-gated when both modules active
 
 Parent: [[../_module]]

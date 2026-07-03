@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Shift Assignment
@@ -47,6 +47,19 @@ Create a shift and optionally assign it to an employee, enforcing conflict rules
 - Consumes: none *(reactive leave handling lives in [[leave-conflict-blocking]])*
 - Feeds: none
 - Shared entity: `hr_employees` (read via EmployeeService); approved leave read via LeaveService
+
+## Test Checklist
+
+### Unit
+- [ ] Overlap detection flags a second shift in the same time span for one employee
+- [ ] On-leave detection matches an approved-leave date to the shift date
+
+### Feature (Pest)
+- [ ] `createShift` with an overlapping shift throws `ShiftConflictException`; with approved leave throws `EmployeeOnLeaveException`
+- [ ] Null `employee_id` creates an unassigned shift (coverage gap); concurrent assignment serialized by `lockForUpdate`
+
+### Livewire
+- [ ] Create requires `hr.shifts.create`; drag-assign/reassign requires `hr.shifts.update`
 
 ## Related
 

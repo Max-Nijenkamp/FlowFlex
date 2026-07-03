@@ -50,3 +50,18 @@ Reusable task lists (checklist items per department/role) that drive each new hi
 - Consumes: none.
 - Feeds: none.
 - Shared entity: reads `hr_departments` (owned by hr.profiles).
+
+## Test Checklist
+
+### Unit
+- [ ] `CreateOnboardingTemplateData` rejects a template with zero tasks
+- [ ] One-default-per-company rule flags a second `is_default` template
+
+### Feature (Pest)
+- [ ] Create a department-scoped template with ordered tasks; tasks persist with `assigned_role`
+- [ ] Setting a second company default is rejected (existing default preserved)
+- [ ] Manage denied without `hr.onboarding.manage-templates`
+
+### Livewire
+- [ ] Repeater adds/reorders tasks with an `assigned_role` per row
+- [ ] `OnboardingTemplateResource` create/edit hidden without `hr.onboarding.manage-templates`

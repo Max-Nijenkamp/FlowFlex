@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Manager Reassignment
@@ -48,6 +48,19 @@ Reassign an employee's manager directly from the org chart.
   > [!warning] UNVERIFIED
   > No confirmed hierarchy-changed event exists on hr.profiles. *(assumed)*
 - Shared entity: reads / writes-via-owner `hr_employees` (owned by hr.profiles).
+
+## Test Checklist
+
+### Unit
+- [ ] A reassignment producing a cycle is rejected (`ManagerCycleException`, check delegated to `EmployeeService::update`)
+
+### Feature (Pest)
+- [ ] `ReassignManagerAction` updates `hr_employees.manager_id` via hr.profiles' owning service; the tree reflects the new parent
+- [ ] The `manager_id` write goes only through `EmployeeService` — never a direct cross-domain write from hr.org
+- [ ] Reassigning to a manager in another company is impossible (tenant isolation)
+
+### Livewire
+- [ ] Reassign action gated on `hr.org.reassign`; the tree-select modal surfaces the `ManagerCycleException` message inline on a cycle
 
 ## Related
 

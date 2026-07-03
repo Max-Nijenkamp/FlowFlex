@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # My Profile
@@ -42,5 +42,19 @@ updated: 2026-07-02
   > [!warning] UNVERIFIED
   > Whether the own-profile correction fires an `EmployeeUpdated` (or equivalent) event is not confirmed. Resolve against hr.profiles' event contract before build.
 - Shared entity: reads `hr_employees` / `hr_emergency_contacts` (owned by hr.profiles).
+
+## Test Checklist
+
+### Unit
+- [ ] Editable-slice whitelist accepts only phone / personal_email / emergency contacts / photo; HR-only fields (name, salary, national_id, job, manager) are rejected
+
+### Feature (Pest)
+- [ ] `UpdateOwnProfileAction` writes only via hr.profiles' owning service, scoped to `auth()->user()->employee`
+- [ ] Attempting to edit an HR-only field is rejected
+- [ ] Self-scope isolation: employee A cannot view or edit employee B's profile via any self-service route (second layer on top of `CompanyScope`)
+
+### Livewire
+- [ ] `MyProfilePage` `canAccess()` denies without `hr.self-service.view` or when `hr.self-service` inactive; edit requires `hr.self-service.update-own`
+- [ ] Invalid phone (not E.164) surfaces a validation error on the editable slice
 
 [[../_module]]

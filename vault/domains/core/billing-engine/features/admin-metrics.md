@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Admin Metrics (MRR / Churn / Adoption)
@@ -42,6 +42,19 @@ Revenue and adoption metrics for FlowFlex staff, surfaced in the `/admin` panel.
 - Consumes: none.
 - Feeds: none (read-only metrics; not consumed by other domains).
 - Shared entity: none beyond the billing tables it aggregates.
+
+## Test Checklist
+
+### Unit
+- [ ] MRR = sum of active-subscription module prices via brick/money (no float math)
+- [ ] Churn rate formula returns the expected ratio for a period *(assumed definition)*
+
+### Feature (Pest)
+- [ ] `mrr()` aggregates only active subscriptions across all companies (admin scope, not company-scoped)
+- [ ] `churnRate($period)` computes correctly over seeded subscription/cancellation data
+
+### Livewire
+- [ ] Metrics widgets render on `/admin` only; denied on `/app` and to non-staff users
 
 ## Unknowns
 

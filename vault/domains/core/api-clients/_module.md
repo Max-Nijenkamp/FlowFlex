@@ -5,15 +5,22 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # API Clients
 
 API key management for the FlowFlex REST API. Company admins create Sanctum tokens with specific ability scopes, rotate or revoke them, and monitor last-used timestamps. Tokens are shown once at creation and stored only as a hash.
 
-- **module-key:** `core.api` · **panel:** app · **priority:** v1
-- **fires-events:** none · **consumes-events:** none
+## Module-key
+
+`core.api`
+
+**Priority:** v1  
+**Panel:** app  
+**Permission prefix:** `core.api`  
+**Tables:** `personal_access_tokens` (Sanctum, extended with `created_by` — owns no dedicated table)  
+**Events:** fires none · consumes none
 
 ## Sibling notes
 

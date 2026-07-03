@@ -15,7 +15,7 @@ tables: [fin_budgets, fin_budget_lines]
 permission-prefix: finance.budgets
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Budgets
@@ -23,6 +23,15 @@ updated: 2026-06-20
 Department and company-level budgets with actual-vs-budget variance tracking. Absorbed from the former FP&A domain. Budgets carry per-account, per-period lines; actuals are imported from the general ledger for variance reporting and alerts.
 
 > Rebuild blueprint. Code was stripped to the [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; nothing here is built yet. This spec is the source of truth for the rebuild.
+
+## Module-key
+
+`finance.budgets`
+
+**Priority:** v1  
+**Panel:** finance  
+**Permission prefix:** `finance.budgets`  
+**Tables:** `fin_budgets`, `fin_budget_lines`
 
 ## Purpose
 
@@ -63,7 +72,8 @@ See [[../../../architecture/queue-jobs]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see, edit, or approve company B budgets/lines
+- [ ] Module gating: artifacts hidden when `finance.budgets` inactive
 - [ ] Variance = actual − budget per account/period from GL fixtures (brick/money)
 - [ ] Revision creates new version, preserves old
 - [ ] Approved budget lines immutable (revise instead) *(assumed)*

@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Bank Accounts — Security
@@ -35,7 +35,7 @@ CSV statement uploads enforce a MIME whitelist (`text/csv`) and store under `com
 
 ## Rate limiting
 
-A rate limiter is intended on the import action (e.g. N imports per company per minute) in addition to the queued chunked job, per [[../../../architecture/api-design]] and [[../../../architecture/security]].
+The statement-import action (file ingest → queued chunked job) carries a **named** `panel-action` rate limiter (N imports per company per minute) in addition to the queued chunked job, per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]], [[../../../architecture/api-design]], and [[../../../architecture/security]]. Reconcile/unreconcile are internal integrity writes (no comms, no GL money posting, no external call) and rely on the pessimistic lock rather than a rate limiter.
 
 ## Integrity controls
 

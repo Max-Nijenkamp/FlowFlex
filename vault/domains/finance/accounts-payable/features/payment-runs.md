@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Payment Runs
@@ -40,6 +40,21 @@ Batch approved bills into a single **payment run** by due date and execute them 
 - Feeds: posts to [[../../general-ledger/_module]] via `LedgerService::post`; settled bills reflected in [[ap-aging]]
 - in-domain: consumes scheduled bills from [[bill-approval]]; calls `LedgerService::post` (finance.ledger)
 - pain.001 XML export deferred *(assumed)* — v1 is batch list / CSV/SEPA export
+
+## Test Checklist
+
+### Unit
+- [ ] Batch total equals the sum of selected bills' amounts (brick/money integer cents); line-sum reconciliation rejects a mismatch
+- [ ] Early-payment discount applies only when the run date is within a bill's discount window
+
+### Feature (Pest)
+- [ ] `executeRun` marks every selected bill `scheduled → paid`, posts one GL cash entry, and applies discounts — atomically under a pessimistic lock
+- [ ] A failure mid-run rolls back the whole run (all-or-none); no bill is left partially paid
+- [ ] Tenant isolation: a run cannot include company B bills; `execute-run` permission enforced
+
+### Livewire
+- [ ] `PaymentRunPage` execute action gated on `finance.ap.execute-run`; `canAccess` denied without `finance.ap.view-any`
+- [ ] Batch preview surfaces the line-sum check and blocks execute on mismatch
 
 ## Related
 

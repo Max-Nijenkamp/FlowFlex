@@ -52,3 +52,16 @@ Let HR see all active onboardings and their % complete at a glance.
 - Shared entity: reads `hr_employees` (owned by hr.profiles).
 
 > "Overdue" depends on unverified due-date semantics — see [[../unknowns]].
+
+## Test Checklist
+
+### Unit
+- [ ] Per-plan % complete derives from `OnboardingService::progress`
+
+### Feature (Pest)
+- [ ] Dashboard lists only active plans for the current tenant
+- [ ] Company A cannot see company B onboardings (tenant isolation)
+
+### Livewire
+- [ ] `ActiveOnboardingsWidget` renders the active count and drills into a plan
+- [ ] Widget/list hidden without `hr.onboarding.view-any`

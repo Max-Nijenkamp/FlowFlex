@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Billing Engine — Security
@@ -14,9 +14,15 @@ Parent: [[_module]]
 
 ## Permissions
 
-`core.billing.view` · `core.billing.activate-module` · `core.billing.deactivate-module` · `core.billing.manage-payment-method`
+`core.billing.view-any` (billing list) · `core.billing.view` (single invoice) · `core.billing.activate-module` · `core.billing.deactivate-module` · `core.billing.manage-payment-method`
 
-Owner-only by default for activate/deactivate *(assumed)*.
+Owner-only by default for activate/deactivate *(assumed)*. Invoice state transitions (`open → paid → past_due → uncollectible`) are driven by Stripe webhooks and the dunning command under system context — they carry no user-facing permission. Seeded in `PermissionSeeder`.
+
+## Rate Limiting
+
+- `webhook` limiter on the Stripe webhook route (see below) — in addition to signature verification.
+- `panel-action` limiter on the **manage payment method** header action — it calls the external Stripe API ([[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]).
+- `exports`/PDF: `InvoiceMail` and invoice-PDF generation run on the notifications/finance queues as scheduled work, not interactive panel actions — no per-request limiter needed.
 
 ## Authorization
 

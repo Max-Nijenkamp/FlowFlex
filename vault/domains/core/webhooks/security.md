@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Webhooks — Security
@@ -14,7 +14,9 @@ Parent: [[_module]]
 
 ## Permissions
 
-`core.webhooks.view-any` · `core.webhooks.create` · `core.webhooks.update` · `core.webhooks.delete` · `core.webhooks.test`
+`core.webhooks.view-any` · `core.webhooks.create` · `core.webhooks.update` · `core.webhooks.delete` · `core.webhooks.test` · `core.webhooks.rotate`
+
+One permission per command: `test` (`SendTestWebhookAction`) and `rotate` (`RotateWebhookSecretAction`, mints a new secret) each have their own verb on top of the CRUD set. Seeded in `PermissionSeeder`.
 
 ## Authorization
 
@@ -34,9 +36,9 @@ Every delivery carries `X-FlowFlex-Signature` = HMAC-SHA256 of the payload keyed
 
 `CreateWebhookEndpointData` requires `url` to start with `https://` *(assumed)* — non-HTTPS URLs are rejected: "Webhook URLs must use HTTPS."
 
-## Test rate limiter
+## Rate limiting (test + rotate)
 
-`SendTestWebhookAction` is throttled (a few test sends per endpoint per minute) — from `build/security-audit-2026-06-11` (medium). Prevents using the test button as an SSRF/spam amplifier.
+`SendTestWebhookAction` names the `panel-action` limiter (a few test sends per endpoint per minute) — from `build/security-audit-2026-06-11` (medium). It calls an external URL, so throttling prevents using the test button as an SSRF/spam amplifier. `RotateWebhookSecretAction` also names the `panel-action` limiter since it mints a credential (per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]). Both return 429 + `Retry-After` on exhaustion.
 
 ## Tenancy
 

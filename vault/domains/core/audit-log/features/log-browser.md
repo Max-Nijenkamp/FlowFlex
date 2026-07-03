@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Log Browser
@@ -43,6 +43,19 @@ The read-only viewer over `activity_log`: who did what, to which record, when, a
 - Consumes: none (no domain events) — it reads rows written by `AuditLogger::log` (see [[audit-logger]]).
 - Feeds: none.
 - Shared entity: subject models are polymorphic references owned by every domain; the browser only displays their type + id, never mutates them.
+
+## Test Checklist
+
+### Unit
+- [ ] Rendered `properties` diff omits PII/encrypted field values (field names only) per denylist
+
+### Feature (Pest)
+- [ ] `/app` resource is company-scoped: company A cannot see company B's log rows (tenant isolation)
+- [ ] `/admin` cross-company view returns rows across companies under the admin guard only; denied to a company user
+
+### Livewire
+- [ ] `AuditLogResource` exposes no create/edit/delete actions (read-only); filters (domain / action / user / date-range / subject) narrow the table
+- [ ] `canAccess()` denied without `core.audit.view-any` or when `core.audit` module inactive
 
 ## Related
 

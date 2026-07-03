@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Event-Driven Inputs
@@ -52,5 +52,16 @@ Soft deps (hr.leave, hr.time, finance.expenses) degrade gracefully when unbuilt 
 - Consumes: `EmployeeHired` from `hr.profiles` → create stub payroll record (`incomplete`); `EmployeeOffboarded` from `hr.profiles` → flag final run + leave payout; `LeaveRequestApproved` from `hr.leave` → unpaid-leave deduction; `TimesheetApproved` from `hr.time` → hourly pay hours; `ExpenseApproved` from `finance.expenses` → reimbursement line
 - Feeds: none (this feature is the consuming side; the run feed to Finance is [[ledger-journal-posting]])
 - Shared entity: `hr_employees` read via `EmployeeService` (hr.profiles)
+
+## Test Checklist
+
+### Unit
+- [ ] `UpdatePayrollDeductionsListener` acts on unpaid leave types only; paid leave is a no-op
+- [ ] `AddReimbursementListener` skips events with a null `employee_id`
+
+### Feature (Pest)
+- [ ] `EmployeeHired` creates a stub payroll record with status `incomplete`
+- [ ] Listeners run under `WithCompanyContext` — effects are tenant-scoped to the event's `company_id`
+- [ ] Soft-dep events (`LeaveRequestApproved`, `TimesheetApproved`, `ExpenseApproved`) absent when those modules are unbuilt → payroll degrades gracefully (inputs simply do not arrive)
 
 Back to [[../_module]].

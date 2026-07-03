@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Company Management
@@ -35,6 +35,20 @@ List, search, and edit all customer companies from `/admin` — status, user cou
 - Consumes: none (no domain events).
 - Feeds: no domain event *(assumed — `fires-events: none`)*. A suspend action invokes [[../../billing-engine/_module]]'s `BillingService`.
 - Shared entity: `companies` — the shared tenant root, owned by the foundation/billing layer; staff-console edits it read/write via the `Company` model but owns none of it.
+
+## Test Checklist
+
+### Unit
+- [ ] Suspend action requires a reason; MRR-contribution column derives from active-paid-module price × user count
+
+### Feature (Pest)
+- [ ] Admin list spans every tenant (`CompanyScope` no-ops with no `CompanyContext`)
+- [ ] Editing locale/timezone/currency/trial persists on the `companies` row via the `Company` model
+- [ ] Suspend routes through `BillingService::suspend`; company status flips and the context does not leak afterward
+
+### Livewire
+- [ ] `ListCompanies` denied to a non-admin (tenant web user); admin sees the table
+- [ ] Edit-page save with a stale `updated_at` surfaces the conflict notification
 
 ## Related
 

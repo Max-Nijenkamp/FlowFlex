@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Recurring Invoices
@@ -39,5 +39,18 @@ UNVERIFIED: whether the recurrence day-of-month is pinned or drifts is not enume
 
 > [!warning] UNVERIFIED
 > Whether the recurrence day-of-month is pinned or drifts is not enumerated in the spec.
+
+## Test Checklist
+
+### Unit
+- [ ] Schedule advance: `next_recurring_at` moves by the correct interval (monthly / quarterly / annually) from the current date
+- [ ] Selection predicate matches only rows WHERE `next_recurring_at <= today`
+
+### Feature (Pest)
+- [ ] `GenerateRecurringInvoicesCommand` generates one invoice per due schedule and advances `next_recurring_at` in the same transaction (copies lines via brick/money)
+- [ ] Idempotent: running the command twice on the same day produces no duplicate invoices (row lock guards double-generation)
+- [ ] Tenant isolation: the command only generates within each schedule's own company
+
+<!-- background command — no Livewire surface; schedule fields are configured on InvoiceResource (covered by invoice-lifecycle) -->
 
 See [[../api]], [[../architecture]], [[../../../../architecture/queue-jobs]].

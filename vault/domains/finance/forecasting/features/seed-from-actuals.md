@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Seed From Actuals
@@ -34,5 +34,19 @@ Bootstrap a forecast from trailing actuals plus a growth assumption, then refine
 ## Relations
 - Consumes: no events.
 - Feeds: no events. In-domain service call `seedFromActuals`; cross-domain read of ledger actuals. Accuracy MAPE tracking *(assumed)*.
+
+## Test Checklist
+
+### Unit
+- [ ] `projected = round(actual_cents × (1 + growthPercent/100))` per account/period is exact integer-cent (brick/money), no float accumulation
+- [ ] Growth of 0% reproduces the trailing actuals unchanged; negative growth reduces projected lines correctly
+
+### Feature (Pest)
+- [ ] `seedFromActuals(forecastId, growthPercent)` reads trailing-12-month actuals from GL fixtures and writes scaled projected lines that remain freely editable afterwards
+- [ ] Empty result when no trailing actuals exist for the forecast's accounts/periods
+- [ ] Tenant isolation: seeding company A's forecast never reads company B ledger actuals; writes only own `fin_forecast_lines`
+
+### Livewire
+- [ ] Seed-from-actuals action validates the growth % input and populates the projected-line grid on run; `canAccess` denied without the forecast create/update permission
 
 See [[../architecture]], [[../api]], [[scenario-modelling]], [[../../general-ledger/_module]].

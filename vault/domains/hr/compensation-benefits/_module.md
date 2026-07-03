@@ -5,7 +5,7 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Compensation & Benefits
@@ -14,23 +14,33 @@ updated: 2026-07-02
 
 Compensation bands, salary benchmarking, benefits enrollment, and comp review cycles. Intended to include an append-only salary history audit trail.
 
-module-key: `hr.compensation` · panel: `hr` · nav group: **Payroll** · priority: `v1`
+---
+
+## Module-key
+
+`hr.compensation`
+
+**Priority:** v1  
+**Panel:** hr  
+**Permission prefix:** `hr.compensation`  
+**Tables:** `hr_compensation_bands`, `hr_benefits`, `hr_employee_benefits`, `hr_salary_history`  
+**Nav group:** Payroll
 
 ---
 
-## Purpose
+## Core Features
 
-- Compensation bands: min/mid/max salary per job grade, per department.
-- Compa-ratio: employee salary vs band midpoint.
-- Benefits catalog + enrollment (health, pension, gym, lunch).
-- Comp review cycle: bulk salary adjustment during annual review.
-- Salary history: append-only trail (who/when/old→new/reason).
+- Compensation bands: min/mid/max salary per job grade, per department — [[features/compensation-bands]]
+- Compa-ratio: employee salary vs band midpoint (via `brick/money`, never float)
+- Benefits catalog + enrollment (health, pension, gym, lunch) — [[features/benefits-catalog]], [[features/benefit-enrollment]]
+- Comp review cycle: bulk salary adjustment during annual review
+- Salary history: append-only trail (who/when/old→new/reason) — [[features/salary-history]]
 
-## Intended Behavior
+**Intended behavior:**
 
-- Every salary change is intended to write an `hr_salary_history` row and update the payroll profile atomically in one transaction.
+- Every salary change writes an `hr_salary_history` row and updates the payroll profile atomically in one transaction.
 - Money is stored as integer minor units (cents, `bigint`) and arithmetic goes through `brick/money` — never raw float. See [[../../../architecture/packages]].
-- Salary amounts are intended to be encrypted at rest; the `salary_band` column exposes only a coarse band. See [[../../../security/encryption]].
+- Salary amounts are encrypted at rest; the `salary_band` column exposes only a coarse band. See [[../../../security/encryption]].
 
 ---
 
@@ -99,3 +109,17 @@ app/Filament/HR/Resources/{CompensationBandResource,BenefitResource,BenefitEnrol
 database/factories/HR/{CompensationBandFactory,BenefitFactory,SalaryHistoryFactory}.php
 tests/Feature/HR/{CompensationBandTest,SalaryHistoryTest,BenefitEnrollmentTest}.php
 ```
+
+---
+
+## Test Checklist
+
+- [ ] Tenant isolation: company A cannot see or adjust company B bands, benefits, enrollments, or salary history
+- [ ] Module gating: all artifacts hidden when `hr.compensation` inactive
+- [ ] Salary display (history + salary columns) hidden without `hr.payroll.view-sensitive`
+- [ ] `adjustSalary` updates payroll profile and appends exactly one `hr_salary_history` row in one transaction; concurrent adjust rejected via row lock
+- [ ] `hr_salary_history` is append-only — no update/delete path exists
+- [ ] Compa-ratio computed via `brick/money` (no float); `null` when no matching band
+- [ ] Band constraint `min ≤ mid ≤ max` enforced; unique `(company_id, job_grade, department_id)`
+- [ ] Benefit enroll honours unique-active `(employee_id, benefit_id)`; double-enroll rejected
+- [ ] `amount_raw` stored encrypted (never plaintext salary in the DB)

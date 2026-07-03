@@ -15,7 +15,7 @@ tables: [fin_suppliers, fin_bills, fin_bill_lines, fin_payment_runs]
 permission-prefix: finance.ap
 encrypted-fields: ["fin_suppliers.iban"]
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Accounts Payable
@@ -51,11 +51,12 @@ AP is the outbound counterpart to AR: capture supplier bills, route them through
 
 ## Permissions
 
-`finance.ap.view-any` · `finance.ap.create` · `finance.ap.approve` · `finance.ap.approve-large` · `finance.ap.schedule` · `finance.ap.execute-run` · `finance.ap.manage-suppliers` · `finance.ap.view-sensitive`
+`finance.ap.view-any` · `finance.ap.create` · `finance.ap.approve` · `finance.ap.approve-large` · `finance.ap.schedule` · `finance.ap.execute-run` · `finance.ap.void` · `finance.ap.manage-suppliers` · `finance.ap.view-sensitive`
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see, approve, or pay company B bills/suppliers
+- [ ] Module gating: artifacts hidden when `finance.ap` inactive
 - [ ] Duplicate supplier bill number rejected
 - [ ] Approval posts a balanced GL liability entry; payment posts a cash entry
 - [ ] Threshold routes to the `approve-large` permission

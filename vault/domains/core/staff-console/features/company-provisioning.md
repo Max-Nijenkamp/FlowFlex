@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Company Provisioning
@@ -48,3 +48,18 @@ Owner invite accept flow lives in core.invitations.
 - Consumes: none (no domain events).
 - Feeds: no domain event fired *(assumed — `fires-events: none` on [[../_module]])*. The owner `UserInvitation` it creates is later consumed by **core.invitations** (owner accept flow), and `seedFreeCoreModules` invokes **[[../../billing-engine/_module]]**'s `BillingService`.
 - Shared entity: `companies` (foundation/billing-owned), `user_invitations` (core.invitations-owned), spatie roles/permissions ([[../../rbac/_module]]-owned), `company_module_subscriptions` ([[../../billing-engine/_module]]-owned) — all written only via their owners' services within the target `CompanyContext`.
+
+## Test Checklist
+
+### Unit
+- [ ] `ProvisionCompanyData` validates presence of `name`, `owner_email`, `timezone`, `locale`, `currency`; slug derives uniquely from name
+
+### Feature (Pest)
+- [ ] `ProvisionCompanyAction` in one transaction creates the company + owner role (full permission sync, team = company) + free-core subscriptions + owner `UserInvitation` (`invited_by = null`) and sends the invite mail
+- [ ] A failure mid-transaction (e.g. duplicate email) rolls the whole thing back — no orphan company/role/subscription
+- [ ] `CompanyContext` is set then forgotten (`finally`) — a subsequent admin query is not scoped to the new company
+- [ ] The `panel-action` rate limiter throttles rapid repeat provisioning submits
+
+### Livewire
+- [ ] `CreateCompany` form validation rejects a duplicate owner email / slug collision inline
+- [ ] `CreateCompany` denied to a non-admin; admin submit redirects to the new company record

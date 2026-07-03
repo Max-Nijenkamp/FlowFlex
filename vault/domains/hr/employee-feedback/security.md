@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Employee Feedback — Security
@@ -32,6 +32,10 @@ Enforced in query scopes (not just UI):
 | 1-on-1 notes | the two participants only (manager + employee); not HR by default |
 
 Note the confidentiality split: **HR `view-any` can read feedback, but 1-on-1 agenda/notes are participant-only.** Coaching notes are visible up the manager chain but not to peers.
+
+## Rate Limiting
+
+The give-feedback and request-feedback actions send comms (recipient/target notifications) and therefore cite the named `panel-action` rate limiter (comms category) per [[../../../architecture/security]] and [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]. No exports, money, or inventory mutations in this module.
 
 ## Tenancy
 

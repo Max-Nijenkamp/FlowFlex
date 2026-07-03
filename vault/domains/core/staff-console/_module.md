@@ -5,15 +5,22 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Staff Console
 
 The FlowFlex-staff side of the platform inside `/admin`: create and manage customer companies, activate/deactivate modules for them, see their subscriptions, invoices and users, and read platform revenue summaries (revenue this month, MRR, open invoices). Closes the loop required by the no-public-registration ADR ("staff create companies in /admin") that no MVP module owned. *(assumed: single staff role — every Admin sees everything; per-admin RBAC deferred until the team grows)*
 
-- **module-key:** `core.staff-console` · **panel:** admin · **priority:** v1-core
-- **fires-events:** none · **consumes-events:** none
+## Module-key
+
+`core.staff-console`
+
+**Priority:** v1-core  
+**Panel:** admin  
+**Permission prefix:** none (admin-guard access — no spatie permissions on the admin guard)  
+**Tables:** none of its own — reads/writes `companies`, `company_module_subscriptions`, `billing_invoices`, `user_invitations` via their owning models/services  
+**Events:** fires none · consumes none (drives other domains via service calls inside a set-then-forgotten `CompanyContext`)
 
 ## Sibling notes
 
@@ -51,6 +58,8 @@ Schema change: `user_invitations.invited_by` becomes **nullable** (staff-provisi
 
 ## Test Checklist
 
+- [ ] Tenant isolation: `CompanyContext` is set-then-forgotten around console mutations — no leak into subsequent admin queries; a tenant web user can never reach any console page
+- [ ] Module gating: n/a (platform staff module, always active — admin-guard only)
 - [ ] Non-admin (web user) cannot reach any console page
 - [ ] Admin sees companies list incl. cross-company data
 - [ ] Provisioning creates company + owner role with all web permissions + free-core subscriptions + pending owner invitation (invited_by null)

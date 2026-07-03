@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Per-Company Module Management
@@ -35,6 +35,20 @@ Activate any active catalog module for a company, deactivate any non-free-core m
 - Consumes: none (no domain events).
 - Feeds: no domain event of its own *(assumed — `fires-events: none`)*. Delegates to [[../../billing-engine/_module]]'s `BillingService`, whose activation/deactivation may itself fire billing events consumed elsewhere (e.g. RBAC permission suspension on module deactivation — see [[../../rbac/_module]]).
 - Shared entity: `company_module_subscriptions` (owned by [[../../billing-engine/_module]]); module catalog (owned by [[../../../infrastructure/module-catalog]]).
+
+## Test Checklist
+
+### Unit
+- [ ] Deactivation of a free-core module is refused; activation validates against catalog validity
+
+### Feature (Pest)
+- [ ] Activate runs `BillingService::activateModule` inside `RunsInCompanyContext`; subscription row appears for the target company
+- [ ] Deactivate a non-free-core module succeeds; the free-core deactivation attempt throws / is refused
+- [ ] `CompanyContext` is forgotten in `finally` — no leak into the next admin query
+
+### Livewire
+- [ ] Modules relation-manager tab denied to a non-admin; activate/deactivate row actions run for admin
+- [ ] Catalog-invalid activation surfaces a notification and makes no subscription change
 
 ## Related
 

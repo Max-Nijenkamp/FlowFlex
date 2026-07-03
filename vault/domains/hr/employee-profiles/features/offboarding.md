@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Offboarding
@@ -48,6 +48,19 @@ Terminate employment: capture termination date, reason, and downstream signals (
 
 > [!warning] UNVERIFIED
 > IT deprovisioning as an `EmployeeOffboarded` consumer is a P3 soft integration and not confirmed by any built spec.
+
+## Test Checklist
+
+### Unit
+- [ ] `OffboardEmployeeData` requires `termination_date` (on/after `hire_date`) and `termination_reason` (max:1000)
+
+### Feature (Pest)
+- [ ] `offboard` transitions to `terminated` and fires `EmployeeOffboarded` with the contract payload
+- [ ] Missing/invalid termination date or reason is rejected; state unchanged
+- [ ] The transition takes a pessimistic lock (`DB::transaction` + `lockForUpdate`) — concurrent double-offboard is serialized ([[../architecture]])
+
+### Livewire
+- [ ] `OffboardAction` modal validates required fields; action gated on `hr.employees.offboard`
 
 ## Related
 

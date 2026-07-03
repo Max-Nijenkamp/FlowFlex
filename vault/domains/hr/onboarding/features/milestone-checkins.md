@@ -57,3 +57,16 @@ Send 30/60/90 day milestone check-in reminders after a hire starts.
 - Shared entity: reads `hr_employees` (owned by hr.profiles).
 
 > Storage of the per-milestone sent flag is undecided — no jsonb column exists in the data model. See [[../unknowns]].
+
+## Test Checklist
+
+### Unit
+- [ ] Milestone due dates computed at 30/60/90d after `started_at`
+
+### Feature (Pest)
+- [ ] `SendMilestoneCheckInsCommand` fires each milestone once (per-milestone guard)
+- [ ] Command is tenant-scoped — only reminders for the running company's plans send
+
+### Livewire
+- [ ] Page lists upcoming/overdue check-ins and drills into one
+- [ ] Page hidden without `hr.onboarding.view`

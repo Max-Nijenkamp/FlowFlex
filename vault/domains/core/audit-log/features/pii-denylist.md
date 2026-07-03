@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: PII Denylist
@@ -39,3 +39,13 @@ The audit log records **what changed**, not sensitive raw values. `properties` m
 - Consumes: none (no domain events) — invoked in-process by every domain's writes via `AuditLogger::log`.
 - Feeds: none.
 - Shared entity: the list of encrypted/PII fields is conceptually owned by each source domain's model (its `encrypted` casts); the denylist mirrors those field names *(assumed per-model `$auditExclude`)*.
+
+## Test Checklist
+
+### Unit
+- [ ] Denylist strips encrypted/PII keys while retaining ordinary keys with their before/after values
+- [ ] Empty / no-PII `properties` pass through unchanged
+
+### Feature (Pest)
+- [ ] `AuditPiiTest`: logging a model with encrypted fields writes field names only — no raw values reach `activity_log`
+- [ ] Fail-closed on denylist misconfiguration *(assumed guard)* — a sensitive key is never persisted even if the exclude list is incomplete

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Platform Dashboard
@@ -35,6 +35,19 @@ The `/admin` landing overview for FlowFlex staff: companies by status, revenue t
 - Consumes: none (no domain events) — figures are computed live from read-only queries against billing/company data.
 - Feeds: none.
 - Shared entity: `billing_invoices`, `company_module_subscriptions` (owned by [[../../billing-engine/_module]]); `companies`/users (foundation); health results (owned by [[../../health-monitoring/_module]]).
+
+## Test Checklist
+
+### Unit
+- [ ] Revenue-this-month counts only paid invoices dated in the current month
+- [ ] MRR estimate = Σ(active-paid-module price × company user count) across all companies
+
+### Feature (Pest)
+- [ ] Widgets aggregate cross-company (admin, `CompanyScope` no-ops); figures match seeded invoices/subscriptions
+- [ ] Zero companies/invoices → zeroed stats and an empty chart (no error)
+
+### Livewire
+- [ ] Dashboard widgets deny render to a non-admin; admin sees the stats row, revenue chart, and health tile
 
 ## Related
 

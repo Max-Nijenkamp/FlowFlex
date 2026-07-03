@@ -8,7 +8,7 @@ module-count: 19
 build-status: planned
 status: active
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Core Platform
@@ -25,27 +25,27 @@ Each module below is a **folder** (`<slug>/_module.md` + sibling notes: `archite
 
 ## Modules
 
-| Module | Key | Build | Priority | Depends on (intra-domain) |
-|---|---|---|---|---|
-| [[company-settings/_module\|Company Settings]] | `core.settings` | planned | v1-core | — |
-| [[rbac/_module\|Roles & Permissions]] | `core.rbac` | planned | v1-core | — |
-| [[invitation-system/_module\|Invitation System]] | `core.invitations` | planned | v1-core | rbac |
-| [[billing-engine/_module\|Billing Engine]] | `core.billing` | planned | v1-core | settings |
-| [[module-marketplace/_module\|Module Marketplace]] | `core.marketplace` | planned | v1-core | billing |
-| [[staff-console/_module\|Staff Console]] | `core.staff-console` | planned | v1-core | billing, invitations |
-| [[workspace-hub/_module\|Workspace Hub]] | `core.hub` *(assumed)* | planned | v1-core | billing, rbac |
-| [[audit-log/_module\|Audit Log]] | `core.audit` | planned | v1-core | — |
-| [[notifications/_module\|Notifications]] | `core.notifications` | planned | v1-core | — |
-| [[file-storage/_module\|File Storage]] | `core.files` | planned | v1-core | settings |
-| [[two-factor-auth/_module\|Two-Factor Auth]] | `core.2fa` *(assumed)* | planned | v1-core | — |
-| [[spotlight/_module\|Spotlight ⌘K]] | `core.spotlight` *(assumed)* | planned | v1-core | notifications |
-| [[data-import/_module\|Data Import]] | `core.import` | planned | v1 | files, billing, rbac |
-| [[webhooks/_module\|Webhooks]] | `core.webhooks` | planned | v1 | billing, rbac |
-| [[api-clients/_module\|API Clients]] | `core.api` | planned | v1 | rbac, billing |
-| [[setup-wizard/_module\|Setup Wizard]] | `core.setup` | planned | v1 | settings, invitations, marketplace |
-| [[data-privacy/_module\|Data Privacy]] | `core.privacy` | planned | v1 | settings, files, rbac, billing |
-| [[i18n/_module\|Internationalisation]] | `core.i18n` | planned | v1 | settings |
-| [[health-monitoring/_module\|Health Monitoring]] | `core.health` | planned | v1 | — |
+| Module | Key | Build | Priority | Depends on (intra-domain) | Kind highlights |
+|---|---|---|---|---|---|
+| [[company-settings/_module\|Company Settings]] | `core.settings` | planned | v1-core | — | wizard custom-page (#7) |
+| [[rbac/_module\|Roles & Permissions]] | `core.rbac` | planned | v1-core | — | resource (#1) *(assumed)* |
+| [[invitation-system/_module\|Invitation System]] | `core.invitations` | planned | v1-core | rbac | resource (#1) + public-vue accept (#13) |
+| [[billing-engine/_module\|Billing Engine]] | `core.billing` | planned | v1-core | settings | resource (#1) + dashboard widgets (#6) |
+| [[module-marketplace/_module\|Module Marketplace]] | `core.marketplace` | planned | v1-core | billing | gallery/directory custom-page (#17) |
+| [[staff-console/_module\|Staff Console]] | `core.staff-console` | planned | v1-core | billing, invitations | resource + dashboard (#1/#6) *(assumed)* |
+| [[workspace-hub/_module\|Workspace Hub]] | `core.hub` *(assumed)* | planned | v1-core | billing, rbac | gallery/directory custom-page (#17) *(assumed)* |
+| [[audit-log/_module\|Audit Log]] | `core.audit` | planned | v1-core | — | resource read-only (#1) |
+| [[notifications/_module\|Notifications]] | `core.notifications` | planned | v1-core | — | notification bell render-hook (#10) *(assumed)* |
+| [[file-storage/_module\|File Storage]] | `core.files` | planned | v1-core | settings | none (backend module) |
+| [[two-factor-auth/_module\|Two-Factor Auth]] | `core.2fa` *(assumed)* | planned | v1-core | — | panel-chrome + settings *(assumed)* |
+| [[spotlight/_module\|Spotlight ⌘K]] | `core.spotlight` *(assumed)* | planned | v1-core | notifications | render-hook Livewire (panel chrome) *(assumed)* |
+| [[data-import/_module\|Data Import]] | `core.import` | planned | v1 | files, billing, rbac | resource (#1) + wizard create (#7) |
+| [[webhooks/_module\|Webhooks]] | `core.webhooks` | planned | v1 | billing, rbac | resource (#1) *(assumed)* |
+| [[api-clients/_module\|API Clients]] | `core.api` | planned | v1 | rbac, billing | resource (#1) |
+| [[setup-wizard/_module\|Setup Wizard]] | `core.setup` | planned | v1 | settings, invitations, marketplace | wizard custom-page (#7) |
+| [[data-privacy/_module\|Data Privacy]] | `core.privacy` | planned | v1 | settings, files, rbac, billing | resource (#1) + report/export custom-page (#9) |
+| [[i18n/_module\|Internationalisation]] | `core.i18n` | planned | v1 | settings | none (backend module) |
+| [[health-monitoring/_module\|Health Monitoring]] | `core.health` | planned | v1 | — | dashboard custom-page (#6) + external /pulse /horizon |
 
 > [!note] Two-factor-auth and spotlight were reconstructed from code (no flat spec existed). Their `core.2fa` / `core.spotlight` module-keys and priorities are `*(assumed)*` — see each module's `unknowns` note.
 

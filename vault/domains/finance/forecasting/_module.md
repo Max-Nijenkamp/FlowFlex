@@ -15,7 +15,7 @@ tables: [fin_forecasts, fin_forecast_lines]
 permission-prefix: finance.forecasting
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Forecasting
@@ -23,6 +23,15 @@ updated: 2026-06-20
 Financial forecasting, scenario modelling, and variance analysis. Absorbed from the former FP&A domain. Rolling forecasts project revenue/expense per period from historical actuals plus growth assumptions, compared three ways against actuals and budget.
 
 > Rebuild blueprint. Code was stripped to the [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; nothing here is built yet. This spec is the source of truth for the rebuild.
+
+## Module-key
+
+`finance.forecasting`
+
+**Priority:** v1  
+**Panel:** finance  
+**Permission prefix:** `finance.forecasting`  
+**Tables:** `fin_forecasts`, `fin_forecast_lines`
 
 ## Purpose
 
@@ -55,7 +64,8 @@ The module produces rolling forecasts: projected revenue/expense per period, upd
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see or edit company B forecasts/lines
+- [ ] Module gating: artifacts hidden when `finance.forecasting` inactive
 - [ ] Seed-from-actuals applies growth to trailing actuals correctly (brick/money)
 - [ ] Three-way comparison numbers match GL + budget fixtures
 - [ ] Scenario comparison renders all three when present

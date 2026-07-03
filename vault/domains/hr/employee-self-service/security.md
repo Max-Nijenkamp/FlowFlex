@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Security — Employee Self-Service
@@ -20,14 +20,20 @@ Intended to be granted to the `employee` role by default in `PermissionSeeder`. 
 
 ## Authorization
 
-Every artifact gates on:
+Every artifact (all custom pages) gates on:
 
 ```
-canAccess() = Auth::user()->can('hr.self-service.view-any')
+canAccess() = Auth::user()->can('hr.self-service.view')
               && BillingService::hasModule('hr.self-service')
 ```
 
-per filament-patterns #1 — custom pages state this explicitly. See [[../../../security/authn-authz]].
+per filament-patterns #1 — custom pages state this explicitly. There is no `view-any`: self-service is deliberately own-scoped, so `view` gates the pages and the self-scope below narrows every query. Own-profile edit additionally requires `hr.self-service.update-own`. See [[../../../security/authn-authz]].
+
+> **Permission-name drift** — feature notes reference assumed names (`hr.self-service.access`, `hr.self-service.update-own-profile`); the authoritative permissions are `hr.self-service.view` and `hr.self-service.update-own`. Reconcile the feature bodies at build time. *(assumed)*
+
+## Rate Limiting
+
+Payslip and personal-document downloads stream files and therefore cite the named `exports` rate limiter (per-user/company) per [[../../../architecture/security]] and [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]. Leave submission and onboarding task completion delegate to their owning modules, which own their limiters.
 
 ## Self-Scoped Access (critical)
 

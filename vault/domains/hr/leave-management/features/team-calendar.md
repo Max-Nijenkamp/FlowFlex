@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Team Calendar & Overlap Detection
@@ -42,6 +42,21 @@ Monthly/weekly view of approved leave across the team, with overlap detection an
 - Consumes: none
 - Feeds: none
 - Shared entity: `hr_employees` (read via EmployeeService); public-holiday reference data from company locale settings
+
+## Test Checklist
+
+### Unit
+- [ ] `calculateWorkingDays()` excludes weekends and public holidays
+- [ ] Overlap detection flags a request overlapping existing approved leave or a public holiday
+
+### Feature (Pest)
+- [ ] Overlap warning surfaces (warns, does not block) on an overlapping approved leave
+- [ ] Public holidays are excluded from `days_requested`
+- [ ] Tenant isolation: calendar renders only the acting company's approved leave
+
+### Livewire
+- [ ] `LeaveCalendarPage` `canAccess()` denies without `hr.leave.view-any` or when `hr.leave` inactive
+- [ ] Team-wide view requires `hr.leave.view-any` *(assumed)*; polling refresh renders newly approved leave
 
 ## Related
 

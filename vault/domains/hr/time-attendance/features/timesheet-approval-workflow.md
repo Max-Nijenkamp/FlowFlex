@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Timesheet Approval Workflow
@@ -50,6 +50,19 @@ Weekly timesheet lifecycle: employees submit, managers approve or reject before 
 - Consumes: none
 - Feeds: `TimesheetApproved` → consumed by [[../../payroll/_module|hr.payroll]] (hourly pay calculation)
 - Shared entity: `hr_employees` (read via EmployeeService)
+
+## Test Checklist
+
+### Unit
+- [ ] `submitWeek` requires all days closed (no running timers) and locks entries
+- [ ] State transitions valid only along `draft → submitted → approved` / `rejected → submitted`
+
+### Feature (Pest)
+- [ ] Approve requires `hr.time.approve` and approver ≠ owner (audited); fires `TimesheetApproved`
+- [ ] Reject returns to employee with a note and unlocks entries; concurrent approve serialized by `lockForUpdate`; company A cannot approve company B timesheets
+
+### Livewire
+- [ ] Submit requires `hr.time.submit-own`; approve/reject actions require `hr.time.approve`; approval page `canAccess()` gated
 
 ## Related
 

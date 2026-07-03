@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Job Requisitions
@@ -50,6 +50,20 @@ Open role requests approved by HR, linked to a department and headcount plan. Op
 - Consumes: none *(soft: reads planned roles fed from [[../../workforce-planning/_module|hr.workforce-planning]] when present; manual requisitions without it)*
 - Feeds: none directly *(auto-closes on hire via [[applicant-to-employee-conversion]] within this module)*
 - Shared entity: department reference data (org structure); planned roles (workforce-planning)
+
+## Test Checklist
+
+### Unit
+- [ ] `slug` is unique per company (sluggable)
+- [ ] Requisition auto-closes when headcount is filled
+
+### Feature (Pest)
+- [ ] `openRequisition` creates a `draft`; status advances `draft → open → closed`
+- [ ] Company A cannot see or edit company B requisitions
+
+### Livewire
+- [ ] Create denied without `hr.recruitment.create`; edit/publish denied without `hr.recruitment.update`
+- [ ] Publish toggle exposes the requisition at `/careers/{slug}`
 
 ## Related
 

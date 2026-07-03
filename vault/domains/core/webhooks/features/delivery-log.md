@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Delivery Log
@@ -40,3 +40,17 @@ An audit trail of every delivery attempt.
 - Consumes: delivery results from `DeliverWebhookJob` (own module).
 - Feeds: none (audit surface; not consumed by other domains).
 - Shared entity: `webhook_deliveries` (owned here).
+
+## Test Checklist
+
+### Unit
+- [ ] Prune date-guard selects only rows older than 30 days *(assumed)*
+
+### Feature (Pest)
+- [ ] Each delivery attempt writes one `webhook_deliveries` row (`event_type`, `payload`, `response_status`, `attempts`, `delivered_at`)
+- [ ] Log queries are tenant-scoped (`company_id, delivered_at` index); company A never sees company B deliveries
+- [ ] `PruneWebhookDeliveriesCommand` removes rows >30 days and leaves newer ones
+
+### Livewire
+- [ ] Deliveries relation manager is read-only (no edit action) and requires `core.webhooks.view-any`
+- [ ] A failed row expands to show the payload + response for debugging

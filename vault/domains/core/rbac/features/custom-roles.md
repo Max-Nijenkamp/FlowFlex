@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # RBAC — Custom Roles
@@ -52,6 +52,21 @@ Company admins create roles beyond the four built-ins (`owner`, `admin`, `manage
 
 - Consumes: `ModuleActivated` / `ModuleDeactivated` (core.billing) → widen/narrow the assignable permission set.
 - Feeds: the role definitions every module's `canAccess()` reads.
+
+## Test Checklist
+
+### Unit
+- [ ] Permission-matrix grouping buckets permissions by `domain.module`; only active-module groups are offered
+- [ ] `CreateRoleData` validates role name presence and rejects an unknown/inactive-module permission string
+
+### Feature (Pest)
+- [ ] `CreateRoleAction` persists a role under `team_id = company_id` and syncs the ticked permissions
+- [ ] A role created in company A is not assignable in company B (team scoping)
+- [ ] Server rejects a create carrying an inactive-module permission even if the client forged it
+
+### Livewire
+- [ ] Role form saves; new role immediately appears assignable in `UserResource`
+- [ ] `RoleResource` denied without `core.rbac.create`/`core.rbac.update`
 
 ## Related
 

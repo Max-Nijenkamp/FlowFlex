@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Manager Hierarchy
@@ -49,6 +49,20 @@ Self-referential reporting structure on `hr_employees` (recursive `manager_id` F
 - Consumes: none.
 - Feeds: none (manager_id changes read by hr.org).
 - Shared entity: reads `hr_employees` self-referential.
+
+## Test Checklist
+
+### Unit
+- [ ] Cycle detection rejects self-reference, direct cycle (A→B→A), and indirect cycle
+- [ ] `manager_id` must reference an employee in the same company
+
+### Feature (Pest)
+- [ ] `EmployeeService::update` throws `ManagerCycleException` on a circular chain; record unchanged
+- [ ] `directReports` / `managerChain` resolve the correct sets
+- [ ] Cross-company manager assignment is rejected (tenant isolation)
+
+### Livewire
+- [ ] Setting a cycling manager surfaces the `ManagerCycleException` message inline; edit requires `hr.employees.update`
 
 ## Related
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feedback Requests
@@ -45,5 +45,18 @@ Let an employee ask a colleague or manager for feedback.
 - Consumes: none
 - Feeds: none — request delivered via core.notifications; response lands in [[feedback]]
 - Shared entity: `hr_employees` (hr.profiles)
+
+## Test Checklist
+
+### Unit
+- [ ] An invalid/absent target employee is rejected
+
+### Feature (Pest)
+- [ ] `RequestFeedbackAction` notifies the target; no `hr_feedback` row is created until they respond
+- [ ] The request send is throttled by the named `panel-action` rate limiter (comms — see [[../security]])
+- [ ] Tenant isolation: a request can only target an employee in the acting company
+
+### Livewire
+- [ ] Any employee can open the "Request feedback" action; the eventual response requires `hr.feedback.give`
 
 Back to [[../_module]].

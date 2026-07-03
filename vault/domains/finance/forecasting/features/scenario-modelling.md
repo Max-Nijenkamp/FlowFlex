@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Scenario Modelling & Three-Way Comparison
@@ -34,5 +34,20 @@ Side-by-side base / optimistic / pessimistic forecasts, compared against actuals
 ## Relations
 - Consumes: no events.
 - Feeds: no events. In-domain service calls (`comparison`) and read calls into ledger/budgets; see [[seed-from-actuals]].
+
+## Test Checklist
+
+### Unit
+- [ ] `comparison(forecastId, period)` produces projected/actual/budget per account/period in integer cents (brick/money); derived variance columns match the three sources
+- [ ] Budget columns omitted from the assembled comparison when the budgets module is inactive
+
+### Feature (Pest)
+- [ ] `comparison()` assembles projected (forecast lines) + actual (summed journal lines) + budgeted (budget lines) against GL + budget fixtures
+- [ ] Tenant isolation: company A's comparison never reads company B forecast lines, ledger actuals, or budget lines
+- [ ] Multiple scenarios (base / optimistic / pessimistic) for one fiscal year all render side by side; absent scenarios simply omitted
+
+### Livewire
+- [ ] `ForecastResource` form validates scenario + fiscal year and the assumptions-register (jsonb) editor; `canAccess` denied without `finance.forecasting.view-any`
+- [ ] `ForecastComparisonPage` renders the three-way grid and hides budget columns when budgets inactive
 
 See [[../architecture]], [[../api]], [[../data-model]], [[seed-from-actuals]].

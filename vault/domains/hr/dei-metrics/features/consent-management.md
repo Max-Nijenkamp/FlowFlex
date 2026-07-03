@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Consent management
@@ -46,6 +46,20 @@ Make consent mandatory for collection and give employees a clean withdrawal path
 - Consumes: employee GDPR-erasure signal from core.privacy / `hr.profiles` → hard-delete own attribute rows (snapshots retain aggregates only) *(assumed event wiring)*
 - Feeds: none outbound (privacy); writes consent/withdrawal entries to core.privacy log
 - Shared entity: `hr_employees` (read-only), core.privacy consent log
+
+## Test Checklist
+
+### Unit
+- [ ] `consented_at` is required (references a core.privacy consent log) before any attribute row is written
+
+### Feature (Pest)
+- [ ] `WithdrawDeiConsentAction` hard-deletes the owner's own `hr_dei_attributes` rows and logs the withdrawal
+- [ ] Employee GDPR erasure hard-deletes attribute rows; existing snapshots retain aggregates only (no individual data survives)
+- [ ] Withdrawal affects only the acting employee's rows — cannot delete another employee's attributes (tenant + ownership isolation)
+
+### Livewire
+- [ ] Withdraw control opens a confirm dialog; confirming runs the action and resets the form to opt-in
+- [ ] Consent checkbox gates submission; denied without `hr.dei.submit-own`
 
 ## Related
 

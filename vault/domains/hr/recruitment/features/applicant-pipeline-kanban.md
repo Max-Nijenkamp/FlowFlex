@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Applicant Pipeline (Kanban)
@@ -50,6 +50,20 @@ Track applicants through per-requisition stages: `applied → screening → inte
 - Consumes: none
 - Feeds: none directly *(hire handoff modeled in [[applicant-to-employee-conversion]])*
 - Shared entity: none
+
+## Test Checklist
+
+### Unit
+- [ ] Invalid stage jump (e.g. `applied → offer`) rejected by `ApplicantState`
+- [ ] `→ rejected` reachable from any non-terminal state; records `rejection_reason` *(assumed)*
+
+### Feature (Pest)
+- [ ] `moveStage` advances only along legal transitions; concurrent moves on one applicant serialized by `lockForUpdate`
+- [ ] `offer → hired` requires `hr.recruitment.hire`; company A cannot move company B applicants
+
+### Livewire
+- [ ] `ApplicantPipelinePage` `canAccess()` gated by permission + `hasModule('hr.recruitment')`
+- [ ] Drag move requires `hr.recruitment.update`; invalid transition surfaces an error toast
 
 ## Related
 

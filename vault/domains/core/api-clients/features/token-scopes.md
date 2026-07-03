@@ -39,3 +39,17 @@ Each token carries named abilities of the form `{domain}:{verb}` where verb is `
 - Consumes: none.
 - Feeds: the ability check gates `/api/v1/` calls into every domain's REST endpoints (read/write per verb); no event emitted.
 - Shared entity: the ability registry mirrors [[../rbac/_module]] permission domains; the active-module set is owned by [[../billing-engine/_module]] (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Ability string parses to `{domain}:{verb}` with verb in `read`/`write`; malformed strings rejected
+- [ ] Ability for an inactive module is filtered out of the assignable set
+
+### Feature (Pest)
+- [ ] `ability:hr:read` token is rejected (403) on a `hr` write endpoint; accepted on a `hr` read endpoint
+- [ ] Creating a token with an ability for an inactive module fails validation
+- [ ] Abilities are immutable after creation — no edit path mutates the stored `abilities` json
+
+### Livewire
+- [ ] Ability multi-select offers only active-module abilities, grouped by domain; setting abilities denied without `core.api.create`

@@ -5,15 +5,22 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # File Storage
 
 File upload and media management for all domains via `spatie/laravel-media-library`. Every model can carry attachments; files are stored under `companies/{company_id}/` in S3/R2. An always-free core module — the storage infrastructure consumed by every domain with uploads.
 
-- **module-key:** `core.files` · **panel:** app · **priority:** v1-core
-- **fires-events:** none · **consumes-events:** none
+## Module-key
+
+`core.files`
+
+**Priority:** v1-core  
+**Panel:** app (no standalone surface — Media fields ride inside other modules' forms)  
+**Permission prefix:** none (access rides on the owning record's module permissions)  
+**Tables:** `media` (Spatie Media Library, + `company_id`)  
+**Events:** fires none · consumes none
 
 ## Sibling notes
 
@@ -45,8 +52,9 @@ No `api.md` — this module exposes no events or DTOs of its own; upload validat
 
 ## Test Checklist
 
-- [ ] Every stored file path starts with `companies/{company_id}/` (PathGenerator test, incl. conversions)
 - [ ] Tenant isolation: company A cannot resolve a temporary URL for company B media *(assumed: ownership check in action)*
+- [ ] Module gating: n/a (platform module, always active — storage infra for every domain)
+- [ ] Every stored file path starts with `companies/{company_id}/` (PathGenerator test, incl. conversions)
 - [ ] Disallowed extension (.php / .exe) rejected
 - [ ] MIME / extension mismatch rejected
 - [ ] Per-company max size enforced from settings

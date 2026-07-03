@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Accounts Payable — Security
@@ -23,7 +23,18 @@ per [[../../../architecture/filament-patterns]] #1 — custom pages (`ApAgingPag
 
 ## Permissions
 
-`finance.ap.view-any` · `finance.ap.create` · `finance.ap.approve` · `finance.ap.approve-large` · `finance.ap.schedule` · `finance.ap.execute-run` · `finance.ap.manage-suppliers` · `finance.ap.view-sensitive`
+`finance.ap.view-any` · `finance.ap.create` · `finance.ap.approve` · `finance.ap.approve-large` · `finance.ap.schedule` · `finance.ap.execute-run` · `finance.ap.void` · `finance.ap.manage-suppliers` · `finance.ap.view-sensitive`
+
+Verb-per-transition/command: `approve` (draft → approved; `approve-large` above the company threshold), `schedule` (approved → scheduled; add to a payment run), `execute-run` (scheduled → paid), `void` (draft/approved → voided with GL reversal), `manage-suppliers` (supplier CRUD incl. IBAN), `view-sensitive` (full IBAN). `create`/`update`/`delete` cover draft-bill CRUD.
+
+## Rate Limiting
+
+Money-mutating and file-generating panel actions carry a **named** rate limiter per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]:
+
+- `approveBill` (posts a GL liability) and `executeRun` (posts GL cash, mutates money) → `panel-action` limiter.
+- Payment-run SEPA/CSV batch export → `exports` limiter.
+
+See [[../../../architecture/security]] and [[../../../architecture/api-design]].
 
 ## Encrypted fields
 

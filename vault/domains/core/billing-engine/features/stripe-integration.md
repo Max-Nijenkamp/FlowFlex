@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Stripe Integration
@@ -47,3 +47,16 @@ Raw `stripe/stripe-php` SDK (not Cashier — [[../decisions]]).
 
 > [!warning] UNVERIFIED
 > Webhook route handler (`StripeWebhookController`) and the `webhook` rate limiter binding were not found in `app/`. See [[../unknowns]].
+
+## Test Checklist
+
+### Unit
+- [ ] Webhook router maps `invoice.payment_succeeded → paid` and `payment_failed → past_due`
+
+### Feature (Pest)
+- [ ] Webhook with a bad signature → 400, no state change
+- [ ] `invoice.payment_succeeded` webhook sets status `paid` + `paid_at` (pessimistic invoice-row lock; duplicate delivery is idempotent)
+- [ ] `companies.stripe_customer_id` persisted encrypted — no plaintext in the DB column
+
+### Livewire
+- [ ] Manage-payment-method action gated on `core.billing.manage-payment-method` and carries the `panel-action` rate limiter

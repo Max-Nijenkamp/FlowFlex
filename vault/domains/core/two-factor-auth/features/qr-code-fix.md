@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Two-Factor Auth — QR Code Fix
@@ -49,6 +49,15 @@ The override detects the already-complete `data:` URI (double-wrap) and unwraps 
 - Consumes: none.
 - Feeds: none.
 - Shared entity: none — the fix is self-contained inside `AppAuthenticationWithQrFix` and touches no domain data.
+
+## Test Checklist
+
+### Unit
+- [ ] `generateQrCodeDataUri()` detects an already-complete `data:image/svg+xml;base64,…` URI and unwraps exactly one base64 layer
+- [ ] A single-encoded input is returned unchanged (no double-unwrap)
+
+### Feature (Pest)
+- [ ] Enrollment on a panel using the aliased subclass renders a valid, scannable QR data URI (regression guard against the empty-image bug) on both `/app` and `/admin`
 
 ## Related
 

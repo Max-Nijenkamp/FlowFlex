@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Deductions & Employer Cost
@@ -45,5 +45,19 @@ Configurable per-company deduction types and employer cost reporting.
 - Consumes: none
 - Feeds: none (deduction math is consumed internally by `GeneratePayslipsJob`)
 - Shared entity: none
+
+## Test Checklist
+
+### Unit
+- [ ] Percent deduction (basis points) and flat deduction (cents) computed exactly via `brick/money`
+- [ ] `is_employer_contribution` splits employee deductions from employer contributions in the totals
+
+### Feature (Pest)
+- [ ] Employer-cost total per run = gross payroll + employer contributions (`total_employer_cost_cents`)
+- [ ] Company A cannot see or edit company B deduction types
+
+### Livewire
+- [ ] `DeductionTypeResource` create/edit denied without `hr.payroll.manage-deductions`
+- [ ] Validation rejects an invalid `calculation_type` / negative `value`
 
 Back to [[../_module]].

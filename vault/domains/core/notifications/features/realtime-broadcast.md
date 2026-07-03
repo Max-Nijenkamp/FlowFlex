@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Realtime Broadcast
@@ -40,3 +40,12 @@ Live unread-badge updates over Reverb.
 - Consumes: notification-create signal from this module's own delivery path (fed by domain events via listeners).
 - Feeds: `NotificationCreated` on `company.{id}.notifications` — consumed by the client-side [[inbox-bell]] only; **not** a cross-domain server event.
 - Shared entity: the Reverb channel `company.{id}.notifications` (tenant-scoped).
+
+## Test Checklist
+
+### Unit
+- [ ] `NotificationCreated` payload carries `company_id` and the notification id; channel name resolves to `company.{id}.notifications`
+
+### Feature (Pest)
+- [ ] Creating a notification dispatches `NotificationCreated` on the owning company's channel and no other
+- [ ] Channel authorization rejects a subscriber whose `company_id` differs from the channel's (tenant isolation)

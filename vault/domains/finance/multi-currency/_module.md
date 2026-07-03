@@ -15,7 +15,7 @@ tables: [fin_currencies, fin_exchange_rates]
 permission-prefix: finance.currency
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Multi-Currency
@@ -23,6 +23,15 @@ updated: 2026-06-20
 Support invoices, bills, and expenses in foreign currencies with exchange rates, base-currency conversion, and FX gain/loss tracking.
 
 > Rebuild blueprint. Code was stripped to the [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; nothing here is built yet. This spec is the source of truth for the rebuild.
+
+## Module-key
+
+`finance.currency`
+
+**Priority:** v1  
+**Panel:** finance  
+**Permission prefix:** `finance.currency`  
+**Tables:** `fin_currencies`, `fin_exchange_rates`
 
 ## Purpose
 
@@ -61,7 +70,8 @@ See [[../../../architecture/queue-jobs]].
 
 ## Test Checklist
 
-- [ ] Tenant isolation + module gating
+- [ ] Tenant isolation: company A cannot see or edit company B currencies/rates
+- [ ] Module gating: artifacts hidden when `finance.currency` inactive
 - [ ] Rate lookup picks most recent ≤ date; missing rate throws
 - [ ] JPY (0 minor units) + BHD (3) round-trip correctly via brick/money
 - [ ] Payment at different rate posts realised FX gain/loss entry

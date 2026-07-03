@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Leave Management — Security
@@ -14,9 +14,9 @@ Authz model + tenancy for the module. Platform refs: [[../../../security/authn-a
 
 ## Permissions
 
-`hr.leave.view-any` · `hr.leave.view` · `hr.leave.create` · `hr.leave.update` · `hr.leave.delete` · `hr.leave.approve` · `hr.leave.reject` · `hr.leave.manage-types`
+`hr.leave.view-any` · `hr.leave.view` · `hr.leave.create` · `hr.leave.update` · `hr.leave.delete` · `hr.leave.approve` · `hr.leave.reject` · `hr.leave.cancel` *(assumed — gates the `submitted`/`approved → cancelled` transition; owner cancels own, manager cancels approved before start_date)* · `hr.leave.manage-types`
 
-Seeded in `PermissionSeeder`. Employees get `create` + `view` (own) via the self-service role; managers get `approve`/`reject`. RBAC via [[../../core/rbac/_module\|core.rbac]] (spatie/laravel-permission, teams = company_id).
+Verb-per-transition cross-check ([[architecture]] state machine): `submitted` ← `create`; `approved` ← `approve`; `rejected` ← `reject`; `cancelled` ← `cancel`. Seeded in `PermissionSeeder`. Employees get `create` + `view` (own) + `cancel` (own) via the self-service role; managers get `approve`/`reject`. RBAC via [[../../core/rbac/_module\|core.rbac]] (spatie/laravel-permission, teams = company_id).
 
 ## Authorization Contract
 
@@ -33,6 +33,10 @@ Public/portal surfaces (self-service submission) use a guest or scoped-portal gu
 ## Tenancy
 
 All three tables carry `company_id` (not null, FK, indexed) + `BelongsToCompany`. Company A approvers must not see/approve company B requests — covered by the tenant-isolation test. See [[../../../security/tenancy-isolation]].
+
+## Rate Limiting
+
+Approve/reject actions send comms (in-app + email approval/rejection notifications) and therefore cite the named `panel-action` rate limiter (comms category) per [[../../../architecture/security]] and [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]. No exports, money, or inventory mutations in this module.
 
 ## Encrypted Fields
 

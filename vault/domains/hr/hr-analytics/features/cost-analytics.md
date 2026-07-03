@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Cost Analytics
@@ -47,5 +47,18 @@ Cost charts at **`salary_band` level only** — the widget is **hidden** when `h
 - Consumes: `PayrollRunApproved` from `hr.payroll` → refresh band-level cost projection *(assumed — may recompute live per request)*
 - Feeds: none (read-only dashboards)
 - Shared entity: `hr_payroll_runs` (read-only, band-level aggregation)
+
+## Test Checklist
+
+### Unit
+- [ ] Cost aggregation buckets by `salary_band` only — no individual salary value appears in the computed payload
+
+### Feature (Pest)
+- [ ] No individual (encrypted) salary is ever surfaced at row level — the payload contains band aggregates only
+- [ ] Cost aggregated from `hr_payroll_runs` is company-scoped
+- [ ] Widget is hidden entirely when `hr.payroll` is inactive (soft-dep degraded behavior)
+
+### Livewire
+- [ ] Cost widget omitted when `hr.payroll` inactive; visible + `canView()`-gated when both modules active
 
 Parent: [[../_module]]

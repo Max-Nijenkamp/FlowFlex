@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Payslip Generation & PDF
@@ -46,5 +46,16 @@ Generate per-employee payslips for a run, render PDFs, and deliver them by email
 - Consumes: none (triggered internally by the run lifecycle process/approve stages)
 - Feeds: none externally; `PayslipMail` delivers via core.notifications
 - Shared entity: `hr_employees` read via `EmployeeService` (hr.profiles) for name/email/deliverability
+
+## Test Checklist
+
+### Unit
+- [ ] Gross / net / employer-cost computed via `brick/money` (integer cents, no float drift)
+- [ ] `email_deliverable=false` employees excluded from the mail set
+
+### Feature (Pest)
+- [ ] `GeneratePayslipsJob` idempotent upsert on `(payroll_run_id, employee_id)` — re-running produces no duplicates
+- [ ] Job failure rolls the run `processing → draft` and rolls back payslips
+- [ ] `amounts_raw` decryption denied without `hr.payroll.view-sensitive`; employees see own payslips only
 
 Back to [[../_module]].

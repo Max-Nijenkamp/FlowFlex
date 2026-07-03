@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Company Settings — Security
@@ -14,7 +14,9 @@ Parent: [[_module]] · See also [[decisions]] · [[architecture]]
 
 ## Permissions
 
-`core.settings.view` · `core.settings.update`
+`core.settings.view-any` (open the settings page) · `core.settings.view` · `core.settings.update` (save a tab)
+
+Seeded in `PermissionSeeder`. No state transitions or command actions beyond the per-tab save (`update`); no comms/money/file/external-API panel action, so no additional rate limiter (logo/favicon uploads go through `core.files` under its own upload contract).
 
 ## Authorization — owner-only
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Public Register (Vue + Inertia)
@@ -43,3 +43,13 @@ The only public (guest) registration surface in FlowFlex.
 - Consumes: none.
 - Feeds: none directly — it triggers [[accept-flow]], which feeds `InvitationAccepted` to [[../../rbac/_module|core.rbac]].
 - Shared entity: **companies** owned by the platform/tenancy layer (read-only, for the displayed company name).
+
+## Test Checklist
+
+### Unit
+- [ ] `showInviteRegistration` resolves the invite `withoutGlobalScope(CompanyScope)` + `firstOrFail()` on token validity
+
+### Feature (Pest)
+- [ ] `GET /register/invite/{token}` renders the form with a prefilled read-only email + company name for a valid token
+- [ ] An invalid/expired token renders the "invitation invalid" page, not the form
+- [ ] The accept route is rate-limited (`login` limiter)

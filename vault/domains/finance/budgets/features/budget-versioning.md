@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Budget Versioning & Approval
@@ -35,5 +35,20 @@ Draft → approved workflow with in-year revisions kept as immutable versions.
 ## Relations
 - Consumes: no events.
 - Feeds: no events. In-domain service calls only (`approve`, `revise`, `copyFromYear`); read by [[variance-tracking]] and finance.forecasting for comparison columns.
+
+## Test Checklist
+
+### Unit
+- [ ] `copyFromYear` copies every prior-year line into the new fiscal year at the same account/period, amounts unchanged (integer cents)
+- [ ] Version increments monotonically; approved-line-immutability rule rejects a mutation on an approved version *(assumed)*
+
+### Feature (Pest)
+- [ ] `approve(budgetId)` moves draft → approved and subsequent line edits are rejected (approved lines immutable)
+- [ ] `revise(budgetId)` creates a new `version` row copying the lines and preserves the prior version; `unique (company_id, name, fiscal_year, version)` holds
+- [ ] Tenant isolation: company A cannot approve/revise company B budgets; concurrent double-approve rejected via row lock ([[../architecture]] Concurrency)
+
+### Livewire
+- [ ] Approve header action visible only with `finance.budgets.approve`; hidden/denied otherwise
+- [ ] Line-editor grid is read-only on an approved version; edit permitted only on the active draft
 
 See [[../architecture]], [[../api]], [[../security]], [[variance-tracking]].

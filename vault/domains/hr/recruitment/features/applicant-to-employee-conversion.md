@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Applicant → Employee Conversion (Hire)
@@ -49,6 +49,19 @@ Convert a hired applicant into an employee record, delegating to hr.profiles.
 - Consumes: none
 - Feeds: hands off to [[../../employee-profiles/_module|hr.profiles]] via `EmployeeService::hire(...)`; `EmployeeHired` fires **from hr.profiles** on record creation, not from recruitment. Exact handoff mechanism (direct service call vs. queued `ApplicantHired` event bridge) is *(assumed)* a synchronous service call.
 - Shared entity: `hr_employees` (created via EmployeeService); requisition headcount (this module)
+
+## Test Checklist
+
+### Unit
+- [ ] `hire` refuses an applicant not in `offer` state
+- [ ] Requisition auto-closes only when headcount is filled
+
+### Feature (Pest)
+- [ ] `hire` delegates to `EmployeeService::hire`, transitions applicant → `hired`, and closes the filled requisition
+- [ ] `EmployeeHired` fires from hr.profiles, not from recruitment (this module fires no events); concurrent hire serialized by `lockForUpdate`
+
+### Livewire
+- [ ] Hire action requires `hr.recruitment.hire` and is shown only for an applicant in `offer` state
 
 ## Related
 

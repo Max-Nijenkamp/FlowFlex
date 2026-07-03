@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature — Leave Request Workflow & Approval
@@ -45,6 +45,23 @@ The core request lifecycle: submit, multi-level approval, rejection, cancellatio
 - Consumes: none
 - Feeds: `LeaveRequestApproved` → consumed by [[../../payroll/_module|hr.payroll]] (deductions) and [[../../shift-scheduling/_module|hr.shifts]] (blocks/unassigns shifts on approved leave)
 - Shared entity: `hr_employees` + manager chain (read via EmployeeService)
+
+## Test Checklist
+
+### Unit
+- [ ] State machine permits only legal transitions (`draft→submitted→approved|rejected|cancelled`); invalid throws `InvalidStateTransitionException`
+- [ ] Reject requires a non-empty reason
+
+### Feature (Pest)
+- [ ] Approve sets `approved_by`/`approved_at`, moves balance `pending→taken`, and fires `LeaveRequestApproved` with the contract payload
+- [ ] Approver cannot approve their own request (`CannotApproveOwnRequestException`) even with `hr.leave.approve`
+- [ ] Reject releases pending balance and notifies with the reason
+- [ ] The transition + balance mutation take a pessimistic lock (`DB::transaction` + `lockForUpdate`) — concurrent double-approve is serialized ([[../architecture]])
+- [ ] Tenant isolation: company A approver cannot approve company B requests
+
+### Livewire
+- [ ] Approve/reject table actions gated on `hr.leave.approve` / `hr.leave.reject`; reject opens the reason modal
+- [ ] `canAccess()` denies without `hr.leave.view-any` or when `hr.leave` inactive
 
 ## Related
 

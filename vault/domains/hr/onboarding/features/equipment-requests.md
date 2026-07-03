@@ -53,3 +53,16 @@ Request equipment (laptop, phone, access cards) for a new hire, routed to IT.
 - Shared entity: none.
 
 > UNVERIFIED: real IT-ticket integration deferred to P3 — see [[../unknowns]].
+
+## Test Checklist
+
+### Unit
+- [ ] Equipment request is modeled as a plan task with `assigned_role = it`
+
+### Feature (Pest)
+- [ ] Creating an equipment request against a plan persists an `it` task
+- [ ] v1 fires no IT provisioning event (P3 integration deferred)
+
+### Livewire
+- [ ] Create-request action available on the plan
+- [ ] Action denied without `hr.onboarding.update`

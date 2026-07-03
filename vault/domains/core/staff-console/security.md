@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Staff Console — Security
@@ -19,6 +19,10 @@ None. The admin guard has no spatie teams; access = being an `Admin`. Tenant-sid
 ## Authorization
 
 `canAccess()` on every artifact: `auth('admin')->check()`. The `/admin` panel is staff-only (admin guard + IP allowlist in prod); no spatie permissions on the admin guard *(assumed)*. See [[../../../security/authn-authz]].
+
+## Rate Limiting
+
+`ProvisionCompanyAction` sends the owner invitation email (a comms side effect) — the `CreateCompany` submit therefore names the `panel-action` limiter (30/min per admin) per the security contract ([[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]). Module activate/deactivate and suspend delegate to `BillingService`; any external (Stripe) call there carries billing-engine's own limiter. The read-only cross-company resources and dashboard widgets need no action limiter.
 
 ## Tenancy / context-leak
 

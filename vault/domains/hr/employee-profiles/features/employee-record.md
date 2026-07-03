@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # Feature: Employee Record
@@ -50,6 +50,22 @@ The canonical employee record: personal info, contact details, emergency contact
 
 > [!warning] UNVERIFIED
 > IT provisioning as an `EmployeeHired` consumer is a P3 soft integration and not confirmed by any built spec.
+
+## Test Checklist
+
+### Unit
+- [ ] `employee_number` generator produces sequential, per-company-unique values
+- [ ] `phone` normalises to E.164 via `propaganistas/laravel-phone`; invalid numbers rejected
+
+### Feature (Pest)
+- [ ] Hire assigns a unique `employee_number` per company even under concurrent creates (advisory lock)
+- [ ] Duplicate work `email` within a company is rejected with a clear message
+- [ ] `national_id` / `date_of_birth` / `personal_email` persist as ciphertext; `national_id_hash` lookup resolves the record
+- [ ] Tenant isolation: company A cannot read/list company B employees
+
+### Livewire
+- [ ] Create form surfaces validation errors (duplicate email, invalid E.164) inline
+- [ ] Sensitive fields (national_id / DOB) hidden without `hr.employees.view-sensitive`; `canAccess()` denies without `hr.employees.view` or inactive module
 
 ## Related
 

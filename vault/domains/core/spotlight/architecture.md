@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Spotlight — Architecture
@@ -50,6 +50,24 @@ Both via `FilamentView::registerRenderHook(...)`:
 ## Blade / Alpine
 
 `resources/views/livewire/spotlight.blade.php` — Alpine `x-data` overlay teleported to `<body>`. Opens on `keydown.window.meta.k` / `.ctrl.k` and the `ff-spotlight-open` event; ESC closes; up/down move through `.ff-spotlight-result`; Enter clicks the active one. CSS classes `ff-spotlight-overlay` / `ff-spotlight`. Detail: [[features/keyboard-palette]].
+
+## Filament Artifacts
+
+**Nav group:** (none — chrome overlay injected via render hooks, not a nav entry)
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `Spotlight` (Livewire overlay) | Render-hook chrome component *(assumed — no dedicated ui-strategy row; closest analogue is #10 notification bell, render hook)* | [[../../../architecture/patterns/filament-panel-chrome]] | `BODY_END` palette (authenticated only) + `GLOBAL_SEARCH_BEFORE` topbar trigger; restores panel context per null-panel pitfall |
+
+**Access contract (mandatory):** Spotlight is not a Filament resource or routed page — it is a render-hook chrome overlay, so it states its gate explicitly: the `BODY_END` hook renders **only when `Filament::auth()->check()`**, and every result is `canAccess()`-filtered against the *current panel's* Resources / Pages / global-search provider (which honour per-record authorization + `CompanyScope`). `core.spotlight` is platform chrome (always active) — there is no `hasModule()` gate and no dedicated permission string; the palette can never link to something the user's own `canAccess()` would deny. See [[security]] and [[../../../architecture/filament-patterns]] #1.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| (none) | n/a | Spotlight is a stateless read-only navigation/search overlay — it owns no tables and performs no writes, so there is no concurrent-edit surface |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Flow
 

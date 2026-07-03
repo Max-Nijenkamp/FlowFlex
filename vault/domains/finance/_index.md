@@ -8,7 +8,7 @@ module-count: 13
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Finance & Accounting
@@ -33,21 +33,23 @@ Complete accounting stack: general ledger, invoicing, expenses, AP/AR, bank reco
 
 ## Modules
 
-| Module | Key | Priority | Build-status | Depends on (intra-domain) |
-|---|---|---|---|---|
-| [[general-ledger/_module\|General Ledger]] | `finance.ledger` | v1-core | planned | — (anchor) |
-| [[invoicing/_module\|Invoicing]] | `finance.invoicing` | v1-core | planned | ledger |
-| [[expenses/_module\|Expenses]] | `finance.expenses` | v1-core | planned | ledger |
-| [[bank-accounts/_module\|Bank Accounts]] | `finance.bank` | v1-core | planned | ledger |
-| [[accounts-receivable/_module\|Accounts Receivable]] | `finance.ar` | v1 | planned | invoicing |
-| [[accounts-payable/_module\|Accounts Payable]] | `finance.ap` | v1 | planned | ledger |
-| [[budgets/_module\|Budgets]] | `finance.budgets` | v1 | planned | ledger |
-| [[financial-reporting/_module\|Financial Reporting]] | `finance.reporting` | v1 | planned | ledger |
-| [[tax-management/_module\|Tax Management]] | `finance.tax` | v1 | planned | ledger |
-| [[multi-currency/_module\|Multi-Currency]] | `finance.currency` | v1 | planned | ledger |
-| [[forecasting/_module\|Forecasting]] | `finance.forecasting` | v1 | planned | ledger, budgets |
-| [[cash-flow/_module\|Cash Flow]] | `finance.cashflow` | v1 | planned | invoicing, bank |
-| [[fixed-assets/_module\|Fixed Assets]] | `finance.assets` | v1 | planned | ledger |
+| Module | Key | Priority | Build-status | Depends on (intra-domain) | Kind highlights |
+|---|---|---|---|---|---|
+| [[general-ledger/_module\|General Ledger]] | `finance.ledger` | v1-core | planned | — (anchor) | resource ×3 + trial-balance report page (#9) |
+| [[invoicing/_module\|Invoicing]] | `finance.invoicing` | v1-core | planned | ledger | resource ×2 (pdf-preview, line repeater) + stats widget (#6) |
+| [[expenses/_module\|Expenses]] | `finance.expenses` | v1-core | planned | ledger | resource ×3 (state-badge, receipt upload) |
+| [[bank-accounts/_module\|Bank Accounts]] | `finance.bank` | v1-core | planned | ledger | resource ×2 + import wizard (#7) + reconciliation matcher (#9*) |
+| [[accounts-receivable/_module\|Accounts Receivable]] | `finance.ar` | v1 | planned | invoicing | resource + aging/statement report pages (#9) + money actions |
+| [[accounts-payable/_module\|Accounts Payable]] | `finance.ap` | v1 | planned | ledger | resource ×2 + aging + payment-run report pages (#9) |
+| [[budgets/_module\|Budgets]] | `finance.budgets` | v1 | planned | ledger | resource + variance report page (#9) + widget (#6) |
+| [[financial-reporting/_module\|Financial Reporting]] | `finance.reporting` | v1 | planned | ledger | P&L / balance-sheet / cash-flow report pages (#9) |
+| [[tax-management/_module\|Tax Management]] | `finance.tax` | v1 | planned | ledger | resource + tax-return report page (#9) |
+| [[multi-currency/_module\|Multi-Currency]] | `finance.currency` | v1 | planned | ledger | resource ×2 + FX gain/loss report page (#9) |
+| [[forecasting/_module\|Forecasting]] | `finance.forecasting` | v1 | planned | ledger, budgets | resource + comparison report page (#9) |
+| [[cash-flow/_module\|Cash Flow]] | `finance.cashflow` | v1 | planned | invoicing, bank | cash-flow report page (#9) + low-cash widget (#6) |
+| [[fixed-assets/_module\|Fixed Assets]] | `finance.assets` | v1 | planned | ledger | resource + depreciation-run wizard (#7) |
+
+<sub>`#9*` — bank reconciliation is a two-panel matcher with no exact ui-strategy row; cited as closest (#9), flagged for a possible new blueprint kind (see [[../../build/gaps/INDEX|open gaps]]).</sub>
 
 Build order: ledger → invoicing → expenses → bank → AR/AP → budgets/reporting/tax → rest ([[../../build/BUILD-ORDER]]).
 

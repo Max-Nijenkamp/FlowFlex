@@ -48,3 +48,12 @@ Send a welcome email automatically when an onboarding plan starts, with a self-s
 - Consumes: `EmployeeHired` (via plan start) from hr.profiles → queues `WelcomeMail`.
 - Feeds: none.
 - Shared entity: reads `hr_employees` (owned by hr.profiles) + core.notifications.
+
+## Test Checklist
+
+### Unit
+- [ ] `WelcomeMail` composes the self-service portal link from plan + employee
+
+### Feature (Pest)
+- [ ] `WelcomeMail` is queued (ShouldQueue, `notifications` queue) on plan start
+- [ ] Mail scoped to the plan's company — recipient is the hired employee only

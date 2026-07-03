@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Audit Logger (write path + retention)
@@ -42,6 +42,17 @@ The single entry point through which every domain records audit activity, plus t
 - Consumes: none as domain events — it is invoked in-process by every domain's write operations and by the state-transition base class.
 - Feeds: none (fires no events).
 - Shared entity: `activity_log` subject/causer are polymorphic references to models owned by other domains/platform; stored read-only as type + id.
+
+## Test Checklist
+
+### Unit
+- [ ] `company_id` force-set from `CompanyContext` even when a different `company_id` is passed in `properties`
+- [ ] PII keys stripped from `properties` before persist (denylist strip returns field names only)
+
+### Feature (Pest)
+- [ ] `AuditLogger::log` inserts one row with `company_id` from context; company A's row invisible to company B (tenant isolation)
+- [ ] A state-machine transition writes a `state-transition` row carrying from/to via the transition base class
+- [ ] `PruneAuditLogCommand` deletes rows older than the per-company retention cutoff and leaves newer rows (idempotent on re-run)
 
 ## Related
 

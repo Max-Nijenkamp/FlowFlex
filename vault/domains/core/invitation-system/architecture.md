@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: unverified
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Invitation System — Architecture
@@ -50,3 +50,25 @@ flowchart TD
 ## Exceptions
 
 `InvalidInvitationTokenException` — thrown by `AcceptInvitationAction` when the token is expired, already accepted, or revoked.
+
+## Filament Artifacts
+
+**Nav group:** User Management *(assumed)*
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `InvitationResource` (/app) | #1 CRUD resource | tweaks: state-badge-column (pending / accepted / revoked / expired), custom-header-actions (resend, revoke) | list = pending invites with an expiry-countdown column; create form = email + role ([[./features/send-invite]]) |
+
+**Access contract (mandatory):** the resource and its actions gate on
+`canAccess() = Auth::user()->can('core.invitations.view-any') && BillingService::hasModule('core.invitations')`
+per [[../../../architecture/filament-patterns]] #1. The **resend** and **revoke** header actions each carry their own permission (`core.invitations.resend` / `.revoke`) and the `panel-action` rate limiter (create + resend send invite emails — a comms action). The public **accept** surface `/register/invite/{token}` is **Vue + Inertia** (ui-strategy row #13, guest guard), not a Filament artifact — it uses single-use token semantics (UUID, 7-day expiry, `withoutGlobalScope`) + the `login` rate limiter ([[security]], [[./features/public-register-vue]]).
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Invite create (`user_invitations` row + queue mail) | n/a | Insert-once — a duplicate pending invite for the same email is rejected by a uniqueness guard; no concurrent-edit surface |
+| Invite accept (validate token → create user, set `accepted_at`) | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the invitation row: re-read, validate unexpired/unaccepted/unrevoked, create user + assign role, set `accepted_at` atomically — prevents double-accept and accept-after-revoke races ([[../../../architecture/patterns/states]]) |
+| Resend (rotate token) / Revoke (set `revoked_at`) | Pessimistic | `lockForUpdate()` on the invite row — guard against mutating an already-accepted invite before rotating/revoking |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].

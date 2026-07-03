@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Accept Flow
@@ -41,3 +41,14 @@ Recipient accepts an invite and becomes a company user.
 > The existing note describes `AcceptInvitationAction` assigning the role **inline** (a direct write outside this module's tables). The constitution ([[../../../../decisions/decision-2026-06-20-full-mapping-conventions]] + [[../../../../security/data-ownership]]) requires that cross-domain write to happen via an `InvitationAccepted` event consumed by core.rbac. Event name `InvitationAccepted`, its payload (`company_id` scalar, `user_id`, `role`), and the split of "create user" vs "assign role" across the boundary are `*(assumed)*` — confirm at build. core.rbac's `_module.md` frontmatter currently reads `consumes-events: none`; it needs updating to consume this event.
 
 - Shared entity: **roles** and **users** owned by [[../../rbac/_module|core.rbac]] / platform (read-only here; written only through the accept event / owning service).
+
+## Test Checklist
+
+### Unit
+- [ ] Token validation rejects an expired / accepted / revoked token → `InvalidInvitationTokenException`
+
+### Feature (Pest)
+- [ ] Accept creates the user with the correct `company_id` + role under the correct team, sets `accepted_at`, and logs in
+- [ ] An expired / revoked / already-accepted token creates no user (invalid page)
+- [ ] Double-accept race prevented (pessimistic `lockForUpdate`) — only one user is created
+- [ ] Accept fires `InvitationAccepted`, consumed by core.rbac for the role assignment *(assumed event — see UNVERIFIED note)*

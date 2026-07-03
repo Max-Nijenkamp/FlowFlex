@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-07-02
+updated: 2026-07-03
 ---
 
 # 1-on-1 Meetings
@@ -47,5 +47,19 @@ Records of recurring 1-on-1 meetings between a manager and a direct report.
 - Consumes: none
 - Feeds: none (participant-confidential; not surfaced elsewhere)
 - Shared entity: `hr_employees` + manager chain (hr.profiles)
+
+## Test Checklist
+
+### Unit
+- [ ] Action-item checklist round-trips as `[{title, done}]`; the reportee must report to the acting manager *(assumed)*
+
+### Feature (Pest)
+- [ ] `LogOneOnOneAction` creates a participant-scoped record
+- [ ] Agenda/notes are readable only by the two participants — HR `view-any` cannot read them (confidentiality split enforced in query scope)
+- [ ] Tenant isolation: company A cannot read company B 1-on-1 records
+
+### Livewire
+- [ ] `OneOnOneResource` gated on `hr.feedback.one-on-one`; list is participant-scoped
+- [ ] Toggling an action item persists the `done` flag
 
 Back to [[../_module]].

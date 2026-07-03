@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — CSV Statement Import
@@ -40,5 +40,18 @@ Bank statements are imported from CSV through a chunked queued job.
 - Consumes: no events
 - Feeds: no cross-domain events — imported transactions are surfaced to [[reconciliation]]
 - in-domain: `ImportBankStatementJob` (imports queue) does the chunked work
+
+## Test Checklist
+
+### Unit
+- [ ] Row hashing of `date + amount + description` produces the `import_hash`; identical rows hash equal
+- [ ] Column mapping parses the date per the chosen format and amounts into signed integer minor units (brick/money)
+
+### Feature (Pest)
+- [ ] Re-importing the same statement creates zero duplicates via the `(bank_account_id, import_hash)` unique constraint
+- [ ] Malformed rows land in the error report and the job continues; `current_balance_cents` updates from imported rows; tenant isolation — import writes only the account's own company rows
+
+### Livewire
+- [ ] The import wizard enforces the upload contract (`text/csv`, max 10MB) and the column-mapping step, then queues the job; `canAccess` / action denied without `finance.bank.import`; the named import rate limiter applies
 
 See [[../api]], [[../architecture]].

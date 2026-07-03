@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature — Trial Balance
@@ -35,5 +35,20 @@ updated: 2026-06-20
 ## Relations
 - Consumes: no cross-domain events; reads GL tables the ledger owns.
 - Feeds: nothing — output is display-only. Cached per closed period (`company:{id}:finance:trial-balance:{from}:{to}`, 1 h); an in-domain `LedgerService::post` busts the key.
+
+## Test Checklist
+
+### Unit
+- [ ] Trial-balance rows sum `debit_cents` / `credit_cents` per account (brick/money, integer minor units); range totals: debits = credits
+- [ ] Invalid range (from > to) rejected before compute
+
+### Feature (Pest)
+- [ ] `trialBalance(from, to)` over GL fixtures returns balanced totals (debits = credits) with correct per-account subtotals
+- [ ] Closed-period result served from cache (`company:{id}:finance:trial-balance:{from}:{to}`); an in-period `LedgerService::post` busts the key and forces recompute
+- [ ] Tenant isolation: company A trial balance excludes company B journal lines
+
+### Livewire
+- [ ] `TrialBalancePage` renders the report grid and drills an account row down to its `fin_journal_lines`; empty range shows the empty state
+- [ ] `canAccess` denied without `finance.ledger.view-any` and when `finance.ledger` inactive
 
 See [[../api]], [[../data-model]].

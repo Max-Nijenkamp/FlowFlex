@@ -5,7 +5,7 @@ type: security
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Performance Reviews — Security
@@ -28,6 +28,14 @@ canAccess() = Auth::user()->can('hr.performance.view-any')
 ```
 
 Custom pages state this explicitly. Public/portal surfaces use a guest or scoped-portal guard.
+
+## Rate Limiting
+
+| Action | Limiter | Category |
+|---|---|---|
+| Finalise cycle → `GenerateReviewReportPdfJob` per employee | `exports` | file generation |
+
+`ReviewDueReminderCommand` sends reminders via `core.notifications` (scheduled command, not a user-triggered action — no panel limiter). Named limiters per [[../../../architecture/security]] and [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
 
 ## Visibility (reviewer / reviewee / manager / HR)
 

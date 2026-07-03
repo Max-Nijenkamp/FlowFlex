@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Leave Management — Architecture
@@ -50,6 +50,33 @@ stateDiagram-v2
     cancelled --> [*]
     approved --> [*]: after start_date
 ```
+
+## Filament Artifacts
+
+**Nav group:** Leave
+
+| Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
+|---|---|---|---|
+| `LeaveRequestResource` | #1 CRUD resource | tweaks: state-badge-column (request status + transition group), custom-header-actions (approve / reject — each own permission, reject opens reason modal) | Pending / All tabs; approve & reject table actions ([[features/leave-request-workflow]]) |
+| `LeaveBalanceResource` | #1 CRUD resource | tweaks: read-only-flow-owned (`canCreate(): false` — balances written by `LeaveService` + accrual commands) | read-only ledger; filter by employee / type / year ([[features/leave-balances]]) |
+| `LeaveTypeResource` | #1 CRUD resource | tweaks: *(none — plain admin config)* | `hr.leave.manage-types` ([[features/leave-types]]) |
+| `LeaveCalendarPage` | #4 Calendar custom page | [[../../../architecture/patterns/page-blueprints#Calendar]] | `saade/filament-fullcalendar`; approved leave + public holidays; polling 30s, no Reverb ([[features/team-calendar]]) |
+| `PendingApprovalsWidget` | #6 dashboard widget | [[../../../architecture/patterns/page-blueprints#Dashboard]] | current approver's pending count; polling 30–60s |
+
+**Access contract (mandatory):** every artifact gates on
+`canAccess() = Auth::user()->can('hr.leave.view-any') && BillingService::hasModule('hr.leave')`
+per [[../../../architecture/filament-patterns]] #1. `LeaveCalendarPage` is a custom page and MUST state it explicitly — Filament does not auto-gate custom pages. Approve/reject actions additionally require `hr.leave.approve` / `hr.leave.reject`, and the service enforces `CannotApproveOwnRequestException` regardless of permission. The employee submission surface is `hr.self-service` (Vue+Inertia per [[../../../architecture/ui-strategy]], scoped-portal guard); without it HR submits on behalf.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Leave-type & request CRUD (form, API) | Optimistic | `updated_at` stale-check on save → `StaleRecordException` → conflict notification ([[../../../architecture/patterns/optimistic-locking]]) |
+| Request state transition (submit / approve / reject / cancel) + balance pending↔taken mutation | Pessimistic | `DB::transaction()` + `lockForUpdate()` on the balance row, re-read, validate, write per [[../../../architecture/patterns/states]] — prevents two approvals double-decrementing a balance |
+| Accrual / carry-over balance writes (scheduled commands) | n/a | idempotent upsert on `(company, employee, type, year)` — single scheduler writer, safe to re-run |
+| Team calendar | n/a | read-only view over `hr_leave_requests` |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Related
 

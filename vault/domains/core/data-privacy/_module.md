@@ -5,15 +5,22 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Data Privacy
 
 GDPR tooling: DSAR (Data Subject Access Request) management, consent logs, full-dataset export, and an erasure queue. Ensures compliance from day one — implements the policy in [[../../../architecture/data-lifecycle]] via a `PersonalDataRegistry` that every module registers its PII tables into (drives both export scope and erasure cascade).
 
-- **module-key:** `core.privacy` · **panel:** app · **priority:** v1
-- **fires-events:** `DSARRequestSubmitted`
+## Module-key
+
+`core.privacy`
+
+**Priority:** v1  
+**Panel:** app  
+**Permission prefix:** `core.privacy`  
+**Tables:** `dsar_requests`, `consent_logs`  
+**Fires events:** `DSARRequestSubmitted`
 
 ## Sibling notes
 
@@ -47,7 +54,8 @@ GDPR tooling: DSAR (Data Subject Access Request) management, consent logs, full-
 ## Test Checklist
 
 - [ ] Tenant isolation: DSAR of company A invisible to company B
-- [ ] Module gating + permission gating on both surfaces
+- [ ] Module gating: artifacts hidden when `core.privacy` inactive
+- [ ] Permission gating on both surfaces (`view-any` / `process` / `export`; export owner-only)
 - [ ] Access request produces ZIP containing rows for the subject across registered tables only
 - [ ] Erasure: `hr_employees` anonymised per rule, invoices untouched, emergency contacts hard-deleted
 - [ ] Erasure with open legal hold (employment ongoing) → rejected path

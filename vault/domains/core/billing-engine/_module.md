@@ -5,15 +5,22 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Billing Engine
 
 Manages company subscriptions to FlowFlex modules: activation/deactivation, monthly invoice calculation, Stripe payment processing, dunning for failed payments, and MRR/churn metrics. The central gating service for all optional domain modules — `BillingService::hasModule()` is called by every `canAccess()` in the product.
 
-- **module-key:** `core.billing` · **panel:** app + admin · **priority:** v1-core
-- **fires-events:** `ModuleActivated`, `CompanySubscriptionSuspended`
+## Module-key
+
+`core.billing`
+
+**Priority:** v1-core  
+**Panel:** app + admin  
+**Permission prefix:** `core.billing`  
+**Tables:** `company_module_subscriptions`, `billing_invoices`, `billing_invoice_lines`, `module_catalog` (Sushi)  
+**Fires events:** `ModuleActivated`, `CompanySubscriptionSuspended`
 
 ## Sibling notes
 
@@ -52,6 +59,7 @@ Consumed by [[../module-marketplace/_module]] (UI over this service) and [[../st
 ## Test Checklist
 
 - [ ] Tenant isolation: company A subscriptions invisible to company B
+- [ ] Module gating: n/a (platform module — billing is the gate itself, always active)
 - [ ] `hasModule` true after activation, false after deactivation, within one request (cache bust)
 - [ ] Free core modules cannot be deactivated
 - [ ] Invoice calculation: 15 users × 3 modules matches pricing-model to the cent (brick/money)

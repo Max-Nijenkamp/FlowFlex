@@ -5,16 +5,22 @@ type: module
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Notifications
 
 In-app notification inbox and email alert delivery for all FlowFlex domains. Every domain dispatches events; Notifications provides the infrastructure — a base notification class, per-user preferences, an in-app bell, and a realtime broadcast — that delivers them to the right users on the right channel. Always-free core module.
 
-- **module-key:** `core.notifications` · **panel:** app · **priority:** v1-core
-- **fires-events:** none · **consumes-events:** `ModuleActivated`, `CompanySubscriptionSuspended`, `DSARRequestSubmitted`
-- **broadcasts:** `NotificationCreated` on `company.{id}.notifications`
+## Module-key
+
+`core.notifications`
+
+**Priority:** v1-core  
+**Panel:** app (bell renders in every panel)  
+**Permission prefix:** `core.notifications` (no permissions — per-user inbox, auth only)  
+**Tables:** `notifications`, `notification_preferences`  
+**Events:** fires none · consumes `ModuleActivated`, `CompanySubscriptionSuspended`, `DSARRequestSubmitted` · broadcasts `NotificationCreated` on `company.{id}.notifications`
 
 ## Sibling notes
 
@@ -47,6 +53,7 @@ In-app notification inbox and email alert delivery for all FlowFlex domains. Eve
 ## Test Checklist
 
 - [ ] Tenant isolation: a notification for company A never lands on company B's channel/user
+- [ ] Module gating: n/a (platform module, always active — always-free core)
 - [ ] Preference email=off suppresses mail channel, keeps in-app (and vice versa)
 - [ ] Unread count correct after mark-read / mark-all-read
 - [ ] `NotificationCreated` broadcast emitted on `company.{id}.notifications` on create
