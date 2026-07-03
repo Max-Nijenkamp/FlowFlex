@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # QBR Scheduling
@@ -40,6 +40,18 @@ Schedule a Quarterly Business Review for an account, track its status, and auto-
 - Consumes: none.
 - Feeds: `cs.analytics` (QBR cadence adherence).
 - Shared entity: `crm_accounts` (read-only) + owner (CSM).
+
+## Test Checklist
+
+### Unit
+- [ ] State machine: scheduled->held requires outcomes; scheduled->cancelled allowed; held is terminal
+
+### Feature (Pest)
+- [ ] `complete` writes outcomes + creates action items + auto-creates next QBR per cadence exactly once (locked transition)
+- [ ] Tenant isolation + permission: schedule/complete/cancel verbs enforced
+
+### Livewire
+- [ ] Schedule form validates account + date; complete action requires outcomes before transition
 
 ## Unknowns
 

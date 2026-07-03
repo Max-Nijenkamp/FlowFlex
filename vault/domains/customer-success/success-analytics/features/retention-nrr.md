@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Retention & NRR
@@ -40,6 +40,18 @@ Compute retention rate, churn rate, and net revenue retention over a date window
 - Consumes: `crm.contacts` lifecycle, `finance.invoicing` revenue (read APIs).
 - Feeds: nothing (leaf consumer; renders on the dashboard).
 - Shared entity: `crm_accounts` + invoices (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Retention/churn rate math over lifecycle windows; NRR arithmetic via brick/money integers (no float)
+
+### Feature (Pest)
+- [ ] NRR section requires `finance.invoicing` active; revenue read through the finance read API only
+- [ ] Tenant isolation: rates computed per company
+
+### Livewire
+- [ ] Retention/NRR widgets render; hidden without the analytics permission/module
 
 ## Unknowns
 

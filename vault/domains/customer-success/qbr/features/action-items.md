@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Action Items
@@ -40,6 +40,18 @@ Capture follow-up commitments from a QBR with owners and due dates, and remind o
 - Consumes: created by QBR completion ([[./qbr-scheduling|QBR Scheduling]]).
 - Feeds: `core.notifications` (overdue reminders).
 - Shared entity: owner user record (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Action item requires owner + due date; `reminded` guard blocks duplicate reminders
+
+### Feature (Pest)
+- [ ] `QbrActionReminderCommand` reminds overdue OPEN items once; completed items never reminded
+- [ ] Tenant isolation: items per company; edit gated
+
+### Livewire
+- [ ] Items relation manager adds/completes items; overdue badge renders
 
 ## Unknowns
 

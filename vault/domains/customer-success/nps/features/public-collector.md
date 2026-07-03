@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Public Collector
@@ -41,6 +41,18 @@ The unauthenticated, token-scoped page where a recipient submits their 0–10 sc
 - Consumes: recipient rows from [[./survey-send|Survey Send]].
 - Feeds: `core.notifications` (detractor alert); the stored response feeds [[./sentiment-scoring|Sentiment Scoring]] and `cs.health`.
 - Shared entity: none written; the pre-stored `contact_id`/`account_id` are read-only refs.
+
+## Test Checklist
+
+### Unit
+- [ ] Token validation: exists + unanswered; category promoter 9-10 / passive 7-8 / detractor 0-6
+
+### Feature (Pest)
+- [ ] Raced double-submit on one token stores one answer (locked token row); detractor raises CSM notification
+- [ ] Public endpoint rate-limited on guest guard *(assumed -- registry reconcile task)*; invalid token -> 404 without enumeration
+
+### Livewire
+- (none -- public unauthenticated page)
 
 ## Unknowns
 

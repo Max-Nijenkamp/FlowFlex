@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Health Scores — Architecture
@@ -56,6 +56,16 @@ Full queue context rules in [[../../../architecture/queue-jobs]].
 **Access contract:** every artifact above gates on `canAccess() = Auth::user()->can('cs.health.view-any') && BillingService::hasModule('cs.health')` per [[../../../architecture/filament-patterns]] #1 — custom pages state it explicitly. The configuration form additionally checks `cs.health.configure`. Public/portal surfaces use a guest or scoped-portal guard (Vue+Inertia per [[../../../architecture/ui-strategy]]).
 
 ---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `recalculate` score upserts | n-a | Single scheduled writer; one row per account per run, `is_current` flip in the same transaction |
+| Signal weight config edits | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| `breakdown` / `trend` | n-a | Read-only |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

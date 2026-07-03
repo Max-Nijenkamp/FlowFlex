@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Playbooks — Architecture
@@ -64,6 +64,17 @@ Full queue context in [[../../../architecture/queue-jobs]].
 **Access contract:** `canAccess() = Auth::user()->can('cs.playbooks.view-any') && BillingService::hasModule('cs.playbooks')` per [[../../../architecture/filament-patterns]] #1. Create/edit requires `cs.playbooks.manage`; launching a run requires `cs.playbooks.run`; completing steps requires `cs.playbooks.complete-steps`. No public/portal surface.
 
 ---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `run` (create run + steps) | Pessimistic | Unique-active-run constraint checked under `lockForUpdate` -- auto-trigger + manual launch race yields one run |
+| `CompletePlaybookStepAction` | Pessimistic | Step + run locked -- last-step close transitions the run to `completed` exactly once |
+| `cancel` | Pessimistic | Run state transition under lock per patterns/states |
+| Template/builder CRUD | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

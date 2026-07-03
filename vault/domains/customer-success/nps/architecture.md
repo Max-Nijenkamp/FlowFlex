@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # NPS — Architecture
@@ -60,6 +60,17 @@ Full queue context in [[../../../architecture/queue-jobs]]; email setup in [[../
 **Access contract:** panel artifacts gate on `canAccess() = Auth::user()->can('cs.nps.view-any') && BillingService::hasModule('cs.nps')` per [[../../../architecture/filament-patterns]] #1; Send requires `cs.nps.send`. The public collector is served **outside** any authenticated panel guard — token-scoped only.
 
 ---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `send` (materialise recipients + mail batch) | Pessimistic | Survey row locked during send -- raced double-send materialises recipients once (unique token rows, `sent_at` guard) |
+| `RecordNpsResponseAction` | Pessimistic | Token row locked -- answered-once guard under raced public submits |
+| Survey CRUD | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| Score / trend reads | n-a | Read-only |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

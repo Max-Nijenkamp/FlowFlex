@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Churn Risk — Architecture
@@ -65,6 +65,16 @@ The health→churn chain is the domain's key sequencing rule ([[../_index]]). Fu
 **Access contract:** `canAccess() = Auth::user()->can('cs.churn.view-any') && BillingService::hasModule('cs.churn')` per [[../../../architecture/filament-patterns]] #1. The resolve action additionally requires `cs.churn.resolve`. No public/portal surface.
 
 ---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `evaluate` open/update/resolve risk rows | n-a | Single scheduled writer chained after health recalc; per-account upsert |
+| Manual `resolve` | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] -- raced auto-evaluate vs manual resolve converges next run |
+| `RunRecoveryPlaybookAction` | n-a | Delegates to `PlaybookService::run`, deduped there by unique-active-run |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

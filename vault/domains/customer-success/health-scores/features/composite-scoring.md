@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Composite Scoring
@@ -42,6 +42,19 @@ Combine several weighted signals into a single 0–100 health score per customer
 - Consumes: none as events v1 — signals are pulled on the nightly schedule *(assumed)*.
 - Feeds: exposes `HealthScoreService` breakdown/trend as an internal read API to `cs.churn`, `cs.qbr`, `cs.analytics`.
 - Shared entity: `crm_accounts` (owned by `crm.contacts`) — read-only reference the score is keyed on.
+
+## Test Checklist
+
+### Unit
+- [ ] Weight renormalisation over active signals only; score bounded 0-100; factor contribution = value x weight
+
+### Feature (Pest)
+- [ ] `recalculate` upserts one current row per account per run; prior row kept for trend
+- [ ] Inactive signal module -> excluded from weights, no query, no error
+- [ ] Tenant isolation: scores per company
+
+### Livewire
+- [ ] Breakdown view renders per-factor contributions; hidden without the health permission/module
 
 ## Unknowns
 

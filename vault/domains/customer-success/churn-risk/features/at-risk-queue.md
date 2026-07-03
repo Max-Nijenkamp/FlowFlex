@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # At-Risk Queue
@@ -41,6 +41,18 @@ A severity-sorted worklist of open churn risks so CSMs can triage and act, with 
 - Consumes: none (rows are produced by [[./rule-based-detection|detection]]).
 - Feeds: `cs.playbooks` (one-click recovery run); `cs.analytics` reads open-risk counts + recovery rate.
 - Shared entity: `crm_accounts` (read-only display + owner).
+
+## Test Checklist
+
+### Unit
+- [ ] Queue ordering: severity desc, then recency *(assumed)*; resolved risks excluded
+
+### Feature (Pest)
+- [ ] One-click recovery launch delegates to `PlaybookService::run` only when `cs.playbooks` active (soft-dep hidden otherwise)
+- [ ] Tenant isolation + permission: queue lists own-company risks, resolve gated
+
+### Livewire
+- [ ] Queue page canAccess() explicit; resolve action requires note *(assumed)*; playbook button hidden when module inactive
 
 ## Unknowns
 

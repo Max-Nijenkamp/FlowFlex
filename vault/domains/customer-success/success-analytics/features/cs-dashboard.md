@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # CS Dashboard
@@ -40,6 +40,19 @@ The single Customer Success command view: health distribution, NPS trend, at-ris
 - Consumes: read APIs of every other CS module + finance + crm.
 - Feeds: nothing (leaf consumer).
 - Shared entity: none written; reads reference `crm_accounts` + each module's metrics.
+
+## Test Checklist
+
+### Unit
+- [ ] Cache key embeds company + window; soft sections null/omitted when source module inactive
+
+### Feature (Pest)
+- [ ] Export cites the `exports` limiter and requires the analytics view permission
+- [ ] Inactive nps/playbooks/churn/invoicing -> section omitted, no query, no error
+- [ ] Tenant isolation on every aggregate
+
+### Livewire
+- [ ] Dashboard page canAccess() explicit; date filter re-scopes; widgets render conditionally
 
 ## Unknowns
 

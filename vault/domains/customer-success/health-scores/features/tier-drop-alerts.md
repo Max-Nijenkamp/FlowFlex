@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Tier-Drop Alerts
@@ -41,6 +41,18 @@ When an account's health tier drops (green→amber, amber→red, or green→red)
 - Consumes: none — driven by this module's own recalc step.
 - Feeds: `core.notifications` (CSM alert on downward tier change). `cs.churn` independently reads the same score signal on its chained nightly run.
 - Shared entity: `crm_accounts.owner_id` (owned by `crm.contacts`) — read-only, resolves the CSM recipient.
+
+## Test Checklist
+
+### Unit
+- [ ] Drop detection: green->amber, amber->red, green->red each detected once vs prior current row
+
+### Feature (Pest)
+- [ ] CSM notified once per drop; unchanged or improving tier sends nothing; re-drop after recovery alerts again
+- [ ] Tenant isolation: notification targets the account's own-company CSM
+
+### Livewire
+- (none -- background alert path)
 
 ## Unknowns
 

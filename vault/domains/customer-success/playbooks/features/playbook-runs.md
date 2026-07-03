@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Playbook Runs
@@ -40,6 +40,19 @@ Launch a playbook against an account, track step completion, and close the run w
 - Consumes: launched by [[./auto-triggers|Auto Triggers]] and by `cs.churn` one-click recovery (`RunRecoveryPlaybookAction`).
 - Feeds: `core.notifications` (assignments, reminders); `cs.analytics` reads run/step completion for playbook effectiveness.
 - Shared entity: `crm_accounts` (read-only) + owner (assignee).
+
+## Test Checklist
+
+### Unit
+- [ ] Step materialisation: `due_date = started_at + day_offset`, assignee from `owner_role` (CSM = account owner *(assumed)*)
+
+### Feature (Pest)
+- [ ] Completing the last open step transitions the run to `completed` exactly once under raced completions
+- [ ] Cancel stops reminders; duplicate active run for playbook+account rejected
+- [ ] Tenant isolation + permission: run/complete/cancel verbs enforced
+
+### Livewire
+- [ ] Run view lists steps with due dates; complete action gated to assignee/CSM; cancel confirms
 
 ## Unknowns
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Sentiment Scoring
@@ -41,6 +41,18 @@ Compute the NPS metric and expose per-account sentiment as a read API for health
 - Consumes: none.
 - Feeds: `cs.health` (sentiment factor), `cs.analytics` (NPS trend) — both via `latestForAccount` / `trend` read APIs.
 - Shared entity: `crm_accounts` (read-only key on responses).
+
+## Test Checklist
+
+### Unit
+- [ ] NPS = %promoters - %detractors over ANSWERED rows only
+
+### Feature (Pest)
+- [ ] `latestForAccount` returns the newest answered response for the health read API
+- [ ] Tenant isolation: scores computed per company
+
+### Livewire
+- [ ] Survey results view shows score + distribution; hidden without the nps permission/module
 
 ## Unknowns
 

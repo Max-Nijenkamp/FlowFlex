@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Survey Send
@@ -40,6 +40,19 @@ Create an NPS survey, choose its audience, and send it as batched, token-scoped 
 - Consumes: none.
 - Feeds: recipient rows consumed by the [[./public-collector|Public Collector]]; delivery via `foundation.email`.
 - Shared entity: `crm_contacts` / `crm_accounts` (read-only audience) + segments (via `crm.segments`).
+
+## Test Checklist
+
+### Unit
+- [ ] Audience resolution (segment / account_ids) -> recipient contacts; suppression honoured *(assumed)*
+
+### Feature (Pest)
+- [ ] `send` materialises one token row per recipient and dispatches batched queued mail; double-send guarded by `sent_at` + lock
+- [ ] Send path cites the queued mail throttle (`panel-action` on the trigger)
+- [ ] Tenant isolation + permission: send gated, audience own-company only
+
+### Livewire
+- [ ] Survey form validates audience; send action confirms + reports recipient count
 
 ## Unknowns
 

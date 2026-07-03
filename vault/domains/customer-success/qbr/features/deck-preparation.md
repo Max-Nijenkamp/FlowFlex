@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Deck Preparation
@@ -40,6 +40,18 @@ Auto-assemble a data-backed review deck by snapshotting active-source metrics in
 - Consumes: read-only signals from `cs.health`, `support.tickets`, crm.
 - Feeds: nothing downstream (the deck is presentational).
 - Shared entity: `crm_accounts` (read-only) + the source metrics.
+
+## Test Checklist
+
+### Unit
+- [ ] Snapshot composition: inactive soft-dep sections omitted (not zeroed) from `deck_data`
+
+### Feature (Pest)
+- [ ] `prepareDeck` snapshots current metrics; re-prepare overwrites the snapshot; sources read via read APIs only (no cross-domain writes)
+- [ ] Tenant isolation: deck data from own-company sources only
+
+### Livewire
+- [ ] Prepare action gated; deck sections render conditionally
 
 ## Unknowns
 

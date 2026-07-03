@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Auto Triggers
@@ -41,6 +41,19 @@ Automatically launch the right playbook when a lifecycle signal fires — health
 - Consumes: read signals from `cs.churn`/`cs.health`, `crm.contracts`, `crm.contacts` (poll, not events v1).
 - Feeds: creates runs consumed by [[./playbook-runs|Playbook Runs]]; notifications via `core.notifications`.
 - Shared entity: `crm_accounts` + contract renewal dates (read-only).
+
+## Test Checklist
+
+### Unit
+- [ ] Trigger mapping: health-drop / renewal-window / new-customer each resolves the mapped playbook
+
+### Feature (Pest)
+- [ ] Daily poll firing twice creates no duplicate run (unique-active-run under lock)
+- [ ] Inactive signal module -> trigger skipped silently
+- [ ] Tenant isolation: triggers evaluate per company
+
+### Livewire
+- (none -- scheduled command)
 
 ## Unknowns
 

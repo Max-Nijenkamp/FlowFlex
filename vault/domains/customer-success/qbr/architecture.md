@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # QBR — Architecture
@@ -55,6 +55,18 @@ Deck prep may run on demand (button) or as a pre-QBR scheduled task *(assumed)*.
 **Access contract:** `canAccess() = Auth::user()->can('cs.qbr.view-any') && BillingService::hasModule('cs.qbr')` per [[../../../architecture/filament-patterns]] #1. Create/schedule + record-outcomes require `cs.qbr.manage`. No public/portal surface.
 
 ---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `complete` (held + action items + next QBR) | Pessimistic | State transition scheduled->held under lock -- outcomes written and next-cadence QBR created exactly once |
+| `schedule` / cancel | Pessimistic | State transitions per patterns/states |
+| `prepareDeck` snapshot | Optimistic | Deck data save; stale re-snapshot overwrites acceptably per [[../../../architecture/patterns/optimistic-locking]] |
+| Action-item edits | Optimistic | Version-checked save |
+| Reminder command | n-a | Single scheduled writer with `reminded` guard |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Success Analytics — Architecture
@@ -51,6 +51,15 @@ Heavy aggregations are cached per [[../../../architecture/caching]] to keep the 
 **Access contract:** `canAccess() = Auth::user()->can('cs.analytics.view') && BillingService::hasModule('cs.analytics')` per [[../../../architecture/filament-patterns]] #1 — the custom page states it explicitly. Soft sections are hidden when their source module is inactive. No public/portal surface.
 
 ---
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| All metric/dashboard/export paths | n-a | Read-only; owns no tables, writes nothing (data-ownership reference module) |
+| Metrics cache writes | n-a | TTL-keyed, idempotent recompute |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Rule-Based Detection
@@ -41,6 +41,20 @@ Deterministic, explainable churn-risk detection over existing CS/finance signals
 - Consumes: none as events v1 — chained after the health recalc on schedule.
 - Feeds: `core.notifications` (CSM at-risk alert); exposes open risks to `cs.analytics` (at-risk count, recovery rate).
 - Shared entity: `crm_accounts` (read-only, keyed on) + `crm_accounts.owner_id` (CSM recipient).
+
+## Test Checklist
+
+### Unit
+- [ ] `risk_level` derivation: 1/2/3/>=4 factors -> low/medium/high/critical *(assumed)*; critical single factor escalates
+- [ ] Each detection rule evaluates its read-API signal correctly (red tier, >=2 tier drop, detractor, overdue invoice, stale engagement)
+
+### Feature (Pest)
+- [ ] Alert fires only on NEW open risk or escalation -- same level re-detected alerts zero times
+- [ ] Soft-dep signals (nps, invoicing) skipped without error when module inactive
+- [ ] Tenant isolation: evaluation scoped per company
+
+### Livewire
+- (none -- background evaluation; queue UI covered in at-risk-queue)
 
 ## Unknowns
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Playbook Builder
@@ -40,6 +40,18 @@ Define a reusable playbook: name, trigger, and an ordered list of steps with rol
 - Consumes: none.
 - Feeds: definitions consumed by [[./playbook-runs|Playbook Runs]] and [[./auto-triggers|Auto Triggers]].
 - Shared entity: none written; owner-role resolution happens at run time against `crm_accounts.owner_id`.
+
+## Test Checklist
+
+### Unit
+- [ ] Step validation: ordered list, `day_offset` >= 0, `owner_role` in allowed set
+
+### Feature (Pest)
+- [ ] Template edits do not mutate steps of already-running runs (steps are materialised copies)
+- [ ] Tenant isolation + permission: builder gated, templates per company
+
+### Livewire
+- [ ] Builder repeater orders steps; validates offsets/roles; hidden without permission/module
 
 ## Unknowns
 
