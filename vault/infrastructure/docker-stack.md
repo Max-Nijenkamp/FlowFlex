@@ -4,14 +4,14 @@ type: infrastructure
 build-status: planned
 status: unverified
 color: "#F97316"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Docker Stack — Local Development
 
 The whole app runs as a **9-service** docker-compose stack defined in the repo-root
 `docker-compose.yml`. The browser hits **nginx on host `:8080`**; everything else talks over
-the internal `flowflex` bridge network. Verified against `docker-compose.yml` on 2026-06-20.
+the internal `flowflex` bridge network. Verified against `docker-compose.yml` on 2026-06-20; stack rebuilt from this spec and re-verified live on 2026-07-03 (all 9 up, pgsql migrate clean, nginx 200, redis auth ping).
 
 > [!note] Audit correction
 > Earlier vault notes said "eight services" and listed `LocalAdminSeeder`/`LocalCompanySeeder`

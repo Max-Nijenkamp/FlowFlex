@@ -2,7 +2,7 @@
 domain: foundation
 module: docker-environment
 type: module
-build-status: planned
+build-status: in-progress
 status: unverified
 color: "#4ADE80"
 updated: 2026-07-03
@@ -71,9 +71,9 @@ docker compose exec mailpit ...   # inspect captured mail (8025 not published)
 - [ ] Tenant isolation: n/a — local-dev infrastructure owns no tenant data (isolation lives in [[../multi-tenancy-layer/_module|multi-tenancy-layer]])
 - [ ] Module gating: n/a — `foundation.docker` is always-on local-dev infra, not a billable/gateable module
 - [x] `docker compose up -d` brings all 9 services up (postgres/redis healthchecks gate `app`)
-- [x] `migrate --seed` runs clean (M0 exit gate)
+- [x] `migrate` runs clean against container pgsql (verified rebuild 2026-07-03); `--seed` completes the M0 gate once [[../permissions-seed/_module|permissions-seed]] ships LocalDevSeeder
 - [x] App reachable at `localhost:8080`
-- [ ] Mailpit/Reverb only reachable internally (publish a free host port for browser work)
+- [x] Mailpit/Reverb only reachable internally (verified 2026-07-03 — host :8081 unreachable; publish a free port temporarily for browser work)
 
 No DTOs / Services / Filament / Permissions — local-dev infrastructure only.
 

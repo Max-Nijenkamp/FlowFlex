@@ -1,0 +1,153 @@
+# FlowFlex local-dev stack — 9 services.
+# Spec: vault/infrastructure/docker-stack.md (authoritative) + vault/domains/foundation/docker-environment/.
+# Only nginx :8080, postgres :5432, meilisearch :7700 are host-published.
+
+x-app-env: &app-env
+  APP_ENV: local
+  APP_DEBUG: "true"
+  APP_URL: http://localhost:8080
+  APP_KEY: ${APP_KEY:-base64:Zmxvd2ZsZXgtbG9jYWwtZGV2LWtleS0zMmJ5dGVzISE=}
+  DB_CONNECTION: pgsql
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_DATABASE: flowflex
+  DB_USERNAME: flowflex
+  DB_PASSWORD: secret
+  REDIS_CLIENT: phpredis
+  REDIS_HOST: redis
+  REDIS_PASSWORD: secret
+  CACHE_STORE: redis
+  QUEUE_CONNECTION: redis
+  SESSION_DRIVER: redis
+  MAIL_MAILER: smtp
+  MAIL_HOST: mailpit
+  MAIL_PORT: "1025"
+  MAIL_FROM_ADDRESS: dev@flowflex.test
+  SCOUT_DRIVER: meilisearch
+  MEILISEARCH_HOST: http://meilisearch:7700
+  MEILISEARCH_KEY: masterKey
+  BROADCAST_CONNECTION: reverb
+  REVERB_HOST: reverb
+  REVERB_PORT: "8081"
+
+x-app-build: &app-build
+  build:
+    context: ./docker/php
+    dockerfile: Dockerfile
+  volumes:
+    - ./app:/var/www/html
+  networks:
+    - flowflex
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+
+services:
+  app:
+    <<: *app-build
+    container_name: flowflex_app
+    environment: *app-env
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /var/www/html
+          ignore:
+            - vendor/
+            - node_modules/
+
+  nginx:
+    image: nginx:alpine
+    container_name: flowflex_nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./app:/var/www/html:ro
+    networks:
+      - flowflex
+    depends_on:
+      - app
+
+  postgres:
+    image: postgres:17
+    container_name: flowflex_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: flowflex
+      POSTGRES_USER: flowflex
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - flowflex
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flowflex -d flowflex"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:8-alpine
+    container_name: flowflex_redis
+    command: redis-server --requirepass secret
+    networks:
+      - flowflex
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a secret ping | grep PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.10
+    container_name: flowflex_meilisearch
+    ports:
+      - "7700:7700"
+    environment:
+      MEILI_MASTER_KEY: masterKey
+      MEILI_ENV: development
+    volumes:
+      - meili:/meili_data
+    networks:
+      - flowflex
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: flowflex_mailpit
+    expose:
+      - "1025"
+      - "8025"
+    networks:
+      - flowflex
+
+  horizon:
+    <<: *app-build
+    container_name: flowflex_horizon
+    environment: *app-env
+    command: php artisan horizon
+
+  scheduler:
+    <<: *app-build
+    container_name: flowflex_scheduler
+    environment: *app-env
+    command: php artisan schedule:work
+
+  reverb:
+    <<: *app-build
+    container_name: flowflex_reverb
+    environment: *app-env
+    command: php artisan reverb:start --host=0.0.0.0 --port=8081
+    expose:
+      - "8081"
+
+networks:
+  flowflex:
+    driver: bridge
+
+volumes:
+  pgdata:
+  meili:
