@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Ticket Types
@@ -39,6 +39,18 @@ Define the ticket types offered for an event: pricing, quantity, and sales windo
 - Consumes: nothing.
 - Feeds: ticket types read by the public purchase flow + landing.
 - Shared entity: `ev_events` (read).
+
+## Test Checklist
+
+### Unit
+- [ ] Ticket-type validation: price integer minor units, quantity >= sold, sales window sane
+
+### Feature (Pest)
+- [ ] Quantity reduction below `quantity_sold` rejected; window closes purchase path
+- [ ] Tenant isolation + permission on type CRUD
+
+### Livewire
+- [ ] Type form validates; sold-count column read-only; gated by the tickets permission
 
 ## Unknowns
 

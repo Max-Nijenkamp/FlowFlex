@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Event CRUD & Lifecycle
@@ -41,6 +41,19 @@ Create, edit, publish, and cancel events; the scheduled lifecycle command advanc
 - Consumes: nothing.
 - Feeds: a published event is the anchor consumed (read) by registrations, speakers, sponsors, analytics.
 - Shared entity: `ev_venues` (owned by [[../../venues/_module|Venues]]), read via its service.
+
+## Test Checklist
+
+### Unit
+- [ ] State machine: draft->published->live->completed; cancel allowed pre-live *(per spec)*; invalid jumps rejected
+
+### Feature (Pest)
+- [ ] Publish/cancel locked transitions; cancel notifies registrants once via registrations service
+- [ ] `EventLifecycleCommand` re-run is a no-op on already-transitioned events (status+time guards)
+- [ ] Tenant isolation + permission verbs on publish/cancel
+
+### Livewire
+- [ ] Event form validates dates/venue; publish + cancel actions gated with confirm
 
 ## Unknowns
 

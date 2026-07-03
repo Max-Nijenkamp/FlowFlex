@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Speaker Directory
@@ -39,6 +39,17 @@ The reusable, company-level speaker records shared across events.
 - Consumes: nothing.
 - Feeds: profiles referenced by [[session-assignment|Session Assignment]] + public landing.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Speaker record validation (name, bio purified, photo upload contract)
+
+### Feature (Pest)
+- [ ] Directory reusable across events (company-level records); tenant isolation enforced
+
+### Livewire
+- [ ] Speaker resource CRUD; hidden without permission or `events.speakers` inactive
 
 ## Unknowns
 

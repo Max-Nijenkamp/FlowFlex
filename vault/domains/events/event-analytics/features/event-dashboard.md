@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Event Dashboard
@@ -39,6 +39,18 @@ The analytics dashboard: registration funnel, attendance, revenue, and across-ev
 - Consumes: read aggregation across all sibling Events modules.
 - Feeds: nothing.
 - Shared entity: reads sibling read models; owns none.
+
+## Test Checklist
+
+### Unit
+- [ ] Funnel math: registrations -> confirmed -> attended rates; revenue via brick/money integers
+
+### Feature (Pest)
+- [ ] Soft sections (tickets/sponsors) omitted without error when module inactive
+- [ ] Tenant isolation: metrics per company; export/permission gated
+
+### Livewire
+- [ ] Dashboard page canAccess() explicit; event selector + range filter re-scope widgets
 
 ## Unknowns
 

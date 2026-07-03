@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Discount Codes
@@ -39,6 +39,18 @@ Per-event discount codes (percent or fixed) applied at purchase, with usage limi
 - Consumes: nothing.
 - Feeds: applied during [[ticket-purchase|Ticket Purchase]].
 - Shared entity: `ev_events` (read).
+
+## Test Checklist
+
+### Unit
+- [ ] Percent vs fixed discount math (brick/money); validity window + usage limit checks
+
+### Feature (Pest)
+- [ ] Raced purchases cannot exceed the code's usage limit (atomic increment under lock)
+- [ ] Tenant isolation: codes resolve within the owning event/company
+
+### Livewire
+- [ ] Discount CRUD validates value/limits; gated by the tickets permission
 
 ## Unknowns
 

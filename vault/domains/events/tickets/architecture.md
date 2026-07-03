@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Tickets — Architecture
@@ -41,6 +41,17 @@ sequenceDiagram
 ## Webhook Verification
 
 - The inbound Stripe webhook **verifies the `Stripe-Signature` header (signing secret)** before processing payment-confirmation events (per [[../../../build/security-audit-2026-06-11]], HIGH). Webhook handled by shared Stripe routing *(assumed: per-domain event types)*.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `purchase` sold-count increment | Pessimistic | Atomic `quantity_sold` increment under `lockForUpdate` -- oversell-proof (inventory-capacity tier); Stripe idempotency key dedupes intents |
+| Webhook success handling | Pessimistic | Purchase row locked -- paid transition + confirm + PDF queue fire once per webhook retry |
+| `refund` | Pessimistic | Money mutation: Stripe refund (idempotency key) + sold-count decrement + cancel in one locked transaction |
+| Ticket-type / discount CRUD | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Filament Artifacts
 

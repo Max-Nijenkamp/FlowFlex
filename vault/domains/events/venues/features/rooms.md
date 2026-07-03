@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Rooms
@@ -39,6 +39,17 @@ Rooms within a venue, used by multi-track events for session room assignment.
 - Consumes: nothing.
 - Feeds: session room picker in [[../../events/_module|Events]].
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Room validation: name unique per venue *(assumed)*, capacity int
+
+### Feature (Pest)
+- [ ] Session room picker lists only the event venue's rooms; tenant isolation enforced
+
+### Livewire
+- [ ] Rooms relation manager CRUD; gated by the venues permission
 
 ## Unknowns
 

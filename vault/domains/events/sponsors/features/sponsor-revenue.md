@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Sponsor Revenue
@@ -38,6 +38,17 @@ A per-event revenue summary of sponsorship value, split committed vs. paid by ti
 - Consumes: nothing.
 - Feeds: sponsorship revenue → [[../../event-analytics/_module|Event Analytics]].
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Revenue split committed vs paid per tier via brick/money integers
+
+### Feature (Pest)
+- [ ] Summary reads own-company sponsors only; reflects invoice-paid state when finance active
+
+### Livewire
+- [ ] Revenue widget renders split; hidden without permission/module
 
 ## Unknowns
 

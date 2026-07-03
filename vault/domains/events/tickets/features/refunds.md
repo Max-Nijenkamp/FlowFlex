@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Refunds
@@ -38,6 +38,19 @@ Refund a paid ticket: Stripe refund, registration cancellation, and sold-count d
 - Consumes: Stripe refund webhook (external).
 - Feeds: `RegistrationService::cancel` (registrations) → waitlist promotion.
 - Shared entity: `ev_registrations` (written only by Registrations).
+
+## Test Checklist
+
+### Unit
+- [ ] Refund math in minor units; idempotency key derivation
+
+### Feature (Pest)
+- [ ] Refund: Stripe refund + registration cancel + `quantity_sold` decrement in one locked transaction; retry with same key refunds once
+- [ ] Permission: refund verb enforced; `panel-action` limiter cited on the money mutation
+- [ ] Tenant isolation: refunds on own-company purchases only
+
+### Livewire
+- [ ] Refund action confirms + reports outcome; hidden without the refund permission
 
 ## Unknowns
 

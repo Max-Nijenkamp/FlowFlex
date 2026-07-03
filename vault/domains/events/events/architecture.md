@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Events — Architecture
@@ -60,6 +60,16 @@ Public landing uses a guest guard (Vue + Inertia per [[../../../architecture/ui-
 ## Events
 
 None fired or consumed at the module level. Cross-domain reactions (registrations, CRM) originate in the **registrations** module. See [[../../../architecture/event-bus]].
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `publish` / `cancel` | Pessimistic | spatie state transitions under `lockForUpdate` per patterns/states; cancel cascades registrant notification once |
+| `EventLifecycleCommand` published->live->completed | n-a | Single scheduled writer; status+time guards idempotent |
+| Event/session CRUD | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Search & Realtime
 

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Sponsors — Architecture
@@ -45,6 +45,17 @@ Logos render on the public landing grouped by tier.
 ## Events
 
 None fired or consumed. Finance/CRM interactions are read/command via their services. See [[../../../architecture/event-bus]].
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `CreateSponsorInvoiceAction` | Pessimistic | Sponsor row locked -- Finance bridge fires once, `fin_invoice_id` set exactly once (money path) |
+| Sponsor status transitions | Pessimistic | Per patterns/states convention |
+| Sponsor/deliverable CRUD | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| `DeliverableReminderCommand` | n-a | Single scheduled writer, `reminded` flag guard |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Money
 

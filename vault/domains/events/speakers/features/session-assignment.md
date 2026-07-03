@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Session Assignment
@@ -39,6 +39,18 @@ Attach speakers to event sessions with an invited/confirmed/declined status.
 - Consumes: nothing.
 - Feeds: confirmed assignments render on the public landing + agenda.
 - Shared entity: `ev_sessions` (owned by [[../../events/_module|Events]], read-only here).
+
+## Test Checklist
+
+### Unit
+- [ ] Duplicate `(session, speaker)` rejected; status set invited on assign
+
+### Feature (Pest)
+- [ ] Confirm via mail link or admin flips invited->confirmed once under race; declined recorded
+- [ ] Tenant isolation: assignments within own-company events only
+
+### Livewire
+- [ ] Assign action validates duplicates; status badges render; gated by the speakers permission
 
 ## Unknowns
 

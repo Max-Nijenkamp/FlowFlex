@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Ticket Purchase
@@ -39,6 +39,19 @@ The public paid-ticket flow: Stripe payment, atomic sold-count, registration con
 - Consumes: Stripe webhook (external).
 - Feeds: `RegistrationService::confirm` (registrations); revenue feeds [[../../event-analytics/_module|Event Analytics]].
 - Shared entity: `ev_registrations` (written only by Registrations).
+
+## Test Checklist
+
+### Unit
+- [ ] Price + discount computed via brick/money; sales-window enforcement
+
+### Feature (Pest)
+- [ ] Raced purchases of the last ticket: exactly one succeeds (`quantity_sold` locked increment), rest rejected
+- [ ] Webhook (signature-verified) marks paid + confirms registration + queues PDF ticket once across retries
+- [ ] Public purchase rate-limited on guest guard *(assumed)*; tenant isolation on ticket types
+
+### Livewire
+- (none -- public Stripe flow; admin views covered elsewhere)
 
 ## Unknowns
 

@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Registrations — Architecture
@@ -41,6 +41,17 @@ registered → confirmed → attended
 ## Atomicity
 
 - Capacity is enforced with an atomic check against `ev_events.capacity` (row lock / conditional update) so concurrent registrations at the limit waitlist rather than oversell.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `register` capacity decision | Pessimistic | Atomic capacity check under `lockForUpdate` in transaction (see ## Atomicity) -- raced sign-ups never oversell; overflow -> waitlisted |
+| `cancel` + FIFO waitlist promotion | Pessimistic | Registration + waitlist rows locked -- one promotion per freed seat |
+| `CheckInAction` | Pessimistic | Confirmed->attended transition locked -- double scan checks in once |
+| `MarkNoShowsCommand` | n-a | Single scheduled writer, status-guarded |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Events
 

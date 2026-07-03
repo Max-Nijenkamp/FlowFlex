@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Speakers — Architecture
@@ -44,6 +44,16 @@ Public submit + public profiles (confirmed only) use a guest/token guard (Vue + 
 ## Events
 
 None fired or consumed. See [[../../../architecture/event-bus]].
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| `AssignSpeakerAction` | n-a | Unique `(session, speaker)` insert -- raced assigns yield one row |
+| `ConfirmSpeakerAction` | Pessimistic | invited->confirmed transition locked -- mail link + admin race resolves once |
+| Speaker CRUD / public bio submit | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Uploads
 

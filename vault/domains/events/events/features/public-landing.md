@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Public Landing Page
@@ -41,6 +41,18 @@ The unauthenticated event landing page: details, agenda, speakers, sponsors, and
 - Consumes: nothing.
 - Feeds: the embedded form triggers `RegistrationService::register` (registrations module), which fires `EventRegistrationReceived`.
 - Shared entity: reads Speakers, Sponsors, Tickets read models for display.
+
+## Test Checklist
+
+### Unit
+- [ ] Landing renders published/live events only; draft/cancelled -> 404
+
+### Feature (Pest)
+- [ ] Page composes agenda, confirmed speakers, sponsors; registration form embedded when capacity remains
+- [ ] Public route rate-limited on guest guard *(assumed -- registry reconcile task)*; tenant isolation via company slug
+
+### Livewire
+- (none -- public surface)
 
 ## Unknowns
 

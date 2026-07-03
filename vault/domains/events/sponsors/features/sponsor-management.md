@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Sponsor Management
@@ -39,6 +39,18 @@ Sponsor records per event: tier, logo, contact, amount, and the optional Finance
 - Consumes: nothing.
 - Feeds: revenue → [[sponsor-revenue|Sponsor Revenue]] widget; logos → public landing.
 - Shared entity: `crm_contacts` (CRM), `fin_invoices` (Finance) — both referenced, not written.
+
+## Test Checklist
+
+### Unit
+- [ ] Sponsor validation: tier, amount integer minor units (brick/money), logo upload contract
+
+### Feature (Pest)
+- [ ] Finance bridge visible only when `finance.invoicing` active; invoice drafted once (locked), `fin_invoice_id` stored
+- [ ] Tenant isolation + permission on sponsor CRUD
+
+### Livewire
+- [ ] Sponsor form validates; invoice action hidden when finance inactive; gated by the sponsors permission
 
 ## Unknowns
 

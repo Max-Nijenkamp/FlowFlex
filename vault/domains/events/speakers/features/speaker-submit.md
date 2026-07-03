@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Speaker Self-Submit
@@ -39,6 +39,18 @@ A signed-token public form for speakers to supply/update their bio and photo wit
 - Consumes: nothing.
 - Feeds: updates the directory record used by assignments + landing.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Signed token validation: expiry + speaker binding; bio purified
+
+### Feature (Pest)
+- [ ] Valid token updates bio/photo without auth; invalid/expired token -> 403/404; photo follows the upload contract (mime/size)
+- [ ] Public endpoint rate-limited on guest guard *(assumed)*; token never grants access to other speakers
+
+### Livewire
+- (none -- public signed-token form)
 
 ## Unknowns
 

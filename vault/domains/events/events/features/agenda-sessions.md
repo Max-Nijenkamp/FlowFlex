@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Agenda & Sessions
@@ -40,6 +40,18 @@ Multi-session events: a schedule of sessions within the event window, each with 
 - Consumes: nothing (reads Venues rooms + Speakers assignments read-only).
 - Feeds: sessions are read by [[../../speakers/_module|Speakers]] (assignment target) and the public landing.
 - Shared entity: `ev_venue_rooms` (owned by Venues).
+
+## Test Checklist
+
+### Unit
+- [ ] Session validation: within event window, room from the event's venue, agenda order persisted
+
+### Feature (Pest)
+- [ ] Sessions CRUD company-scoped + permission-gated; room picker reads venue rooms
+- [ ] Tenant isolation on sessions
+
+### Livewire
+- [ ] Agenda relation manager orders sessions; validates time window/room
 
 ## Unknowns
 

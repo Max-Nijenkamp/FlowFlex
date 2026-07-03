@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Venues — Architecture
@@ -29,6 +29,15 @@ public static function canAccess(): bool
         && BillingService::hasModule('events.venues');
 }
 ```
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| Venue / room CRUD | Optimistic | Version-checked save per [[../../../architecture/patterns/optimistic-locking]] |
+| Delete guard | n-a | Blocked while an upcoming event references the venue *(assumed)* -- checked in the delete action |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Events
 

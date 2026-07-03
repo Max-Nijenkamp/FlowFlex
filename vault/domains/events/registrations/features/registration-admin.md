@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Registration Admin
@@ -41,6 +41,19 @@ The internal attendee list: per-event filtering, status management, waitlist vis
 - Consumes: nothing.
 - Feeds: cancel → same-module waitlist promotion; counts feed [[../../event-analytics/_module|Event Analytics]].
 - Shared entity: `ev_events` (read for the per-event filter).
+
+## Test Checklist
+
+### Unit
+- [ ] Status filters + waitlist ordering (FIFO) rendered correctly
+
+### Feature (Pest)
+- [ ] Cancel promotes the first waitlisted attendee once and notifies them
+- [ ] Export cites the `exports` limiter; permission verbs enforced
+- [ ] Tenant isolation on attendee lists
+
+### Livewire
+- [ ] Resource filters by event/status; cancel + promote actions gated; hidden without permission/module
 
 ## Unknowns
 

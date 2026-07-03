@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Venue Directory
@@ -39,6 +39,17 @@ The reusable, company-level venue records used by in-person events.
 - Consumes: nothing.
 - Feeds: venues referenced by [[../../events/_module|Events]] (`venue_id`); address renders on the landing.
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Venue validation: address fields, capacity
+
+### Feature (Pest)
+- [ ] Delete blocked while an upcoming event references the venue *(assumed)*; tenant isolation enforced
+
+### Livewire
+- [ ] Venue resource CRUD; delete guard surfaces a clear error; hidden without permission/module
 
 ## Unknowns
 

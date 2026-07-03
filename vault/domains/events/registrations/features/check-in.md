@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Check-In
@@ -34,6 +34,18 @@ On-site attendee check-in via QR scan or manual name search; confirmed-only.
 - Owns / writes: `ev_registrations` only (`status`, `checked_in_at`).
 - Reads: own registrations scoped to the selected event.
 - Cross-domain writes: NONE ([[../../../../security/data-ownership]]).
+
+## Test Checklist
+
+### Unit
+- [ ] QR payload resolves registration; confirmed-only rule (pending/waitlisted/cancelled rejected)
+
+### Feature (Pest)
+- [ ] Double scan checks in once (locked transition); manual name search path equivalent
+- [ ] Tenant isolation: QR from another company's event rejected
+
+### Livewire
+- [ ] Check-in page canAccess() explicit; scan + search flows update status live
 
 ## Unknowns
 

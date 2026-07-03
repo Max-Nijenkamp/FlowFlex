@@ -5,7 +5,7 @@ type: architecture
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Event Analytics — Architecture
@@ -42,6 +42,15 @@ public static function canAccess(): bool
 ```
 
 The custom dashboard page states the contract explicitly.
+
+## Concurrency
+
+| Write path | Tier | Mechanism |
+|---|---|---|
+| All dashboard/comparison paths | n-a | Pure read service; no writes |
+| Metrics cache writes | n-a | TTL-keyed, idempotent recompute |
+
+Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]].
 
 ## Events
 

@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Public Registration
@@ -42,6 +42,19 @@ The public attendee sign-up form embedded on the event landing page, with atomic
 - Consumes: nothing.
 - Feeds: `EventRegistrationReceived` → consumed by [[../../../crm/contacts/_module|crm.contacts]] (find-or-create contact).
 - Shared entity: `crm_contacts` (written only by CRM), `ev_tickets` (read from Tickets).
+
+## Test Checklist
+
+### Unit
+- [ ] Capacity decision: seat left -> registered; full -> waitlisted; free event auto-confirms
+
+### Feature (Pest)
+- [ ] N raced sign-ups for the last seat produce exactly one registered + rest waitlisted (atomic lock)
+- [ ] Free registration sends confirm mail + .ics; paid stays pending until ticket purchase; `EventRegistrationReceived` fired with scalar company_id
+- [ ] Public form rate-limited on guest guard *(assumed)*; duplicate email per event rejected *(per spec)*
+
+### Livewire
+- (none -- public form)
 
 ## Unknowns
 

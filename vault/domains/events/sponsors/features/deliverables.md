@@ -6,7 +6,7 @@ type: feature
 build-status: planned
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-03
 ---
 
 # Feature: Deliverables Tracking
@@ -39,6 +39,18 @@ A per-sponsor checklist of contractual deliverables with due dates and overdue r
 - Consumes: nothing.
 - Feeds: nothing cross-domain (reminder mails via foundation.email).
 - Shared entity: none.
+
+## Test Checklist
+
+### Unit
+- [ ] Deliverable due-date logic; `reminded` flag blocks duplicate reminders
+
+### Feature (Pest)
+- [ ] `DeliverableReminderCommand` reminds each overdue deliverable once; completed items skipped
+- [ ] Tenant isolation: checklist per company
+
+### Livewire
+- [ ] Deliverables relation manager adds/completes items; overdue badge renders
 
 ## Unknowns
 
