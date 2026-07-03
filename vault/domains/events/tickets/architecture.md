@@ -40,7 +40,7 @@ sequenceDiagram
 
 ## Webhook Verification
 
-- The inbound Stripe webhook **verifies the `Stripe-Signature` header (signing secret)** before processing payment-confirmation events (per [[../../../build/security-audit-2026-06-11]], HIGH). Webhook handled by shared Stripe routing *(assumed: per-domain event types)*.
+- The inbound Stripe webhook **verifies the `Stripe-Signature` header (signing secret)** before processing payment-confirmation events (per [[../../../_archive/build-history/security-audit-2026-06-11]], HIGH). Webhook handled by shared Stripe routing *(assumed: per-domain event types)*.
 
 ## Concurrency
 

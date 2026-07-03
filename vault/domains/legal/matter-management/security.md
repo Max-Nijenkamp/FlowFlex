@@ -37,7 +37,7 @@ Verb-per-transition: `change-status` covers `open→active`, `active→on_hold`,
 
 - Matter-document upload panel action (Media Library file write) applies the named `panel-action` rate limiter per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
 
-## Upload hardening (medium — per [[../../../build/security-audit-2026-06-11]])
+## Upload hardening (medium — per [[../../../_archive/build-history/security-audit-2026-06-11]])
 
 - Matter-document Media Library collection: allowed document types, max size, `companies/{id}/`-scoped path.
 

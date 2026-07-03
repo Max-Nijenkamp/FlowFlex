@@ -76,6 +76,14 @@ database/factories/Marketing/UtmTouchFactory.php
 tests/Feature/Marketing/UtmAttributionTest.php
 ```
 
+## Test Checklist
+
+- [ ] Tenant isolation: company A cannot read or mutate company B's utm tracking data
+- [ ] Module gating: artifacts hidden when `marketing.utm` inactive
+- [ ] First touch created once and never overwritten (raced submissions safe); last touch upserts
+- [ ] Attribution toggles first- vs last-touch; deal-value join is read-only through CRM
+- [ ] `BuildUtmUrlAction` URL-encodes params correctly
+
 ## Related
 
 - [[../marketing-analytics/_module|Marketing Analytics]] · [[../../crm/contacts/_module|Contacts]] · [[../forms/_module|Forms]]

@@ -14,7 +14,7 @@ updated: 2026-06-20
 
 `canAccess() = Auth::user()->can('legal.compliance.view-any') && BillingService::hasModule('legal.compliance')` per [[../../../architecture/filament-patterns]] #1.
 
-## Evidence upload hardening (medium — per [[../../../build/security-audit-2026-06-11]])
+## Evidence upload hardening (medium — per [[../../../_archive/build-history/security-audit-2026-06-11]])
 
 - Control-evidence Media Library collection: allowed types (pdf/png/jpg/docx), max size, `companies/{id}/`-scoped storage path.
 

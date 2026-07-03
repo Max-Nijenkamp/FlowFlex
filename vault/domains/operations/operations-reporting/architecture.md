@@ -45,7 +45,7 @@ Fires none, consumes none. (A future optimisation could invalidate the current-w
 
 **Access contract:** `canAccess() = Auth::user()->can('operations.reporting.view') && BillingService::hasModule('operations.reporting')` per [[../../../architecture/filament-patterns]] #1 — the custom page states it explicitly.
 
-**Security note** ([[../../../build/security-audit-2026-06-11]]): rate-limit the Excel export action per user/company.
+**Security note** ([[../../../_archive/build-history/security-audit-2026-06-11]]): rate-limit the Excel export action per user/company.
 
 ---
 

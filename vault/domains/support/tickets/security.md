@@ -53,7 +53,7 @@ Per [[../../../architecture/filament-patterns]] #1 — custom pages (`TicketInbo
 
 ## Upload Contract
 
-- **Attachments** (medium, per [[build/security-audit-2026-06-11]]): allowed MIME/extension whitelist, max file size, and `companies/{company_id}/` storage path for ticket attachments (Media Library).
+- **Attachments** (medium, per [[_archive/build-history/security-audit-2026-06-11]]): allowed MIME/extension whitelist, max file size, and `companies/{company_id}/` storage path for ticket attachments (Media Library).
 
 ## Encrypted Fields
 

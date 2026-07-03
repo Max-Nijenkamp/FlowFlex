@@ -56,7 +56,7 @@ See [[../../../security/tenancy-isolation]] and [[../../../architecture/multi-te
 
 ## Rate Limiter
 
-> [!warning] Bulk import rate limit (medium — [[../../../build/security-audit-2026-06-11]])
+> [!warning] Bulk import rate limit (medium — [[../../../_archive/build-history/security-audit-2026-06-11]])
 > Bulk asset import (via core.import) mutates inventory, so its in-panel trigger action is throttled by the
 > named **`panel-action`** limiter *(assumed)*; the underlying import endpoint owns the primary limiter in
 > core.import per [[../../../architecture/security]]. Confirm the limiter is applied when wiring the import

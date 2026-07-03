@@ -77,6 +77,14 @@ database/factories/Marketing/LandingPageFactory.php
 tests/Feature/Marketing/LandingPageTest.php
 ```
 
+## Test Checklist
+
+- [ ] Tenant isolation: company A cannot read or mutate company B's landing pages data
+- [ ] Module gating: artifacts hidden when `marketing.landing-pages` inactive
+- [ ] Publish validates every block against `BlockRegistry`; failure keeps draft
+- [ ] Public `/p/{company-slug}/{page-slug}` renders published pages; draft 404s; per-IP throttle
+- [ ] `RecordVisitAction` increments visit_count atomically; form submission with page ref counts one conversion
+
 ## Related
 
 - [[../forms/_module|Forms]] · [[../utm-tracking/_module|UTM Tracking]] · [[../../../frontend/_index]]

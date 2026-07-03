@@ -30,7 +30,7 @@ canAccess() = Auth::user()->can('support.chat.view-any')
 
 Per [[../../../architecture/filament-patterns]] #1 — `ChatQueuePage` states this explicitly.
 
-## Public Widget Guard (HIGH — per [[build/security-audit-2026-06-11]])
+## Public Widget Guard (HIGH — per [[_archive/build-history/security-audit-2026-06-11]])
 
 - Widget HTTP endpoints run under an **explicit scoped guard** (Sanctum stateless / dedicated widget guard) limited to `widget-key + per-chat token` scope — **not** the panel session guard.
 - Reverb channel auth: a visitor's signed token authorises **only** its own `chat.{chat_id}` presence/private channel; it can never subscribe to a company-wide channel or another chat (cross-chat auth test required).

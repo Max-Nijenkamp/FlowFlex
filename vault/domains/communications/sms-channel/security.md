@@ -34,7 +34,7 @@ public static function canAccess(): bool
 
 - `comms_sms_config.api_key`, `api_secret`, `webhook_secret` — all encrypted cast; write-only in UI. See [[../../../architecture/patterns/encryption]].
 
-## Webhook Security (medium — [[../../../build/security-audit-2026-06-11]])
+## Webhook Security (medium — [[../../../_archive/build-history/security-audit-2026-06-11]])
 
 - Inbound + status webhook **signature-verified**.
 - **Throttle / rate limiter** on `POST /webhooks/comms/sms`.

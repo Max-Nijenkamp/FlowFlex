@@ -38,4 +38,4 @@ Guarded by a rate limiter + honeypot on the public endpoint.
 |---|---|---|---|
 | `/e/{company}/{slug}` (form POST) | POST | guest (rate-limited) | Submit a registration. See [[features/public-registration]]. |
 
-Attendee export (admin) is throttled (per [[../../../build/security-audit-2026-06-11]]).
+Attendee export (admin) is throttled (per [[../../../_archive/build-history/security-audit-2026-06-11]]).

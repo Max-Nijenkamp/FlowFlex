@@ -41,7 +41,7 @@ Video / file lesson content goes through core.files:
 - Video served via **signed URL** only — no public object URLs.
 - Embed URLs whitelisted to youtube/vimeo; any other host rejected at write.
 
-(Per [[../../../build/security-audit-2026-06-11|security audit]] medium finding — upload constraints on the video/file content section.)
+(Per [[../../../_archive/build-history/security-audit-2026-06-11|security audit]] medium finding — upload constraints on the video/file content section.)
 
 ## Tenant Isolation
 

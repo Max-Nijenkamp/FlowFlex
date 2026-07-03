@@ -77,6 +77,13 @@ app/Filament/Marketing/Widgets/{CampaignPerformanceWidget,FormConversionWidget,A
 tests/Feature/Marketing/MarketingAnalyticsTest.php
 ```
 
+## Test Checklist
+
+- [ ] Tenant isolation: company A cannot read or mutate company B's marketing analytics data
+- [ ] Module gating: artifacts hidden when `marketing.analytics` inactive
+- [ ] Soft-dep sections null + widget omitted (no error) when the source module is inactive
+- [ ] Cache key embeds company + date range; CSV export cites the `exports` limiter
+
 ## Related
 
 - [[../utm-tracking/_module|UTM Tracking]] · [[../campaigns/_module|Campaigns]] · [[../../../architecture/caching]]

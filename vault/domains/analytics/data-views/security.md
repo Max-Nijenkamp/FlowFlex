@@ -39,7 +39,7 @@ Per [[../../../architecture/filament-patterns]] #1 — the custom page states `c
 1. **Cross-company isolation is the critical test.** Every source read inside `DataView::run()` goes through the owning domain's read path, which runs under `CompanyContext` — a view can only ever aggregate the current company's rows. Each shipped view carries its own tenant-isolation test.
 2. **Module gating per source.** A view is listed only when **all** its `requiredModules()` are active; deactivating any source hides the view (no error).
 3. **No free-form query.** Views are shipped code, not user-authored SQL — there is no injection surface.
-4. **Export rate-limited** (medium, per [[../../../build/security-audit-2026-06-11]]): the export action is throttled ([[../../../architecture/security]]); generated files are tenant-scoped.
+4. **Export rate-limited** (medium, per [[../../../_archive/build-history/security-audit-2026-06-11]]): the export action is throttled ([[../../../architecture/security]]); generated files are tenant-scoped.
 
 ---
 

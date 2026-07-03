@@ -39,7 +39,7 @@ A document may hold at most one `dms_document_locks` row (`document_id` unique).
 
 ## Upload Contract (explicit)
 
-Per the [[../../../build/security-audit-2026-06-11]] audit (medium):
+Per the [[../../../_archive/build-history/security-audit-2026-06-11]] audit (medium):
 
 - **Whitelist** — `UploadVersionData` reuses the `dms.library` MIME/extension whitelist and max upload size using `mimes` + `max` rules, referencing the [[../../../architecture/security]] baseline values explicitly (not by link alone).
 - **Storage path** — version bytes are stored under `companies/{id}/dms/` via `CompanyPathGenerator`, identical to the library upload path.

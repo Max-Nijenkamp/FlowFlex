@@ -34,7 +34,7 @@ public static function canAccess(): bool
 
 The send action is additionally gated on `comms.broadcast.send`.
 
-## Rate Limiting (medium — [[../../../build/security-audit-2026-06-11]])
+## Rate Limiting (medium — [[../../../_archive/build-history/security-audit-2026-06-11]])
 
 - The **send / schedule** panel action is mass outbound comms — it carries the `panel-action` rate limiter ([[../../../architecture/security]]).
 - Outbound batch sending is throttled per channel on the `notifications` queue (chunk ~100/min *(assumed)*), keeping sends within provider throughput.

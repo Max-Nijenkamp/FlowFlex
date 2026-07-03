@@ -39,7 +39,7 @@ public static function canAccess(): bool
 
 See [[../../../architecture/patterns/encryption]].
 
-## Webhook Security (medium — [[../../../build/security-audit-2026-06-11]])
+## Webhook Security (medium — [[../../../_archive/build-history/security-audit-2026-06-11]])
 
 - Verify-token / signature validated **before** processing; bad token/signature → `403`, nothing stored.
 - Throttle / rate limiter on `POST /webhooks/whatsapp`.

@@ -41,7 +41,7 @@ public static function canAccess(): bool
 ## Webhook Security (baseline)
 
 - **Stripe signature verification** on every webhook (reject → 400).
-- **Rate limiter** on the webhook route (`throttle:webhooks`) — from [[../../../../build/security-audit-2026-06-11]] (medium).
+- **Rate limiter** on the webhook route (`throttle:webhooks`) — from [[../../../../_archive/build-history/security-audit-2026-06-11]] (medium).
 - **Idempotency** — replaying the same `payment_intent` is a no-op (unique intent id + status guard).
 - **No card data** stored locally; only Stripe references. Idempotency keys on all Stripe mutations.
 

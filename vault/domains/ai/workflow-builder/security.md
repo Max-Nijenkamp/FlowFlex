@@ -51,7 +51,7 @@ Per [[../../../architecture/filament-patterns]] #1 — the builder page + resour
 
 ## Webhook Actions: Rate Limiting & SSRF
 
-- **Rate limiter** (medium, per [[../../../build/security-audit-2026-06-11]]): outbound **webhook** actions and per-workflow execution are throttled, in addition to the loop guard — a hostile or misconfigured workflow must not become an SSRF-amplification or spam vector.
+- **Rate limiter** (medium, per [[../../../_archive/build-history/security-audit-2026-06-11]]): outbound **webhook** actions and per-workflow execution are throttled, in addition to the loop guard — a hostile or misconfigured workflow must not become an SSRF-amplification or spam vector.
 - Webhook targets should be validated (no internal/loopback addresses) *(assumed — confirm against [[../../../architecture/security]])*.
 
 ---

@@ -60,4 +60,4 @@ See [[../../../security/tenancy-isolation]] and [[../../../architecture/multi-te
 
 The matrix export action on `AccessReviewPage` generates a file and is throttled by the named **`exports`**
 rate limiter (keyed on `company_id:user_id`) to prevent a full access-audit dump from being pulled in a
-loop. Flagged medium in [[../../../build/security-audit-2026-06-11]]. See [[../../../architecture/security]].
+loop. Flagged medium in [[../../../_archive/build-history/security-audit-2026-06-11]]. See [[../../../architecture/security]].

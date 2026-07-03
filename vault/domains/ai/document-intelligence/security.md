@@ -39,7 +39,7 @@ Per [[../../../architecture/filament-patterns]] #1 — every artifact gates on b
 
 ## Upload Contract
 
-- **Size:** `max:10240` KB per file (medium finding, [[../../../build/security-audit-2026-06-11]]) — stated explicitly alongside the type whitelist.
+- **Size:** `max:10240` KB per file (medium finding, [[../../../_archive/build-history/security-audit-2026-06-11]]) — stated explicitly alongside the type whitelist.
 - **Type whitelist:** pdf / jpg / png only. No arbitrary MIME types reach the extraction path.
 - **Path:** stored tenant-scoped under `companies/{id}/` via [[../../core/file-storage/_module|core.files]] — one company can never read another's document media (CompanyScope + path isolation).
 

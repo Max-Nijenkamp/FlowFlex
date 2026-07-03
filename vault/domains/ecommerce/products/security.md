@@ -38,7 +38,7 @@ public static function canAccess(): bool
 
 ## Upload Contract (security baseline)
 
-Image gallery uploads (Media Library) restrict to image MIME types (jpg/png/webp), enforce a max file size, and store under `companies/{company_id}/`. From [[../../../../build/security-audit-2026-06-11]] (medium). See [[../../../../architecture/security]].
+Image gallery uploads (Media Library) restrict to image MIME types (jpg/png/webp), enforce a max file size, and store under `companies/{company_id}/`. From [[../../../../_archive/build-history/security-audit-2026-06-11]] (medium). See [[../../../../architecture/security]].
 
 ## Tenant Isolation
 

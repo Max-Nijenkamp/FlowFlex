@@ -38,7 +38,7 @@ Every delivery carries `X-FlowFlex-Signature` = HMAC-SHA256 of the payload keyed
 
 ## Rate limiting (test + rotate)
 
-`SendTestWebhookAction` names the `panel-action` limiter (a few test sends per endpoint per minute) — from `build/security-audit-2026-06-11` (medium). It calls an external URL, so throttling prevents using the test button as an SSRF/spam amplifier. `RotateWebhookSecretAction` also names the `panel-action` limiter since it mints a credential (per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]). Both return 429 + `Retry-After` on exhaustion.
+`SendTestWebhookAction` names the `panel-action` limiter (a few test sends per endpoint per minute) — from `_archive/build-history/security-audit-2026-06-11` (medium). It calls an external URL, so throttling prevents using the test button as an SSRF/spam amplifier. `RotateWebhookSecretAction` also names the `panel-action` limiter since it mints a credential (per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]). Both return 429 + `Retry-After` on exhaustion.
 
 ## Tenancy
 

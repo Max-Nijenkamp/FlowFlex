@@ -43,7 +43,7 @@ See [[../../../security/tenancy-isolation]].
 
 ## Rich-text Sanitization
 
-- `description` is sanitized via HTMLPurifier before persistence (per [[../../../build/security-audit-2026-06-11]], medium).
+- `description` is sanitized via HTMLPurifier before persistence (per [[../../../_archive/build-history/security-audit-2026-06-11]], medium).
 
 ## Virtual Link Exposure
 

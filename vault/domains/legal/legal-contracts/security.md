@@ -36,7 +36,7 @@ Seeded in `PermissionSeeder`.
 - The `sign-off` header action attaches a signed PDF (file write) → apply the named `panel-action` rate limiter per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
 - Roadmap external signer endpoint (`/sign/{token}`, [[./features/e-signature]]) is a public single-use-token endpoint → must carry a public-token rate limiter and signed-token verification when built.
 
-## Upload hardening (medium — per [[../../../build/security-audit-2026-06-11]])
+## Upload hardening (medium — per [[../../../_archive/build-history/security-audit-2026-06-11]])
 
 - Signed-contract Media Library collection: **PDF-only** whitelist, max size cap, `companies/{id}/`-scoped storage path.
 

@@ -42,7 +42,7 @@ Private-channel and DM content is **members-only**, enforced in **three** layers
 
 A missing layer is a data-leak — all three are required. See [[../../../security/tenancy-isolation]].
 
-## Upload Contract (medium — [[../../../build/security-audit-2026-06-11]])
+## Upload Contract (medium — [[../../../_archive/build-history/security-audit-2026-06-11]])
 
 Chat attachments: MIME/extension whitelist, max size, tenant-scoped path via `core.files`.
 

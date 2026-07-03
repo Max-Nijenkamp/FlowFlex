@@ -33,7 +33,7 @@ updated: 2026-06-20
 
 > [!warning] UNVERIFIED — needs confirmation
 > - Production security headers, TLS, WAF, secrets store — not provisioned ([[../infrastructure/deployment]]).
-> - A formal pen-test / threat review beyond the spec-level [[../build/security-audit-2026-06-11]] hasn't run.
+> - A formal pen-test / threat review beyond the spec-level [[../_archive/build-history/security-audit-2026-06-11]] hasn't run.
 
 ## Related
 

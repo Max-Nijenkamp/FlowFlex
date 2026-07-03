@@ -30,7 +30,7 @@ public static function canAccess(): bool
 
 ## Rate Limiting
 
-- The **report export** action carries a rate limiter / throttle (per [[../../../build/security-audit-2026-06-11|security audit]] medium finding) — heavy aggregations should not be triggerable in a loop.
+- The **report export** action carries a rate limiter / throttle (per [[../../../_archive/build-history/security-audit-2026-06-11|security audit]] medium finding) — heavy aggregations should not be triggerable in a loop.
 
 ## Tenant Isolation
 

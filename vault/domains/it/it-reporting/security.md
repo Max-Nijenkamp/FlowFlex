@@ -51,4 +51,4 @@ See [[../../../security/tenancy-isolation]] and [[../../../architecture/multi-te
 
 ## Rate Limiting
 
-Cite a **named throttle on the report export action, keyed per company-user** (medium-severity finding, per [[../../../architecture/security]] / [[../../../build/security-audit-2026-06-11]]). Export generates an aggregate report on demand; the throttle prevents a single user from hammering the aggregation/PDF path.
+Cite a **named throttle on the report export action, keyed per company-user** (medium-severity finding, per [[../../../architecture/security]] / [[../../../_archive/build-history/security-audit-2026-06-11]]). Export generates an aggregate report on demand; the throttle prevents a single user from hammering the aggregation/PDF path.

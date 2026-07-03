@@ -32,7 +32,7 @@ public static function canAccess(): bool
 
 ## Public Submission Guard (HIGH)
 
-The public submission + helpful-vote routes run on the **public/guest guard** with **signed-URL** validation of `review_token`, distinct from the authenticated Filament panel guard. Bodies/titles are purified (htmlpurifier); routes are rate-limited (`throttle:public`). From [[../../../../build/security-audit-2026-06-11]] (HIGH). See [[../../../../architecture/security]].
+The public submission + helpful-vote routes run on the **public/guest guard** with **signed-URL** validation of `review_token`, distinct from the authenticated Filament panel guard. Bodies/titles are purified (htmlpurifier); routes are rate-limited (`throttle:public`). From [[../../../../_archive/build-history/security-audit-2026-06-11]] (HIGH). See [[../../../../architecture/security]].
 
 ## Tenant Isolation
 

@@ -35,7 +35,7 @@ public static function canAccess(): bool
 
 - `comms_email_channels.oauth_token` — encrypted cast (used by v1.x OAuth connection). See [[../../../architecture/patterns/encryption]].
 
-## Webhook Security (medium — [[../../../build/security-audit-2026-06-11]])
+## Webhook Security (medium — [[../../../_archive/build-history/security-audit-2026-06-11]])
 
 - Inbound webhook **signature-verified**; unknown `inbound_token` dropped.
 - **Throttle / rate limiter** on the inbound route.

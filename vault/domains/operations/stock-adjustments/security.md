@@ -44,7 +44,7 @@ Per [[../../../architecture/filament-patterns]] #1. The `StocktakePage` custom p
 
 | Action | Limiter | Why |
 |---|---|---|
-| Stocktake bulk submission (`StocktakePage` confirm) | `panel-action` | Mutates inventory (posts a movement per non-zero delta); throttles large bulk-adjustment runs ([[../../../build/security-audit-2026-06-11]], medium) |
+| Stocktake bulk submission (`StocktakePage` confirm) | `panel-action` | Mutates inventory (posts a movement per non-zero delta); throttles large bulk-adjustment runs ([[../../../_archive/build-history/security-audit-2026-06-11]], medium) |
 | Write-off report export (Excel) | `exports` | Bulk export per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]] |
 
 Limiter registry: [[../../../architecture/security]].

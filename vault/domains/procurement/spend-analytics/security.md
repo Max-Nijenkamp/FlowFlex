@@ -22,7 +22,7 @@ updated: 2026-07-02
 
 ## Controls
 
-- **Export rate limiter** (from [[../../../build/security-audit-2026-06-11]], medium): throttle the export action per [[../../../architecture/security]] — a heavy aggregation + file build is a DoS/scraping vector.
+- **Export rate limiter** (from [[../../../_archive/build-history/security-audit-2026-06-11]], medium): throttle the export action per [[../../../architecture/security]] — a heavy aggregation + file build is a DoS/scraping vector.
 - Spend figures can be sensitive (supplier pricing) — a single coarse `view` permission v1; finer per-department scoping is a candidate (see [[unknowns]]).
 
 ## Data ownership

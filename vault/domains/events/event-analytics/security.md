@@ -30,7 +30,7 @@ public static function canAccess(): bool
 
 ## Rate Limiting
 
-- Report export is throttled (per [[../../../build/security-audit-2026-06-11]], medium).
+- Report export is throttled (per [[../../../_archive/build-history/security-audit-2026-06-11]], medium).
 
 ## Tenant Isolation
 

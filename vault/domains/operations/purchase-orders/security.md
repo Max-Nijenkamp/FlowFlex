@@ -45,7 +45,7 @@ Per [[../../../architecture/filament-patterns]] #1.
 
 | Action | Limiter | Why |
 |---|---|---|
-| `send` action (`GeneratePoPdfJob` + `PurchaseOrderMail`) | `panel-action` | Sends comms (supplier email) and generates a file (PO PDF) per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]; per-company throttle prevents PDF/email abuse ([[../../../build/security-audit-2026-06-11]], medium) |
+| `send` action (`GeneratePoPdfJob` + `PurchaseOrderMail`) | `panel-action` | Sends comms (supplier email) and generates a file (PO PDF) per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]; per-company throttle prevents PDF/email abuse ([[../../../_archive/build-history/security-audit-2026-06-11]], medium) |
 
 Limiter registry: [[../../../architecture/security]].
 

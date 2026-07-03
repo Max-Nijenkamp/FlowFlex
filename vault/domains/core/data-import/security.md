@@ -12,7 +12,7 @@ updated: 2026-06-20
 
 Parent: [[_module]] · See also [[architecture]] · [[api]]
 
-Security notes per `build/security-audit-2026-06-11`.
+Security notes per `_archive/build-history/security-audit-2026-06-11`.
 
 ## Permissions
 

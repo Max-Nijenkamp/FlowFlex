@@ -55,6 +55,6 @@ Per [[../../../architecture/filament-patterns]] #1 — the `CopilotPage` custom 
 ## Conversation Privacy & Rate Limiting
 
 - `ai_copilot_conversations` are **private to their owning user** — a second-layer `user_id` filter on top of `CompanyScope`; other users in the same company cannot read them.
-- **Rate limiter** (medium, per [[../../../build/security-audit-2026-06-11]]): a per-user / per-company `RateLimiter` throttle on message sends, in addition to the `LlmGateway` monthly budget hard-stop.
+- **Rate limiter** (medium, per [[../../../_archive/build-history/security-audit-2026-06-11]]): a per-user / per-company `RateLimiter` throttle on message sends, in addition to the `LlmGateway` monthly budget hard-stop.
 
 See [[../../../security/tenancy-isolation]] and [[../../../architecture/multi-tenancy]].

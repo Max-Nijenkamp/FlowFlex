@@ -10,7 +10,7 @@ color: "#F97316"
 
 ## Context
 
-The 2026-06-11 spec audit ([[build/security-audit-2026-06-11]], UI-ROW) found three module specs citing UI kinds not represented in the [[architecture/ui-strategy]] decision table — each mapped to a wrong existing row:
+The 2026-06-11 spec audit ([[_archive/build-history/security-audit-2026-06-11]], UI-ROW) found three module specs citing UI kinds not represented in the [[architecture/ui-strategy]] decision table — each mapped to a wrong existing row:
 
 - `lms.mentoring` → `MentorDirectoryPage` (card-grid directory of mentors) was mis-cited as row #9 (Report builder).
 - `lms.skills-matrix` → `SkillsMatrixPage` (color-coded competency grid) was mis-cited as row #9 (Report builder).
@@ -45,7 +45,7 @@ The three specs are updated to cite the correct rows (#17/#18/#19).
 
 ## Related
 
-- [[build/security-audit-2026-06-11]]
+- [[_archive/build-history/security-audit-2026-06-11]]
 - [[architecture/ui-strategy]]
 - [[build/decisions/decision-2026-06-10-all-filament-hybrid-ui]]
 - [[build/gaps/gap-ui-row-not-in-table]]

@@ -24,7 +24,7 @@ per [[../../../architecture/filament-patterns]] #1 — custom pages (`DataExport
 
 ## Export rate limiter
 
-From `build/security-audit-2026-06-11` (medium): a throttle limiter on the export trigger — one export per company per N minutes — cited in the Filament/Actions layer. Full-dataset export is expensive and PII-heavy, so it is owner-only and rate-limited.
+From `_archive/build-history/security-audit-2026-06-11` (medium): a throttle limiter on the export trigger — one export per company per N minutes — cited in the Filament/Actions layer. Full-dataset export is expensive and PII-heavy, so it is owner-only and rate-limited.
 
 ## Legal hold
 

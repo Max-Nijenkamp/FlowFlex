@@ -10,7 +10,7 @@ color: "#F97316"
 
 ## Context
 
-A spec-conformance audit (2026-06-11) of all 173 module specs (see [[build/security-audit-2026-06-11]]) found **184 HIGH / 85 MEDIUM / 29 LOW** findings. The failures were not architectural — the baseline in [[architecture/security]] and [[architecture/auth-rbac]] is sound — but systemic **under-specification** of the security contract in the specs themselves. Five repeatable clusters accounted for nearly all HIGH findings:
+A spec-conformance audit (2026-06-11) of all 173 module specs (see [[_archive/build-history/security-audit-2026-06-11]]) found **184 HIGH / 85 MEDIUM / 29 LOW** findings. The failures were not architectural — the baseline in [[architecture/security]] and [[architecture/auth-rbac]] is sound — but systemic **under-specification** of the security contract in the specs themselves. Five repeatable clusters accounted for nearly all HIGH findings:
 
 1. **Missing `canAccess()`** on Filament resources/pages — ~100+ HIGH across all 31 domains. Custom pages are the worst case (Filament does not auto-gate them).
 2. **Unauthenticated public/external surfaces** with no declared guest/portal guard boundary.
@@ -34,7 +34,7 @@ The spec template ([[_meta/spec-template]]) is **frozen** — changing it requir
 4. **Sensitive PII and secrets must be declared in `encrypted-fields`** and flagged 🔐 in the Data Model — restating the existing encryption convention as an audit-enforced gate. Encrypted columns use `text`; queryable encrypted fields (e.g. unique email) get a deterministic `*_hash` companion column.
 5. **Rate limiters must be cited** on exports, bulk ops, public token endpoints, and webhooks.
 
-The audit report [[build/security-audit-2026-06-11]] is the backfill worklist — the per-spec HIGH/MEDIUM items are tracked as 7 systemic gaps (see [[build/gaps/INDEX]]) rather than 184 individual gap files.
+The audit report [[_archive/build-history/security-audit-2026-06-11]] is the backfill worklist — the per-spec HIGH/MEDIUM items are tracked as 7 systemic gaps (see [[build/gaps/INDEX]]) rather than 184 individual gap files.
 
 ## Consequences
 
@@ -45,7 +45,7 @@ The audit report [[build/security-audit-2026-06-11]] is the backfill worklist �
 
 ## Related
 
-- [[build/security-audit-2026-06-11]]
+- [[_archive/build-history/security-audit-2026-06-11]]
 - [[architecture/security]]
 - [[architecture/auth-rbac]]
 - [[architecture/filament-patterns]]

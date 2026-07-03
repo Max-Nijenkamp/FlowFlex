@@ -30,7 +30,7 @@ This module handles **highly sensitive, self-declared diversity attributes**. Ev
 - **Suppression threshold: never show groups smaller than N=5** *(assumed default, configurable)* — k-anonymity protection. Groups below N are suppressed **before** storage in `hr_dei_snapshots.breakdown`; the dashboard shows "insufficient group size" placeholders.
 - Boundary must be tested at N-1 (suppressed) and N (shown).
 
-## Authorization
+## Permissions
 
 - `hr.dei.view-dashboard` — HR leadership; gates the aggregate dashboard.
 - `hr.dei.submit-own` — all employees; self-service opt-in only.

@@ -38,7 +38,7 @@ Per [[../../../architecture/filament-patterns]] #1. The dashboard custom page st
 
 ## Rate Limiting
 
-Per [[../../../build/security-audit-2026-06-11]] (medium): throttle the Excel export endpoint per user/company (export is the expensive path).
+Per [[../../../_archive/build-history/security-audit-2026-06-11]] (medium): throttle the Excel export endpoint per user/company (export is the expensive path).
 
 ## Data Ownership
 

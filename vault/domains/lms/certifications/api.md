@@ -19,7 +19,7 @@ updated: 2026-06-20
 | `course_id` | ulid | nullable, exists in company |
 | `validity_months` | int | nullable, min:1 (null = no expiry) |
 
-(Added per [[../../../build/security-audit-2026-06-11|security audit]] medium finding — the template write path had no DTO.)
+(Added per [[../../../_archive/build-history/security-audit-2026-06-11|security audit]] medium finding — the template write path had no DTO.)
 
 ## `VerifyCertificateData` (public)
 

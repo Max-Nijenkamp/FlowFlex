@@ -47,7 +47,7 @@ Fires none, consumes none. GL posting for write-offs is **deferred** — v1 emit
 `canAccess() = Auth::user()->can('operations.adjustments.view-any') && BillingService::hasModule('operations.adjustments')`
 per [[../../../architecture/filament-patterns]] #1. `StocktakePage` is a custom page and MUST state this explicitly — Filament does not auto-gate custom pages. The approve action requires `operations.adjustments.approve`; create/stocktake require `operations.adjustments.create`. No public/portal surfaces — the `operations` panel is authenticated only.
 
-**Security note** ([[../../../build/security-audit-2026-06-11]]): the stocktake bulk submission carries a `panel-action` limiter and the report export an `exports` limiter — see [[./security]].
+**Security note** ([[../../../_archive/build-history/security-audit-2026-06-11]]): the stocktake bulk submission carries a `panel-action` limiter and the report export an `exports` limiter — see [[./security]].
 
 ---
 

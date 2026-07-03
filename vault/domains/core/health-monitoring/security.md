@@ -24,7 +24,7 @@ per [[../../../architecture/filament-patterns]] #1 — stated explicitly on the 
 
 ## /health endpoint hardening
 
-From `build/security-audit-2026-06-11` (medium):
+From `_archive/build-history/security-audit-2026-06-11` (medium):
 
 - A throttle limiter on `GET /health` to prevent probing.
 - Detailed output restricted to authenticated / monitoring callers (token-guarded); anonymous callers get minimal status only, so component topology (DB, Redis, Meilisearch, queue names) is not leaked.

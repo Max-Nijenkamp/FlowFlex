@@ -119,7 +119,7 @@ Platform code that ships today but has **no owning note**:
 - `_meta/module-graph.md` = **173 rows**; `STATUS.md` claims **174** + CRM 16 → missing rows for `crm.leads` and `core.staff-console`.
 - `build/decisions/INDEX.md` is **not chronologically sorted**; 2 rows use bare `[[decision-…]]` vs full-path links.
 - ADRs **superseded by the strip** but unmarked: `decision-2026-06-11-mvp-v1-deviations`, `decision-2026-06-12-custom-pipelines`.
-- `build/gaps/gap-panel-ux-depth-leftovers` is **obsolete** (enumerates deleted CRM/HR panel forms).
+- `_archive/build-history/gap-panel-ux-depth-leftovers` is **obsolete** (enumerates deleted CRM/HR panel forms).
 
 ---
 

@@ -30,7 +30,7 @@ public static function canAccess(): bool
 
 ## Public Restore Guard (HIGH)
 
-- The restore-cart route uses **Laravel signed URLs** (`signed` middleware) validating `recovery_token` on the **public/guest guard**; the token is a **single-use capability token**. From [[../../../../build/security-audit-2026-06-11]] (HIGH).
+- The restore-cart route uses **Laravel signed URLs** (`signed` middleware) validating `recovery_token` on the **public/guest guard**; the token is a **single-use capability token**. From [[../../../../_archive/build-history/security-audit-2026-06-11]] (HIGH).
 - **Rate limiter** (`throttle:public`) on the public restore route (medium).
 
 See [[../../../../architecture/security]].

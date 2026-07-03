@@ -39,7 +39,7 @@ public static function canAccess(): bool
 
 ## Upload Contract (explicit)
 
-Per the [[../../../build/security-audit-2026-06-11]] audit (medium):
+Per the [[../../../_archive/build-history/security-audit-2026-06-11]] audit (medium):
 
 - **Whitelist** — `UploadDocumentData` enforces a MIME/extension whitelist and max upload size using `mimes` + `max` rules, referencing the [[../../../architecture/security]] baseline values explicitly (not by link alone).
 - **Rate limiter** — `RateLimiter::for` on the document **search** and **upload** endpoints, scoped per company/user, to prevent abuse of Meilisearch and storage.

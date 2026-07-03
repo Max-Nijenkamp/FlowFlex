@@ -27,7 +27,7 @@ canAccess() = Auth::user()->can('support.analytics.view')
 
 Per [[../../../architecture/filament-patterns]] #1 — `SupportDashboardPage` states this explicitly.
 
-## Public CSAT Guard (HIGH — per [[build/security-audit-2026-06-11]])
+## Public CSAT Guard (HIGH — per [[_archive/build-history/security-audit-2026-06-11]])
 
 - The public CSAT submit endpoint runs under an **explicit unauthenticated guard/middleware** (token-only, no panel session) alongside a named `csat` limiter *(assumed)* keyed by token/IP ([[../../../architecture/security]] rate-limit registry) — public token endpoints require a cited limiter per [[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]].
 - One response per `token` / `ticket_id` (unique constraint) — replay/duplicate submissions rejected.

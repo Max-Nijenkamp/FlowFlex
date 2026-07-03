@@ -45,7 +45,7 @@ public static function canAccess(): bool
 ## Rate Limiting
 
 - **Public registration endpoint**: throttled + honeypot (bot/enumeration abuse).
-- **Attendee export action**: throttled (per [[../../../build/security-audit-2026-06-11]], medium).
+- **Attendee export action**: throttled (per [[../../../_archive/build-history/security-audit-2026-06-11]], medium).
 
 ## Cross-Domain PII Flow
 

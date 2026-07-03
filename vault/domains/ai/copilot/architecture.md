@@ -61,7 +61,7 @@ Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]]
 
 ## Rate Limiting
 
-Per [[../../../build/security-audit-2026-06-11]] (medium): the named `panel-action` rate limiter ([[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]) guards copilot message sends — each send triggers an **external LLM provider call** via `LlmGateway`, so it falls under the "panel actions that call external APIs" rule. This is **in addition to** the `LlmGateway` monthly budget: the budget bounds cost; the throttle bounds request rate/abuse.
+Per [[../../../_archive/build-history/security-audit-2026-06-11]] (medium): the named `panel-action` rate limiter ([[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]) guards copilot message sends — each send triggers an **external LLM provider call** via `LlmGateway`, so it falls under the "panel actions that call external APIs" rule. This is **in addition to** the `LlmGateway` monthly budget: the budget bounds cost; the throttle bounds request rate/abuse.
 
 ---
 

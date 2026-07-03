@@ -37,7 +37,7 @@ Merge providers expose a **fixed whitelist** of fields. Sensitive fields — sal
 
 ## Generate Rate Limiter (explicit)
 
-Per the [[../../../build/security-audit-2026-06-11]] audit (medium) and the security contract ([[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]):
+Per the [[../../../_archive/build-history/security-audit-2026-06-11]] audit (medium) and the security contract ([[../../../decisions/decision-2026-07-02-rate-limit-and-token-hardening]]):
 
 | Action | Limiter | Why |
 |---|---|---|

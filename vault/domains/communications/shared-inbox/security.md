@@ -39,7 +39,7 @@ public static function canAccess(): bool
 - `comms_channels`, `comms_conversations`, `comms_messages` all carry `company_id` (indexed) via `BelongsToCompany`; `CompanyScope` constrains every query.
 - Inbound webhook processing resolves the channel — and therefore the company — from the provider payload, then runs under `WithCompanyContext` on the queue. See [[../../../security/tenancy-isolation]] and [[../../../architecture/patterns/tenant-context-pitfalls]].
 
-## Webhook & Rate Limiting (medium — [[../../../build/security-audit-2026-06-11]])
+## Webhook & Rate Limiting (medium — [[../../../_archive/build-history/security-audit-2026-06-11]])
 
 - Inbound channel webhook controllers (in the channel modules) must be **signature-verified** and behind a **throttle / rate limiter** to protect the inbound pipeline from flooding.
 - **Outbound send** (`InboxService::send`, the `comms.inbox.reply` action) is external outbound comms — it carries the `panel-action` rate limiter ([[../../../architecture/security]]); the channel driver's own provider limits apply downstream.

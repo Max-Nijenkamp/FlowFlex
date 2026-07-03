@@ -31,7 +31,7 @@ public static function canAccess(): bool
 }
 ```
 
-## Learner Portal Guard (HIGH — per [[../../../build/security-audit-2026-06-11|security audit]])
+## Learner Portal Guard (HIGH — per [[../../../_archive/build-history/security-audit-2026-06-11|security audit]])
 
 - The `/learn` portal authenticates **external learners** via a **Sanctum scoped portal (learner) guard**.
 - `lms_learners.portal_token` **issuance and rotation flow through that guard** — never ad-hoc token comparison in a controller.

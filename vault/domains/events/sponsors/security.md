@@ -33,7 +33,7 @@ The create-invoice action is additionally hidden when `finance.invoicing` is ina
 
 ## Uploads
 
-- Sponsor logo: allowed image MIME whitelist, max file size, `companies/{id}/` media path (per [[../../../build/security-audit-2026-06-11]], medium).
+- Sponsor logo: allowed image MIME whitelist, max file size, `companies/{id}/` media path (per [[../../../_archive/build-history/security-audit-2026-06-11]], medium).
 
 ## Tenant Isolation
 

@@ -40,7 +40,7 @@ public static function canAccess(): bool
 
 ## Rich-text + Uploads
 
-- `bio` is sanitized via HTMLPurifier on **both** admin and public-token writes (per [[../../../build/security-audit-2026-06-11]], medium).
+- `bio` is sanitized via HTMLPurifier on **both** admin and public-token writes (per [[../../../_archive/build-history/security-audit-2026-06-11]], medium).
 - Photo upload: allowed image MIME whitelist, max file size, `companies/{id}/` media path — enforced especially on the public submit endpoint (medium).
 
 ## Tenant Isolation

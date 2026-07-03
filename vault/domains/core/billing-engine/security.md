@@ -41,7 +41,7 @@ Subscriptions and invoices are company-scoped via `CompanyScope`; company A's da
 ## Stripe webhook hardening
 
 - Signature verification on the webhook (per [[../../../architecture/security]]).
-- **Rate limiter** (medium, from `build/security-audit-2026-06-11`): a dedicated `webhook` throttle limiter on the Stripe webhook route, in addition to signature verification.
+- **Rate limiter** (medium, from `_archive/build-history/security-audit-2026-06-11`): a dedicated `webhook` throttle limiter on the Stripe webhook route, in addition to signature verification.
 
 > [!warning] UNVERIFIED
 > The webhook route handler (`StripeWebhookController`) and `EnsureSubscriptionActive` middleware referenced here were not found in `app/`. See [[unknowns]].

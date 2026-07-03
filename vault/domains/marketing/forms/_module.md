@@ -77,6 +77,15 @@ database/factories/Marketing/{FormFactory,FormSubmissionFactory}.php
 tests/Feature/Marketing/{FormSubmitTest,FormSpamTest}.php
 ```
 
+## Test Checklist
+
+- [ ] Tenant isolation: company A cannot read or mutate company B's forms data
+- [ ] Module gating: artifacts hidden when `marketing.forms` inactive
+- [ ] Builder: exactly one email field enforced; duplicate field keys rejected
+- [ ] Public submit validates against the definition, stores the submission, fires `FormSubmissionReceived` (scalar company_id)
+- [ ] Honeypot-filled submit silently dropped (200, nothing stored); per-IP rate limit returns 429 over limit
+- [ ] Hosted page `/f/{slug}` renders active form; inactive form 404s; views increment the conversion base
+
 ## Related
 
 - [[../landing-pages/_module|Landing Pages]] · [[../email-sequences/_module|Email Sequences]]

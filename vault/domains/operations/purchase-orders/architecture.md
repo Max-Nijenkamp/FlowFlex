@@ -56,7 +56,7 @@ Fires none. Consumes none. Receiving is a same-domain `recordReceipt` call from 
 `canAccess() = Auth::user()->can('operations.purchase-orders.view-any') && BillingService::hasModule('operations.purchase-orders')`
 per [[../../../architecture/filament-patterns]] #1. Header actions each carry their own permission (`send` / `cancel` / `create`); the create-from-requisition action additionally requires the procurement module active. No public/portal surfaces — the `operations` panel is authenticated only.
 
-**Security note** ([[../../../build/security-audit-2026-06-11]]): the `send` action (PDF render + supplier email) is throttled by the `panel-action` limiter — see [[./security]].
+**Security note** ([[../../../_archive/build-history/security-audit-2026-06-11]]): the `send` action (PDF render + supplier email) is throttled by the `panel-action` limiter — see [[./security]].
 
 ---
 

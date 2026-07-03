@@ -73,7 +73,7 @@ Meilisearch (Scout) — see [[../../../architecture/search]]:
 
 ## Security Notes
 
-Per [[build/security-audit-2026-06-11]]:
+Per [[_archive/build-history/security-audit-2026-06-11]]:
 
 - **Rate limiter** (medium): a named rate limiter is planned for the import upload and export actions, and throttling/dedupe on contact-creating event listeners.
 

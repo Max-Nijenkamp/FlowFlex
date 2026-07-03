@@ -32,11 +32,11 @@ public static function canAccess(): bool
 
 ## Webhook Verification (HIGH)
 
-- The inbound Stripe webhook verifies the `Stripe-Signature` header against the signing secret **before** processing any payment-confirmation event. Unverified payloads are rejected. See [[../../../architecture/security]] and [[../../../build/security-audit-2026-06-11]].
+- The inbound Stripe webhook verifies the `Stripe-Signature` header against the signing secret **before** processing any payment-confirmation event. Unverified payloads are rejected. See [[../../../architecture/security]] and [[../../../_archive/build-history/security-audit-2026-06-11]].
 
 ## Rate Limiting
 
-- **Public purchase endpoint** and **discount-code validation** are throttled to prevent abuse and code enumeration (per [[../../../build/security-audit-2026-06-11]], medium).
+- **Public purchase endpoint** and **discount-code validation** are throttled to prevent abuse and code enumeration (per [[../../../_archive/build-history/security-audit-2026-06-11]], medium).
 
 ## Payment Idempotency
 
