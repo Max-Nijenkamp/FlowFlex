@@ -6,6 +6,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Auth\EditProfile;
 use App\Filament\Auth\PanelLogin;
+use App\Filament\Auth\RequestPasswordReset;
 use App\Http\Middleware\EnsureSubscriptionActive;
 use App\Http\Middleware\RedirectToSetupWizard;
 use App\Http\Middleware\SetCompanyContext;
@@ -36,7 +37,7 @@ class AppPanelProvider extends PanelProvider
             ->path('app')
             ->viteTheme('resources/css/filament/app/theme.css')
             ->login(PanelLogin::class)
-            ->passwordReset()
+            ->passwordReset(RequestPasswordReset::class)
             ->emailVerification()
             ->multiFactorAuthentication(AppAuthentication::make()->recoverable())
             ->profile(EditProfile::class, isSimple: false)

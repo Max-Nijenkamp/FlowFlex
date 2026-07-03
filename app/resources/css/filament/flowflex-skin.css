@@ -155,8 +155,11 @@
     border: 1px solid var(--ff-line-strong);
     border-radius: 20px;
     padding: 40px;
-    max-width: 420px;
-    box-shadow: 0 1px 2px rgb(17 24 39 / 0.04), 0 28px 56px -32px rgb(17 24 39 / 0.16);
+    max-width: 440px;
+    box-shadow:
+        0 1px 2px rgb(17 24 39 / 0.05),
+        0 12px 24px -12px rgb(17 24 39 / 0.12),
+        0 32px 64px -32px rgb(17 24 39 / 0.22);
 }
 
 /* Mono panel badge on the login card (WORKSPACE / /ADMIN via --ff-panel-label) */
@@ -169,6 +172,34 @@
     letter-spacing: 0.2em;
     color: var(--ff-ink-faint);
     margin-bottom: 0.5rem;
+}
+
+/* No wordmark inside the card — the brand lives on the dark panel
+   (and duplicated the heading: "FlowFlex Staff" over "Staff sign in"). */
+.fi-simple-main .fi-logo {
+    display: none;
+}
+
+/* Left-aligned card content with display-font headings, per the handoff */
+.fi-simple-main .fi-simple-header {
+    align-items: flex-start;
+    text-align: start;
+}
+
+.fi-simple-main .fi-simple-header-heading {
+    font-family: 'Archivo', var(--font-family), sans-serif;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    text-align: start;
+}
+
+.fi-simple-main .fi-simple-header-subheading {
+    text-align: start;
+    color: var(--ff-ink-soft);
+}
+
+.dark .fi-simple-main .fi-simple-header-subheading {
+    color: rgb(255 255 255 / 0.55);
 }
 
 /* Split shell: 620px dark brand panel + centered card on paper.
@@ -264,6 +295,7 @@
 }
 
 .ff-auth-display {
+    font-family: 'Archivo', var(--font-family), sans-serif;
     font-size: 42px;
     font-weight: 700;
     letter-spacing: -0.025em;

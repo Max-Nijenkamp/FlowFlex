@@ -68,9 +68,6 @@
                         <p class="ff-auth-sub">One login for HR, finance, CRM and every other module your team switched on.</p>
                     @endif
 
-                    <div class="ff-auth-trust">
-                        <span>EU-hosted</span><span>&middot;</span><span>GDPR-first</span><span>&middot;</span><span>{{ $isStaff ? 'full audit trail' : '2FA available' }}</span>
-                    </div>
                 </div>
             </aside>
         @endif

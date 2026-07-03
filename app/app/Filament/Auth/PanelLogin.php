@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Auth;
 
 use Filament\Auth\Pages\Login;
+use Filament\Schemas\Components\Component;
 use Illuminate\Contracts\Support\Htmlable;
 
 /**
@@ -23,6 +24,19 @@ class PanelLogin extends Login
         return $this->isStaff()
             ? 'FlowFlex employees only. All sessions are audited.'
             : 'Welcome back.';
+    }
+
+    protected function getEmailFormComponent(): Component
+    {
+        return parent::getEmailFormComponent()
+            ->label($this->isStaff() ? 'Staff email' : 'Work email');
+    }
+
+    protected function getRememberFormComponent(): Component
+    {
+        return parent::getRememberFormComponent()
+            ->label('Keep me signed in')
+            ->default(true);
     }
 
     private function isStaff(): bool
