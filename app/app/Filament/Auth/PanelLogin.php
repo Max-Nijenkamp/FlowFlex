@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Filament\Auth;
 
 use Filament\Auth\Pages\Login;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Component;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -28,13 +30,17 @@ class PanelLogin extends Login
 
     protected function getEmailFormComponent(): Component
     {
-        return parent::getEmailFormComponent()
-            ->label($this->isStaff() ? 'Staff email' : 'Work email');
+        return TextInput::make('email')
+            ->label($this->isStaff() ? 'Staff email' : 'Work email')
+            ->email()
+            ->required()
+            ->autocomplete()
+            ->autofocus();
     }
 
     protected function getRememberFormComponent(): Component
     {
-        return parent::getRememberFormComponent()
+        return Checkbox::make('remember')
             ->label('Keep me signed in')
             ->default(true);
     }
