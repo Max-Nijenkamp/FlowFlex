@@ -55,19 +55,20 @@ API key management for the FlowFlex REST API. Company admins create Sanctum toke
 - [ ] Ability scoping: `hr:read` token cannot POST to hr endpoints
 - [ ] Plain token never retrievable after creation
 - [ ] Revoked token → 401 immediately
-- [ ] Expired token → 401
-- [ ] Per-token rate limit returns 429 + Retry-After
+- [ ] Expired token → 401 (default 90-day expiry applied when none supplied)
+- [ ] Rotate issues a replacement with identical abilities + company binding, revokes the original after the grace window (concurrent double-rotate rejected via row lock)
+- [ ] Per-token rate limit returns 429 + Retry-After; per-company `api-company` quota enforced across a tenant's tokens
 
 ## Build Manifest (corrected to flat paths)
 
 ```
 database/migrations/xxxx_add_created_by_to_personal_access_tokens.php
 app/Data/CreateApiTokenData.php
-app/Actions/{CreateApiTokenAction,RevokeApiTokenAction,RevokeAllApiTokensAction}.php
+app/Actions/{CreateApiTokenAction,RotateApiTokenAction,RevokeApiTokenAction,RevokeAllApiTokensAction}.php
 app/Http/Middleware/EnforceModuleAccess.php
 app/Filament/App/Resources/ApiClientResource.php
-routes/api.php (v1 group: auth:sanctum + throttle + module middleware)
-tests/Feature/Core/{ApiTokenTest,ApiScopingTest}.php
+routes/api.php (v1 group: auth:sanctum + throttle + module middleware; POST auth/tokens/{id}/rotate)
+tests/Feature/Core/{ApiTokenTest,ApiScopingTest,ApiTokenRotationTest}.php
 ```
 
 Spec listed `app/.../Core/...`; real layout is flat (no `Core/` subdir) — corrected above.

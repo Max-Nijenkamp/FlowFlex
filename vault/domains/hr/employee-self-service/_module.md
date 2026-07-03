@@ -98,5 +98,3 @@ Owns **no tables** — aggregating portal. Reads sibling HR modules scoped to `A
 - [[../../../security/authn-authz]]
 - [[../../../security/tenancy-isolation]]
 - [[../../../glossary]]
-</content>
-</invoke>

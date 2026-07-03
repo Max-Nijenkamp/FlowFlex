@@ -24,6 +24,15 @@ P&L statement, balance sheet, and cash flow statement generated from the General
 
 > Rebuild blueprint. Code was stripped to the [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; nothing here is built yet. This spec is the source of truth for the rebuild.
 
+## Module-key
+
+`finance.reporting`
+
+**Priority:** v1  
+**Panel:** finance  
+**Permission prefix:** `finance.reporting`  
+**Tables:** none (pure reporting over the ledger — owns no tables)
+
 ## Purpose
 
 The module renders the three core financial statements over any period — Profit & Loss, Balance Sheet, and Cash Flow Statement — driven entirely by the general ledger. It supports comparative periods (this vs prior vs budget), drill-down from a statement line to contributing journal entries, fiscal-year-aware period selection, and export to Excel/PDF. It owns no source data of its own.

@@ -117,5 +117,3 @@ Filament artifacts (resources, calendar page, widget) and per-write-path concurr
 - [[../../../architecture/patterns/interface-service]]
 - [[../../../architecture/patterns/custom-pages]]
 - [[../../../glossary]]
-</content>
-</invoke>

@@ -24,6 +24,15 @@ Fixed asset register, depreciation schedules, and disposal tracking. Capitalised
 
 > Rebuild blueprint. Code was stripped to the [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; nothing here is built yet. This spec is the source of truth for the rebuild.
 
+## Module-key
+
+`finance.assets`
+
+**Priority:** v1  
+**Panel:** finance  
+**Permission prefix:** `finance.assets`  
+**Tables:** `fin_fixed_assets`, `fin_depreciation_entries`
+
 ## Purpose
 
 The fixed-assets register tracks each capitalised asset from acquisition to disposal. Depreciation is intended to run monthly as a batch, posting a balanced journal entry to the ledger per asset, and disposal computes gain/loss against net book value (NBV) and posts the resulting GL entry. The module is the financial counterpart to physical asset inventory (IT), but is intended to stand alone without it.

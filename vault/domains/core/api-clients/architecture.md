@@ -18,7 +18,8 @@ Token management is action-based (no multi-method service): stateless single-ste
 
 | Action | Signature | Behavior |
 |---|---|---|
-| `CreateApiTokenAction` | `run(CreateApiTokenData $data): string` | creates a Sanctum token with the requested abilities; **returns the plain token once** |
+| `CreateApiTokenAction` | `run(CreateApiTokenData $data): string` | creates a Sanctum token with the requested abilities, bound to the issuing user's `company_id`, 90-day default expiry; **returns the plain token once** |
+| `RotateApiTokenAction` | `run(string $tokenId): string` | issues a replacement with identical abilities + company binding, revokes the original after a 7-day grace overlap; **returns the new plain token once** (see Token hardening below) |
 | `RevokeApiTokenAction` | `run(string $tokenId): void` | deletes a single token row |
 | `RevokeAllApiTokensAction` | `run(): void` | revokes all tokens for the company's service user |
 

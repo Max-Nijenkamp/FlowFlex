@@ -24,6 +24,15 @@ Supplier bill management, payment scheduling, AP aging, and an approval workflow
 
 > Rebuild blueprint. Code was stripped to the [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; nothing here is built yet. This spec is the source of truth for the rebuild.
 
+## Module-key
+
+`finance.ap`
+
+**Priority:** v1  
+**Panel:** finance  
+**Permission prefix:** `finance.ap`  
+**Tables:** `fin_suppliers`, `fin_bills`, `fin_bill_lines`, `fin_payment_runs`
+
 ## Purpose
 
 AP is the outbound counterpart to AR: capture supplier bills, route them through approval by amount threshold, gate payment on a 3-way match against PO + goods receipt (when Procurement is active), batch them into payment runs, and post the corresponding liability and cash entries to the ledger. It owns supplier records (with encrypted IBAN), bills, bill lines, and payment runs.

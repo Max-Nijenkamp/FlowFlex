@@ -14,7 +14,9 @@ Intended controls. See [[../../../security/authn-authz]], [[../../../security/en
 
 ## Permissions
 
-`hr.feedback.view-any` (HR) · `hr.feedback.give` · `hr.feedback.view-own` · `hr.feedback.one-on-one`
+`hr.feedback.view-any` (HR) · `hr.feedback.give` · `hr.feedback.request` (any employee; the responder still needs `.give`) · `hr.feedback.view-own` · `hr.feedback.one-on-one`
+
+Verb-per-command: `give` and `request` are distinct command actions (both send comms — see Rate Limiting); `one-on-one` gates the participant-confidential 1-on-1 records. No state machine in this module (feedback records are append-only), so no transition verbs.
 
 ## Authorization
 

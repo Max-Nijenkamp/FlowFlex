@@ -98,5 +98,3 @@ Filament artifacts (resources, recognition feed page) and per-write-path concurr
 - [[../employee-profiles/_module]]
 - [[../../../glossary]]
 - [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]]
-</content>
-</invoke>

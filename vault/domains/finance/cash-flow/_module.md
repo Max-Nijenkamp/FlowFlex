@@ -24,6 +24,15 @@ Cash flow forecasting and a receivables-vs-payables timeline for short-term liqu
 
 > Rebuild blueprint. Code was stripped to the [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; nothing here is built yet. This spec is the source of truth for the rebuild.
 
+## Module-key
+
+`finance.cashflow`
+
+**Priority:** v1  
+**Panel:** finance  
+**Permission prefix:** `finance.cashflow`  
+**Tables:** `fin_cashflow_projections`, `fin_cashflow_items`
+
 ## Purpose
 
 The module projects weekly cash position over a standard 13-week treasury horizon. Inflows come from open invoices (by due date), outflows from scheduled supplier bills, payroll estimates, recurring expenses, and manual items; opening cash comes from bank balances. The projection is intended to be a full nightly regenerate (delete + rebuild projected rows) so it is deterministic, with a weekly low-cash alert when a projected balance breaches a threshold.

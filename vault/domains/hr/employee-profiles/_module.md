@@ -117,5 +117,3 @@ Owns `hr_employees`, `hr_departments`, `hr_emergency_contacts`; only `EmployeeSe
 - [[../../../architecture/patterns/belongs-to-company]]
 - [[../../../infrastructure/search-meilisearch]]
 - [[../../../glossary]]
-</content>
-</invoke>

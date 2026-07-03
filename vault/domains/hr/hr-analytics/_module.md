@@ -102,5 +102,3 @@ Filament artifacts (dashboard + widgets) and per-write-path concurrency tiers: [
 - [[../../../architecture/caching]]
 - [[../../../glossary]]
 - [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell]]
-</content>
-</invoke>

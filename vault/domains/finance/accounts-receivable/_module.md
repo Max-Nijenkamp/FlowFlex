@@ -24,6 +24,15 @@ Customer payment tracking, aging reports, automated dunning, and an AR dashboard
 
 > Rebuild blueprint. Code was stripped to the [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; nothing here is built yet. This spec is the source of truth for the rebuild.
 
+## Module-key
+
+`finance.ar`
+
+**Priority:** v1  
+**Panel:** finance  
+**Permission prefix:** `finance.ar`  
+**Tables:** `fin_ar_dunning_rules`, `fin_ar_writeoffs`
+
 ## Purpose
 
 AR turns the raw invoice/payment ledger into collections workflow: bucket open balances by age, chase overdue customers with escalating reminders, allocate incoming payments across invoices, and write off what can't be collected. It owns the dunning rules and write-off records; everything else it reads from [[../invoicing/_module|finance.invoicing]].

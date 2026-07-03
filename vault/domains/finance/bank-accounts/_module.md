@@ -24,6 +24,15 @@ Bank account records, manual transaction import (CSV), and reconciliation agains
 
 > Rebuild blueprint. Code was stripped to the [[../../../decisions/decision-2026-06-19-strip-to-app-admin-shell|app/admin shell]]; nothing here is built yet. This spec is the source of truth for the rebuild.
 
+## Module-key
+
+`finance.bank`
+
+**Priority:** v1-core  
+**Panel:** finance  
+**Permission prefix:** `finance.bank`  
+**Tables:** `fin_bank_accounts`, `fin_bank_transactions`
+
 ## Purpose
 
 Bank accounts mirror real-world accounts against a GL asset account. Statement lines are imported from CSV via a chunked queued job and matched against posted journal lines (invoices, expenses, manual entries) during reconciliation. IBAN and account number are encrypted at rest.
