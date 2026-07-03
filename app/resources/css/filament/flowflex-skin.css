@@ -141,8 +141,9 @@
     font-family: var(--ff-font-mono);
 }
 
-/* ---- Login / simple layout parity ---------------------------------------- */
+/* ---- Auth screens (design handoff §8–11) ---------------------------------- */
 .fi-simple-layout {
+    min-height: 100dvh;
     background-color: var(--ff-paper);
     background-image:
         radial-gradient(48rem 30rem at 15% -10%, rgb(var(--primary-500) / 0.1), transparent 60%),
@@ -152,20 +153,147 @@
 .fi-simple-main {
     background-color: var(--ff-card);
     border: 1px solid var(--ff-line-strong);
-    border-radius: 16px;
-    box-shadow: 0 28px 56px -28px rgb(17 24 39 / 0.22);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 420px;
+    box-shadow: 0 1px 2px rgb(17 24 39 / 0.04), 0 28px 56px -32px rgb(17 24 39 / 0.16);
 }
 
-/* Mono panel badge on the login card (ADMIN / APP via --ff-panel-label) */
+/* Mono panel badge on the login card (WORKSPACE / /ADMIN via --ff-panel-label) */
 .fi-simple-main::before {
     content: var(--ff-panel-label, '');
     display: block;
+    width: fit-content;
     font-family: var(--ff-font-mono);
     font-size: 10px;
     letter-spacing: 0.2em;
     color: var(--ff-ink-faint);
-    text-align: center;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Staff badge inverts to an ink chip; staff buttons are ink, never indigo */
+.fi-panel-admin .fi-simple-main::before {
+    background: var(--ff-ink);
+    color: #ffffff;
+    border-radius: 6px;
+    padding: 5px 10px;
+}
+
+.fi-panel-admin .fi-simple-main .fi-btn {
+    background-color: var(--ff-ink);
+}
+
+.fi-panel-admin .fi-simple-main .fi-btn:hover {
+    background-color: #1f2937;
+}
+
+/* Split shell: 620px dark brand panel + centered card on paper */
+.ff-auth-split {
+    display: grid;
+    grid-template-columns: minmax(420px, 620px) 1fr;
+}
+
+.ff-auth-split .fi-simple-main-ctn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.ff-auth-brand {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    background: var(--ff-flow-bg);
+    color: #ffffff;
+    padding: 52px 56px;
+}
+
+.ff-auth-brand-glow {
+    position: absolute;
+    left: 50%;
+    top: -260px;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 560px;
+    background: radial-gradient(ellipse 50% 50% at 50% 50%, rgb(79 70 229 / 0.28), rgb(56 189 248 / 0.05) 55%, transparent 75%);
+    pointer-events: none;
+}
+
+.ff-auth-paths {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.ff-pulse {
+    stroke-dasharray: 26 200;
+    animation: ff-pulse-dash 4.5s linear infinite;
+}
+
+@keyframes ff-pulse-dash {
+    from { stroke-dashoffset: 226; }
+    to { stroke-dashoffset: -226; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ff-pulse { animation: none; }
+}
+
+.ff-auth-brand-top,
+.ff-auth-brand-bottom {
+    position: relative;
+}
+
+.ff-auth-wordmark {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.ff-auth-kicker {
+    font-family: var(--ff-font-mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    color: rgb(255 255 255 / 0.4);
+}
+
+.ff-auth-display {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+    margin-top: 14px;
+}
+
+.fi-panel-admin .ff-auth-display {
+    font-size: 38px;
+    line-height: 1.1;
+}
+
+.ff-auth-sub {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgb(255 255 255 / 0.55);
+    max-width: 320px;
+}
+
+.ff-auth-trust {
+    margin-top: 28px;
+    display: flex;
+    gap: 12px;
+    font-family: var(--ff-font-mono);
+    font-size: 11px;
+    color: rgb(255 255 255 / 0.38);
+}
+
+@media (max-width: 1023px) {
+    .ff-auth-split { grid-template-columns: 1fr; }
+    .ff-auth-brand { display: none; }
 }
 
 /* ---- Dark mode: keep ink sidebar, deepen canvas --------------------------- */

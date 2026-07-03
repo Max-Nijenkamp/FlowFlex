@@ -77,6 +77,14 @@ docker compose exec mailpit ...   # inspect captured mail (8025 not published)
 
 No DTOs / Services / Filament / Permissions — local-dev infrastructure only.
 
+## Perf notes (2026-07-03)
+
+Windows-host bind-mount stat-tax made every PHP request ~3-12s. Fixes baked into the stack:
+- `vendor/`, `storage/`, `bootstrap/cache` moved to **named volumes** (`appvendor`, `appstorage`, `appbootcache`) — run `composer install` **inside the container** after dependency changes (host vendor stays for IDE/host-pest).
+- `docker/php/php.ini`: `opcache.revalidate_freq=5` + 4M realpath cache.
+- Views + Filament components cached in-container (`view:cache`, `filament:optimize`); config/route caches deliberately NOT used in dev (stale-cache foot-gun — a pre-volume `config.php` cached pgsql into host tests once).
+- Result: warm requests ~40-100ms (first hit per fpm worker still pays a ~3s opcache warmup after restart).
+
 ## Related
 
 - [[../../../infrastructure/docker-stack]] — authoritative infra spec

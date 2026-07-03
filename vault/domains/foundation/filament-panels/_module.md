@@ -112,6 +112,7 @@ tests/Feature/PanelAuthTest.php
 ## Build notes (2026-07-03)
 
 - **Switchboard+ skin implemented**: shared `resources/css/filament/flowflex-skin.css` imported by both per-panel `theme.css` files (bunny-fonts Instrument Sans + JetBrains Mono self-hosted at build, `--ff-panel-label` = `WORKSPACE` / `/ADMIN`), wired via `viteTheme` + Vite inputs. Selectors verified against rendered Filament 5 markup (`fi-sidebar-*`, `fi-topbar`, `fi-simple-layout`, `fi-ta-*`). Ink sidebar + paper canvas + mono meta + login parity live.
+- **Auth split shell implemented** (design handoff §8–11): overridden `filament-panels::layout.simple` renders the 620px `#0E1320` brand panel (radial indigo glow, 3 animated flow pulses `stroke-dasharray 26 200` 4.5s staggered, reduced-motion gated) on Login pages only; forgot/reset stay centered. Per-panel copy ("Everything flows." vs `FLOWFLEX STAFF · /ADMIN` + "Platform operations."), 420px/20px-radius card, ink staff button + ink `/ADMIN` chip, mono trust line.
 - **Deferred to core modules**: sidebar "Your panels" switcher chips + user card (needs core.workspace-hub), topbar crumb + ⌘K spotlight trigger (needs core.spotlight) — the render-hook chrome per [[../../../architecture/patterns/filament-panel-chrome]].
 
 ## Related

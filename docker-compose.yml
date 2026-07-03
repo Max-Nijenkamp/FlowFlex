@@ -36,6 +36,11 @@ x-app-build: &app-build
     dockerfile: Dockerfile
   volumes:
     - ./app:/var/www/html
+    # vendor/storage/bootstrap-cache live in named volumes: the Windows bind
+    # mount stat-tax on thousands of files is what makes requests take seconds.
+    - appvendor:/var/www/html/vendor
+    - appstorage:/var/www/html/storage
+    - appbootcache:/var/www/html/bootstrap/cache
   networks:
     - flowflex
   depends_on:
@@ -151,3 +156,6 @@ networks:
 volumes:
   pgdata:
   meili:
+  appvendor:
+  appstorage:
+  appbootcache:
