@@ -1,6 +1,8 @@
 {
   "permissions": {
     "allow": [
+      "Edit",
+      "Write",
       "Bash(php artisan *)",
       "Bash(xargs php -l)",
       "Bash(php *)",
@@ -297,8 +299,39 @@
       "Bash(grep -rn '\\\\[\\\\[\\\\.\\\\./\\\\.\\\\./\\\\.\\\\./security/' domains/foundation/*/features/)",
       "Bash(grep -rln '\\\\[\\\\[\\\\.\\\\./\\\\.\\\\./security/' domains/foundation/*/security.md domains/foundation/*/unknowns.md)",
       "Bash(rm -f products.md)",
-      "Bash(mkdir -p variants/features payments/features promotions/features reviews/features orders/features storefront/features abandoned-cart/features)"
-    ]
+      "Bash(mkdir -p variants/features payments/features promotions/features reviews/features orders/features storefront/features abandoned-cart/features)",
+      "Skill(update-config)",
+      "Edit(vault/**)",
+      "Write(vault/**)",
+      "Edit(//C/Users/maxni/Documents/projects/FlowFlex/vault/**)",
+      "Write(//C/Users/maxni/Documents/projects/FlowFlex/vault/**)",
+      "Bash(git commit -m 'docs\\(vault\\): wave 2 batch 0 — workplace maintenance fixup *)",
+      "Bash(node *)",
+      "Agent",
+      "WebFetch",
+      "Bash(cd *)",
+      "Bash(ls *)",
+      "Bash(for *)",
+      "Bash(echo *)",
+      "Bash(wc *)",
+      "Bash(basename *)",
+      "Bash(rm RESUME-VAULT-V3.md)",
+      "Bash(rm C:/Users/maxni/Documents/projects/FlowFlex/RESUME-VAULT-V3.md)",
+      "PowerShell($j = Get-Content \"C:\\\\Users\\\\maxni\\\\Documents\\\\projects\\\\FlowFlex\\\\.claude\\\\settings.local.json\" -Raw | ConvertFrom-Json; $j.permissions.allow.Count)",
+      "Bash(python3 \"C:/Users/maxni/AppData/Local/Temp/claude/C--Users-maxni-Documents-projects-FlowFlex/b926c3fd-cefe-45fc-b97d-71c347be2885/scratchpad/insert_tc_it.py\")",
+      "Bash(python \"C:/Users/maxni/AppData/Local/Temp/claude/C--Users-maxni-Documents-projects-FlowFlex/b926c3fd-cefe-45fc-b97d-71c347be2885/scratchpad/insert_tc_it.py\")",
+      "Bash(python *)",
+      "Bash(python \"C:/Users/maxni/AppData/Local/Temp/claude/C--Users-maxni-Documents-projects-FlowFlex/b926c3fd-cefe-45fc-b97d-71c347e2885/scratchpad/fix_ecommerce.py\")",
+      "Bash(python \"C:/Users/maxni/AppData/Local/Temp/claude/C--Users-maxni-Documents-projects-FlowFlex/b926c3fd-cefe-45fc-b97d-71c347be2885/scratchpad/fix_ecommerce.py\")",
+      "Bash(grep -v ':1$')",
+      "Bash(python -)",
+      "Bash(grep -n 'RateLimiter::for\\\\|^| `' architecture/security.md)",
+      "Bash(grep -i 'limit\\\\|`')",
+      "Bash(grep -rhoE '`\\(help-centre|chat-widget|csat|public-booking|guest-route|public-tracking|public-apply|help-center\\)`' domains)",
+      "Bash(git commit -q -m 'docs\\(vault\\): wave 3a — feature-gap research, all 21 domains *)",
+      "Bash(git commit -q -m 'docs: remove RESUME-VAULT-V3 — v3 program complete *)"
+    ],
+    "defaultMode": "acceptEdits"
   },
   "enabledMcpjsonServers": [
     "claude-flow"
