@@ -192,6 +192,13 @@
     justify-content: center;
     padding: 2rem;
     min-height: 100dvh;
+    /* The layout-level bloom hides behind the brand panel in split mode —
+       paint the paper + bloom on the right column itself. */
+    background-color: var(--ff-paper-deep);
+    background-image:
+        radial-gradient(44rem 30rem at 50% -10%, rgb(var(--primary-500) / 0.16), transparent 62%),
+        radial-gradient(36rem 24rem at 90% 110%, rgb(var(--primary-500) / 0.08), transparent 60%),
+        linear-gradient(to bottom, var(--ff-paper), var(--ff-paper-deep));
 }
 
 .ff-auth-brand {
