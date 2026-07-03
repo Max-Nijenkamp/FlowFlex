@@ -17,8 +17,12 @@ updated: 2026-06-20
 | id | ulid | PK. |
 | company_id | ulid | Indexed, tenant scope. |
 | name | string | |
-| referrer_reward | jsonb | `{type, value_cents/percent, note}`. |
-| referee_reward | jsonb | `{type, value_cents/percent, note}`. |
+| referrer_reward_type | string | `cash` / `credit` / `percent` (decision 2026-07-03 — split from jsonb). |
+| referrer_reward_value | bigint | Minor-unit cents for cash/credit (brick/money); basis points for percent. |
+| referrer_reward_note | string | Nullable. |
+| referee_reward_type | string | `cash` / `credit` / `percent`. |
+| referee_reward_value | bigint | Minor-unit cents for cash/credit (brick/money); basis points for percent. |
+| referee_reward_note | string | Nullable. |
 | terms | text | |
 | is_active | bool | |
 | starts_at | date | Nullable. |
@@ -51,8 +55,10 @@ erDiagram
         ulid id PK
         ulid company_id
         string name
-        jsonb referrer_reward
-        jsonb referee_reward
+        string referrer_reward_type
+        bigint referrer_reward_value
+        string referee_reward_type
+        bigint referee_reward_value
         text terms
         bool is_active
         date starts_at

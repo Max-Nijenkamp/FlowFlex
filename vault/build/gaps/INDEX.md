@@ -7,6 +7,8 @@ color: "#F97316"
 
 Bugs, spec issues, and missing details discovered during build sessions.
 
+> **2026-07-03 decision round:** two-panel-matcher row (#21), access-contract verb rule, estimated_minutes migration, and crm reward/lead-PII conventions all **resolved** (specs updated, ADRs logged, files in `_archive/build-history/`). All 13 `gap-feature-*` items were **accepted** onto the [[../ROADMAP|roadmap]] (`status: accepted`) — they stay listed until built.
+
 ---
 
 ## Open Gaps
@@ -16,11 +18,7 @@ Bugs, spec issues, and missing details discovered during build sessions.
 | [[gap-filament5-plugins-unavailable]] | low | foundation | foundation.scaffold | 2 of 4 Filament plugins still lack v5 (fullcalendar, tiptap — needed Phase 2+); shield + activitylog resolved via custom resources in core.rbac/core.audit | 2026-06-11 |
 | [[gap-switchboard-expansion-spec-missing]] | low | All | frontend | §14–25 pages built in-system with *(assumed)* copy — regenerated design bundle never landed; diff + swap when it arrives | 2026-06-12 |
 | [[gap-bank-accounts-import-page-not-in-manifest]] | low | finance | finance.bank-accounts | ImportStatementPage in Filament Artifacts but absent from Build Manifest | 2026-07-03 |
-| [[gap-two-panel-matcher-ui-row-missing]] | low | finance | finance.bank-accounts | Bank-rec + payment-run are two-panel matchers with no ui-strategy row; cite #9* — needs ADR | 2026-07-03 |
-| [[gap-projects-estimated-hours-unit-mismatch]] | medium | projects | projects.tasks | estimated_hours decimal vs platform minutes-int convention — migrate or exempt via ADR | 2026-07-03 |
-| [[gap-canaccess-verb-not-in-permission-table]] | medium | All | communications.email-channel | canAccess() cites verbs missing from security.md permission tables (9 modules so far incl. crm) — needs vault-wide lint + ADR | 2026-07-03 |
 | [[gap-crm-contracts-renewals-page-not-in-manifest]] | low | crm | crm.contracts | Renewals queue page + renew verb declared but ContractRenewalsPage absent from Build Manifest | 2026-07-03 |
-| [[gap-crm-money-pii-conventions]] | medium | crm | crm.referral-program | Reward money in jsonb blob (not minor-unit int); lead phone lacks E.164 + encryption decision | 2026-07-03 |
 | [[gap-feature-marketing-subscriber-import]] | medium | marketing | marketing.campaigns | No `core.data-import` importer for a marketing subscriber list — blocks the migrate-off-Mailchimp on-ramp (audiences only come from CRM segments) | 2026-07-03 |
 | [[gap-feature-events-attendee-import]] | medium | events | events.registrations | Attendee export specced but no bulk attendee/guest-list import — organizers expect roster upload + bulk QR ticketing | 2026-07-03 |
 | [[gap-feature-projects-task-import-export]] | medium | projects | projects.tasks | No task CSV/Excel import or export — blocks migrate-off-Asana/Monday on-ramp; only time/gantt export exists | 2026-07-03 |

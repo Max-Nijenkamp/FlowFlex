@@ -22,7 +22,7 @@ updated: 2026-06-20
 | completed_at | timestamp | nullable | |
 | owner_id | ulid | not null FK users | |
 | client_account_id | ulid | nullable | CRM link (read-only resolve) |
-| estimated_hours | int | nullable | |
+| estimated_minutes | int | nullable | |
 | estimated_cost_cents | bigint | nullable | minor currency unit |
 | color | string(7) | default per palette *(assumed)* | board/gantt display |
 | deleted_at | timestamp | nullable | SoftDeletes |
@@ -55,7 +55,7 @@ erDiagram
         timestamp completed_at
         ulid owner_id FK
         ulid client_account_id FK
-        int estimated_hours
+        int estimated_minutes
         bigint estimated_cost_cents
         string color
         timestamp deleted_at

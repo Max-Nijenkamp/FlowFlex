@@ -15,7 +15,7 @@ Members × days grid of task load, colour-coded by capacity, with drag-to-rebala
 
 ## Behaviour
 
-- Cell = sum of `estimated_hours` of a member's `todo`/`in_progress` tasks due that day.
+- Cell = sum of `estimated_minutes` of a member's `todo`/`in_progress` tasks due that day.
 - Colour by % of daily capacity: green <80%, amber 80–100%, red >100% *(assumed)*.
 - Drag a task cell to another member/day → reassign/reschedule via `UpdateTaskAction`.
 
@@ -43,7 +43,7 @@ Members × days grid of task load, colour-coded by capacity, with drag-to-rebala
 ## Test Checklist
 
 ### Unit
-- [ ] Cell total sums only `todo`/`in_progress` task `estimated_hours` bucketed on the due date.
+- [ ] Cell total sums only `todo`/`in_progress` task `estimated_minutes` bucketed on the due date.
 - [ ] Colour level boundaries correct at 80% and 100% of daily capacity (green / amber / red).
 
 ### Feature (Pest)

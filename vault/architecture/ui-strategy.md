@@ -48,8 +48,10 @@ The single decision table for "what tech do I build this screen with". Every mod
 | 17 | Gallery / directory (card grid of people/items) | **Custom Filament Page** | Page + Blade grid + Livewire filters | None | `lms.mentoring` |
 | 18 | Heat-map / matrix grid (color-coded cells) | **Custom Filament Page** | Page + Blade/CSS grid (+ apexcharts heatmap if charted) | None | `lms.skills-matrix` |
 | 19 | Spatial / floor map (positioned hotspots over an image) | **Custom Filament Page** + Alpine | Page + absolute-positioned divs over floor image, click-to-act | Polling 30s (live occupancy) | `workplace.desk-booking` |
+| 20 | Kiosk / scan-station (shared terminal, chrome hidden, touch/scan-first) | **Custom Filament Page** in kiosk mode (render hooks strip sidebar/topbar; device-scoped guard) | Page + `simplesoftwareio/simple-qrcode` + [[architecture/patterns/filament-panel-chrome]] hooks | Polling / none | `operations.inventory` scan-station, `workplace.visitors` / `events.registrations` check-in |
+| 21 | Two-panel matcher (left worklist vs right candidates, match/confirm) | **Custom Filament Page** + Livewire | Page + two Livewire panels + match actions | None | `finance.bank-accounts` reconciliation, `finance.accounts-payable` payment run, `procurement.goods-receipt` match board, `procurement.purchase-orders` sourcing |
 
-Rows **3–11 and 17–19 are custom pages** — each must cite its kind in [[architecture/patterns/page-blueprints]] and pass [[architecture/patterns/custom-page-checklist]] before its module is `complete`.
+Rows **3–11 and 17–21 are custom pages** — each must cite its kind in [[architecture/patterns/page-blueprints]] and pass [[architecture/patterns/custom-page-checklist]] before its module is `complete`. Rows 20–21 added per [[../decisions/decision-2026-07-03-pos-kiosk-ui-row]] and [[../decisions/decision-2026-07-03-two-panel-matcher-ui-row]].
 
 ---
 

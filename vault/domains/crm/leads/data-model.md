@@ -21,7 +21,7 @@ updated: 2026-06-20
 | `name` | string | Lead / person name |
 | `company_name` | string | Prospect company |
 | `email` | string | Used for contact matching on convert |
-| `phone` | string | |
+| `phone` | string | E.164 via `propaganistas/laravel-phone` (decision 2026-07-03). |
 | `source` | string | manual / website / referral / event / import |
 | `status` | string | new / working / qualified / converted / unqualified |
 | `owner_id` | ulid | FK → `users` |
@@ -68,3 +68,5 @@ erDiagram
         string email
     }
 ```
+
+> **PII decision (2026-07-03):** lead `email`/`phone` stay **plaintext** (matching `crm.contacts` — search/dedupe need them queryable); covered by the CRM retention rules in [[../../../architecture/data-lifecycle]]. Phone always normalized to E.164 on the DTO.

@@ -40,7 +40,7 @@ flowchart TD
 | Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
 | `ProcurementPoResource` | #1 CRUD resource (layer view) | badge-status, relation-panels | Procurement view over Operations POs: sourcing, approval state, commitment |
-| `SourcingBoard` | #9-style comparison custom page *(assumed -- quote comparison, two-panel matcher family)* | side-by-side quotes | Collect/compare quotes, select winner (draft POs only) |
+| `SourcingBoard` | #21 two-panel matcher custom page | side-by-side quotes | Collect/compare quotes, select winner (draft POs only) |
 
 Hosted in **/operations** (Purchase Orders nav group). Every artifact gates on `canAccess() = Auth::user()->can('procurement.purchase-orders.view-any') && BillingService::hasModule('procurement.purchase-orders')` per [[../../../architecture/filament-patterns]] #1 -- the board states it explicitly.
 

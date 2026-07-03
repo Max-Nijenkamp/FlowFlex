@@ -2,7 +2,7 @@
 type: gap
 severity: medium
 category: feature
-status: open
+status: accepted
 domain: communications
 color: "#F97316"
 discovered: 2026-07-03

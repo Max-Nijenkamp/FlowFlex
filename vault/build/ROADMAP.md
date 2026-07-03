@@ -56,8 +56,28 @@ From `_archive/build-history/` — code-level traps the previous build hit:
 - **Static analysis**: plain PHPStan + `@property` docblocks, not Larastan (boot crash — ADR 2026-06-11).
 - **Null-team 403 family**: after every session touching panels/auth/middleware run `/flowflex:verify` (scripted Livewire `$refresh` POST catches it) — [[../architecture/patterns/tenant-context-pitfalls]].
 
+## Accepted research features (2026-07-03 decision round)
+
+All 13 researched feature gaps were accepted; build each alongside its module's phase (the gap file is the mini-spec until the module spec absorbs it):
+
+| Feature | Module | Phase | Gap |
+|---|---|---|---|
+| Bulk/CSV user invites | core.invitations | 1 | [[gaps/gap-feature-core-bulk-invite]] |
+| Email suppression list (complaints + soft bounces) | foundation.email | 0 | [[gaps/gap-feature-foundation-email-suppression]] |
+| Task CSV/Excel import + export | projects.tasks | 4 | [[gaps/gap-feature-projects-task-import-export]] |
+| Broadcast recipient CSV import | communications.broadcast | 4 | [[gaps/gap-feature-comms-broadcast-recipient-import]] |
+| DMS batch template generation (mail-merge) | dms.templates | 4 | [[gaps/gap-feature-dms-batch-template-generation]] |
+| Subscriber-list CSV import | marketing.campaigns | 5 | [[gaps/gap-feature-marketing-subscriber-import]] |
+| Attendee/guest-list import + bulk QR ticketing | events.registrations | 5 | [[gaps/gap-feature-events-attendee-import]] |
+| Contract full-text search + tags | legal.contracts | 5 | [[gaps/gap-feature-legal-contract-search-tags]] |
+| Visitor QR pre-reg → kiosk check-in (row #20) | workplace.visitors | 5 | [[gaps/gap-feature-visitor-qr-checkin]] |
+| Inventory barcode/QR label printing | operations.inventory | 5 | [[gaps/gap-feature-inventory-barcode-labels]] |
+| IT asset QR labels + scan-to-ticket | it.assets | 5 | [[gaps/gap-feature-it-asset-qr-labels]] |
+| External dashboard share links (signed, read-only) | analytics.dashboards | 5 | [[gaps/gap-feature-analytics-public-dashboard-share]] |
+| AI inbound webhook trigger (catch hook) | ai.workflows | 5 | [[gaps/gap-feature-ai-inbound-webhook-trigger]] |
+
 ## Related
 
-- [[gaps/INDEX|Open gaps]] (13 feature gaps from the 2026-07 research are backlog candidates — schedule them into their module's phase row when accepted)
+- [[gaps/INDEX|Open gaps]]
 - [[../00-index/status-board|Status board]] · [[../_meta/artifact-registry|Artifact registry]] · [[../_meta/module-graph|Module graph]]
 - [[../architecture/way-of-working|Definition of done]] · [[../architecture/local-dev|Local dev]]

@@ -17,7 +17,7 @@ updated: 2026-06-20
 `id, template_id FK, company_id, name, order`.
 
 ## `proj_template_tasks`
-`id, template_id FK, section_id FK, company_id, title, description, estimated_hours, day_offset, order`.
+`id, template_id FK, section_id FK, company_id, title, description, estimated_minutes, day_offset, order`.
 
 ## `proj_template_milestones`
 `id, template_id FK, company_id, title, day_offset`.
@@ -46,7 +46,7 @@ erDiagram
         ulid section_id FK
         ulid company_id
         string title
-        decimal estimated_hours
+        integer estimated_minutes (minutes, int — unit decision 2026-07-03)
         int day_offset
         int order
     }

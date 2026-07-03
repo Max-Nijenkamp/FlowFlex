@@ -24,7 +24,7 @@ updated: 2026-06-20
 | `priority` | enum | urgent/high/medium/low |
 | `assignee_id` | ulid | nullable, project member — "Assignee must be a project member." |
 | `due_date` | date | nullable |
-| `estimated_hours` | decimal | nullable |
+| `estimated_minutes` | integer | nullable | (minutes, int — unit decision 2026-07-03)
 | `tags` | string[] | spatie/laravel-tags |
 
 ### AddDependencyData
@@ -36,7 +36,7 @@ updated: 2026-06-20
 ## Output
 
 ### TaskData
-`id, title, status, priority, assignee_name, due_date, estimated_hours, project_id, section_id, subtask_count, blocked_by[], comment_count`.
+`id, title, status, priority, assignee_name, due_date, estimated_minutes, project_id, section_id, subtask_count, blocked_by[], comment_count`.
 
 ## Public / Portal Endpoints
 

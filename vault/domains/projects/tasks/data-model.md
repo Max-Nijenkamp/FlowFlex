@@ -23,7 +23,7 @@ updated: 2026-06-20
 | priority | string | default `medium` | urgent/high/medium/low |
 | assignee_id | ulid | nullable FK users | project member |
 | due_date | date | nullable | |
-| estimated_hours | decimal(6,2) | nullable | |
+| estimated_minutes | integer | nullable | | (minutes, int — unit decision 2026-07-03)
 | order | int | default 0 | board/section order |
 | completed_at | timestamp | nullable | *(assumed)* |
 | deleted_at | timestamp | nullable | SoftDeletes |
@@ -63,7 +63,7 @@ erDiagram
         string priority
         ulid assignee_id FK
         date due_date
-        decimal estimated_hours
+        integer estimated_minutes (minutes, int — unit decision 2026-07-03)
         int order
         timestamp completed_at
         timestamp deleted_at

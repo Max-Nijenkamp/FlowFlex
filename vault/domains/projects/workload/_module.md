@@ -25,7 +25,7 @@ Team capacity view showing each member's task load per day; identifies overloade
 
 | Type | Module | Why |
 |---|---|---|
-| Hard | [[../tasks/_module\|projects.tasks]] | assignee + estimated_hours + due_date inputs |
+| Hard | [[../tasks/_module\|projects.tasks]] | assignee + estimated_minutes + due_date inputs |
 | Hard | [[../../core/billing-engine/_module\|core.billing]] + [[../../core/rbac/_module\|core.rbac]] | gating + permissions |
 | Soft | [[../../hr/employee-profiles/_module\|hr.profiles]] | capacity from HR record *(assumed: default 8h/day without it)* |
 | Soft | [[../resource-allocation/_module\|projects.resources]] | allocation overlay |

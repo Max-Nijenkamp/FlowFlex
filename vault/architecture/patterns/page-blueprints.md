@@ -163,6 +163,30 @@ Row #19. Custom page + Alpine — absolute-positioned hotspots over a floor imag
 
 ---
 
+## Kiosk / Scan Station
+
+Row #20 (per [[../../decisions/decision-2026-07-03-pos-kiosk-ui-row|ADR]]). Chrome-stripped Filament custom page on a **device-scoped guard** — shared terminal, not a per-user session.
+
+- **Regions** — *stage* (single large task area: scan prompt / check-in card) · *feedback band* (big success/failure state after each scan) · *idle screen* (branding + "scan to begin") · minimal *footer* (device name, staff-unlock affordance).
+- **Skin/tokens** — full-screen paper canvas, panel sidebar/topbar stripped via render hooks ([[filament-panel-chrome]]); oversized type + touch targets (min 48px); domain accent only on the feedback band (success tint / danger tint).
+- **States** — *idle*: attract screen. *Scanning*: input focused, scanner-as-keyboard captures into a hidden field. *Success*: full-band confirmation, auto-reset after ~4s. *Failure*: clear reason (unknown code / already checked in / not eligible) + retry. *Offline/error*: "Station offline — see staff" takeover; never a stack trace.
+- **Realtime default** — polling or none; the station itself is the writer.
+- **Interactions** — scan → lookup → act (check in / receive / count) in ONE round-trip · manual search fallback behind a staff unlock · every write names its limiter and runs the same pessimistic guards as the panel path (capacity, duplicates). Device guard + rate limits per [[../security]] must be pinned before first kiosk build.
+
+---
+
+## Two-Panel Matcher
+
+Row #21 (per [[../../decisions/decision-2026-07-03-two-panel-matcher-ui-row|ADR]]). Reconciliation surfaces: a left worklist of unmatched items vs right candidate matches, with confirm/override actions.
+
+- **Regions** — *left panel* (worklist: unmatched bank lines / flagged matches / quotes — selectable rows) · *right panel* (candidates for the selected item, ranked, with confidence/variance shown) · *action bar* (match / confirm / override / reject with notes) · *progress header* (n of m reconciled).
+- **Skin/tokens** — two paper panels with a visible gutter; selected left row = 2px primary ring; candidate confidence as mono percentages; variance amounts in mono, negative in danger ink; matched rows fade to ink-faint.
+- **States** — *empty worklist*: "All reconciled" (celebratory emptied state). *No candidates*: right panel offers manual search + create-adjustment path. *Error*: per-panel inline error + retry, panels fail independently. *Loading*: row skeletons per panel.
+- **Realtime default** — none; matching is a deliberate single-operator task.
+- **Interactions** — select left item → candidates load right · click candidate → preview the pairing (amounts diffed) → confirm · override/reject requires notes (audited) · keyboard: ↑/↓ worklist, enter to confirm the top candidate. Money writes go through the owning service under the pessimistic tier per [[../../decisions/decision-2026-07-02-optimistic-locking-standard|concurrency]].
+
+---
+
 ## Notification Bell (render hook, not a page)
 
 Row #10. Not a custom page — a Livewire component mounted via the panel `GLOBAL_SEARCH_BEFORE`/topbar render hook on **every** panel (see [[filament-panel-chrome]]).

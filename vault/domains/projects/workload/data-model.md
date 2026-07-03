@@ -16,7 +16,7 @@ updated: 2026-06-20
 
 | Table / source | Owner | Used for |
 |---|---|---|
-| `proj_tasks` | projects.tasks | assignee, estimated_hours, due_date, status |
+| `proj_tasks` | projects.tasks | assignee, estimated_minutes, due_date, status |
 | capacity (working-time) | hr.profiles | per-user daily capacity (default 8h when inactive) |
 | `proj_resource_allocations` | projects.resources | allocation overlay |
 
@@ -32,7 +32,7 @@ erDiagram
     proj_tasks {
         ulid id PK
         ulid assignee_id FK
-        decimal estimated_hours
+        integer estimated_minutes (minutes, int — unit decision 2026-07-03)
         date due_date
         string status
     }

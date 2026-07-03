@@ -38,7 +38,7 @@ Complete accounting stack: general ledger, invoicing, expenses, AP/AR, bank reco
 | [[general-ledger/_module\|General Ledger]] | `finance.ledger` | v1-core | planned | — (anchor) | resource ×3 + trial-balance report page (#9) |
 | [[invoicing/_module\|Invoicing]] | `finance.invoicing` | v1-core | planned | ledger | resource ×2 (pdf-preview, line repeater) + stats widget (#6) |
 | [[expenses/_module\|Expenses]] | `finance.expenses` | v1-core | planned | ledger | resource ×3 (state-badge, receipt upload) |
-| [[bank-accounts/_module\|Bank Accounts]] | `finance.bank` | v1-core | planned | ledger | resource ×2 + import wizard (#7) + reconciliation matcher (#9*) |
+| [[bank-accounts/_module\|Bank Accounts]] | `finance.bank` | v1-core | planned | ledger | resource ×2 + import wizard (#7) + reconciliation matcher (#21) |
 | [[accounts-receivable/_module\|Accounts Receivable]] | `finance.ar` | v1 | planned | invoicing | resource + aging/statement report pages (#9) + money actions |
 | [[accounts-payable/_module\|Accounts Payable]] | `finance.ap` | v1 | planned | ledger | resource ×2 + aging + payment-run report pages (#9) |
 | [[budgets/_module\|Budgets]] | `finance.budgets` | v1 | planned | ledger | resource + variance report page (#9) + widget (#6) |
@@ -49,7 +49,7 @@ Complete accounting stack: general ledger, invoicing, expenses, AP/AR, bank reco
 | [[cash-flow/_module\|Cash Flow]] | `finance.cashflow` | v1 | planned | invoicing, bank | cash-flow report page (#9) + low-cash widget (#6) |
 | [[fixed-assets/_module\|Fixed Assets]] | `finance.assets` | v1 | planned | ledger | resource + depreciation-run wizard (#7) |
 
-<sub>`#9*` — bank reconciliation is a two-panel matcher with no exact ui-strategy row; cited as closest (#9), flagged for a possible new blueprint kind (see [[../../build/gaps/INDEX|open gaps]]).</sub>
+<sub>Two-panel matcher pages (bank reconciliation, AP payment run) cite row #21 per [[../../decisions/decision-2026-07-03-two-panel-matcher-ui-row|ADR 2026-07-03]].</sub>
 
 Build order: ledger → invoicing → expenses → bank → AR/AP → budgets/reporting/tax → rest ([[../../build/BUILD-ORDER]]).
 

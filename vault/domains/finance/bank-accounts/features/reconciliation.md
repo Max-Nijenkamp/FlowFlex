@@ -21,7 +21,7 @@ Imported transactions are matched against posted journal lines (invoices, expens
 
 ## UI
 
-- **Kind**: custom-page (two-pane matcher)
+- **Kind**: custom-page — ui-strategy row #21 two-panel matcher ([[../../../../architecture/patterns/page-blueprints#Two-Panel Matcher]])
 - **Page**: "Reconciliation" under `/finance/bank/{account}/reconcile`
 - **Layout**: unreconciled bank txns on the left, suggested journal lines on the right; balance comparison strip (bank vs GL)
 - **Key interactions**: `suggestMatches` exact-amount within a ±5-day window *(assumed)*, click to link a txn to a journal line, unreconcile, `balanceComparison` bank vs GL

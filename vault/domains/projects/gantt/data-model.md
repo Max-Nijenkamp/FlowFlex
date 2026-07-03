@@ -34,7 +34,7 @@ erDiagram
     proj_tasks {
         ulid id PK
         date due_date
-        decimal estimated_hours
+        integer estimated_minutes (minutes, int — unit decision 2026-07-03)
     }
     proj_milestones {
         ulid id PK

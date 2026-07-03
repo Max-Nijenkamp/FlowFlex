@@ -11,7 +11,10 @@ Architectural decisions, one file per decision. Moved from `build/decisions/` to
 
 | Date | Decision | Status |
 |---|---|---|
-| 2026-07-03 | [[decisions/decision-2026-07-03-pos-kiosk-ui-row\|Kiosk / scan-station UI-strategy row (#20) — shared-terminal scan/touch surfaces]] | proposed |
+| 2026-07-03 | [[decisions/decision-2026-07-03-two-panel-matcher-ui-row\|Two-panel matcher — ui-strategy row #21 + blueprint]] | decided |
+| 2026-07-03 | [[decisions/decision-2026-07-03-access-contract-verb-rule\|Access-contract verbs must exist in the module's Permissions table]] | decided |
+| 2026-07-03 | [[decisions/decision-2026-07-03-external-dashboard-share\|External read-only dashboard share links (relaxes intra-company rule)]] | decided |
+| 2026-07-03 | [[decisions/decision-2026-07-03-pos-kiosk-ui-row\|Kiosk / scan-station UI-strategy row (#20) — Filament kiosk-mode]] | decided |
 | 2026-07-03 | [[decisions/decision-2026-07-03-public-endpoint-limiters\|Public / guest endpoint rate limiters registered]] | decided |
 | 2026-07-02 | [[decisions/decision-2026-07-02-optimistic-locking-standard\|Optimistic locking — platform standard for concurrent edits]] | decided |
 | 2026-07-02 | [[decisions/decision-2026-07-02-spec-template-v3-exploded-format\|Spec template v3 — exploded format, per-feature test checklists, concurrency notes]] | decided |

@@ -1,7 +1,7 @@
 ---
 type: adr
 date: 2026-07-03
-status: proposed
+status: decided
 domain: All
 color: "#F97316"
 ---
@@ -42,7 +42,7 @@ so builders cite a row that doesn't fit.
 3. **Two rows** (authenticated in-panel scan-station vs fully-public kiosk). *Deferred* — likely overkill;
    one row with a "guard" column note can cover both until a second consumer proves the split.
 
-## Decision (proposed)
+## Decision (ratified 2026-07-03)
 
 Add **row #20 — Kiosk / scan-station (shared-terminal, full-screen, touch/scan-first)** to
 [[architecture/ui-strategy]]:
@@ -51,14 +51,15 @@ Add **row #20 — Kiosk / scan-station (shared-terminal, full-screen, touch/scan
 |---|---|---|---|---|---|
 | 20 | Kiosk / scan-station (shared terminal, chrome hidden, touch/scan-first) | **Custom Filament Page** in kiosk mode (render hooks strip sidebar/topbar; device-scoped guard) — or **Vue 3 + Inertia** when fully public/unauthenticated | Page + `simplesoftwareio/simple-qrcode`; Filament panel render hooks ([[architecture/patterns/filament-panel-chrome]]) | Polling / none | `operations.inventory` scan-station, `workplace.visitors` check-in, `events.registrations` check-in |
 
-Open sub-question for the build-time owner: **Filament-page-in-kiosk-mode vs Vue+Inertia** per surface —
-authenticated shared-staff terminals (warehouse) fit a chrome-stripped Filament page; unauthenticated public
-kiosks (visitor lobby) fit Vue+Inertia under a scoped guard. The row lists both; the picker is per-consumer.
-No new package required — `simplesoftwareio/simple-qrcode`, Filament, and Vue+Inertia are all already chosen.
+**Tech sub-question resolved at ratification: Filament kiosk-mode is the default** — kiosk pages are
+chrome-stripped Filament custom pages (render hooks strip sidebar/topbar per
+[[architecture/patterns/filament-panel-chrome]]) on a device-scoped auth. One stack, panel infra reused;
+offline tolerance deferred. Vue+Inertia remains the documented exception path only if a fully-public
+unauthenticated kiosk proves unworkable on a device guard — deviating requires a follow-up ADR.
+No new package required — `simplesoftwareio/simple-qrcode` and Filament are already chosen.
 
-Status is **proposed**: raising for the architecture owner to ratify (or fold into a broader ui-strategy
-refresh) rather than freezing unilaterally, since [[_meta/spec-template]] and the ui-strategy table are
-change-controlled.
+Ratified by the product owner 2026-07-03; row #20 added to the frozen table via the same amendment path as
+rows 17–19.
 
 ## Consequences
 

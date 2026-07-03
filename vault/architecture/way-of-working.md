@@ -49,6 +49,7 @@ Work strictly from the spec's **Build Manifest** — if a file isn't in the mani
 | N+1 check | Telescope queries tab on the module's list + view pages | no duplicate queries |
 | TypeScript sync | `php artisan typescript:transform` (if DTOs changed) | generated.d.ts updated |
 | pgsql migrate (if migrations changed) | `docker compose exec -T app php artisan migrate:fresh --seed --force` | clean — sqlite tests miss pgsql constraint ordering |
+| Access-contract verbs | grep the module's `can('…')` citations vs `security.md` `## Permissions` | every cited verb exists in the table ([[../decisions/decision-2026-07-03-access-contract-verb-rule\|ADR]]) |
 
 A failing gate means the session is **not done** — fix or log a gap; never sync `complete` over a red gate.
 

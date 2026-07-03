@@ -21,7 +21,7 @@ updated: 2026-06-20
 | `start_date` / `target_date` | date | target ≥ start — "Target date must be on or after the start date." |
 | `owner_id` | ulid | in company users |
 | `client_account_id` | ulid | nullable, resolved via CRM read API |
-| `estimated_hours` | int | nullable, min:0 |
+| `estimated_minutes` | int | nullable, min:0 |
 | `estimated_cost_cents` | bigint | nullable, min:0 |
 | `member_ids` | ulid[] | company users |
 
@@ -29,7 +29,7 @@ updated: 2026-06-20
 
 ### ProjectData
 
-`id, name, status, start_date, target_date, owner_name, client_name, progress_percent, health (on-track/at-risk/off-track), estimated_hours, actual_hours, estimated_cost_cents, actual_cost_cents`.
+`id, name, status, start_date, target_date, owner_name, client_name, progress_percent, health (on-track/at-risk/off-track), estimated_minutes, actual_hours, estimated_cost_cents, actual_cost_cents`.
 
 ## Public / Portal Endpoints
 

@@ -2,7 +2,7 @@
 type: gap
 severity: low
 category: feature
-status: open
+status: accepted
 domain: workplace
 color: "#F97316"
 discovered: 2026-07-03

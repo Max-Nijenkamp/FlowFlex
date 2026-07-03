@@ -45,7 +45,7 @@ flowchart TD
 | Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
 | `ThreeWayMatchResource` | #1 CRUD resource (read-heavy) | badge-status, filter-tabs (matched / flagged / overridden / rejected) | Verdict rows; resolve actions on flagged rows |
-| `ThreeWayMatchBoard` | #9-style review custom page *(assumed -- two-panel matcher family, see [[../../../../vault/build/gaps/gap-two-panel-matcher-ui-row-missing|gap]])* | variance triage | Flagged matches with PO/GRN/bill side-by-side |
+| `ThreeWayMatchBoard` | #21 two-panel matcher custom page | variance triage | Flagged matches with PO/GRN/bill side-by-side |
 
 Hosted in **/operations**. Every artifact gates on `canAccess() = Auth::user()->can('procurement.goods-receipt.view-any') && BillingService::hasModule('procurement.goods-receipt')` per [[../../../architecture/filament-patterns]] #1 -- the board states it explicitly; override carries its own verb.
 
