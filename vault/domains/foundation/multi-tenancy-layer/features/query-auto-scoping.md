@@ -38,12 +38,12 @@ Every read on a tenant model is auto-filtered to the current company; every crea
 ## Test Checklist
 
 ### Unit
-- [ ] `creating` hook stamps `company_id` from `CompanyContext::currentId()`
+- [x] `creating` hook stamps `company_id` from `CompanyContext::currentId()`
 
 ### Feature (Pest)
-- [ ] Company A context returns zero company B rows (`TenantIsolationTest`)
-- [ ] A read with no context throws `MissingCompanyContextException` (fail-closed)
-- [ ] `withoutGlobalScope(CompanyScope)` forbidden outside admin/support (`TenancyTest`)
+- [x] Company A context returns zero company B rows (`TenantIsolationTest`)
+- [x] A read with no context throws `MissingCompanyContextException` (fail-closed)
+- [x] `withoutGlobalScope(CompanyScope)` forbidden outside admin/support (`TenancyTest`)
 
 ## Unknowns
 

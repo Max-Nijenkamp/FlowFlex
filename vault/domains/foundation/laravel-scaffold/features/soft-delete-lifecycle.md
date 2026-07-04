@@ -36,11 +36,11 @@ Every model soft-deletes (`deleted_at`) rather than hard-deleting — recoverabl
 ## Test Checklist
 
 ### Unit
-- [ ] A soft-deleted model is excluded from default queries and is restorable
+- [x] A soft-deleted model is excluded from default queries and is restorable
 
 ### Feature (Pest)
-- [ ] `ModelsTest` asserts `SoftDeletes` on models (arch gate)
-- [ ] Ordinary delete sets `deleted_at`; `forceDelete` is reserved for GDPR cascades
+- [x] `ModelsTest` asserts `SoftDeletes` on models (arch gate)
+- [x] Ordinary delete sets `deleted_at`; `forceDelete` is reserved for GDPR cascades
 
 ## Unknowns
 

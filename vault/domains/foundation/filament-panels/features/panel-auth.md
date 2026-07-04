@@ -41,14 +41,14 @@ Login, password reset, email verification, 2FA, and profile editing — a shared
 ## Test Checklist
 
 ### Unit
-- [ ] Login resolves the guard-correct model (`web` → User, `admin` → Admin)
+- [x] Login resolves the guard-correct model (`web` → User, `admin` → Admin)
 
 ### Feature (Pest)
-- [ ] Cross-guard login rejected — Admin on `/app`, User on `/admin` (`PanelAuthTest`)
-- [ ] Login throttling engages after repeated failed attempts
+- [x] Cross-guard login rejected — Admin on `/app`, User on `/admin` (`PanelAuthTest`)
+- [x] Login throttling engages after repeated failed attempts
 
 ### Livewire
-- [ ] Login form validation: invalid credentials show an error; throttled shows the rate-limit message
+- [x] Login form validation: invalid credentials show an error; throttled shows the rate-limit message
 
 ## Unknowns
 

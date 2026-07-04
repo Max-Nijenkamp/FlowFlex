@@ -37,11 +37,11 @@ Tenant context is set on every authenticated request — including Livewire upda
 ## Test Checklist
 
 ### Unit
-- [ ] `SetCompanyContext` sets `CompanyContext` + `setPermissionsTeamId` from `$user->company_id`
+- [x] `SetCompanyContext` sets `CompanyContext` + `setPermissionsTeamId` from `$user->company_id`
 
 ### Feature (Pest)
-- [ ] Every authenticated `/app` request establishes context; missing context → 403 (fail-closed, never cross-tenant)
-- [ ] A Livewire follow-up POST re-runs the middleware (`isPersistent: true`) — no null-team 403
+- [x] Every authenticated `/app` request establishes context; missing context → 403 (fail-closed, never cross-tenant)
+- [x] A Livewire follow-up POST re-runs the middleware (`isPersistent: true`) — no null-team 403
 
 ## Unknowns
 

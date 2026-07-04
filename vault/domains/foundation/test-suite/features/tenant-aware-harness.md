@@ -36,11 +36,11 @@ Pest on in-memory SQLite with a one-line `setCompany()` helper, so every test ca
 ## Test Checklist
 
 ### Unit
-- [ ] `setCompany($company)` sets `CompanyContext` + `setPermissionsTeamId`
+- [x] `setCompany($company)` sets `CompanyContext` + `setPermissionsTeamId`
 
 ### Feature (Pest)
-- [ ] A feature test scoped via `setCompany` sees only that company's rows
-- [ ] `Http::fake()` blocks real Stripe/mail calls; the rate limiter is cleared per auth test
+- [x] A feature test scoped via `setCompany` sees only that company's rows
+- [x] `Http::fake()` blocks real Stripe/mail calls; the rate limiter is cleared per auth test
 
 ## Unknowns
 

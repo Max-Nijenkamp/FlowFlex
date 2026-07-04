@@ -40,11 +40,11 @@ A single non-production seeder that stands up a fully-populated "FlowFlex Demo" 
 ## Test Checklist
 
 ### Unit
-- [ ] Owner `syncPermissions` grants every current `web`-guard permission
+- [x] Owner `syncPermissions` grants every current `web`-guard permission
 
 ### Feature (Pest)
-- [ ] `LocalDevSeeder` throws `RuntimeException` in production; seeds the demo company in non-prod
-- [ ] The three demo logins authenticate; `test@test.nl` is both staff admin and tenant owner
+- [x] `LocalDevSeeder` throws `RuntimeException` in production; seeds the demo company in non-prod
+- [x] The three demo logins authenticate; `test@test.nl` is both staff admin and tenant owner
 
 ## Unknowns
 

@@ -42,13 +42,13 @@ The FlowFlex-staff console — separate `admin` guard, `Admin` model, no company
 ## Test Checklist
 
 ### Unit
-- [ ] `AdminPanelProvider` registers the `admin` guard + `Admin` model with no CompanyScope
+- [x] `AdminPanelProvider` registers the `admin` guard + `Admin` model with no CompanyScope
 
 ### Feature (Pest)
-- [ ] Staff `Admin` authenticates on `/admin`; a tenant `User` is rejected (`PanelAuthTest`)
+- [x] Staff `Admin` authenticates on `/admin`; a tenant `User` is rejected (`PanelAuthTest`)
 
 ### Livewire
-- [ ] `/admin` renders the staff shell for an authenticated Admin; unauthenticated → login
+- [x] `/admin` renders the staff shell for an authenticated Admin; unauthenticated → login
 
 ## Unknowns
 

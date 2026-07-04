@@ -38,11 +38,11 @@ Every model's primary key is a ULID (`HasUlids`), not an auto-increment integer 
 ## Test Checklist
 
 ### Unit
-- [ ] A new model's PK is a 26-char ULID, lexicographically sortable by creation
+- [x] A new model's PK is a 26-char ULID, lexicographically sortable by creation
 
 ### Feature (Pest)
-- [ ] `ModelsTest` asserts models declare `HasUlids` (arch gate)
-- [ ] Tenant table migrations use `foreignUlid('company_id')`
+- [x] `ModelsTest` asserts models declare `HasUlids` (arch gate)
+- [x] Tenant table migrations use `foreignUlid('company_id')`
 
 ## Unknowns
 

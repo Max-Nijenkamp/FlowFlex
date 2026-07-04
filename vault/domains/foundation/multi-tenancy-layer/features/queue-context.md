@@ -38,11 +38,11 @@ Tenant context survives the queue boundary: a job that runs minutes later in a H
 ## Test Checklist
 
 ### Unit
-- [ ] `WithCompanyContext` reads `company_id` from the job payload
+- [x] `WithCompanyContext` reads `company_id` from the job payload
 
 ### Feature (Pest)
-- [ ] Queued listener restores company + team before `handle()` (`QueueContextTest`)
-- [ ] A job dispatched without the middleware does not read another company's rows (null-tenant guard)
+- [x] Queued listener restores company + team before `handle()` (`QueueContextTest`)
+- [x] A job dispatched without the middleware does not read another company's rows (null-tenant guard)
 
 ## Unknowns
 

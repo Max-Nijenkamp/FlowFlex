@@ -43,14 +43,14 @@ The tenant-facing Filament 5 shell every domain's resources plug into — Switch
 ## Test Checklist
 
 ### Unit
-- [ ] `AppPanelProvider` registers `web` guard, CompanyScope, and the persistent auth-middleware chain
+- [x] `AppPanelProvider` registers `web` guard, CompanyScope, and the persistent auth-middleware chain
 
 ### Feature (Pest)
-- [ ] Authenticated `User` reaches `/app`; `SetCompanyContext` runs on every request
-- [ ] Suspended company blocked by `EnsureSubscriptionActive`; setup-incomplete → wizard
+- [x] Authenticated `User` reaches `/app`; `SetCompanyContext` runs on every request
+- [x] Suspended company blocked by `EnsureSubscriptionActive`; setup-incomplete → wizard
 
 ### Livewire
-- [ ] A Livewire table `$refresh` POST keeps tenant context (no null-team 403) — persistent middleware
+- [x] A Livewire table `$refresh` POST keeps tenant context (no null-team 403) — persistent middleware
 
 ## Unknowns
 

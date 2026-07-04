@@ -38,12 +38,12 @@ Resend posts bounce/complaint events to a signed webhook; a hard bounce flags th
 ## Test Checklist
 
 ### Unit
-- [ ] Hard-bounce event payload maps to `email_deliverable = false`; non-hard-bounce types are no-ops
+- [x] Hard-bounce event payload maps to `email_deliverable = false`; non-hard-bounce types are no-ops
 
 ### Feature (Pest)
-- [ ] Valid-signature hard bounce flags the address undeliverable (`BounceWebhookTest`)
-- [ ] Invalid/unsigned request rejected before the controller — no state change
-- [ ] Webhook route enforces `throttle:60,1`
+- [x] Valid-signature hard bounce flags the address undeliverable (`BounceWebhookTest`)
+- [x] Invalid/unsigned request rejected before the controller — no state change
+- [x] Webhook route enforces `throttle:60,1`
 
 ## Unknowns
 

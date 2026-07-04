@@ -38,11 +38,11 @@ One command brings up all 9 services and a reproducible dev environment; the dev
 ## Test Checklist
 
 ### Unit
-- [ ] Compose config declares all 9 services with postgres/redis healthcheck `depends_on` gates
+- [x] Compose config declares all 9 services with postgres/redis healthcheck `depends_on` gates
 
 ### Feature (Pest)
-- [ ] `docker compose up -d` brings the stack healthy; `localhost:8080` serves the app
-- [ ] `migrate --seed` runs clean from an empty DB (M0 exit gate)
+- [x] `docker compose up -d` brings the stack healthy; `localhost:8080` serves the app
+- [x] `migrate --seed` runs clean from an empty DB (M0 exit gate)
 
 ## Unknowns
 

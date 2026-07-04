@@ -40,11 +40,11 @@ Horizon processes Redis-backed queues in priority order; the dashboard is an adm
 ## Test Checklist
 
 ### Unit
-- [ ] The `defaults` supervisor declares the queue priority order
+- [x] The `defaults` supervisor declares the queue priority order
 
 ### Feature (Pest)
-- [ ] `/horizon` reachable by the `admin` guard, blocked for tenant users
-- [ ] A failed job lands in `failed_jobs` and is retryable
+- [x] `/horizon` reachable by the `admin` guard, blocked for tenant users
+- [x] A failed job lands in `failed_jobs` and is retryable
 
 ## Unknowns
 

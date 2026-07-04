@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Support\Mail;
 
+use App\Models\User;
 use App\Support\Services\CompanyContext;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Mail\Factory;
+use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\SentMessage;
 use Illuminate\Queue\SerializesModels;
 
 /**
@@ -44,5 +48,28 @@ abstract class FlowFlexMailable extends Mailable implements ShouldQueue
     public function buildViewData(): array
     {
         return array_merge(parent::buildViewData(), ['branding' => $this->branding()]);
+    }
+
+    /**
+     * Suppression list: never send to an address flagged undeliverable by the
+     * bounce webhook. Runs at send time (inside the queued job, tenant context
+     * already restored) so late flags still suppress queued mail.
+     */
+    /** @param  Mailer|Factory  $mailer */
+    public function send($mailer): ?SentMessage
+    {
+        $this->to = array_values(array_filter(
+            $this->to,
+            fn (array $recipient): bool => ! User::query()
+                ->where('email', $recipient['address'])
+                ->where('email_deliverable', false)
+                ->exists(),
+        ));
+
+        if ($this->to === []) {
+            return null;
+        }
+
+        return parent::send($mailer);
     }
 }

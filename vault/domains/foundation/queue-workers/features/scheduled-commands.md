@@ -36,10 +36,10 @@ A dedicated `scheduler` container (`php artisan schedule:work`) enqueues recurri
 ## Test Checklist
 
 ### Unit
-- [ ] A scheduled command declares `withoutOverlapping()` + `onOneServer()`
+- [x] A scheduled command declares `withoutOverlapping()` + `onOneServer()`
 
 ### Feature (Pest)
-- [ ] An overlapping run is skipped (single instance); recurring tenant work dispatches carrying `company_id`
+- [x] An overlapping run is skipped (single instance); recurring tenant work dispatches carrying `company_id`
 
 ## Unknowns
 

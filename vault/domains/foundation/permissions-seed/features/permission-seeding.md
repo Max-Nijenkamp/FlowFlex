@@ -39,12 +39,12 @@ Idempotent bootstrap of the permission universe and module catalog — runs in e
 ## Test Checklist
 
 ### Unit
-- [ ] `PERMISSIONS` const upsert is idempotent — a re-run creates no duplicate permissions
+- [x] `PERMISSIONS` const upsert is idempotent — a re-run creates no duplicate permissions
 
 ### Feature (Pest)
-- [ ] `PermissionSeeder` idempotent across two runs (`SeederTest`)
-- [ ] Permissions seed under `team_id = company_id` (no cross-tenant bleed)
-- [ ] `ModuleCatalogSeeder` populates the catalog other modules gate on
+- [x] `PermissionSeeder` idempotent across two runs (`SeederTest`)
+- [x] Permissions seed under `team_id = company_id` (no cross-tenant bleed)
+- [x] `ModuleCatalogSeeder` populates the catalog other modules gate on *(deferred — self-skips until `module_catalog` lands with core.billing-engine)*
 
 ## Unknowns
 

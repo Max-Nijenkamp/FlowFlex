@@ -36,11 +36,11 @@ Pest arch tests that turn the vault's hard rules into build-time gates — the C
 ## Test Checklist
 
 ### Unit
-- [ ] `TenancyTest` flags a class calling `withoutGlobalScope(CompanyScope)` outside admin/support
+- [x] `TenancyTest` flags a class calling `withoutGlobalScope(CompanyScope)` outside admin/support
 
 ### Feature (Pest)
-- [ ] `ModelsTest` fails a model missing `HasUlids` / `SoftDeletes`
-- [ ] `LayersTest` fails on `dd` / `dump` / `var_dump` in `app/`
+- [x] `ModelsTest` fails a model missing `HasUlids` / `SoftDeletes`
+- [x] `LayersTest` fails on `dd` / `dump` / `var_dump` in `app/`
 
 ## Unknowns
 
