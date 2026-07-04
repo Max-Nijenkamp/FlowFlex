@@ -69,6 +69,9 @@ This is how the collapsed-rail off-center bug (vendor `scrollbar-gutter: stable`
 
 ## Gotchas
 
+- **Root-owned compiled views 500 the panels** (`touch(): Utime failed`): every root-run `docker compose exec app php artisan ...` or test run compiles Blade views owned by root that php-fpm (www-data) cannot overwrite. After ANY container artisan/test session, finish with:
+  `docker compose exec -T app sh -c 'rm -f storage/framework/views/*.php; chmod -R 777 storage/framework'`
+
 - Success-notification carryover: `body.innerText.includes('Saved')` right after an action can match the PREVIOUS action's toast. Assert on unique text or fresh navigation.
 - Interacting across `browser.newContext()` = separate sessions — log in per context.
 - Sidebar collapse state persists in localStorage per context — reset by clicking the toggle before screenshotting the expanded state.

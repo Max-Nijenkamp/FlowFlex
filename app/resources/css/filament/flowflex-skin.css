@@ -1094,54 +1094,115 @@
     color: #34d399;
 }
 
-/* ---- Settings tabs (company-settings page) — underline tabs per design ----- */
-.ff-settings-tabs {
-    display: flex;
-    gap: 4px;
-    border-bottom: 1px solid var(--ff-line);
-    margin-bottom: 24px;
+/* ---- Filament Tabs as their own card (no Section wrapper needed) ----------- */
+.fi-sc-tabs {
+    background: var(--ff-card);
+    border: 1px solid var(--ff-line-strong);
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgb(17 24 39 / 0.04);
+    overflow: hidden;
 }
 
-.ff-settings-tabs button {
-    padding: 10px 16px;
+.fi-sc-tabs > .fi-tabs {
+    padding: 0 12px;
+    border-bottom: 1px solid var(--ff-line);
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    gap: 4px;
+}
+
+/* underline tabs per the design system (no pill backgrounds) */
+.fi-sc-tabs .fi-tabs-item {
+    padding: 13px 14px;
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: transparent !important;
     font-size: 13.5px;
     font-weight: 600;
     color: var(--ff-ink-faint);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    cursor: pointer;
+    transition: color 0.15s ease-out, border-color 0.15s ease-out;
 }
 
-.ff-settings-tabs button:hover {
+.fi-sc-tabs .fi-tabs-item:hover {
     color: var(--ff-ink);
 }
 
-.ff-settings-tabs button.ff-on {
+.fi-sc-tabs .fi-tabs-item.fi-active {
     color: var(--ff-ink);
     border-bottom-color: var(--primary-500);
 }
 
-.dark .ff-settings-tabs {
+.fi-sc-tabs > .fi-sc-tabs-tab {
+    padding: 24px;
+}
+
+/* smooth tab-panel entrance */
+@keyframes ff-tab-in {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fi-sc-tabs-tab.fi-active {
+    animation: ff-tab-in 0.22s cubic-bezier(0, 0, 0.2, 1);
+}
+
+.dark .fi-sc-tabs {
+    background: #111827;
+    border-color: rgb(255 255 255 / 0.1);
+}
+
+.dark .fi-sc-tabs > .fi-tabs {
     border-bottom-color: rgb(255 255 255 / 0.08);
 }
 
-.dark .ff-settings-tabs button {
+.dark .fi-sc-tabs .fi-tabs-item {
     color: rgb(255 255 255 / 0.45);
 }
 
-.dark .ff-settings-tabs button:hover,
-.dark .ff-settings-tabs button.ff-on {
+.dark .fi-sc-tabs .fi-tabs-item:hover,
+.dark .fi-sc-tabs .fi-tabs-item.fi-active {
     color: #ffffff;
 }
 
-.ff-settings-tabs-wrp section + section {
-    margin-top: 0;
+/* ---- Motion pass: consistent micro-transitions ----------------------------- */
+.fi-sidebar-item-btn,
+.ff-panel-chip,
+.ff-side-toggle,
+.ff-user-card,
+.ff-user-menu-item,
+.ff-theme-row button,
+.ff-spotlight-row,
+.ff-mkt-row {
+    transition: background-color 0.13s ease-out, color 0.13s ease-out;
 }
 
-.ff-settings-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.ff-mkt-row:hover {
+    background: color-mix(in srgb, var(--primary-400) 6%, transparent);
+}
+
+/* popover pop-in (user menu) */
+.ff-pop-enter { transition: opacity 0.15s ease-out, transform 0.15s cubic-bezier(0, 0, 0.2, 1); }
+.ff-pop-leave { transition: opacity 0.1s ease-in, transform 0.1s ease-in; }
+.ff-pop-from { opacity: 0; transform: translateY(6px) scale(0.98); }
+.ff-pop-to { opacity: 1; transform: translateY(0) scale(1); }
+
+/* spotlight panel scale-in rides its overlay transition */
+.ff-spotlight-overlay .ff-spotlight-panel {
+    animation: ff-tab-in 0.18s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fi-sc-tabs-tab.fi-active,
+    .ff-spotlight-overlay .ff-spotlight-panel {
+        animation: none;
+    }
+
+    .ff-pop-enter,
+    .ff-pop-leave {
+        transition: none;
+    }
 }
 
 /* ---- Workspace hub tiles ---------------------------------------------------- */

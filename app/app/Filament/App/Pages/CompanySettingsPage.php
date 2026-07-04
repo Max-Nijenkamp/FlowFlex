@@ -20,16 +20,16 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Alignment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 /**
  * Company settings (core.company-settings/settings-tabs, ui-strategy row
- * #7): ONE full-width section card with Filament tabs inside — Identity /
+ * #7): the Tabs component IS the card (owner call: no Section around tabs) — Identity /
  * Locale / Business / Privacy — each tab saving independently via its own
  * footer action. Owner-only.
  *
@@ -94,109 +94,106 @@ class CompanySettingsPage extends Page
         return $schema
             ->statePath('data')
             ->components([
-                Section::make()
-                    ->schema([
-                        Tabs::make('settings')
-                            ->persistTabInQueryString()
-                            ->tabs([
-                                Tab::make('Identity')
-                                    ->schema([
-                                        TextInput::make('name')
-                                            ->label('Company name')
-                                            ->required()
-                                            ->maxLength(255),
-                                        TextInput::make('slug')
-                                            ->label('Workspace slug')
-                                            ->required()
-                                            ->alphaDash()
-                                            ->maxLength(64)
-                                            ->rule(Rule::unique('companies', 'slug')->ignore($companyId)),
-                                        ColorPicker::make('primary_color')
-                                            ->label('Primary color')
-                                            ->required()
-                                            ->regex('/^#[0-9a-fA-F]{6}$/'),
-                                        Actions::make([
-                                            Action::make('saveIdentity')->label('Save identity')->action('saveIdentity'),
-                                        ]),
+                Tabs::make('settings')
+                    ->persistTabInQueryString()
+                    ->tabs([
+                        Tab::make('Identity')
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('Company name')
+                                    ->required()
+                                    ->maxLength(255),
+                                TextInput::make('slug')
+                                    ->label('Workspace slug')
+                                    ->required()
+                                    ->alphaDash()
+                                    ->maxLength(64)
+                                    ->rule(Rule::unique('companies', 'slug')->ignore($companyId)),
+                                ColorPicker::make('primary_color')
+                                    ->label('Primary color')
+                                    ->required()
+                                    ->regex('/^#[0-9a-fA-F]{6}$/'),
+                                Actions::make([
+                                    Action::make('saveIdentity')->label('Save identity')->action('saveIdentity'),
+                                ])->columnSpanFull()->alignment(Alignment::End),
+                            ])
+                            ->columns(2),
+                        Tab::make('Locale')
+                            ->schema([
+                                Select::make('timezone')
+                                    ->options(array_combine(timezone_identifiers_list(), timezone_identifiers_list()))
+                                    ->searchable()
+                                    ->required(),
+                                Select::make('locale')
+                                    ->label('Language')
+                                    ->options(['en' => 'English', 'nl' => 'Nederlands'])
+                                    ->required(),
+                                Select::make('date_format')
+                                    ->options([
+                                        'd-m-Y' => date('d-m-Y').' (d-m-Y)',
+                                        'Y-m-d' => date('Y-m-d').' (Y-m-d)',
+                                        'd/m/Y' => date('d/m/Y').' (d/m/Y)',
+                                        'm/d/Y' => date('m/d/Y').' (m/d/Y)',
                                     ])
-                                    ->columns(2),
-                                Tab::make('Locale')
-                                    ->schema([
-                                        Select::make('timezone')
-                                            ->options(array_combine(timezone_identifiers_list(), timezone_identifiers_list()))
-                                            ->searchable()
-                                            ->required(),
-                                        Select::make('locale')
-                                            ->label('Language')
-                                            ->options(['en' => 'English', 'nl' => 'Nederlands'])
-                                            ->required(),
-                                        Select::make('date_format')
-                                            ->options([
-                                                'd-m-Y' => date('d-m-Y').' (d-m-Y)',
-                                                'Y-m-d' => date('Y-m-d').' (Y-m-d)',
-                                                'd/m/Y' => date('d/m/Y').' (d/m/Y)',
-                                                'm/d/Y' => date('m/d/Y').' (m/d/Y)',
-                                            ])
-                                            ->required(),
-                                        Select::make('currency')
-                                            ->options(['EUR' => 'EUR — Euro', 'USD' => 'USD — US Dollar', 'GBP' => 'GBP — British Pound'])
-                                            ->required(),
-                                        Select::make('currency_position')
-                                            ->label('Symbol position')
-                                            ->options(['before' => 'Before the amount (€ 12,50)', 'after' => 'After the amount (12,50 €)'])
-                                            ->required(),
-                                        Select::make('decimal_places')
-                                            ->options([0 => '0', 2 => '2'])
-                                            ->required(),
-                                        Actions::make([
-                                            Action::make('saveLocale')->label('Save locale')->action('saveLocale'),
-                                        ]),
-                                    ])
-                                    ->columns(2),
-                                Tab::make('Business')
-                                    ->schema([
-                                        Select::make('fiscal_year_start_month')
-                                            ->label('Fiscal year starts in')
-                                            ->options(array_combine(range(1, 12), array_map(
-                                                fn (int $m): string => now()->startOfYear()->addMonths($m - 1)->format('F'),
-                                                range(1, 12),
-                                            )))
-                                            ->required(),
-                                        Select::make('week_start')
-                                            ->label('Week starts on')
-                                            ->options(['monday' => 'Monday', 'sunday' => 'Sunday'])
-                                            ->required(),
-                                        Select::make('holiday_calendar_country')
-                                            ->label('Public holiday calendar')
-                                            ->options(['NL' => 'Netherlands', 'BE' => 'Belgium', 'DE' => 'Germany'])
-                                            ->required(),
-                                        Select::make('max_upload_mb')
-                                            ->label('Max upload size')
-                                            ->options([10 => '10 MB', 25 => '25 MB', 50 => '50 MB', 100 => '100 MB'])
-                                            ->required(),
-                                        Actions::make([
-                                            Action::make('saveBusiness')->label('Save business settings')->action('saveBusiness'),
-                                        ]),
-                                    ])
-                                    ->columns(2),
-                                Tab::make('Privacy')
-                                    ->schema([
-                                        Select::make('data_retention_months')
-                                            ->label('Data retention')
-                                            ->options([12 => '12 months', 24 => '24 months', 36 => '36 months', 60 => '60 months'])
-                                            ->required(),
-                                        TextInput::make('dsar_email')
-                                            ->label('DSAR contact email')
-                                            ->email()
-                                            ->maxLength(255),
-                                        Toggle::make('consent_logging_enabled')
-                                            ->label('Log consent events'),
-                                        Actions::make([
-                                            Action::make('savePrivacy')->label('Save privacy settings')->action('savePrivacy'),
-                                        ]),
-                                    ])
-                                    ->columns(2),
-                            ]),
+                                    ->required(),
+                                Select::make('currency')
+                                    ->options(['EUR' => 'EUR — Euro', 'USD' => 'USD — US Dollar', 'GBP' => 'GBP — British Pound'])
+                                    ->required(),
+                                Select::make('currency_position')
+                                    ->label('Symbol position')
+                                    ->options(['before' => 'Before the amount (€ 12,50)', 'after' => 'After the amount (12,50 €)'])
+                                    ->required(),
+                                Select::make('decimal_places')
+                                    ->options([0 => '0', 2 => '2'])
+                                    ->required(),
+                                Actions::make([
+                                    Action::make('saveLocale')->label('Save locale')->action('saveLocale'),
+                                ])->columnSpanFull()->alignment(Alignment::End),
+                            ])
+                            ->columns(2),
+                        Tab::make('Business')
+                            ->schema([
+                                Select::make('fiscal_year_start_month')
+                                    ->label('Fiscal year starts in')
+                                    ->options(array_combine(range(1, 12), array_map(
+                                        fn (int $m): string => now()->startOfYear()->addMonths($m - 1)->format('F'),
+                                        range(1, 12),
+                                    )))
+                                    ->required(),
+                                Select::make('week_start')
+                                    ->label('Week starts on')
+                                    ->options(['monday' => 'Monday', 'sunday' => 'Sunday'])
+                                    ->required(),
+                                Select::make('holiday_calendar_country')
+                                    ->label('Public holiday calendar')
+                                    ->options(['NL' => 'Netherlands', 'BE' => 'Belgium', 'DE' => 'Germany'])
+                                    ->required(),
+                                Select::make('max_upload_mb')
+                                    ->label('Max upload size')
+                                    ->options([10 => '10 MB', 25 => '25 MB', 50 => '50 MB', 100 => '100 MB'])
+                                    ->required(),
+                                Actions::make([
+                                    Action::make('saveBusiness')->label('Save business settings')->action('saveBusiness'),
+                                ])->columnSpanFull()->alignment(Alignment::End),
+                            ])
+                            ->columns(2),
+                        Tab::make('Privacy')
+                            ->schema([
+                                Select::make('data_retention_months')
+                                    ->label('Data retention')
+                                    ->options([12 => '12 months', 24 => '24 months', 36 => '36 months', 60 => '60 months'])
+                                    ->required(),
+                                TextInput::make('dsar_email')
+                                    ->label('DSAR contact email')
+                                    ->email()
+                                    ->maxLength(255),
+                                Toggle::make('consent_logging_enabled')
+                                    ->label('Log consent events'),
+                                Actions::make([
+                                    Action::make('savePrivacy')->label('Save privacy settings')->action('savePrivacy'),
+                                ])->columnSpanFull()->alignment(Alignment::End),
+                            ])
+                            ->columns(2),
                     ]),
             ]);
     }

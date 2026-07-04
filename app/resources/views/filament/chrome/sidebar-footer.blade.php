@@ -47,7 +47,9 @@
     {{-- User card doubles as the account menu (topbar user menu is hidden —
          profile and sign-out live here, per the handoff sidebar footer). --}}
     <div class="ff-user-menu" x-data="{ open: false }" x-on:click.outside="open = false" x-on:keydown.escape="open = false">
-        <div class="ff-user-menu-panel" x-show="open" x-cloak>
+        <div class="ff-user-menu-panel" x-show="open" x-cloak
+            x-transition:enter="ff-pop-enter" x-transition:enter-start="ff-pop-from" x-transition:enter-end="ff-pop-to"
+            x-transition:leave="ff-pop-leave" x-transition:leave-start="ff-pop-to" x-transition:leave-end="ff-pop-from">
             {{-- Theme switcher (mirrors Filament's, sans dropdown close()) --}}
             <div
                 class="ff-theme-row"
