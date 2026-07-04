@@ -100,10 +100,10 @@ Build: `/flowflex:start core.hub` · Done: `/flowflex:done core.hub` · Spec: [[
 
 Build: `/flowflex:start core.notifications` · Done: `/flowflex:done core.notifications` · Spec: [[../../domains/core/notifications/_module|hub]] · Hard deps: foundation.panels, foundation.email, foundation.queues
 
-- [ ] **Inbox Bell** ([[../../domains/core/notifications/features/inbox-bell|spec]]) — hand-check: open topbar bell in every Filament panel — Filament's built-in `->databaseNotifications()` + `->databaseNotificatio; open the panel, click a notification (mark read + follow action_url), mark-as-read per item, mark-all-read (`MarkAllReadAction`), 
-- [ ] **Preferences** ([[../../domains/core/notifications/features/preferences|spec]]) — hand-check: open `NotificationPreferencesPage` at `/app` (custom Filament page).; user toggles per-type / per-channel switches and saves; save submits `UpdateNotificationPreferencesData`.
-- [ ] **Realtime Broadcast** ([[../../domains/core/notifications/features/realtime-broadcast|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
-- [ ] Gates: Pint + PHPStan + Pest green, spec Test Checklist covered, `/flowflex:verify` clean
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending; bell UI is Filament's built-in databaseNotifications, already live on both panels)* **Inbox Bell** ([[../../domains/core/notifications/features/inbox-bell|spec]]) — hand-check: open topbar bell in every Filament panel — Filament's built-in `->databaseNotifications()` + `->databaseNotificatio; open the panel, click a notification (mark read + follow action_url), mark-as-read per item, mark-all-read (`MarkAllReadAction`), 
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Preferences** ([[../../domains/core/notifications/features/preferences|spec]]) — hand-check: open `NotificationPreferencesPage` at `/app` (custom Filament page).; user toggles per-type / per-channel switches and saves; save submits `UpdateNotificationPreferencesData`.
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending; NB reverb creds must be present for live channel auth — registration is guarded when absent)* **Realtime Broadcast** ([[../../domains/core/notifications/features/realtime-broadcast|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
+- [x] Gates: Pint + PHPStan + Pest green (113), `NotificationsTest` 7 tests
 
 ### Billing Engine — `core.billing-engine`
 

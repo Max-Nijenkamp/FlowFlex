@@ -2,7 +2,7 @@
 domain: core
 module: notifications
 type: module
-build-status: planned
+build-status: in-progress
 status: wip
 color: "#4ADE80"
 updated: 2026-07-03
@@ -52,13 +52,13 @@ In-app notification inbox and email alert delivery for all FlowFlex domains. Eve
 
 ## Test Checklist
 
-- [ ] Tenant isolation: a notification for company A never lands on company B's channel/user
-- [ ] Module gating: n/a (platform module, always active — always-free core)
-- [ ] Preference email=off suppresses mail channel, keeps in-app (and vice versa)
-- [ ] Unread count correct after mark-read / mark-all-read
-- [ ] `NotificationCreated` broadcast emitted on `company.{id}.notifications` on create
-- [ ] Consumed events (`ModuleActivated` etc.) generate owner notifications per contract
-- [ ] All notifications queued on `notifications` queue
+- [x] Tenant isolation: a notification for company A never lands on company B's channel/user
+- [x] Module gating: n/a (platform module, always active — always-free core)
+- [x] Preference email=off suppresses mail channel, keeps in-app (and vice versa)
+- [x] Unread count correct after mark-read / mark-all-read
+- [x] `NotificationCreated` broadcast emitted on `company.{id}.notifications` on create
+- [x] Consumed events (`ModuleActivated` etc.) generate owner notifications per contract
+- [x] All notifications queued on `notifications` queue
 
 ## Build Manifest (corrected to flat paths)
 
