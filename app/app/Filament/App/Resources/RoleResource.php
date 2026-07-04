@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\App\Resources;
 
 use App\Actions\DeleteRoleAction;
+use App\Models\ModuleCatalogEntry;
 use App\Models\User;
 use App\Services\BillingService;
 use App\Support\Services\BuiltInRoles;
@@ -63,6 +64,7 @@ class RoleResource extends Resource
         return $schema->components([
             Section::make('Role')
                 ->description('Members holding this role get the union of every checked permission.')
+                ->columnSpanFull()
                 ->schema([
                     TextInput::make('name')
                         ->required()
@@ -71,16 +73,18 @@ class RoleResource extends Resource
                         ->helperText(fn (?Role $record): ?string => $record !== null && BuiltInRoles::isBuiltIn($record->name)
                             ? 'Built-in role — the name is fixed.'
                             : null),
+                    ...self::permissionMatrix(),
                 ]),
-            ...self::permissionMatrix(),
         ]);
     }
 
     /**
-     * One section per ACTIVE module (module-scoped-permissions): permissions
-     * of inactive modules can neither render nor be granted.
+     * Permission matrix grouped per ACTIVE module (module-scoped-permissions):
+     * permissions of inactive modules can neither render nor be granted.
+     * One flat card — module groups are hairline-divided checkbox lists, not
+     * stacked sections (owner call 2026-07-04: section-per-module too clunky).
      *
-     * @return array<int, Section>
+     * @return array<int, CheckboxList>
      */
     protected static function permissionMatrix(): array
     {
@@ -92,6 +96,10 @@ class RoleResource extends Resource
 
         $active = app(BillingService::class)->activeModules($companyId);
 
+        $moduleNames = ModuleCatalogEntry::query()
+            ->whereIn('module_key', $active)
+            ->pluck('name', 'module_key');
+
         $byModule = Permission::query()
             ->where('guard_name', 'web')
             ->orderBy('name')
@@ -100,17 +108,14 @@ class RoleResource extends Resource
             ->only($active);
 
         return $byModule
-            ->map(fn ($permissions, string $moduleKey): Section => Section::make($moduleKey)
-                ->compact()
-                ->schema([
-                    CheckboxList::make('matrix.'.str_replace('.', '_', $moduleKey))
-                        ->label('')
-                        ->options($permissions->mapWithKeys(
-                            fn (string $name): array => [$name => str($name)->afterLast('.')->headline()->toString()],
-                        )->all())
-                        ->columns(3)
-                        ->bulkToggleable(),
-                ]))
+            ->map(fn ($permissions, string $moduleKey): CheckboxList => CheckboxList::make('matrix.'.str_replace('.', '_', $moduleKey))
+                ->label($moduleNames[$moduleKey] ?? str($moduleKey)->afterLast('.')->headline()->toString())
+                ->options($permissions->mapWithKeys(
+                    fn (string $name): array => [$name => str($name)->afterLast('.')->headline()->toString()],
+                )->all())
+                ->columns(3)
+                ->bulkToggleable()
+                ->extraFieldWrapperAttributes(['class' => 'ff-perm-group']))
             ->values()
             ->all();
     }

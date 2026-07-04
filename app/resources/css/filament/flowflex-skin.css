@@ -1415,6 +1415,84 @@
 .dark .ff-ws-name { color: #fff; }
 .dark .ff-ws-close:hover { background: rgb(255 255 255 / 0.06); }
 
+/* ---- Audit entry modal (description-list styling) --------------------------- */
+.ff-audit { display: flex; flex-direction: column; gap: 18px; }
+
+.ff-audit-top {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--ff-line);
+}
+
+.ff-audit-event {
+    font-family: var(--ff-font-mono); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.04em; color: var(--ff-ink);
+    background: var(--ff-paper-deep); border: 1px solid var(--ff-line);
+    border-radius: 7px; padding: 4px 10px;
+}
+
+.ff-audit-when { font-size: 12px; color: var(--ff-ink-faint); white-space: nowrap; }
+
+.ff-audit-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+.ff-audit-cell { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+
+.ff-audit-label,
+.ff-audit-block-title {
+    font-family: var(--ff-font-mono); font-size: 9.5px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ff-ink-faint);
+}
+
+.ff-audit-value { font-size: 13.5px; font-weight: 500; color: var(--ff-ink); overflow-wrap: anywhere; }
+
+.ff-audit-block { display: flex; flex-direction: column; gap: 8px; }
+
+.ff-audit-rows {
+    border: 1px solid var(--ff-line); border-radius: 10px; overflow: hidden;
+}
+
+.ff-audit-row {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+    padding: 9px 13px; font-size: 13px;
+}
+
+.ff-audit-row:nth-child(even) { background: var(--ff-paper-deep); }
+
+.ff-audit-key { color: var(--ff-ink-soft); flex: none; }
+
+.ff-audit-val { color: var(--ff-ink); text-align: right; overflow-wrap: anywhere; }
+
+.ff-audit-val s { color: var(--ff-ink-faint); margin-right: 8px; }
+
+.ff-audit-none { font-size: 13px; color: var(--ff-ink-faint); }
+
+.dark .ff-audit-top { border-bottom-color: rgb(255 255 255 / 0.08); }
+.dark .ff-audit-event { background: rgb(255 255 255 / 0.05); border-color: rgb(255 255 255 / 0.1); color: #fff; }
+.dark .ff-audit-value, .dark .ff-audit-val { color: #fff; }
+.dark .ff-audit-rows { border-color: rgb(255 255 255 / 0.1); }
+.dark .ff-audit-row:nth-child(even) { background: rgb(255 255 255 / 0.04); }
+
+/* ---- Role permission matrix: one card, hairline-divided module groups ------ */
+.ff-perm-group {
+    border-top: 1px solid var(--ff-line);
+    padding-top: 15px;
+    margin-top: 2px;
+}
+
+/* module name as a switchboard group header, not a field label */
+.ff-perm-group .fi-fo-field-label,
+.ff-perm-group .fi-fo-field-label * {
+    font-family: var(--ff-font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ff-ink-faint);
+}
+
+.dark .ff-perm-group {
+    border-top-color: rgb(255 255 255 / 0.08);
+}
+
 /* ---- Module marketplace — switchboard boards (design Switchboard.vue) ------ */
 .ff-mkt { display: flex; flex-direction: column; gap: 22px; }
 .ff-mkt-search {

@@ -10,7 +10,6 @@ use App\Models\User;
 use App\Services\BillingService;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -114,16 +113,8 @@ class AuditLogResource extends Resource
             ->recordActions([
                 ViewAction::make()
                     ->modalHeading('Audit entry')
-                    ->infolist([
-                        TextEntry::make('created_at')->dateTime(),
-                        TextEntry::make('log_name')->label('Domain'),
-                        TextEntry::make('event')->label('Event'),
-                        TextEntry::make('description'),
-                        TextEntry::make('causer.full_name')->label('By')->default('System'),
-                        TextEntry::make('properties')
-                            ->label('Changes')
-                            ->formatStateUsing(fn (Activity $record): string => json_encode($record->properties, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) ?: '{}'),
-                    ]),
+                    ->modalWidth('lg')
+                    ->modalContent(fn (Activity $record) => view('filament.app.audit-entry', ['record' => $record])),
             ])
             ->emptyStateHeading('No activity yet')
             ->emptyStateDescription('Every change in your workspace will show up here — who did what, and when.');
