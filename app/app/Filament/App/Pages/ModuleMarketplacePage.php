@@ -30,6 +30,8 @@ class ModuleMarketplacePage extends Page
 
     protected static string|\UnitEnum|null $navigationGroup = 'Billing';
 
+    protected static ?int $navigationSort = 1;
+
     protected static ?string $navigationLabel = 'Marketplace';
 
     protected static ?string $title = 'Module marketplace';

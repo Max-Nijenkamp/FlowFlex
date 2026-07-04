@@ -1142,7 +1142,6 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-width: 640px;
 }
 
 /* ---- Workspace hub tiles ---------------------------------------------------- */
@@ -1168,40 +1167,57 @@
 .dark .ff-hub-tile { background: #111827; border-color: rgb(255 255 255 / 0.08); }
 .dark .ff-hub-name { color: #fff; }
 
-/* ---- Module marketplace grid (switchboard cards) --------------------------- */
-.ff-mkt { display: flex; flex-direction: column; gap: 26px; }
+/* ---- Module marketplace — switchboard boards (design Switchboard.vue) ------ */
+.ff-mkt { display: flex; flex-direction: column; gap: 22px; }
 .ff-mkt-search {
     width: 320px; padding: 9px 12px; font-size: 13.5px;
     border: 1px solid var(--ff-line-strong); border-radius: 9px; background: var(--ff-card);
 }
-.ff-mkt-search:focus { outline: none; border-color: var(--primary-500); }
-.ff-mkt-domain-label {
-    display: flex; align-items: center; gap: 8px;
-    font-family: var(--ff-font-mono); font-size: 11px; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--ff-ink-faint); margin-bottom: 10px;
+.ff-mkt-search:focus { outline: none; border-color: var(--primary-500); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-500) 15%, transparent); }
+.ff-mkt-board {
+    background: var(--ff-card); border: 1px solid var(--ff-line-strong);
+    border-radius: 14px; overflow: hidden; box-shadow: 0 1px 2px rgb(17 24 39 / 0.04);
 }
-.ff-mkt-square { width: 10px; height: 10px; border-radius: 3px; }
-.ff-mkt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-.ff-mkt-card {
-    background: var(--ff-card); border: 1px dashed var(--ff-line-strong);
-    border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px;
+.ff-mkt-board-head {
+    display: flex; align-items: center; gap: 9px;
+    padding: 13px 20px; border-bottom: 1px solid var(--ff-line);
 }
-.ff-mkt-card.ff-on { border-style: solid; }
-.ff-mkt-card header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.ff-mkt-card h3 { font-size: 14.5px; font-weight: 600; }
+.ff-mkt-board-head h2 {
+    font-family: 'Archivo', var(--font-family), sans-serif;
+    font-size: 15px; font-weight: 700; letter-spacing: -0.02em;
+}
+.ff-mkt-count {
+    margin-left: auto; font-family: var(--ff-font-mono);
+    font-size: 10.5px; color: var(--ff-ink-faint);
+}
+.ff-mkt-square { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.ff-mkt-row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 11px 20px; border-bottom: 1px solid var(--ff-line);
+}
+.ff-mkt-row:last-child { border-bottom: none; }
+.ff-mkt-row:nth-child(odd) { background: #faf9f5; }
+.ff-mkt-row.ff-off .ff-mkt-name,
+.ff-mkt-row.ff-off .ff-mkt-key { opacity: 0.6; }
+.ff-mkt-row-main { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
+.ff-mkt-name { font-size: 13.5px; font-weight: 600; color: var(--ff-ink); }
+.ff-mkt-key { font-family: var(--ff-font-mono); font-size: 10.5px; color: var(--ff-ink-faint); }
+.ff-mkt-price { font-family: var(--ff-font-mono); font-size: 12px; color: var(--ff-ink-soft); white-space: nowrap; }
 .ff-mkt-pill {
     font-family: var(--ff-font-mono); font-size: 10px; font-weight: 700;
-    padding: 2px 8px; border-radius: 999px; background: var(--ff-paper-deep); color: var(--ff-ink-faint);
+    padding: 2px 9px; border-radius: 999px; background: var(--ff-paper-deep); color: var(--ff-ink-faint);
+    flex: none;
 }
 .ff-mkt-pill.ff-active { background: color-mix(in srgb, var(--primary-400) 18%, transparent); color: var(--primary-600); }
 .ff-mkt-pill.ff-incl { background: #e5f5ee; color: #0e8c61; }
-.ff-mkt-key { font-family: var(--ff-font-mono); font-size: 11px; color: var(--ff-ink-faint); }
-.ff-mkt-price { font-family: var(--ff-font-mono); font-size: 12.5px; color: var(--ff-ink-soft); }
-.ff-mkt-actions { margin-top: 8px; }
+.ff-mkt-action { flex: none; min-width: 104px; display: flex; justify-content: flex-end; }
 .ff-mkt-empty { color: var(--ff-ink-faint); font-size: 14px; }
-.dark .ff-mkt-card { background: #111827; border-color: rgb(255 255 255 / 0.12); }
+.dark .ff-mkt-board { background: #111827; border-color: rgb(255 255 255 / 0.1); }
+.dark .ff-mkt-board-head { border-bottom-color: rgb(255 255 255 / 0.08); }
+.dark .ff-mkt-row { border-bottom-color: rgb(255 255 255 / 0.06); }
+.dark .ff-mkt-row:nth-child(odd) { background: rgb(255 255 255 / 0.02); }
+.dark .ff-mkt-name { color: #fff; }
 .dark .ff-mkt-search { background: rgb(255 255 255 / 0.04); border-color: rgb(255 255 255 / 0.1); color: #fff; }
-.dark .ff-mkt-card h3 { color: #fff; }
 
 /* ---- Spotlight ⌘K palette (.ff-spotlight-*, panel-chrome §4) --------------- */
 .ff-spotlight-overlay {

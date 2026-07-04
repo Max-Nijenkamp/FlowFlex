@@ -36,6 +36,8 @@ class InvitationResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Team';
 
+    protected static ?int $navigationSort = 3;
+
     protected static ?string $navigationLabel = 'Invitations';
 
     protected static ?string $modelLabel = 'invitation';

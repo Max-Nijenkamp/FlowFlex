@@ -19,20 +19,21 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 /**
- * Tabbed company settings (core.company-settings/settings-tabs, ui-strategy
- * row #7): Identity / Locale / Business / Privacy, each tab bound to one
- * spatie settings class and saved independently. Owner-only.
+ * Company settings (core.company-settings/settings-tabs, ui-strategy row
+ * #7): ONE full-width section card with Filament tabs inside — Identity /
+ * Locale / Business / Privacy — each tab saving independently via its own
+ * footer action. Owner-only.
  *
- * @property-read Schema $identityForm
- * @property-read Schema $localeForm
- * @property-read Schema $businessForm
- * @property-read Schema $privacyForm
+ * @property-read Schema $form
  */
 class CompanySettingsPage extends Page
 {
@@ -41,6 +42,8 @@ class CompanySettingsPage extends Page
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-cog-6-tooth';
 
     protected static string|\UnitEnum|null $navigationGroup = 'Settings';
+
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $navigationLabel = 'Company settings';
 
@@ -51,16 +54,7 @@ class CompanySettingsPage extends Page
     protected string $view = 'filament.app.pages.company-settings';
 
     /** @var array<string, mixed>|null */
-    public ?array $identityData = [];
-
-    /** @var array<string, mixed>|null */
-    public ?array $localeData = [];
-
-    /** @var array<string, mixed>|null */
-    public ?array $businessData = [];
-
-    /** @var array<string, mixed>|null */
-    public ?array $privacyData = [];
+    public ?array $data = [];
 
     public static function canAccess(): bool
     {
@@ -78,153 +72,156 @@ class CompanySettingsPage extends Page
     {
         abort_unless(static::canAccess(), 403);
 
+        $company = app(CompanyContext::class)->current();
+
         // Identity defaults come from the company row until first save.
         $identity = app(CompanyIdentitySettings::class)->toArray();
-        $company = app(CompanyContext::class)->current();
         $identity['name'] = $identity['name'] !== '' ? $identity['name'] : $company->name;
         $identity['slug'] = $identity['slug'] !== '' ? $identity['slug'] : $company->slug;
-        $this->identityForm->fill($identity);
-        $this->localeForm->fill(app(CompanyLocaleSettings::class)->toArray());
-        $this->businessForm->fill(app(CompanyBusinessSettings::class)->toArray());
-        $this->privacyForm->fill(app(CompanyPrivacySettings::class)->toArray());
+
+        $this->form->fill([
+            ...$identity,
+            ...app(CompanyLocaleSettings::class)->toArray(),
+            ...app(CompanyBusinessSettings::class)->toArray(),
+            ...app(CompanyPrivacySettings::class)->toArray(),
+        ]);
     }
 
-    public function identityForm(Schema $schema): Schema
+    public function form(Schema $schema): Schema
     {
         $companyId = app(CompanyContext::class)->currentId();
 
         return $schema
-            ->statePath('identityData')
+            ->statePath('data')
             ->components([
-                Section::make('Identity')
-                    ->description('Your workspace name, slug and brand color.')
-                    ->footerActions([
-                        Action::make('saveIdentity')->label('Save identity')->action('saveIdentity'),
-                    ])
+                Section::make()
                     ->schema([
-                        TextInput::make('name')
-                            ->label('Company name')
-                            ->required()
-                            ->maxLength(255),
-                        TextInput::make('slug')
-                            ->label('Workspace slug')
-                            ->required()
-                            ->alphaDash()
-                            ->maxLength(64)
-                            ->rule(Rule::unique('companies', 'slug')->ignore($companyId)),
-                        ColorPicker::make('primary_color')
-                            ->label('Primary color')
-                            ->required()
-                            ->regex('/^#[0-9a-fA-F]{6}$/'),
+                        Tabs::make('settings')
+                            ->persistTabInQueryString()
+                            ->tabs([
+                                Tab::make('Identity')
+                                    ->schema([
+                                        TextInput::make('name')
+                                            ->label('Company name')
+                                            ->required()
+                                            ->maxLength(255),
+                                        TextInput::make('slug')
+                                            ->label('Workspace slug')
+                                            ->required()
+                                            ->alphaDash()
+                                            ->maxLength(64)
+                                            ->rule(Rule::unique('companies', 'slug')->ignore($companyId)),
+                                        ColorPicker::make('primary_color')
+                                            ->label('Primary color')
+                                            ->required()
+                                            ->regex('/^#[0-9a-fA-F]{6}$/'),
+                                        Actions::make([
+                                            Action::make('saveIdentity')->label('Save identity')->action('saveIdentity'),
+                                        ]),
+                                    ])
+                                    ->columns(2),
+                                Tab::make('Locale')
+                                    ->schema([
+                                        Select::make('timezone')
+                                            ->options(array_combine(timezone_identifiers_list(), timezone_identifiers_list()))
+                                            ->searchable()
+                                            ->required(),
+                                        Select::make('locale')
+                                            ->label('Language')
+                                            ->options(['en' => 'English', 'nl' => 'Nederlands'])
+                                            ->required(),
+                                        Select::make('date_format')
+                                            ->options([
+                                                'd-m-Y' => date('d-m-Y').' (d-m-Y)',
+                                                'Y-m-d' => date('Y-m-d').' (Y-m-d)',
+                                                'd/m/Y' => date('d/m/Y').' (d/m/Y)',
+                                                'm/d/Y' => date('m/d/Y').' (m/d/Y)',
+                                            ])
+                                            ->required(),
+                                        Select::make('currency')
+                                            ->options(['EUR' => 'EUR — Euro', 'USD' => 'USD — US Dollar', 'GBP' => 'GBP — British Pound'])
+                                            ->required(),
+                                        Select::make('currency_position')
+                                            ->label('Symbol position')
+                                            ->options(['before' => 'Before the amount (€ 12,50)', 'after' => 'After the amount (12,50 €)'])
+                                            ->required(),
+                                        Select::make('decimal_places')
+                                            ->options([0 => '0', 2 => '2'])
+                                            ->required(),
+                                        Actions::make([
+                                            Action::make('saveLocale')->label('Save locale')->action('saveLocale'),
+                                        ]),
+                                    ])
+                                    ->columns(2),
+                                Tab::make('Business')
+                                    ->schema([
+                                        Select::make('fiscal_year_start_month')
+                                            ->label('Fiscal year starts in')
+                                            ->options(array_combine(range(1, 12), array_map(
+                                                fn (int $m): string => now()->startOfYear()->addMonths($m - 1)->format('F'),
+                                                range(1, 12),
+                                            )))
+                                            ->required(),
+                                        Select::make('week_start')
+                                            ->label('Week starts on')
+                                            ->options(['monday' => 'Monday', 'sunday' => 'Sunday'])
+                                            ->required(),
+                                        Select::make('holiday_calendar_country')
+                                            ->label('Public holiday calendar')
+                                            ->options(['NL' => 'Netherlands', 'BE' => 'Belgium', 'DE' => 'Germany'])
+                                            ->required(),
+                                        Select::make('max_upload_mb')
+                                            ->label('Max upload size')
+                                            ->options([10 => '10 MB', 25 => '25 MB', 50 => '50 MB', 100 => '100 MB'])
+                                            ->required(),
+                                        Actions::make([
+                                            Action::make('saveBusiness')->label('Save business settings')->action('saveBusiness'),
+                                        ]),
+                                    ])
+                                    ->columns(2),
+                                Tab::make('Privacy')
+                                    ->schema([
+                                        Select::make('data_retention_months')
+                                            ->label('Data retention')
+                                            ->options([12 => '12 months', 24 => '24 months', 36 => '36 months', 60 => '60 months'])
+                                            ->required(),
+                                        TextInput::make('dsar_email')
+                                            ->label('DSAR contact email')
+                                            ->email()
+                                            ->maxLength(255),
+                                        Toggle::make('consent_logging_enabled')
+                                            ->label('Log consent events'),
+                                        Actions::make([
+                                            Action::make('savePrivacy')->label('Save privacy settings')->action('savePrivacy'),
+                                        ]),
+                                    ])
+                                    ->columns(2),
+                            ]),
                     ]),
             ]);
     }
 
-    public function localeForm(Schema $schema): Schema
+    /** @return array<string, mixed> */
+    protected function validatedState(): array
     {
-        return $schema
-            ->statePath('localeData')
-            ->components([
-                Section::make('Locale')
-                    ->description('Timezone, language, dates and currency for the whole workspace.')
-                    ->footerActions([
-                        Action::make('saveLocale')->label('Save locale')->action('saveLocale'),
-                    ])
-                    ->schema([
-                        Select::make('timezone')
-                            ->options(array_combine(timezone_identifiers_list(), timezone_identifiers_list()))
-                            ->searchable()
-                            ->required(),
-                        Select::make('locale')
-                            ->options(['en' => 'English', 'nl' => 'Nederlands'])
-                            ->required(),
-                        Select::make('date_format')
-                            ->options([
-                                'd-m-Y' => date('d-m-Y').' (d-m-Y)',
-                                'Y-m-d' => date('Y-m-d').' (Y-m-d)',
-                                'd/m/Y' => date('d/m/Y').' (d/m/Y)',
-                                'm/d/Y' => date('m/d/Y').' (m/d/Y)',
-                            ])
-                            ->required(),
-                        Select::make('currency')
-                            ->options(['EUR' => 'EUR — Euro', 'USD' => 'USD — US Dollar', 'GBP' => 'GBP — British Pound'])
-                            ->required(),
-                        Select::make('currency_position')
-                            ->label('Symbol position')
-                            ->options(['before' => 'Before the amount (€ 12,50)', 'after' => 'After the amount (12,50 €)'])
-                            ->required(),
-                        Select::make('decimal_places')
-                            ->options([0 => '0', 2 => '2'])
-                            ->required(),
-                    ]),
-            ]);
-    }
-
-    public function businessForm(Schema $schema): Schema
-    {
-        return $schema
-            ->statePath('businessData')
-            ->components([
-                Section::make('Business')
-                    ->description('Fiscal calendar and workweek rhythm.')
-                    ->footerActions([
-                        Action::make('saveBusiness')->label('Save business settings')->action('saveBusiness'),
-                    ])
-                    ->schema([
-                        Select::make('fiscal_year_start_month')
-                            ->label('Fiscal year starts in')
-                            ->options(array_combine(range(1, 12), array_map(
-                                fn (int $m): string => now()->startOfYear()->addMonths($m - 1)->format('F'),
-                                range(1, 12),
-                            )))
-                            ->required(),
-                        Select::make('week_start')
-                            ->label('Week starts on')
-                            ->options(['monday' => 'Monday', 'sunday' => 'Sunday'])
-                            ->required(),
-                        Select::make('holiday_calendar_country')
-                            ->label('Public holiday calendar')
-                            ->options(['NL' => 'Netherlands', 'BE' => 'Belgium', 'DE' => 'Germany'])
-                            ->required(),
-                    ]),
-            ]);
-    }
-
-    public function privacyForm(Schema $schema): Schema
-    {
-        return $schema
-            ->statePath('privacyData')
-            ->components([
-                Section::make('Privacy')
-                    ->description('Retention and GDPR contact for your workspace.')
-                    ->footerActions([
-                        Action::make('savePrivacy')->label('Save privacy settings')->action('savePrivacy'),
-                    ])
-                    ->schema([
-                        Select::make('data_retention_months')
-                            ->label('Data retention')
-                            ->options([12 => '12 months', 24 => '24 months', 36 => '36 months', 60 => '60 months'])
-                            ->required(),
-                        TextInput::make('dsar_email')
-                            ->label('DSAR contact email')
-                            ->email()
-                            ->maxLength(255),
-                        Toggle::make('consent_logging_enabled')
-                            ->label('Log consent events'),
-                    ]),
-            ]);
+        return $this->form->getState();
     }
 
     public function saveIdentity(): void
     {
-        $data = $this->identityForm->getState();
+        $data = $this->validatedState();
 
         $settings = app(CompanyIdentitySettings::class);
-        $settings->fill($data);
+        $settings->fill([
+            'name' => $data['name'],
+            'slug' => $data['slug'],
+            'logo_path' => $settings->logo_path,
+            'favicon_path' => $settings->favicon_path,
+            'primary_color' => $data['primary_color'],
+        ]);
         $settings->save();
 
-        // companies.name/slug stay the platform source of truth (login,
-        // provisioning) — mirror the shared fields on save.
+        // companies.name/slug stay the platform source of truth.
         app(CompanyContext::class)->current()->update([
             'name' => $data['name'],
             'slug' => $data['slug'],
@@ -235,10 +232,17 @@ class CompanySettingsPage extends Page
 
     public function saveLocale(): void
     {
-        $data = $this->localeForm->getState();
+        $data = $this->validatedState();
 
         $settings = app(CompanyLocaleSettings::class);
-        $settings->fill($data);
+        $settings->fill([
+            'timezone' => $data['timezone'],
+            'locale' => $data['locale'],
+            'date_format' => $data['date_format'],
+            'currency' => $data['currency'],
+            'currency_position' => $data['currency_position'],
+            'decimal_places' => (int) $data['decimal_places'],
+        ]);
         $settings->save();
 
         // SetLocale middleware + money formatting read the company row.
@@ -253,8 +257,15 @@ class CompanySettingsPage extends Page
 
     public function saveBusiness(): void
     {
+        $data = $this->validatedState();
+
         $settings = app(CompanyBusinessSettings::class);
-        $settings->fill($this->businessForm->getState());
+        $settings->fill([
+            'fiscal_year_start_month' => (int) $data['fiscal_year_start_month'],
+            'week_start' => $data['week_start'],
+            'holiday_calendar_country' => $data['holiday_calendar_country'],
+            'max_upload_mb' => (int) $data['max_upload_mb'],
+        ]);
         $settings->save();
 
         Notification::make()->success()->title('Business settings saved')->send();
@@ -262,10 +273,16 @@ class CompanySettingsPage extends Page
 
     public function savePrivacy(): void
     {
+        $data = $this->validatedState();
+
         $settings = app(CompanyPrivacySettings::class);
-        $settings->fill($this->privacyForm->getState());
+        $settings->fill([
+            'data_retention_months' => (int) $data['data_retention_months'],
+            'dsar_email' => $data['dsar_email'] ?? null,
+            'consent_logging_enabled' => (bool) $data['consent_logging_enabled'],
+        ]);
         $settings->save();
 
-        Notification::make()->success()->title('Privacy settings saved')->send();
+        Notification::make()->success()->title('Privacy saved')->send();
     }
 }

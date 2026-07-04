@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace App\Filament\Auth;
 
+use App\Models\NotificationPreference;
+use App\Models\User as AppUser;
+use App\Services\NotificationPreferenceService;
 use Filament\Actions\Action;
 use Filament\Auth\Pages\EditProfile as BaseEditProfile;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -83,7 +87,73 @@ class EditProfile extends BaseEditProfile
                                     ->required(),
                             ]),
                     ]),
+                Section::make('Notifications')
+                    ->description('Choose how each kind of update reaches you. These are personal - they only affect your account.')
+                    ->footerActions([
+                        Action::make('saveNotifications')
+                            ->label('Save notification preferences')
+                            ->action('saveNotifications'),
+                    ])
+                    ->columns(2)
+                    ->schema(self::notificationToggles()),
             ]);
+    }
+
+    /** @return array<int, Toggle> */
+    protected static function notificationToggles(): array
+    {
+        $toggles = [];
+
+        foreach (NotificationPreferenceService::TYPES as $type => $description) {
+            $key = str_replace('-', '_', $type);
+            $label = str($type)->replace('-', ' ')->headline()->toString();
+
+            $toggles[] = Toggle::make($key.'_in_app')->label($label.' - in-app')->helperText($description);
+            $toggles[] = Toggle::make($key.'_email')->label($label.' - email');
+        }
+
+        return $toggles;
+    }
+
+    /** @param array<string, mixed> $data @return array<string, mixed> */
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $user = $this->getUser();
+
+        foreach (array_keys(NotificationPreferenceService::TYPES) as $type) {
+            $preference = NotificationPreference::query()
+                ->withoutGlobalScopes()
+                ->where('user_id', $user->getKey())
+                ->where('notification_type', $type)
+                ->first();
+
+            $key = str_replace('-', '_', $type);
+            $data[$key.'_in_app'] = $preference === null || $preference->in_app_enabled;
+            $data[$key.'_email'] = $preference === null || $preference->email_enabled;
+        }
+
+        return $data;
+    }
+
+    public function saveNotifications(): void
+    {
+        /** @var AppUser $user */
+        $user = $this->getUser();
+
+        foreach (array_keys(NotificationPreferenceService::TYPES) as $type) {
+            $key = str_replace('-', '_', $type);
+
+            NotificationPreference::query()->updateOrCreate(
+                ['user_id' => $user->id, 'notification_type' => $type],
+                [
+                    'company_id' => $user->company_id,
+                    'in_app_enabled' => (bool) ($this->data[$key.'_in_app'] ?? true),
+                    'email_enabled' => (bool) ($this->data[$key.'_email'] ?? true),
+                ],
+            );
+        }
+
+        Notification::make()->success()->title('Notification preferences saved')->send();
     }
 
     /** No global save/cancel — sections save independently. */

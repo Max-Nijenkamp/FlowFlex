@@ -18,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 use Throwable;
@@ -33,6 +34,8 @@ class UserResource extends Resource
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
     protected static string|\UnitEnum|null $navigationGroup = 'Team';
+
+    protected static ?int $navigationSort = 1;
 
     protected static ?string $navigationLabel = 'Members';
 
@@ -60,6 +63,35 @@ class UserResource extends Resource
                 TextColumn::make('created_at')->label('Member since')->date('d M Y')->sortable(),
             ])
             ->recordActions([
+                Action::make('editMember')
+                    ->label('Edit')
+                    ->icon('heroicon-o-pencil-square')
+                    ->visible(function (): bool {
+                        $user = Auth::user();
+
+                        return $user instanceof User && $user->can('core.rbac.assign-roles');
+                    })
+                    ->schema([
+                        TextInput::make('first_name')->required()->maxLength(255)
+                            ->default(fn (User $record): string => $record->first_name),
+                        TextInput::make('last_name')->required()->maxLength(255)
+                            ->default(fn (User $record): string => $record->last_name),
+                        TextInput::make('email')->email()->required()->maxLength(255)
+                            ->default(fn (User $record): string => $record->email),
+                    ])
+                    ->action(function (User $record, array $data): void {
+                        validator($data, [
+                            'email' => [Rule::unique('users', 'email')->ignore($record->id)],
+                        ])->validate();
+
+                        $record->update([
+                            'first_name' => $data['first_name'],
+                            'last_name' => $data['last_name'],
+                            'email' => $data['email'],
+                        ]);
+
+                        Notification::make()->success()->title('Member updated')->send();
+                    }),
                 Action::make('assignRoles')
                     ->label('Roles')
                     ->icon('heroicon-o-shield-check')

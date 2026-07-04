@@ -96,7 +96,7 @@ test('saving the locale tab mirrors locale to the company row and SetLocale pick
             'currency' => 'EUR',
             'currency_position' => 'before',
             'decimal_places' => 2,
-        ], 'localeForm')
+        ])
         ->call('saveLocale')
         ->assertNotified();
 
@@ -119,9 +119,9 @@ test('the identity tab rejects a slug already taken by another company', functio
             'name' => 'Acme',
             'slug' => 'taken-slug',
             'primary_color' => '#4F46E5',
-        ], 'identityForm')
+        ])
         ->call('saveIdentity')
-        ->assertHasFormErrors(['slug'], 'identityForm');
+        ->assertHasFormErrors(['slug']);
 
     expect($company->fresh()->slug)->not->toBe('taken-slug');
 });
@@ -138,7 +138,7 @@ test('saving identity mirrors name and slug onto the company row', function () {
             'name' => 'Rebranded BV',
             'slug' => 'rebranded',
             'primary_color' => '#4F46E5',
-        ], 'identityForm')
+        ])
         ->call('saveIdentity')
         ->assertNotified();
 

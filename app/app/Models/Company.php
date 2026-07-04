@@ -24,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $setup_completed_at
  * @property int|null $audit_retention_days
  * @property string|null $stripe_customer_id
+ * @property Carbon $created_at
  */
 class Company extends Model
 {

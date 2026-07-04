@@ -38,6 +38,8 @@ class RoleResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Team';
 
+    protected static ?int $navigationSort = 2;
+
     protected static ?string $navigationLabel = 'Roles';
 
     protected static ?string $modelLabel = 'role';
