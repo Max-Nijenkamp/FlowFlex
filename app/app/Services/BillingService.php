@@ -19,10 +19,12 @@ use App\Services\Stripe\StripeBillingClient;
 use App\States\Core\BillingInvoice\Open;
 use App\States\Core\BillingInvoice\Paid;
 use App\States\Core\BillingInvoice\PastDue;
+use App\Support\Services\AuditLogger;
 use App\Support\Services\CompanyContext;
 use Brick\Money\Money;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -108,6 +110,8 @@ class BillingService implements BillingServiceInterface
 
             ModuleActivated::dispatch($company->id, $moduleKey, $actor->id);
 
+            app(AuditLogger::class)->log('core.module-activated', $company, $actor, ['module' => $moduleKey]);
+
             return $subscription;
         });
     }
@@ -138,6 +142,14 @@ class BillingService implements BillingServiceInterface
             Cache::forget("company:{$company->id}:modules");
 
             ModuleDeactivated::dispatch($company->id, $moduleKey);
+
+            $causer = Auth::user();
+            app(AuditLogger::class)->log(
+                'core.module-deactivated',
+                $company,
+                $causer instanceof User ? $causer : null,
+                ['module' => $moduleKey],
+            );
         });
     }
 

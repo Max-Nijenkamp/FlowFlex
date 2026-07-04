@@ -1101,18 +1101,42 @@
     border-radius: 14px;
     box-shadow: 0 1px 2px rgb(17 24 39 / 0.04);
     overflow: hidden;
+    /* vendor centers the nav via flex alignment — stretch it edge to edge */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.fi-sc-tabs > .fi-tabs {
+    width: 100%;
 }
 
 .fi-sc-tabs > .fi-tabs {
     padding: 0 12px;
-    border-bottom: 1px solid var(--ff-line);
+}
+
+/* stray non-tab children in a tabs nav (overflow probes etc.) never render */
+.fi-tabs > :not(.fi-tabs-item) {
+    display: none !important;
+}
+
+/* underline tabs per the design system (no pill backgrounds) — global, so
+   relation-manager tabs (admin company edit) match too */
+.fi-tabs {
+    justify-content: flex-start;
     background: transparent;
     box-shadow: none;
     border-radius: 0;
     gap: 4px;
+    border-bottom: 1px solid var(--ff-line);
+    padding: 0 4px;
 }
 
-/* underline tabs per the design system (no pill backgrounds) */
+.dark .fi-tabs {
+    border-bottom-color: rgb(255 255 255 / 0.08);
+}
+
+.fi-tabs .fi-tabs-item,
 .fi-sc-tabs .fi-tabs-item {
     padding: 13px 14px;
     border-radius: 0;
@@ -1125,11 +1149,11 @@
     transition: color 0.15s ease-out, border-color 0.15s ease-out;
 }
 
-.fi-sc-tabs .fi-tabs-item:hover {
+.fi-tabs .fi-tabs-item:hover {
     color: var(--ff-ink);
 }
 
-.fi-sc-tabs .fi-tabs-item.fi-active {
+.fi-tabs .fi-tabs-item.fi-active {
     color: var(--ff-ink);
     border-bottom-color: var(--primary-500);
 }
@@ -1157,12 +1181,12 @@
     border-bottom-color: rgb(255 255 255 / 0.08);
 }
 
-.dark .fi-sc-tabs .fi-tabs-item {
+.dark .fi-tabs .fi-tabs-item {
     color: rgb(255 255 255 / 0.45);
 }
 
 .dark .fi-sc-tabs .fi-tabs-item:hover,
-.dark .fi-sc-tabs .fi-tabs-item.fi-active {
+.dark .fi-tabs .fi-tabs-item.fi-active {
     color: #ffffff;
 }
 
@@ -1278,6 +1302,7 @@
 .dark .ff-mkt-row { border-bottom-color: rgb(255 255 255 / 0.06); }
 .dark .ff-mkt-row:nth-child(odd) { background: rgb(255 255 255 / 0.02); }
 .dark .ff-mkt-name { color: #fff; }
+.dark .ff-mkt-pill.ff-incl { background: rgb(16 185 129 / 0.15); color: #34d399; }
 .dark .ff-mkt-search { background: rgb(255 255 255 / 0.04); border-color: rgb(255 255 255 / 0.1); color: #fff; }
 
 /* ---- Spotlight ⌘K palette (.ff-spotlight-*, panel-chrome §4) --------------- */

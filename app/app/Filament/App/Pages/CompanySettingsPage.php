@@ -10,6 +10,7 @@ use App\Settings\CompanyBusinessSettings;
 use App\Settings\CompanyIdentitySettings;
 use App\Settings\CompanyLocaleSettings;
 use App\Settings\CompanyPrivacySettings;
+use App\Support\Services\AuditLogger;
 use App\Support\Services\CompanyContext;
 use Filament\Actions\Action;
 use Filament\Forms\Components\ColorPicker;
@@ -198,6 +199,18 @@ class CompanySettingsPage extends Page
             ]);
     }
 
+    protected function audit(string $tab): void
+    {
+        $user = Auth::user();
+
+        app(AuditLogger::class)->log(
+            'core.settings-updated',
+            app(CompanyContext::class)->current(),
+            $user instanceof User ? $user : null,
+            ['tab' => $tab],
+        );
+    }
+
     /** @return array<string, mixed> */
     protected function validatedState(): array
     {
@@ -224,6 +237,8 @@ class CompanySettingsPage extends Page
             'slug' => $data['slug'],
         ]);
 
+        $this->audit('identity');
+
         Notification::make()->success()->title('Identity saved')->send();
     }
 
@@ -249,6 +264,8 @@ class CompanySettingsPage extends Page
             'currency' => $data['currency'],
         ]);
 
+        $this->audit('locale');
+
         Notification::make()->success()->title('Locale saved')->send();
     }
 
@@ -265,6 +282,8 @@ class CompanySettingsPage extends Page
         ]);
         $settings->save();
 
+        $this->audit('business');
+
         Notification::make()->success()->title('Business settings saved')->send();
     }
 
@@ -279,6 +298,8 @@ class CompanySettingsPage extends Page
             'consent_logging_enabled' => (bool) $data['consent_logging_enabled'],
         ]);
         $settings->save();
+
+        $this->audit('privacy');
 
         Notification::make()->success()->title('Privacy saved')->send();
     }

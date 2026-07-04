@@ -8,6 +8,7 @@ use App\Data\CreateInvitationData;
 use App\Mail\InvitationMail;
 use App\Models\User;
 use App\Models\UserInvitation;
+use App\Support\Services\AuditLogger;
 use App\Support\Services\CompanyContext;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -62,6 +63,13 @@ class SendInvitationAction
         ]);
 
         Mail::to($invitation->email)->queue(InvitationMail::forInvitation($invitation));
+
+        app(AuditLogger::class)->log(
+            'core.invitation-sent',
+            $invitation,
+            $causer instanceof User ? $causer : null,
+            ['email' => $data->email, 'role' => $data->role],
+        );
 
         return $invitation;
     }

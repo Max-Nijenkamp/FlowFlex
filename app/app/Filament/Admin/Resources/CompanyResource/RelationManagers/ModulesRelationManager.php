@@ -51,12 +51,10 @@ class ModulesRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('module_key')->label('Module'),
                 TextColumn::make('activated_at')->dateTime('d M Y')->sortable(),
-                TextColumn::make('deactivated_at')
-                    ->label('Status')
+                TextColumn::make('status')
                     ->badge()
-                    ->formatStateUsing(fn (?string $state): string => $state === null ? 'Active' : 'Deactivated')
-                    ->default('Active')
-                    ->color(fn (CompanyModuleSubscription $record): string => $record->deactivated_at === null ? 'success' : 'gray'),
+                    ->state(fn (CompanyModuleSubscription $record): string => $record->deactivated_at === null ? 'Active' : 'Deactivated')
+                    ->color(fn (string $state): string => $state === 'Active' ? 'success' : 'gray'),
             ])
             ->defaultSort('activated_at', 'desc')
             ->headerActions([

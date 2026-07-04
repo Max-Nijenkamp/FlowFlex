@@ -7,7 +7,9 @@ namespace App\Actions;
 use App\Data\AssignRolesData;
 use App\Exceptions\CannotRemoveLastOwnerException;
 use App\Models\User;
+use App\Support\Services\AuditLogger;
 use App\Support\Services\CompanyContext;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
@@ -46,6 +48,14 @@ class AssignRolesAction
             }
 
             $user->syncRoles($data->roles);
+
+            $causer = Auth::user();
+            app(AuditLogger::class)->log(
+                'core.roles-assigned',
+                $user,
+                $causer instanceof User ? $causer : null,
+                ['roles' => $data->roles],
+            );
         });
     }
 }

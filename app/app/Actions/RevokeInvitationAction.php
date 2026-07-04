@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
+use App\Models\User;
 use App\Models\UserInvitation;
+use App\Support\Services\AuditLogger;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -22,5 +25,13 @@ class RevokeInvitationAction
         }
 
         $invitation->update(['revoked_at' => now()]);
+
+        $causer = Auth::user();
+        app(AuditLogger::class)->log(
+            'core.invitation-revoked',
+            $invitation,
+            $causer instanceof User ? $causer : null,
+            ['email' => $invitation->email],
+        );
     }
 }

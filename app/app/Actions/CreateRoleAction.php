@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\Data\CreateRoleData;
+use App\Models\User;
 use App\Services\BillingService;
+use App\Support\Services\AuditLogger;
 use App\Support\Services\CompanyContext;
+use Illuminate\Support\Facades\Auth;
 use InvalidArgumentException;
 use Lorisleiva\Actions\Concerns\AsAction;
 use Spatie\Permission\Models\Role;
@@ -29,6 +32,14 @@ class CreateRoleAction
         ]);
 
         $role->syncPermissions($data->permissions);
+
+        $causer = Auth::user();
+        app(AuditLogger::class)->log(
+            'core.role-created',
+            $company,
+            $causer instanceof User ? $causer : null,
+            ['role' => $data->name, 'permissions' => $data->permissions],
+        );
 
         return $role;
     }

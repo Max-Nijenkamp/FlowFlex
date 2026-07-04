@@ -9,6 +9,7 @@ use App\Events\InvitationAccepted;
 use App\Exceptions\InvalidInvitationTokenException;
 use App\Models\User;
 use App\Models\UserInvitation;
+use App\Support\Services\AuditLogger;
 use App\Support\Services\CompanyContext;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Support\Carbon;
@@ -57,6 +58,8 @@ class AcceptInvitationAction
             $user->assignRole($invitation->role);
 
             InvitationAccepted::dispatch($invitation->company_id, $user->id, $invitation->role);
+
+            app(AuditLogger::class)->log('core.invitation-accepted', $user, $user, ['role' => $invitation->role]);
 
             /** @var StatefulGuard $guard */
             $guard = Auth::guard('web');

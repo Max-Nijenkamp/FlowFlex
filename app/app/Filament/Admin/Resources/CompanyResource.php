@@ -53,6 +53,7 @@ class CompanyResource extends Resource
                         ->disabled(),
                 ]),
             Section::make('Locale')
+                ->columnSpanFull()
                 ->columns(2)
                 ->schema([
                     Select::make('timezone')
