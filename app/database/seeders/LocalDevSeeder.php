@@ -8,11 +8,11 @@ use App\Models\Admin;
 use App\Models\Company;
 use App\Models\CompanyModuleSubscription;
 use App\Models\User;
+use App\Support\Services\BuiltInRoles;
 use App\Support\Services\CompanyContext;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Cache;
 use RuntimeException;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 /**
@@ -52,12 +52,9 @@ class LocalDevSeeder extends Seeder
         app(CompanyContext::class)->set($company);
         setPermissionsTeamId($company->id);
 
-        // Owner role, auto-synced to EVERY web-guard permission so owners
-        // receive newly seeded permissions without manual re-grant.
-        $owner = Role::query()->firstOrCreate(
-            ['name' => 'owner', 'guard_name' => 'web', 'company_id' => $company->id],
-        );
-        $owner->syncPermissions(Permission::query()->where('guard_name', 'web')->get());
+        // Built-in roles (owner/admin/manager/employee) with default grants.
+        BuiltInRoles::ensure($company);
+        $owner = Role::query()->where(['name' => 'owner', 'company_id' => $company->id])->firstOrFail();
 
         $ownerLogins = [
             ['email' => 'test@test.nl', 'password' => 'test1234', 'first' => 'Test', 'last' => 'Owner'],
@@ -78,12 +75,19 @@ class LocalDevSeeder extends Seeder
             $user->assignRole($owner);
         }
 
-        // --- Extra demo users (no roles yet — RBAC UI arrives with core.rbac) ------
+        // --- Extra demo users — employees (exactly-one-owner invariant) -------------
         User::factory()
             ->count(5)
             ->for($company)
             ->create()
-            ->each(fn (User $user) => $user->assignRole($owner));
+            ->each(fn (User $user) => $user->assignRole('employee'));
+
+        // Second demo login keeps admin, not owner — one owner per company.
+        User::query()->withoutGlobalScopes()
+            ->where('company_id', $company->id)
+            ->where('email', 'demo@flowflex.nl')
+            ->first()
+            ?->syncRoles(['admin']);
 
         // --- Free core modules active for the demo company --------------------------
         $demoOwner = User::query()->withoutGlobalScopes()

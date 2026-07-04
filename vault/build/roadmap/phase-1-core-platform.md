@@ -83,11 +83,11 @@ Build: `/flowflex:start core.invitation-system` · Done: `/flowflex:done core.in
 
 Build: `/flowflex:start core.rbac` · Done: `/flowflex:done core.rbac` · Spec: [[../../domains/core/rbac/_module|hub]] · Hard deps: foundation.panels, foundation.permissions
 
-- [ ] **RBAC — Custom Roles** ([[../../domains/core/rbac/features/custom-roles|spec]]) — hand-check: open "Create / edit role" (`/app/roles/create`, `/app/roles/{id}/edit`).; toggle permissions per module group; "select all in module"; save → server
-- [ ] **RBAC — Last-Owner & Built-in Role Guardrails** ([[../../domains/core/rbac/features/last-owner-guard|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
-- [ ] **Module-Scoped Role Permissions** ([[../../domains/core/rbac/features/module-scoped-permissions|spec]]) — hand-check: open "Create / edit role" (`/app/roles/create`).; toggle permission checkboxes per module group; "select all in module"; save →
-- [ ] **Company Ownership — single owner, transferable** ([[../../domains/core/rbac/features/ownership|spec]]) — hand-check: open "Transfer ownership" modal on the Users/Roles screen (`/app/roles` or company settings).; pick new owner → double-confirm → atomic transfer → toast + re-render; previous owner
-- [ ] Gates: Pint + PHPStan + Pest green, spec Test Checklist covered, `/flowflex:verify` clean
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **RBAC — Custom Roles** ([[../../domains/core/rbac/features/custom-roles|spec]]) — hand-check: open "Create / edit role" (`/app/roles/create`, `/app/roles/{id}/edit`).; toggle permissions per module group; "select all in module"; save → server
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **RBAC — Last-Owner & Built-in Role Guardrails** ([[../../domains/core/rbac/features/last-owner-guard|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Module-Scoped Role Permissions** ([[../../domains/core/rbac/features/module-scoped-permissions|spec]]) — hand-check: open "Create / edit role" (`/app/roles/create`).; toggle permission checkboxes per module group; "select all in module"; save →
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Company Ownership — single owner, transferable** ([[../../domains/core/rbac/features/ownership|spec]]) — hand-check: open "Transfer ownership" modal on the Users/Roles screen (`/app/roles` or company settings).; pick new owner → double-confirm → atomic transfer → toast + re-render; previous owner
+- [x] Gates: Pint + PHPStan + Pest green (90), `RoleManagementTest` 7 + `RoleIsolationTest` 1, matrix page screenshot-verified live
 
 ### Workspace Hub — `core.hub`
 

@@ -2,7 +2,7 @@
 domain: core
 module: rbac
 type: module
-build-status: planned
+build-status: in-progress
 status: unverified
 color: "#4ADE80"
 updated: 2026-07-03

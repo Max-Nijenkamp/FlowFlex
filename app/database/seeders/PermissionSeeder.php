@@ -22,6 +22,9 @@ class PermissionSeeder extends Seeder
         'core.settings.manage',
         // core.rbac
         'core.rbac.view-any',
+        'core.rbac.create',
+        'core.rbac.update',
+        'core.rbac.delete',
         'core.rbac.assign-roles',
         'core.rbac.transfer-ownership',
         // core.invitations

@@ -20,8 +20,9 @@ test('the full seed runs clean from an empty database and is idempotent', functi
 test('owner role holds every web-guard permission after seeding', function () {
     $this->seed(DatabaseSeeder::class);
 
+    // test@test.nl is THE owner; demo@flowflex.nl is admin (one owner per company)
     $owner = User::query()->withoutGlobalScopes()
-        ->where('email', 'demo@flowflex.nl')->firstOrFail();
+        ->where('email', 'test@test.nl')->firstOrFail();
 
     setCompany($owner->company()->firstOrFail());
 
