@@ -6,11 +6,4 @@ parameters:
         - app
         - database/factories
         - database/seeders
-    ignoreErrors:
-        # Structural, not a bug: BelongsToCompany's first production consumers
-        # are the phase-1 core modules; until then only tests/Support/TestItem
-        # (outside analysed paths) uses it. Remove when the first core model lands.
-        -
-            identifier: trait.unused
-            path: app/Support/Traits/BelongsToCompany.php
     treatPhpDocTypesAsCertain: false

@@ -2,10 +2,10 @@
 domain: core
 module: audit-log
 type: module
-build-status: planned
+build-status: in-progress
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-04
 ---
 
 # Audit Log
@@ -52,13 +52,13 @@ Full activity trail across all FlowFlex domains via Spatie Activity Log. Every w
 
 ## Test Checklist
 
-- [ ] Tenant isolation: company A logs invisible to company B
-- [ ] Module gating: `AuditLogResource` hidden when `core.audit` inactive
-- [ ] `AuditLogger::log` sets `company_id` from context automatically
-- [ ] Encrypted/PII field values never appear in `properties` (denylist test)
-- [ ] State transition writes a `state-transition` log row with from/to
-- [ ] Read-only resource: no create/edit/delete actions exposed
-- [ ] Prune command respects per-company retention setting
+- [x] Tenant isolation: company A logs invisible to company B
+- [x] Module gating: `AuditLogResource` hidden when `core.audit` inactive
+- [x] `AuditLogger::log` sets `company_id` from context automatically
+- [x] Encrypted/PII field values never appear in `properties` (denylist test)
+- [x] State transition writes a `state-transition` log row with from/to
+- [x] Read-only resource: no create/edit/delete actions exposed
+- [x] Prune command respects per-company retention setting
 
 ## Build Manifest (corrected to flat paths)
 

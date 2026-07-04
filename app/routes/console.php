@@ -16,3 +16,8 @@ Schedule::command('horizon:snapshot')
     ->everyFiveMinutes()
     ->withoutOverlapping()
     ->onOneServer();
+
+Schedule::command('audit:prune')
+    ->dailyAt('04:30')
+    ->withoutOverlapping()
+    ->onOneServer();

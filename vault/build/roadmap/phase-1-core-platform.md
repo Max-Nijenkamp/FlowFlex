@@ -16,10 +16,10 @@ The platform every domain module assumes: billing/module gating, RBAC, invitatio
 
 Build: `/flowflex:start core.audit-log` · Done: `/flowflex:done core.audit-log` · Spec: [[../../domains/core/audit-log/_module|hub]] · Hard deps: none
 
-- [ ] **Audit Logger (write path + retention)** ([[../../domains/core/audit-log/features/audit-logger|spec]]) — hand-check: background — trigger it (s: (1) any domain write / state transition calls `AuditLogger::log`; (2) the scheduler run), then check the visible result named in the spec
-- [ ] **Log Browser** ([[../../domains/core/audit-log/features/log-browser|spec]]) — hand-check: open `AuditLogResource` — read-only list/view in `/app` (package-provided, configured); plus a cross-company varian; user opens the log browser → applies filters (e.g. by user + date range) → clicks a row to inspect the before/after properties. Ad
-- [ ] **PII Denylist** ([[../../domains/core/audit-log/features/pii-denylist|spec]]) — hand-check: background — trigger it (every call to `AuditLogger::log(event, subject, causer, properties)` passes `properties` t), then check the visible result named in the spec
-- [ ] Gates: Pint + PHPStan + Pest green, spec Test Checklist covered, `/flowflex:verify` clean
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Audit Logger (write path + retention)** ([[../../domains/core/audit-log/features/audit-logger|spec]]) — hand-check: background — trigger it (s: (1) any domain write / state transition calls `AuditLogger::log`; (2) the scheduler run), then check the visible result named in the spec
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Log Browser** ([[../../domains/core/audit-log/features/log-browser|spec]]) — hand-check: open `AuditLogResource` — read-only list/view in `/app` (package-provided, configured); plus a cross-company varian; user opens the log browser → applies filters (e.g. by user + date range) → clicks a row to inspect the before/after properties. Ad
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **PII Denylist** ([[../../domains/core/audit-log/features/pii-denylist|spec]]) — hand-check: background — trigger it (every call to `AuditLogger::log(event, subject, causer, properties)` passes `properties` t), then check the visible result named in the spec
+- [x] Gates: Pint + PHPStan + Pest green (66), spec Test Checklist covered (`AuditLogTest`, `AuditPiiTest`, `ModuleGatingTest`), both browsers screenshot-verified live
 
 ### Company Settings — `core.company-settings`
 

@@ -35,6 +35,7 @@ class PermissionSeeder extends Seeder
         'core.marketplace.view',
         'core.marketplace.manage',
         // core.audit-log
+        'core.audit.view-any',
         'core.audit.view',
         // core.files
         'core.files.view-any',

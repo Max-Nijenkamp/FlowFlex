@@ -22,6 +22,7 @@ use Illuminate\Support\Carbon;
  * @property string $currency
  * @property Carbon|null $trial_ends_at
  * @property Carbon|null $setup_completed_at
+ * @property int|null $audit_retention_days
  */
 class Company extends Model
 {
@@ -40,6 +41,7 @@ class Company extends Model
         'currency',
         'trial_ends_at',
         'setup_completed_at',
+        'audit_retention_days',
     ];
 
     /** @return HasMany<User, $this> */

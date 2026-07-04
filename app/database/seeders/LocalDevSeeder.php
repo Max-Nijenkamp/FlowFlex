@@ -6,9 +6,11 @@ namespace Database\Seeders;
 
 use App\Models\Admin;
 use App\Models\Company;
+use App\Models\CompanyModuleSubscription;
 use App\Models\User;
 use App\Support\Services\CompanyContext;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
 use RuntimeException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -82,5 +84,24 @@ class LocalDevSeeder extends Seeder
             ->for($company)
             ->create()
             ->each(fn (User $user) => $user->assignRole($owner));
+
+        // --- Free core modules active for the demo company --------------------------
+        $demoOwner = User::query()->withoutGlobalScopes()
+            ->where('company_id', $company->id)
+            ->where('email', 'test@test.nl')
+            ->first();
+
+        foreach (ModuleCatalogSeeder::CATALOG as $key => $entry) {
+            if ($entry['price'] !== 0) {
+                continue;
+            }
+
+            CompanyModuleSubscription::query()->firstOrCreate(
+                ['company_id' => $company->id, 'module_key' => $key, 'deactivated_at' => null],
+                ['activated_at' => now(), 'activated_by' => $demoOwner?->id],
+            );
+        }
+
+        Cache::forget("company:{$company->id}:modules");
     }
 }
