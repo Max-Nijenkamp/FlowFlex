@@ -1145,6 +1145,29 @@
     max-width: 640px;
 }
 
+/* ---- Workspace hub tiles ---------------------------------------------------- */
+.ff-hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.ff-hub-tile {
+    display: flex; flex-direction: column; gap: 8px;
+    background: var(--ff-card); border: 1px solid var(--ff-line-strong);
+    border-radius: 14px; padding: 20px; box-shadow: 0 1px 2px rgb(17 24 39 / 0.04);
+    transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+}
+.ff-hub-tile:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -12px rgb(17 24 39 / 0.18); }
+.ff-hub-tile:active { transform: scale(0.98); }
+.ff-hub-square { width: 12px; height: 12px; border-radius: 3px; }
+.ff-hub-name { font-family: 'Archivo', var(--font-family), sans-serif; font-size: 16px; font-weight: 700; letter-spacing: -0.02em; color: var(--ff-ink); }
+.ff-hub-blurb { font-size: 12.5px; color: var(--ff-ink-faint); }
+.ff-hub-empty { text-align: center; padding: 56px 16px; }
+.ff-hub-empty h2 { font-family: 'Archivo', var(--font-family), sans-serif; font-size: 20px; letter-spacing: -0.02em; margin-bottom: 8px; }
+.ff-hub-empty p { color: var(--ff-ink-soft); font-size: 14px; margin-bottom: 18px; }
+.ff-hub-cta {
+    display: inline-block; padding: 9px 18px; border-radius: 9px;
+    background: var(--primary-500); color: #fff; font-size: 13.5px; font-weight: 600;
+}
+.dark .ff-hub-tile { background: #111827; border-color: rgb(255 255 255 / 0.08); }
+.dark .ff-hub-name { color: #fff; }
+
 /* ---- Module marketplace grid (switchboard cards) --------------------------- */
 .ff-mkt { display: flex; flex-direction: column; gap: 26px; }
 .ff-mkt-search {

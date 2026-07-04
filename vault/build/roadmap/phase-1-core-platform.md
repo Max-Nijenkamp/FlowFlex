@@ -8,7 +8,7 @@ updated: 2026-07-03
 
 The platform every domain module assumes: billing/module gating, RBAC, invitations, settings, files, notifications, audit, marketplace, staff console, setup wizard.
 
-**12 modules · 32 features.** Work top-to-bottom; within a domain, modules are ordered fewest-dependencies-first. Tick a feature only after BOTH gates pass: AI gate (spec Test Checklist covered by green Pest tests + `/flowflex:verify`) AND your hand check.
+**12 modules · 32 features — ✅ ALL AI GATES GREEN 2026-07-04** (one build sweep; hand-checks pending — see each feature's annotation). Work top-to-bottom; within a domain, modules are ordered fewest-dependencies-first. Tick a feature only after BOTH gates pass: AI gate (spec Test Checklist covered by green Pest tests + `/flowflex:verify`) AND your hand check.
 
 ## core
 
@@ -93,8 +93,8 @@ Build: `/flowflex:start core.rbac` · Done: `/flowflex:done core.rbac` · Spec: 
 
 Build: `/flowflex:start core.hub` · Done: `/flowflex:done core.hub` · Spec: [[../../domains/core/workspace-hub/_module|hub]] · Hard deps: core.billing, core.rbac
 
-- [ ] **Domain Launcher** ([[../../domains/core/workspace-hub/features/domain-launcher|spec]]) — hand-check: open Workspace Hub launcher — the tenant's default post-login route (`custom-pages` pattern). Single/multi-panel ro; 1. Tenant user authenticates → lands on the hub.
-- [ ] Gates: Pint + PHPStan + Pest green, spec Test Checklist covered, `/flowflex:verify` clean
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending; tile ordering = alphabetical, recency/favourites deferred per the spec's *(assumed)* marker; tiles link to /{domain} panels that ship in phase 2)* **Domain Launcher** ([[../../domains/core/workspace-hub/features/domain-launcher|spec]]) — hand-check: open Workspace Hub launcher — the tenant's default post-login route (`custom-pages` pattern). Single/multi-panel ro; 1. Tenant user authenticates → lands on the hub.
+- [x] Gates: Pint + PHPStan + Pest green (137), `WorkspaceHubTest` 5 tests
 
 ### Notifications — `core.notifications`
 

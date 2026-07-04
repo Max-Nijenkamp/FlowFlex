@@ -4,7 +4,7 @@ module: workspace-hub
 type: module
 module-key: core.hub
 priority: v1-core
-build-status: planned
+build-status: in-progress
 status: wip
 depends-on: [core.billing, core.rbac]
 soft-depends: []

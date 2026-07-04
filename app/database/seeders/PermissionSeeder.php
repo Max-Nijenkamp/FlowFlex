@@ -67,6 +67,12 @@ class PermissionSeeder extends Seeder
         'core.webhooks.rotate',
         // core.setup-wizard
         'core.setup.complete',
+        // core.workspace-hub
+        'core.hub.view',
+        // domain panel access (tiles on the hub; panels ship in phase 2)
+        'access.hr',
+        'access.finance',
+        'access.crm',
     ];
 
     public function run(): void
