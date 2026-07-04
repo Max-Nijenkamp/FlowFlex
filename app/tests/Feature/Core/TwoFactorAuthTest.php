@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Company;
 use App\Models\User;
 use App\Support\Filament\AppAuthenticationWithQrFix;
+use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Illuminate\Support\Facades\DB;
 use PragmaRX\Google2FA\Google2FA;
 
@@ -25,7 +26,7 @@ test('a correctly single-encoded QR data URI passes through unchanged', function
 test('both panels register the QR-fixed app authentication subclass', function () {
     foreach (['app', 'admin'] as $panelId) {
         $mfa = collect(Filament\Facades\Filament::getPanel($panelId)->getMultiFactorAuthenticationProviders())
-            ->first(fn ($provider) => $provider instanceof Filament\Auth\MultiFactor\App\AppAuthentication);
+            ->first(fn ($provider) => $provider instanceof AppAuthentication);
 
         expect($mfa)->toBeInstanceOf(AppAuthenticationWithQrFix::class);
     }
