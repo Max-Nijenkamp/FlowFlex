@@ -359,6 +359,11 @@ it('does not leak data between companies', function () {
 
 ---
 
+## Session Gotchas in Feature Tests
+
+- **`AuthenticateSession` rejects a user swap mid-session**: after a real HTTP request as user A, `actingAs($userB)` + `get()` 302s to login (A's password hash is still in the session). `$this->flushSession()` between users. `Livewire::test()` bypasses HTTP middleware, so page-component tests never hit this — it appears exactly when converting to route-level tests.
+- **PHPStan blocks `Model::increment()`/`decrement()`** (protected in the stubs) — use `$model->counter++; $model->save();`.
+
 ## SQLite Blind Spots (two production bugs proved this — 2026-06-11)
 
 The suite runs on sqlite :memory:. Two classes of failure stay invisible:

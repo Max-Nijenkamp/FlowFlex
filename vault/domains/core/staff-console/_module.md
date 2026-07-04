@@ -2,10 +2,10 @@
 domain: core
 module: staff-console
 type: module
-build-status: in-progress
+build-status: complete
 status: wip
 color: "#4ADE80"
-updated: 2026-07-03
+updated: 2026-07-04
 ---
 
 # Staff Console

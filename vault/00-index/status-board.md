@@ -14,17 +14,18 @@ plugin). Replaces the old hand-maintained `build/STATUS.md` (archived at [[_arch
 > `built` = code exists & verified · `planned` = spec only (incl. stripped rebuild targets) ·
 > `deferred` = placeholder · `stripped` (historical) = was built then reverted.
 
-## Reality snapshot (2026-06-20)
+## Reality snapshot (2026-07-04)
 
-> [!important] Greenfield — the app project was removed
-> The Laravel codebase, docker stack and all configs were **deleted** (repo = `vault/` + `CLAUDE.md` only).
-> **Nothing is built.** The entire vault is now a blueprint/spec for a system to be built from scratch.
-> See [[../decisions/decision-2026-06-20-app-project-removed]].
+> [!important] Foundation + core platform SHIPPED and owner-validated
+> Rebuilt from scratch after the 2026-06-20 greenfield reset ([[../decisions/decision-2026-06-20-app-project-removed]]).
+> Suite 147 Pest tests green on sqlite, PHPStan + Pint clean, docker stack live on :8080.
 
 | Layer | State |
 |---|---|
-| Everything (all 31 domains, infra, security) | 📝 planned — spec/blueprint only, no code |
-| Previously built (core, foundation + shell) | 📝 planned — code removed 2026-06-20; specs retained as blueprint |
+| Foundation (scaffold, docker, tenancy, queues, email, panels+MFA, seeders, CI) | ✅ complete — evidence-verified 2026-07-04 |
+| Core platform (all 12 modules: audit, settings, spotlight, 2FA, rbac, files, invites, notifications, billing, marketplace, staff console, workspace switcher) | ✅ complete — AI gates + owner hand-validation 2026-07-04 |
+| Domain modules (19 domains, 150 specs) | 📝 planned — Phase 2 starts with hr.employee-profiles |
+| Public site (Vue + Inertia) & Stripe/Reverb creds | ⏸ parked — see [[../build/ROADMAP#Parked — waiting on external input\|roadmap]] |
 | Deferred domains (10) | 💤 deferred (stub index only) |
 | Production infra / CD | ⚠ UNVERIFIED — nothing provisioned |
 
@@ -32,6 +33,7 @@ plugin). Replaces the old hand-maintained `build/STATUS.md` (archived at [[_arch
 
 | Date | Scope | Work |
 |---|---|---|
+| 2026-07-04 | core (all 12) | 🏁 **PHASE 1 COMPLETE — owner hand-validated the whole core** ("i have validated everything it seems fine"). All 12 module hubs flipped to `build-status: complete`; phase-1 roadmap hand-gates ticked. Learnings distilled into filament-patterns (§17–19: state() pills, extraFieldWrapperAttributes + flat-card groups, designed modalContent), panel-chrome §6 (gotchas 8–11: overlay-scrollbar blindness, fi-sc-tabs centering, render-hook placement, toggle overlay), testing-pattern (AuthenticateSession flushSession, increment() PHPStan), /flowflex:screenshot (scrollbar forcing, pointer-intercept, demo creds). Next: Phase 2 — hr.employee-profiles, first domain panel. |
 | 2026-07-04 | core polish | Role edit -> one flat permission card (hairline module groups, mono headers, catalog names); audit entry modal -> designed detail view (event pill, meta grid, zebra rows, old-vs-new strikethrough). 147 green. |
 | 2026-07-04 | core.hub + skin | ✅ Hub page → **workspace switcher modal** (ADR [[../decisions/decision-2026-07-04-hub-modal-not-page\|hub-modal-not-page]]): sidebar entry above nav opens panel-selection modal, current Workspace always listed + CURRENT tag, hover borders, logic in `WorkspacePanels` support class, same gates + tests rewritten (147 green). Also fixed the recurring "weird icon top-right of tabs": vendor tabs nav overflow:auto + 1px underline overflow = classic-Windows scrollbar stub — tabs navs now clip + hide scrollbars. |
 | 2026-07-04 | core + foundation | ✅ **Missing-piece sweep after core build**: audit trail wired into every core action (log was empty — module activate/deactivate, invitations, roles, member edits, settings saves now write rows; dashboard activity live), admin company-edit fixes (inverted status pills, RM tab alignment, Locale width). Then the three buildable gaps closed: **invoice PDF** (dompdf per ADR [[../decisions/decision-2026-07-04-dompdf-for-invoice-pdfs\|dompdf-for-invoice-pdfs]] — container has no Chrome; download on /app + /admin + company tab, attached to InvoiceMail), **email suppression list** (email_suppressions platform table: complaints immediate, soft bounces at 3, send-time check for any recipient), **bulk CSV invite** (paste rows + default role, per-row guards, audit). ROADMAP gained "Parked — waiting on external input" (Stripe keys, Reverb creds, Vue site, setup wizard, Resend prod webhook). Suite **146 green**, PHPStan + Pint clean. ⚠️ migrate:fresh reseeded dev DB — demo logins restored, hand-entered test data reset. |

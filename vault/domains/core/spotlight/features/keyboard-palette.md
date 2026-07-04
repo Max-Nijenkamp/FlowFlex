@@ -3,7 +3,7 @@ domain: core
 module: spotlight
 feature: keyboard-palette
 type: feature
-build-status: in-progress
+build-status: complete
 status: wip
 color: "#4ADE80"
 updated: 2026-07-03

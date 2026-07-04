@@ -4,7 +4,7 @@ module: workspace-hub
 type: module
 module-key: core.hub
 priority: v1-core
-build-status: in-progress
+build-status: complete
 status: wip
 depends-on: [core.billing, core.rbac]
 soft-depends: []
@@ -12,7 +12,7 @@ patterns: [custom-pages, ux-states, perceived-performance]
 tables: []
 permission-prefix: core.hub
 color: "#4ADE80"
-updated: 2026-07-03
+updated: 2026-07-04
 ---
 
 # Workspace Hub

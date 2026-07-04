@@ -74,4 +74,7 @@ This is how the collapsed-rail off-center bug (vendor `scrollbar-gutter: stable`
 
 - Success-notification carryover: `body.innerText.includes('Saved')` right after an action can match the PREVIOUS action's toast. Assert on unique text or fresh navigation.
 - Interacting across `browser.newContext()` = separate sessions — log in per context.
+- **Scrollbar bugs are invisible headless**: overlay scrollbars paint nothing. Reproduce user-reported "weird stub/icon at an edge" with `chromium.launch({ args: ['--disable-features=OverlayScrollbar'] })`, then probe `el.offsetWidth - el.clientWidth` (vertical bar) / `offsetHeight - clientHeight` (horizontal; borders also count) on the suspect container.
+- **"element intercepts pointer events" on sidebar-header children**: the absolutely-positioned collapse toggle (`.ff-side-toggle-wrp`) overlays new header content — check its rect before blaming the target.
+- App demo logins: `test@test.nl` / `test1234` (owner). Admin panel: same, or `admin@flowflex.nl` / `password`. `migrate:fresh --seed` restores them.
 - Sidebar collapse state persists in localStorage per context — reset by clicking the toggle before screenshotting the expanded state.

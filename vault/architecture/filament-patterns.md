@@ -288,6 +288,36 @@ rows (10% tint + 2px edge ≠ hover 5% wash) and wizard steps. Full rules:
 [[architecture/patterns/ux-states]]. Forms >8 fields use a `Wizard` — steps
 validate on Next, never all-at-the-end.
 
+## 17. Table Status Pills: `->state()`, Never `->default()` + `->formatStateUsing()`
+
+`->default()` feeds the default INTO the formatter — a null-state column with `->default('Active')->formatStateUsing(fn ($state) => $state === null ? 'Active' : 'Deactivated')` renders every active row as "Deactivated" (shipped bug, admin Modules tab). Derived status columns always compute from the record:
+
+```php
+TextColumn::make('status')
+    ->badge()
+    ->state(fn (Model $record): string => $record->deactivated_at === null ? 'Active' : 'Deactivated')
+    ->color(fn (string $state): string => $state === 'Active' ? 'success' : 'gray'),
+```
+
+## 18. Form Group Styling: `extraFieldWrapperAttributes`, Flat Cards Over Section Stacks
+
+- `->extraAttributes()` lands on the input container; to style a field's label/wrapper from CSS use `->extraFieldWrapperAttributes(['class' => 'ff-...'])` — the class lands on `.fi-fo-field`, the label is `.fi-fo-field-label` inside it.
+- One `Section` per repeated group (per module, per category) reads clunky (owner call 2026-07-04, role matrix). Pattern: ONE full-width Section, groups as hairline-divided fields with mono uppercase group headers (`.ff-perm-group` in the skin; `RoleResource::permissionMatrix()` is the reference).
+- Resource form schemas default to a 2-column grid — a lone Section spans half the page and looks broken. `->columnSpanFull()` on every full-width section.
+
+## 19. Designed Modals: `->modalContent(view(...))` Over Infolist Dumps
+
+An infolist of stacked `TextEntry`s (worst case a `json_encode` blob) reads as a debug dump. Detail modals get a custom blade + skin classes:
+
+```php
+ViewAction::make()
+    ->modalHeading('Audit entry')
+    ->modalWidth('lg')
+    ->modalContent(fn (Activity $record) => view('filament.app.audit-entry', ['record' => $record])),
+```
+
+Reference: `audit-entry.blade.php` (event pill + meta grid + zebra key-value rows, old-vs-new strikethrough) with `.ff-audit-*` skin styles.
+
 ## 16. Skin Selectors Are Verified Against Rendered Markup
 
 Filament 5 class names differ from v3 docs (`fi-sidebar-item-btn` not
