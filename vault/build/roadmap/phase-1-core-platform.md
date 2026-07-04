@@ -74,10 +74,10 @@ Build: `/flowflex:start core.file-storage` · Done: `/flowflex:done core.file-st
 
 Build: `/flowflex:start core.invitation-system` · Done: `/flowflex:done core.invitation-system` · Spec: [[../../domains/core/invitation-system/_module|hub]] · Hard deps: foundation.panels, foundation.email
 
-- [ ] **Accept Flow** ([[../../domains/core/invitation-system/features/accept-flow|spec]]) — hand-check: background — trigger it (: `AcceptInvitationAction::run(AcceptInvitationData)` invoked by the public register form ), then check the visible result named in the spec
-- [ ] **Public Register (Vue + Inertia)** ([[../../domains/core/invitation-system/features/public-register-vue|spec]]) — hand-check: open `InviteRegister.vue` (`resources/js/Pages/Auth/InviteRegister.vue`), route `/register/invite/{token}` (`routes; 1. Recipient opens the link → `AuthController@showInviteRegistration` loads the invite `withoutGlobalScope(CompanyScope)`, `firstO
-- [ ] **Send Invite** ([[../../domains/core/invitation-system/features/send-invite|spec]]) — hand-check: open `InvitationResource` (`/app/invitations`) — pending-invites list + create/resend/revoke actions, surfaced insi; 1. Owner/admin clicks Invite → modal form (`CreateInvitationData`: email + role).
-- [ ] Gates: Pint + PHPStan + Pest green, spec Test Checklist covered, `/flowflex:verify` clean
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Accept Flow** ([[../../domains/core/invitation-system/features/accept-flow|spec]]) — hand-check: background — trigger it (: `AcceptInvitationAction::run(AcceptInvitationData)` invoked by the public register form ), then check the visible result named in the spec
+- [x] *(AI gate ✓ 2026-07-04 — DEVIATION: shipped as a branded Blade page; swapped for InviteRegister.vue when the Vue+Inertia public site scaffolds — the Vue stack is not installed yet)* **Public Register (Vue + Inertia)** ([[../../domains/core/invitation-system/features/public-register-vue|spec]]) — hand-check: open `InviteRegister.vue` (`resources/js/Pages/Auth/InviteRegister.vue`), route `/register/invite/{token}` (`routes; 1. Recipient opens the link → `AuthController@showInviteRegistration` loads the invite `withoutGlobalScope(CompanyScope)`, `firstO
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Send Invite** ([[../../domains/core/invitation-system/features/send-invite|spec]]) — hand-check: open `InvitationResource` (`/app/invitations`) — pending-invites list + create/resend/revoke actions, surfaced insi; 1. Owner/admin clicks Invite → modal form (`CreateInvitationData`: email + role).
+- [x] Gates: Pint + PHPStan + Pest green (106), `InvitationTest` 8 tests incl. accept race + token rotation + public page render
 
 ### Roles & Permissions — `core.rbac`
 

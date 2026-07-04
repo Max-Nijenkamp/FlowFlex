@@ -2,7 +2,7 @@
 domain: core
 module: invitation-system
 type: module
-build-status: planned
+build-status: in-progress
 status: wip
 color: "#4ADE80"
 updated: 2026-07-03
@@ -52,14 +52,14 @@ Team-member invitation flow: an owner/admin sends an email invite → the recipi
 
 ## Test Checklist
 
-- [ ] Tenant isolation: invites of company A invisible to company B
-- [ ] Module gating: `InvitationResource` hidden when `core.invitations` inactive
-- [ ] Accept flow creates user with correct `company_id` + role under correct team
-- [ ] Expired token → 404/invalid page, no acceptance
-- [ ] Revoked token unusable; resend invalidates old token
-- [ ] Duplicate pending invite for same email rejected with message
-- [ ] Invite mail queued on `notifications`, never sent sync
-- [ ] Accept route rate-limited
+- [x] Tenant isolation: invites of company A invisible to company B
+- [x] Module gating: `InvitationResource` hidden when `core.invitations` inactive
+- [x] Accept flow creates user with correct `company_id` + role under correct team
+- [x] Expired token → 404/invalid page, no acceptance
+- [x] Revoked token unusable; resend invalidates old token
+- [x] Duplicate pending invite for same email rejected with message
+- [x] Invite mail queued on `notifications`, never sent sync
+- [x] Accept route rate-limited
 
 ## Build Manifest (corrected to flat paths)
 

@@ -30,6 +30,7 @@ class PermissionSeeder extends Seeder
         // core.invitations
         'core.invitations.view-any',
         'core.invitations.send',
+        'core.invitations.resend',
         'core.invitations.revoke',
         // core.billing-engine
         'core.billing.view',
