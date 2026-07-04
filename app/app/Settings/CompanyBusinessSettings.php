@@ -14,6 +14,8 @@ class CompanyBusinessSettings extends Settings
 
     public string $holiday_calendar_country;
 
+    public int $max_upload_mb;
+
     public static function group(): string
     {
         return 'company_business';

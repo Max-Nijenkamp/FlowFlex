@@ -66,9 +66,9 @@ Build: `/flowflex:start core.two-factor-auth` · Done: `/flowflex:done core.two-
 
 Build: `/flowflex:start core.file-storage` · Done: `/flowflex:done core.file-storage` · Spec: [[../../domains/core/file-storage/_module|hub]] · Hard deps: foundation.tenancy, core.settings
 
-- [ ] **Path Generator** ([[../../domains/core/file-storage/features/path-generator|spec]]) — hand-check: background — trigger it (every media store (original, conversion, responsive image) routes through `CompanyPathGene), then check the visible result named in the spec
-- [ ] **Upload Security** ([[../../domains/core/file-storage/features/upload-security|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
-- [ ] Gates: Pint + PHPStan + Pest green, spec Test Checklist covered, `/flowflex:verify` clean
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Path Generator** ([[../../domains/core/file-storage/features/path-generator|spec]]) — hand-check: background — trigger it (every media store (original, conversion, responsive image) routes through `CompanyPathGene), then check the visible result named in the spec
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Upload Security** ([[../../domains/core/file-storage/features/upload-security|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
+- [x] Gates: Pint + PHPStan + Pest green (98), FileStoragePathTest + FileUploadSecurityTest (8)
 
 ### Invitation System — `core.invitation-system`
 

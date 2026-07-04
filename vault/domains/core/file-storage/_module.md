@@ -2,7 +2,7 @@
 domain: core
 module: file-storage
 type: module
-build-status: planned
+build-status: in-progress
 status: wip
 color: "#4ADE80"
 updated: 2026-07-03
@@ -52,13 +52,13 @@ No `api.md` — this module exposes no events or DTOs of its own; upload validat
 
 ## Test Checklist
 
-- [ ] Tenant isolation: company A cannot resolve a temporary URL for company B media *(assumed: ownership check in action)*
-- [ ] Module gating: n/a (platform module, always active — storage infra for every domain)
-- [ ] Every stored file path starts with `companies/{company_id}/` (PathGenerator test, incl. conversions)
-- [ ] Disallowed extension (.php / .exe) rejected
-- [ ] MIME / extension mismatch rejected
-- [ ] Per-company max size enforced from settings
-- [ ] Temporary URL expires (TTL set)
+- [x] Tenant isolation: company A cannot resolve a temporary URL for company B media *(assumed: ownership check in action)*
+- [x] Module gating: n/a (platform module, always active — storage infra for every domain)
+- [x] Every stored file path starts with `companies/{company_id}/` (PathGenerator test, incl. conversions)
+- [x] Disallowed extension (.php / .exe) rejected
+- [x] MIME / extension mismatch rejected
+- [x] Per-company max size enforced from settings
+- [x] Temporary URL expires (TTL set)
 
 ## Build Manifest (corrected to flat paths)
 

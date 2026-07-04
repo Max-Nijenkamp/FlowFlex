@@ -32,6 +32,7 @@ return [
             'fiscal_year_start_month' => 1,
             'week_start' => 'monday',
             'holiday_calendar_country' => 'NL',
+            'max_upload_mb' => 25,
         ],
 
         'company_privacy' => [
