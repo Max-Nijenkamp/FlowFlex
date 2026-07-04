@@ -7,40 +7,21 @@
             <button type="button" x-on:click="tab = 'privacy'" x-bind:class="{ 'ff-on': tab === 'privacy' }">Privacy</button>
         </nav>
 
-        <section x-show="tab === 'identity'">
-            <form class="ff-settings-form" wire:submit="saveIdentity">
-                {{ $this->identityForm }}
-                <div>
-                    <x-filament::button type="submit">Save identity</x-filament::button>
-                </div>
-            </form>
+        {{-- Each tab is a Section card with its own footer save action (profile pattern) --}}
+        <section x-show="tab === 'identity'" class="ff-settings-form">
+            {{ $this->identityForm }}
         </section>
 
-        <section x-show="tab === 'locale'" x-cloak>
-            <form class="ff-settings-form" wire:submit="saveLocale">
-                {{ $this->localeForm }}
-                <div>
-                    <x-filament::button type="submit">Save locale</x-filament::button>
-                </div>
-            </form>
+        <section x-show="tab === 'locale'" x-cloak class="ff-settings-form">
+            {{ $this->localeForm }}
         </section>
 
-        <section x-show="tab === 'business'" x-cloak>
-            <form class="ff-settings-form" wire:submit="saveBusiness">
-                {{ $this->businessForm }}
-                <div>
-                    <x-filament::button type="submit">Save business settings</x-filament::button>
-                </div>
-            </form>
+        <section x-show="tab === 'business'" x-cloak class="ff-settings-form">
+            {{ $this->businessForm }}
         </section>
 
-        <section x-show="tab === 'privacy'" x-cloak>
-            <form class="ff-settings-form" wire:submit="savePrivacy">
-                {{ $this->privacyForm }}
-                <div>
-                    <x-filament::button type="submit">Save privacy settings</x-filament::button>
-                </div>
-            </form>
+        <section x-show="tab === 'privacy'" x-cloak class="ff-settings-form">
+            {{ $this->privacyForm }}
         </section>
     </div>
 </x-filament-panels::page>

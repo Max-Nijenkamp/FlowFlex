@@ -59,13 +59,17 @@ class RoleResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make('name')
-                ->required()
-                ->maxLength(64)
-                ->disabled(fn (?Role $record): bool => $record !== null && BuiltInRoles::isBuiltIn($record->name))
-                ->helperText(fn (?Role $record): ?string => $record !== null && BuiltInRoles::isBuiltIn($record->name)
-                    ? 'Built-in role — the name is fixed.'
-                    : null),
+            Section::make('Role')
+                ->description('Members holding this role get the union of every checked permission.')
+                ->schema([
+                    TextInput::make('name')
+                        ->required()
+                        ->maxLength(64)
+                        ->disabled(fn (?Role $record): bool => $record !== null && BuiltInRoles::isBuiltIn($record->name))
+                        ->helperText(fn (?Role $record): ?string => $record !== null && BuiltInRoles::isBuiltIn($record->name)
+                            ? 'Built-in role — the name is fixed.'
+                            : null),
+                ]),
             ...self::permissionMatrix(),
         ]);
     }

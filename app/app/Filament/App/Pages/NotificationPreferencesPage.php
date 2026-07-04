@@ -8,6 +8,7 @@ use App\Data\UpdateNotificationPreferencesData;
 use App\Models\NotificationPreference;
 use App\Models\User;
 use App\Services\NotificationPreferenceService;
+use Filament\Actions\Action;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Notifications\Notification;
@@ -83,7 +84,14 @@ class NotificationPreferencesPage extends Page
                 ->columns(2);
         }
 
-        return $schema->statePath('data')->components($sections);
+        return $schema->statePath('data')->components([
+            Section::make('Delivery preferences')
+                ->description('Choose how each kind of update reaches you.')
+                ->footerActions([
+                    Action::make('save')->label('Save preferences')->action('save'),
+                ])
+                ->schema($sections),
+        ]);
     }
 
     public function save(): void

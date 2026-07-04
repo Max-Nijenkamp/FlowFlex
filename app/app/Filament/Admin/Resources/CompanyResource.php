@@ -16,6 +16,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -38,16 +39,27 @@ class CompanyResource extends Resource
     public static function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make('name')->required()->maxLength(255),
-            TextInput::make('slug')->disabled()->helperText('Set at provisioning; the company edits it in their settings.'),
-            Select::make('subscription_status')
-                ->options(['trial' => 'Trial', 'active' => 'Active', 'suspended' => 'Suspended', 'cancelled' => 'Cancelled'])
-                ->disabled()
-                ->helperText('Changes flow through billing (suspend action / dunning), never direct edits.'),
-            Select::make('timezone')
-                ->options(array_combine(timezone_identifiers_list(), timezone_identifiers_list()))
-                ->searchable(),
-            Select::make('locale')->options(['en' => 'English', 'nl' => 'Nederlands']),
+            Section::make('Identity')
+                ->description('Name and workspace slug.')
+                ->schema([
+                    TextInput::make('name')->required()->maxLength(255),
+                    TextInput::make('slug')->disabled()->helperText('Set at provisioning; the company edits it in their settings.'),
+                ]),
+            Section::make('Subscription')
+                ->description('Changes flow through billing (suspend action / dunning), never direct edits.')
+                ->schema([
+                    Select::make('subscription_status')
+                        ->options(['trial' => 'Trial', 'active' => 'Active', 'suspended' => 'Suspended', 'cancelled' => 'Cancelled'])
+                        ->disabled(),
+                ]),
+            Section::make('Locale')
+                ->columns(2)
+                ->schema([
+                    Select::make('timezone')
+                        ->options(array_combine(timezone_identifiers_list(), timezone_identifiers_list()))
+                        ->searchable(),
+                    Select::make('locale')->options(['en' => 'English', 'nl' => 'Nederlands']),
+                ]),
         ]);
     }
 

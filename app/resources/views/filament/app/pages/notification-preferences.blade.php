@@ -1,8 +1,5 @@
 <x-filament-panels::page>
-    <form class="ff-settings-form" wire:submit="save">
+    <div class="ff-settings-form">
         {{ $this->form }}
-        <div>
-            <x-filament::button type="submit">Save preferences</x-filament::button>
-        </div>
-    </form>
+    </div>
 </x-filament-panels::page>

@@ -10,6 +10,7 @@ use App\Filament\Admin\Resources\CompanyResource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,19 +26,31 @@ class CreateCompany extends CreateRecord
     public function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make('name')->required()->maxLength(255),
-            TextInput::make('owner_email')
-                ->label('Owner email')
-                ->email()
-                ->required()
-                ->helperText('Receives the owner invitation to set up the workspace.'),
-            Select::make('timezone')
-                ->options(array_combine(timezone_identifiers_list(), timezone_identifiers_list()))
-                ->default('Europe/Amsterdam')
-                ->searchable()
-                ->required(),
-            Select::make('locale')->options(['en' => 'English', 'nl' => 'Nederlands'])->default('en')->required(),
-            Select::make('currency')->options(['EUR' => 'EUR', 'USD' => 'USD', 'GBP' => 'GBP'])->default('EUR')->required(),
+            Section::make('Workspace')
+                ->description('The customer company being provisioned.')
+                ->schema([
+                    TextInput::make('name')->required()->maxLength(255),
+                ]),
+            Section::make('Owner')
+                ->description('Receives the owner invitation to set up the workspace.')
+                ->schema([
+                    TextInput::make('owner_email')
+                        ->label('Owner email')
+                        ->email()
+                        ->required(),
+                ]),
+            Section::make('Locale')
+                ->description('Defaults the owner can change later in their settings.')
+                ->columns(3)
+                ->schema([
+                    Select::make('timezone')
+                        ->options(array_combine(timezone_identifiers_list(), timezone_identifiers_list()))
+                        ->default('Europe/Amsterdam')
+                        ->searchable()
+                        ->required(),
+                    Select::make('locale')->options(['en' => 'English', 'nl' => 'Nederlands'])->default('en')->required(),
+                    Select::make('currency')->options(['EUR' => 'EUR', 'USD' => 'USD', 'GBP' => 'GBP'])->default('EUR')->required(),
+                ]),
         ]);
     }
 

@@ -11,6 +11,7 @@ use App\Settings\CompanyIdentitySettings;
 use App\Settings\CompanyLocaleSettings;
 use App\Settings\CompanyPrivacySettings;
 use App\Support\Services\CompanyContext;
+use Filament\Actions\Action;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -18,6 +19,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -76,7 +78,12 @@ class CompanySettingsPage extends Page
     {
         abort_unless(static::canAccess(), 403);
 
-        $this->identityForm->fill(app(CompanyIdentitySettings::class)->toArray());
+        // Identity defaults come from the company row until first save.
+        $identity = app(CompanyIdentitySettings::class)->toArray();
+        $company = app(CompanyContext::class)->current();
+        $identity['name'] = $identity['name'] !== '' ? $identity['name'] : $company->name;
+        $identity['slug'] = $identity['slug'] !== '' ? $identity['slug'] : $company->slug;
+        $this->identityForm->fill($identity);
         $this->localeForm->fill(app(CompanyLocaleSettings::class)->toArray());
         $this->businessForm->fill(app(CompanyBusinessSettings::class)->toArray());
         $this->privacyForm->fill(app(CompanyPrivacySettings::class)->toArray());
@@ -89,20 +96,27 @@ class CompanySettingsPage extends Page
         return $schema
             ->statePath('identityData')
             ->components([
-                TextInput::make('name')
-                    ->label('Company name')
-                    ->required()
-                    ->maxLength(255),
-                TextInput::make('slug')
-                    ->label('Workspace slug')
-                    ->required()
-                    ->alphaDash()
-                    ->maxLength(64)
-                    ->rule(Rule::unique('companies', 'slug')->ignore($companyId)),
-                ColorPicker::make('primary_color')
-                    ->label('Primary color')
-                    ->required()
-                    ->regex('/^#[0-9a-fA-F]{6}$/'),
+                Section::make('Identity')
+                    ->description('Your workspace name, slug and brand color.')
+                    ->footerActions([
+                        Action::make('saveIdentity')->label('Save identity')->action('saveIdentity'),
+                    ])
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Company name')
+                            ->required()
+                            ->maxLength(255),
+                        TextInput::make('slug')
+                            ->label('Workspace slug')
+                            ->required()
+                            ->alphaDash()
+                            ->maxLength(64)
+                            ->rule(Rule::unique('companies', 'slug')->ignore($companyId)),
+                        ColorPicker::make('primary_color')
+                            ->label('Primary color')
+                            ->required()
+                            ->regex('/^#[0-9a-fA-F]{6}$/'),
+                    ]),
             ]);
     }
 
@@ -111,31 +125,38 @@ class CompanySettingsPage extends Page
         return $schema
             ->statePath('localeData')
             ->components([
-                Select::make('timezone')
-                    ->options(array_combine(timezone_identifiers_list(), timezone_identifiers_list()))
-                    ->searchable()
-                    ->required(),
-                Select::make('locale')
-                    ->options(['en' => 'English', 'nl' => 'Nederlands'])
-                    ->required(),
-                Select::make('date_format')
-                    ->options([
-                        'd-m-Y' => date('d-m-Y').' (d-m-Y)',
-                        'Y-m-d' => date('Y-m-d').' (Y-m-d)',
-                        'd/m/Y' => date('d/m/Y').' (d/m/Y)',
-                        'm/d/Y' => date('m/d/Y').' (m/d/Y)',
+                Section::make('Locale')
+                    ->description('Timezone, language, dates and currency for the whole workspace.')
+                    ->footerActions([
+                        Action::make('saveLocale')->label('Save locale')->action('saveLocale'),
                     ])
-                    ->required(),
-                Select::make('currency')
-                    ->options(['EUR' => 'EUR — Euro', 'USD' => 'USD — US Dollar', 'GBP' => 'GBP — British Pound'])
-                    ->required(),
-                Select::make('currency_position')
-                    ->label('Symbol position')
-                    ->options(['before' => 'Before the amount (€ 12,50)', 'after' => 'After the amount (12,50 €)'])
-                    ->required(),
-                Select::make('decimal_places')
-                    ->options([0 => '0', 2 => '2'])
-                    ->required(),
+                    ->schema([
+                        Select::make('timezone')
+                            ->options(array_combine(timezone_identifiers_list(), timezone_identifiers_list()))
+                            ->searchable()
+                            ->required(),
+                        Select::make('locale')
+                            ->options(['en' => 'English', 'nl' => 'Nederlands'])
+                            ->required(),
+                        Select::make('date_format')
+                            ->options([
+                                'd-m-Y' => date('d-m-Y').' (d-m-Y)',
+                                'Y-m-d' => date('Y-m-d').' (Y-m-d)',
+                                'd/m/Y' => date('d/m/Y').' (d/m/Y)',
+                                'm/d/Y' => date('m/d/Y').' (m/d/Y)',
+                            ])
+                            ->required(),
+                        Select::make('currency')
+                            ->options(['EUR' => 'EUR — Euro', 'USD' => 'USD — US Dollar', 'GBP' => 'GBP — British Pound'])
+                            ->required(),
+                        Select::make('currency_position')
+                            ->label('Symbol position')
+                            ->options(['before' => 'Before the amount (€ 12,50)', 'after' => 'After the amount (12,50 €)'])
+                            ->required(),
+                        Select::make('decimal_places')
+                            ->options([0 => '0', 2 => '2'])
+                            ->required(),
+                    ]),
             ]);
     }
 
@@ -144,21 +165,28 @@ class CompanySettingsPage extends Page
         return $schema
             ->statePath('businessData')
             ->components([
-                Select::make('fiscal_year_start_month')
-                    ->label('Fiscal year starts in')
-                    ->options(array_combine(range(1, 12), array_map(
-                        fn (int $m): string => now()->startOfYear()->addMonths($m - 1)->format('F'),
-                        range(1, 12),
-                    )))
-                    ->required(),
-                Select::make('week_start')
-                    ->label('Week starts on')
-                    ->options(['monday' => 'Monday', 'sunday' => 'Sunday'])
-                    ->required(),
-                Select::make('holiday_calendar_country')
-                    ->label('Public holiday calendar')
-                    ->options(['NL' => 'Netherlands', 'BE' => 'Belgium', 'DE' => 'Germany'])
-                    ->required(),
+                Section::make('Business')
+                    ->description('Fiscal calendar and workweek rhythm.')
+                    ->footerActions([
+                        Action::make('saveBusiness')->label('Save business settings')->action('saveBusiness'),
+                    ])
+                    ->schema([
+                        Select::make('fiscal_year_start_month')
+                            ->label('Fiscal year starts in')
+                            ->options(array_combine(range(1, 12), array_map(
+                                fn (int $m): string => now()->startOfYear()->addMonths($m - 1)->format('F'),
+                                range(1, 12),
+                            )))
+                            ->required(),
+                        Select::make('week_start')
+                            ->label('Week starts on')
+                            ->options(['monday' => 'Monday', 'sunday' => 'Sunday'])
+                            ->required(),
+                        Select::make('holiday_calendar_country')
+                            ->label('Public holiday calendar')
+                            ->options(['NL' => 'Netherlands', 'BE' => 'Belgium', 'DE' => 'Germany'])
+                            ->required(),
+                    ]),
             ]);
     }
 
@@ -167,16 +195,23 @@ class CompanySettingsPage extends Page
         return $schema
             ->statePath('privacyData')
             ->components([
-                Select::make('data_retention_months')
-                    ->label('Data retention')
-                    ->options([12 => '12 months', 24 => '24 months', 36 => '36 months', 60 => '60 months'])
-                    ->required(),
-                TextInput::make('dsar_email')
-                    ->label('DSAR contact email')
-                    ->email()
-                    ->maxLength(255),
-                Toggle::make('consent_logging_enabled')
-                    ->label('Log consent events'),
+                Section::make('Privacy')
+                    ->description('Retention and GDPR contact for your workspace.')
+                    ->footerActions([
+                        Action::make('savePrivacy')->label('Save privacy settings')->action('savePrivacy'),
+                    ])
+                    ->schema([
+                        Select::make('data_retention_months')
+                            ->label('Data retention')
+                            ->options([12 => '12 months', 24 => '24 months', 36 => '36 months', 60 => '60 months'])
+                            ->required(),
+                        TextInput::make('dsar_email')
+                            ->label('DSAR contact email')
+                            ->email()
+                            ->maxLength(255),
+                        Toggle::make('consent_logging_enabled')
+                            ->label('Log consent events'),
+                    ]),
             ]);
     }
 
