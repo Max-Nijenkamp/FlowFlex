@@ -57,6 +57,6 @@ Tiers per [[../../../decisions/decision-2026-07-02-optimistic-locking-standard]]
 
 | Key | TTL | Invalidated by |
 |---|---|---|
-| spatie settings cache (`settings.*`) | 10 min (Spatie default) | automatic on save |
+| spatie settings cache | **disabled** (2026-07-04 build correction: spatie's cache keys ignore the tenant — enabling would leak settings cross-company; per-request memoization only) | n/a |
 
 Currency/locale changes affect **new** formatting only, not stored amounts. A locale change is picked up by the `SetLocale` middleware on the next request.

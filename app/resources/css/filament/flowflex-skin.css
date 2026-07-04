@@ -1094,6 +1094,57 @@
     color: #34d399;
 }
 
+/* ---- Settings tabs (company-settings page) — underline tabs per design ----- */
+.ff-settings-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--ff-line);
+    margin-bottom: 24px;
+}
+
+.ff-settings-tabs button {
+    padding: 10px 16px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--ff-ink-faint);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    cursor: pointer;
+}
+
+.ff-settings-tabs button:hover {
+    color: var(--ff-ink);
+}
+
+.ff-settings-tabs button.ff-on {
+    color: var(--ff-ink);
+    border-bottom-color: var(--primary-500);
+}
+
+.dark .ff-settings-tabs {
+    border-bottom-color: rgb(255 255 255 / 0.08);
+}
+
+.dark .ff-settings-tabs button {
+    color: rgb(255 255 255 / 0.45);
+}
+
+.dark .ff-settings-tabs button:hover,
+.dark .ff-settings-tabs button.ff-on {
+    color: #ffffff;
+}
+
+.ff-settings-tabs-wrp section + section {
+    margin-top: 0;
+}
+
+.ff-settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 640px;
+}
+
 /* ---- Spotlight ⌘K palette (.ff-spotlight-*, panel-chrome §4) --------------- */
 .ff-spotlight-overlay {
     position: fixed;

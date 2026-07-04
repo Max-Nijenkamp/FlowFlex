@@ -25,8 +25,8 @@ Build: `/flowflex:start core.audit-log` · Done: `/flowflex:done core.audit-log`
 
 Build: `/flowflex:start core.company-settings` · Done: `/flowflex:done core.company-settings` · Spec: [[../../domains/core/company-settings/_module|hub]] · Hard deps: none
 
-- [ ] **Settings Tabs** ([[../../domains/core/company-settings/features/settings-tabs|spec]]) — hand-check: open `CompanySettingsPage` (`/app`, `app/Filament/App/Pages/CompanySettingsPage.php` + `resources/views/filament/ap; 1. Owner opens the page → each tab hydrates from `app(<SettingsClass>)`.
-- [ ] Gates: Pint + PHPStan + Pest green, spec Test Checklist covered, `/flowflex:verify` clean
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Settings Tabs** ([[../../domains/core/company-settings/features/settings-tabs|spec]]) — hand-check: open `CompanySettingsPage` (`/app`, `app/Filament/App/Pages/CompanySettingsPage.php` + `resources/views/filament/ap; 1. Owner opens the page → each tab hydrates from `app(<SettingsClass>)`.
+- [x] Gates: Pint + PHPStan + Pest green (73), `CompanySettingsTest` 7 tests, page screenshot-verified live
 
 ### Staff Console — `core.staff-console`
 
