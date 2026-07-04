@@ -1239,28 +1239,181 @@
     }
 }
 
-/* ---- Workspace hub tiles ---------------------------------------------------- */
-.ff-hub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
-.ff-hub-tile {
-    display: flex; flex-direction: column; gap: 8px;
-    background: var(--ff-card); border: 1px solid var(--ff-line-strong);
-    border-radius: 14px; padding: 20px; box-shadow: 0 1px 2px rgb(17 24 39 / 0.04);
-    transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+/* ---- Workspace switcher (menu trigger + modal panel selection) --------------
+   Replaces the hub page (owner decision 2026-07-04). Current workspace is
+   always listed + marked active; every row gets a hover border. */
+.ff-ws {
+    padding: 0 24px 4px;
 }
-.ff-hub-tile:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -12px rgb(17 24 39 / 0.18); }
-.ff-hub-tile:active { transform: scale(0.98); }
-.ff-hub-square { width: 12px; height: 12px; border-radius: 3px; }
-.ff-hub-name { font-family: 'Archivo', var(--font-family), sans-serif; font-size: 16px; font-weight: 700; letter-spacing: -0.02em; color: var(--ff-ink); }
-.ff-hub-blurb { font-size: 12.5px; color: var(--ff-ink-faint); }
-.ff-hub-empty { text-align: center; padding: 56px 16px; }
-.ff-hub-empty h2 { font-family: 'Archivo', var(--font-family), sans-serif; font-size: 20px; letter-spacing: -0.02em; margin-bottom: 8px; }
-.ff-hub-empty p { color: var(--ff-ink-soft); font-size: 14px; margin-bottom: 18px; }
-.ff-hub-cta {
-    display: inline-block; padding: 9px 18px; border-radius: 9px;
-    background: var(--primary-500); color: #fff; font-size: 13.5px; font-weight: 600;
+
+.ff-ws-trigger {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--ff-line);
+    background: var(--ff-paper-deep);
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ff-ink-soft);
+    transition: border-color 0.13s ease, background-color 0.13s ease, color 0.13s ease;
 }
-.dark .ff-hub-tile { background: #111827; border-color: rgb(255 255 255 / 0.08); }
-.dark .ff-hub-name { color: #fff; }
+
+.ff-ws-trigger:hover {
+    border-color: var(--ff-line-strong);
+    color: var(--ff-ink);
+}
+
+.ff-ws-trigger svg { color: var(--ff-ink-faint); flex: none; }
+
+.ff-ws-trigger-label { flex: 1; text-align: left; }
+
+.ff-ws-trigger-hint {
+    font-family: var(--ff-font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ff-ink-faint);
+    border: 1px solid var(--ff-line);
+    border-radius: 5px;
+    padding: 2px 6px;
+}
+
+/* icon rail: squares icon only */
+@media (min-width: 1024px) {
+    .fi-sidebar:not(.fi-sidebar-open) .ff-ws { padding: 0 0 4px; }
+    .fi-sidebar:not(.fi-sidebar-open) .ff-ws-trigger {
+        width: 40px; height: 40px; margin-inline: auto;
+        justify-content: center; padding: 0;
+        border-color: transparent; background: transparent;
+    }
+    .fi-sidebar:not(.fi-sidebar-open) .ff-ws-trigger:hover { background: var(--ff-paper-deep); }
+    .fi-sidebar:not(.fi-sidebar-open) .ff-ws-trigger-label,
+    .fi-sidebar:not(.fi-sidebar-open) .ff-ws-trigger-hint { display: none; }
+}
+
+.ff-ws-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 12vh 16px 16px;
+    background: rgb(17 24 39 / 0.42);
+    backdrop-filter: blur(2px);
+}
+
+.ff-ws-modal {
+    width: 100%;
+    max-width: 460px;
+    background: var(--ff-card);
+    border: 1px solid var(--ff-line-strong);
+    border-radius: 16px;
+    box-shadow: 0 24px 48px -12px rgb(17 24 39 / 0.28);
+    overflow: hidden;
+}
+
+.ff-ws-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px 13px;
+    border-bottom: 1px solid var(--ff-line);
+}
+
+.ff-ws-head h2 {
+    font-family: 'Archivo', var(--font-family), sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.ff-ws-close {
+    display: flex;
+    padding: 6px;
+    border-radius: 7px;
+    color: var(--ff-ink-faint);
+    transition: background-color 0.13s ease, color 0.13s ease;
+}
+
+.ff-ws-close:hover { background: var(--ff-paper-deep); color: var(--ff-ink); }
+
+.ff-ws-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px 16px;
+}
+
+.ff-ws-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border-radius: 11px;
+    border: 1px solid var(--ff-line);
+    transition: border-color 0.13s ease, background-color 0.13s ease;
+}
+
+.ff-ws-row:hover {
+    border-color: var(--ff-line-strong);
+    background: var(--ff-paper-deep);
+}
+
+.ff-ws-row.ff-current {
+    border-color: color-mix(in srgb, var(--primary-500) 45%, transparent);
+    background: color-mix(in srgb, var(--primary-500) 7%, transparent);
+}
+
+.ff-ws-row.ff-current:hover {
+    border-color: var(--primary-500);
+}
+
+.ff-ws-square { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+
+.ff-ws-meta { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
+
+.ff-ws-name {
+    font-family: 'Archivo', var(--font-family), sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ff-ink);
+}
+
+.ff-ws-blurb { font-size: 12px; color: var(--ff-ink-faint); }
+
+.ff-ws-current-tag {
+    flex: none;
+    font-family: var(--ff-font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--primary-600, var(--primary-500));
+    border: 1px solid color-mix(in srgb, var(--primary-500) 45%, transparent);
+    border-radius: 999px;
+    padding: 3px 8px;
+}
+
+.ff-ws-empty { text-align: center; padding: 6px 20px 20px; }
+.ff-ws-empty p { color: var(--ff-ink-soft); font-size: 13px; margin-bottom: 12px; }
+
+.ff-ws-cta {
+    display: inline-block; padding: 8px 16px; border-radius: 9px;
+    background: var(--primary-500); color: #fff; font-size: 13px; font-weight: 600;
+}
+
+.dark .ff-ws-trigger { background: rgb(255 255 255 / 0.04); border-color: rgb(255 255 255 / 0.08); color: rgb(255 255 255 / 0.62); }
+.dark .ff-ws-trigger:hover { border-color: rgb(255 255 255 / 0.2); color: #fff; }
+.dark .ff-ws-modal { background: #111827; border-color: rgb(255 255 255 / 0.1); }
+.dark .ff-ws-head { border-bottom-color: rgb(255 255 255 / 0.08); }
+.dark .ff-ws-row { border-color: rgb(255 255 255 / 0.1); }
+.dark .ff-ws-row:hover { border-color: rgb(255 255 255 / 0.24); background: rgb(255 255 255 / 0.04); }
+.dark .ff-ws-name { color: #fff; }
+.dark .ff-ws-close:hover { background: rgb(255 255 255 / 0.06); }
 
 /* ---- Module marketplace — switchboard boards (design Switchboard.vue) ------ */
 .ff-mkt { display: flex; flex-direction: column; gap: 22px; }

@@ -61,6 +61,12 @@ class AppPanelProvider extends PanelProvider
             ])
             ->renderHook(PanelsRenderHook::SIDEBAR_FOOTER, fn () => view('filament.chrome.sidebar-footer'))
             ->renderHook(PanelsRenderHook::SIDEBAR_LOGO_AFTER, fn () => view('filament.chrome.sidebar-toggle'))
+            ->renderHook(
+                PanelsRenderHook::SIDEBAR_NAV_START,
+                fn (): string => Filament::auth()->check()
+                    ? view('filament.chrome.workspace-switcher')->render()
+                    : '',
+            )
             ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_BEFORE, fn () => view('filament.chrome.search-trigger'))
             ->renderHook(
                 PanelsRenderHook::BODY_END,

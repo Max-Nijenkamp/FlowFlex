@@ -2,37 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\App\Pages;
+namespace App\Support\Services;
 
 use App\Contracts\BillingServiceInterface;
 use App\Models\ModuleCatalogEntry;
 use App\Models\User;
-use App\Support\Services\CompanyContext;
-use Filament\Pages\Page;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * Workspace Hub (core.hub/domain-launcher): one tile per domain the
- * company has active AND the user may access. Pure read/compose — owns
- * no tables. Ordering: alphabetical (recency/favourites deferred, spec
+ * Workspace switcher rows (core.hub/domain-launcher, modal form per owner
+ * decision 2026-07-04 — the hub page is gone): one row per domain the
+ * company has active AND the user may access. Pure read/compose — owns no
+ * tables. Ordering: alphabetical (recency/favourites deferred, spec
  * *(assumed)* item).
  */
-class WorkspaceHubPage extends Page
+class WorkspacePanels
 {
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-squares-2x2';
-
-    protected static ?string $navigationLabel = 'Hub';
-
-    protected static ?string $title = 'Workspace';
-
-    protected static ?string $slug = 'hub';
-
-    protected static ?int $navigationSort = -1;
-
-    protected string $view = 'filament.app.pages.workspace-hub';
-
-    /** Domain tiles: name, descriptor, colour (design palette), panel path. */
+    /** Domain rows: name, descriptor, colour (design palette), panel path. */
     public const DOMAINS = [
         'hr' => ['name' => 'HR & people', 'blurb' => 'Profiles, leave and onboarding', 'color' => '#8B5CF6'],
         'finance' => ['name' => 'Finance', 'blurb' => 'Ledger, invoicing and payments', 'color' => '#10B981'],
@@ -42,20 +29,15 @@ class WorkspaceHubPage extends Page
         'support' => ['name' => 'Support', 'blurb' => 'Tickets and SLAs', 'color' => '#F97316'],
     ];
 
-    public static function canAccess(): bool
+    public static function canView(): bool
     {
         $user = Auth::user();
 
         return $user instanceof User && $user->can('core.hub.view');
     }
 
-    public function mount(): void
-    {
-        abort_unless(static::canAccess(), 403);
-    }
-
     /** @return Collection<int, array{key: string, name: string, blurb: string, color: string, url: string}> */
-    public function getTilesProperty(): Collection
+    public static function tiles(): Collection
     {
         /** @var User $user */
         $user = Auth::user();
@@ -81,7 +63,7 @@ class WorkspaceHubPage extends Page
             ->values();
     }
 
-    public function getIsOwnerProperty(): bool
+    public static function isOwner(): bool
     {
         $user = Auth::user();
 

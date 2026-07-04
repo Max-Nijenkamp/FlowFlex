@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-use App\Filament\App\Pages\WorkspaceHubPage;
 use App\Models\Company;
 use App\Models\CompanyModuleSubscription;
 use App\Models\User;
 use App\Support\Services\BuiltInRoles;
+use App\Support\Services\WorkspacePanels;
 use Database\Seeders\ModuleCatalogSeeder;
 use Database\Seeders\PermissionSeeder;
 use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Cache;
-use Livewire\Livewire;
 use Spatie\Permission\Models\Role;
 
 function hubCompany(): array
@@ -42,17 +41,17 @@ function activateForHub(Company $company, string ...$keys): void
     Cache::forget("company:{$company->id}:modules");
 }
 
-test('tiles are the intersection of active modules and access permissions, alphabetical', function () {
+test('switcher rows are the intersection of active modules and access permissions, alphabetical', function () {
     [$company] = hubCompany();
     activateForHub($company, 'hr.leave', 'crm.deals'); // finance NOT active
 
-    $tiles = Livewire::test(WorkspaceHubPage::class)->instance()->tiles;
+    $tiles = WorkspacePanels::tiles();
 
     expect($tiles->pluck('key')->all())->toBe(['crm', 'hr']) // CRM < HR alphabetically by name
         ->and($tiles->pluck('key'))->not->toContain('finance');
 });
 
-test('an inactive domain yields no tile even with the permission; no permission hides an active domain', function () {
+test('an inactive domain yields no row even with the permission; no permission hides an active domain', function () {
     [$company] = hubCompany();
     activateForHub($company, 'hr.leave');
 
@@ -62,47 +61,60 @@ test('an inactive domain yields no tile even with the permission; no permission 
     $member->assignRole($role);
 
     $this->actingAs($member);
-    $tiles = Livewire::test(WorkspaceHubPage::class)->instance()->tiles;
-    expect($tiles)->toBeEmpty(); // active module, no access permission
+    expect(WorkspacePanels::tiles())->toBeEmpty(); // active module, no access permission
 
     $role->givePermissionTo('access.finance'); // permission for an INACTIVE domain
-    $tiles = Livewire::test(WorkspaceHubPage::class)->instance()->tiles;
-    expect($tiles)->toBeEmpty();
+    expect(WorkspacePanels::tiles())->toBeEmpty();
 });
 
-test('company A tiles never leak into company B', function () {
+test('company A rows never leak into company B', function () {
     [$companyA] = hubCompany();
     activateForHub($companyA, 'hr.leave');
 
-    [$companyB] = hubCompany();
+    hubCompany(); // switches context to company B
 
-    $tiles = Livewire::test(WorkspaceHubPage::class)->instance()->tiles;
-    expect($tiles)->toBeEmpty();
+    expect(WorkspacePanels::tiles())->toBeEmpty();
 });
 
-test('the empty state offers the marketplace to owners and directs members to their admin', function () {
+test('the switcher lives in the sidebar and always lists the current workspace', function () {
+    hubCompany();
+
+    $this->get('/app')
+        ->assertOk()
+        ->assertSee('Switch workspace')
+        ->assertSee('ff-ws-trigger', escape: false)
+        ->assertSee('ff-current', escape: false);
+});
+
+test('the switcher is hidden without core.hub.view', function () {
     [$company] = hubCompany();
 
-    Livewire::test(WorkspaceHubPage::class)
-        ->assertSee('Nothing switched on yet')
-        ->assertSee('marketplace');
+    $stranger = User::factory()->for($company)->create(); // no roles at all
+    $this->flushSession();
+    $this->actingAs($stranger);
+
+    expect(WorkspacePanels::canView())->toBeFalse();
+
+    $this->get('/app')
+        ->assertOk()
+        ->assertDontSee('ff-ws-trigger', escape: false);
+});
+
+test('the empty modal offers the marketplace to owners and directs members to their admin', function () {
+    [$company] = hubCompany();
+
+    $this->get('/app')
+        ->assertSee('Open the marketplace');
 
     $member = User::factory()->for($company)->create();
     $role = Role::query()->create(['name' => 'plain', 'guard_name' => 'web', 'company_id' => $company->id]);
     $role->givePermissionTo('core.hub.view');
     $member->assignRole($role);
 
+    // fresh session — AuthenticateSession rejects a user swap mid-session
+    $this->flushSession();
     $this->actingAs($member);
-    Livewire::test(WorkspaceHubPage::class)
+    $this->get('/app')
         ->assertSee('Ask your workspace admin')
         ->assertDontSee('Open the marketplace');
-});
-
-test('the hub is denied without core.hub.view', function () {
-    [$company] = hubCompany();
-
-    $stranger = User::factory()->for($company)->create(); // no roles at all
-    $this->actingAs($stranger);
-
-    expect(WorkspaceHubPage::canAccess())->toBeFalse();
 });

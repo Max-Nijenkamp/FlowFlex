@@ -45,7 +45,7 @@ The hub abstraction works either way; it is the launcher/router.
 
 | Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `WorkspaceHubPage` | #17 Gallery / directory grid custom page | [[../../../architecture/patterns/page-blueprints#Gallery / Directory Grid]] | responsive domain-tile grid = activated modules ∩ user access permissions; skeleton on load; empty/partial states per [[../../../architecture/patterns/ux-states]] |
+| `workspace-switcher` sidebar modal (chrome, no page) | n/a — panel chrome, not a screen (ADR [[../../../decisions/decision-2026-07-04-hub-modal-not-page\|hub-modal-not-page]]) | trigger pinned above nav via `SIDEBAR_NAV_START`; modal rows = activated modules ∩ user access permissions via `App\Support\Services\WorkspacePanels`; current workspace always listed + marked CURRENT; hover borders per row | replaced `WorkspaceHubPage` 2026-07-04 |
 
 **Access contract (mandatory):** `WorkspaceHubPage` is a custom page and MUST state its gate explicitly — Filament does not auto-gate custom pages:
 `canAccess() = Auth::user()->can('core.hub.view')` on the **web** guard only (admin/staff never reach the hub — they land on the staff console)
