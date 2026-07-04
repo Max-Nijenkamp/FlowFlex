@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources\CompanyResource\RelationManagers;
 
+use App\Actions\RenderInvoicePdfAction;
 use App\Models\BillingInvoice;
 use Brick\Money\Money;
+use Filament\Actions\Action;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -31,6 +33,18 @@ class InvoicesRelationManager extends RelationManager
                     ->badge()
                     ->formatStateUsing(fn (BillingInvoice $record): string => str((string) $record->status)->replace('_', ' ')->headline()->toString()),
                 TextColumn::make('paid_at')->dateTime('d M Y')->placeholder('-'),
+            ])
+            ->recordActions([
+                Action::make('downloadPdf')
+                    ->label('PDF')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(fn (BillingInvoice $record) => response()->streamDownload(
+                        function () use ($record): void {
+                            echo RenderInvoicePdfAction::run($record);
+                        },
+                        RenderInvoicePdfAction::number($record).'.pdf',
+                        ['Content-Type' => 'application/pdf'],
+                    )),
             ])
             ->defaultSort('period_start', 'desc');
     }

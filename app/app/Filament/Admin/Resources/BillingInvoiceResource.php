@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
+use App\Actions\RenderInvoicePdfAction;
 use App\Filament\Admin\Resources\BillingInvoiceResource\Pages\ListBillingInvoices;
 use App\Models\BillingInvoice;
 use Brick\Money\Money;
+use Filament\Actions\Action;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -61,6 +63,18 @@ class BillingInvoiceResource extends Resource
                 SelectFilter::make('status')->options([
                     'draft' => 'Draft', 'open' => 'Open', 'paid' => 'Paid', 'past_due' => 'Past due', 'uncollectible' => 'Uncollectible',
                 ]),
+            ])
+            ->recordActions([
+                Action::make('downloadPdf')
+                    ->label('PDF')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(fn (BillingInvoice $record) => response()->streamDownload(
+                        function () use ($record): void {
+                            echo RenderInvoicePdfAction::run($record);
+                        },
+                        RenderInvoicePdfAction::number($record).'.pdf',
+                        ['Content-Type' => 'application/pdf'],
+                    )),
             ])
             ->emptyStateHeading('No invoices yet');
     }

@@ -76,6 +76,18 @@ All 13 researched feature gaps were accepted; build each alongside its module's 
 | External dashboard share links (signed, read-only) | analytics.dashboards | 5 | [[gaps/gap-feature-analytics-public-dashboard-share]] |
 | AI inbound webhook trigger (catch hook) | ai.workflows | 5 | [[gaps/gap-feature-ai-inbound-webhook-trigger]] |
 
+## Parked — waiting on external input (do not lose these)
+
+Nothing here is forgotten; each unblocks the moment its input lands.
+
+| Item | Blocked on | Where it lands |
+|---|---|---|
+| Stripe live charging (payment methods, real webhooks) | `STRIPE_SECRET` + `STRIPE_WEBHOOK_SECRET` in env | BillingService wrapper already no-ops without keys; add Stripe Elements payment-method UI when keys exist |
+| Live realtime (websockets bell, presence) | `REVERB_APP_*` creds in env | channels registered but guarded; Echo config ready |
+| Vue + Inertia public site (root `/login`, marketing pages, InviteRegister.vue) | frontend phase start (own track) | `frontend/` specs; invite-accept currently Blade fallback |
+| Setup wizard (`core.setup-wizard`) | Phase 3 per this roadmap | `RedirectToSetupWizard` middleware already no-ops until the route exists |
+| Resend production webhook registration | Resend dashboard access (prod domain) | `/api/resend/webhook` live, signature-verified |
+
 ## Related
 
 - [[gaps/INDEX|Open gaps]]

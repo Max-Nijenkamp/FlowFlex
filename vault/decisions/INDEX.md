@@ -11,6 +11,7 @@ Architectural decisions, one file per decision. Moved from `build/decisions/` to
 
 | Date | Decision | Status |
 |---|---|---|
+| 2026-07-04 | [[decisions/decision-2026-07-04-dompdf-for-invoice-pdfs\|Dompdf for invoice PDFs (deviation from spatie/laravel-pdf — no Chrome in container)]] | decided |
 | 2026-07-04 | [[decisions/decision-2026-07-04-panel-chrome-ownership\|Panel chrome ownership — minimal topbar, sidebar-owned account & navigation]] | decided |
 | 2026-07-03 | [[decisions/decision-2026-07-03-custom-over-missing-plugins\|Custom-build over waiting for missing Filament plugins]] | decided |
 | 2026-07-03 | [[decisions/decision-2026-07-03-two-panel-matcher-ui-row\|Two-panel matcher — ui-strategy row #21 + blueprint]] | decided |

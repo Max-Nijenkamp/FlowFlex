@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Filament\Auth\PanelLogin;
 use App\Http\Middleware\VerifyResendSignature;
 use App\Models\Company;
+use App\Models\EmailSuppression;
 use App\Models\User;
 use App\Support\Mail\FlowFlexMailable;
 use Illuminate\Console\Scheduling\Schedule;
@@ -48,6 +49,20 @@ test('mail to an undeliverable address is suppressed at send time', function () 
     $user = User::factory()->for($company)->create(['email_deliverable' => false]);
 
     $mailable = (new SuppressionProbeMailable)->to($user->email);
+    $result = $mailable->send(app('mail.manager'));
+
+    expect($result)->toBeNull();
+});
+
+test('mail to an address on the suppression list is blocked even without a user account', function () {
+    setCompany(Company::factory()->create());
+    EmailSuppression::query()->create([
+        'email' => 'external@bounced.nl',
+        'reason' => 'complaint',
+        'suppressed_at' => now(),
+    ]);
+
+    $mailable = (new SuppressionProbeMailable)->to('external@bounced.nl');
     $result = $mailable->send(app('mail.manager'));
 
     expect($result)->toBeNull();

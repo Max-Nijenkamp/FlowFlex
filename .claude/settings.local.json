@@ -384,7 +384,9 @@
       "Bash(node login-flow.mjs)",
       "Bash(rm login-flow.mjs)",
       "Bash(./vendor/bin/pest --filter LoginRedirect)",
-      "Bash(docker port *)"
+      "Bash(docker port *)",
+      "Bash(ls app/Http/Controllers)",
+      "Bash(ls app/Mail)"
     ],
     "defaultMode": "acceptEdits"
   },

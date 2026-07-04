@@ -2,7 +2,7 @@
 type: gap
 severity: medium
 category: feature
-status: accepted
+status: resolved
 domain: foundation
 color: "#F97316"
 discovered: 2026-07-03
@@ -10,6 +10,8 @@ discovered-in: foundation.email
 ---
 
 # Gap: Email suppression handles hard bounces only — no complaint / soft-bounce list
+
+> **RESOLVED 2026-07-04** — platform-level `email_suppressions` table (address-global, no company_id — ModelsTest platform exemption). Webhook now handles `email.complained` (immediate suppress) and `email.delivery_delayed` (suppress at 3, `RecordSoftBounceAction::THRESHOLD`); hard bounce suppresses + keeps flagging user rows. `FlowFlexMailable::send` checks the list for every recipient, user account or not. Transactional-vs-marketing stream isolation still future (no marketing sends exist yet).
 
 ## Context
 

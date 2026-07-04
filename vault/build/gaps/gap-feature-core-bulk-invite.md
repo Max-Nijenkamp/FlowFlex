@@ -2,7 +2,7 @@
 type: gap
 severity: medium
 category: feature
-status: accepted
+status: resolved
 domain: core
 color: "#F97316"
 discovered: 2026-07-03
@@ -10,6 +10,8 @@ discovered-in: core.invitations
 ---
 
 # Gap: Invitations has no bulk / CSV invite path
+
+> **RESOLVED 2026-07-04** — "Bulk invite" header action on InvitationResource: paste CSV rows (`email` or `email,role`, header rows skipped) + default-role select; `BulkInviteAction` runs each row through `SendInvitationAction` so all guards apply per row, failures reported per line, audit `core.invitations-bulk-sent`. FileUpload variant + ImporterRegistry integration can layer on later if paste proves insufficient.
 
 ## Context
 

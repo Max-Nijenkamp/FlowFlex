@@ -15,7 +15,7 @@ Bugs, spec issues, and missing details discovered during build sessions.
 
 | ID | Severity | Domain | Module | Description | Discovered |
 |---|---|---|---|---|---|
-| [[gap-invoice-pdf-missing]] | medium | core | core.billing-engine | Invoice PDF generation + download action not built (mail + list shipped without it) | 2026-07-04 |
+| [[gap-invoice-pdf-missing]] | medium | core | core.billing-engine | **RESOLVED** — dompdf render + download actions + mail attachment (ADR dompdf-for-invoice-pdfs) | 2026-07-04 |
 | [[gap-tests-wiped-dev-database]] | high | foundation | foundation.test-suite | **RESOLVED** — `artisan test --parallel` ran on real pgsql (non-forced phpunit `<env>`), migrate:fresh wiped dev data; fixed with `force="true"` + sqlite guard in TestCase | 2026-07-04 |
 | [[gap-fillform-noop-auth-pages]] | low | foundation | foundation.panels | `fillForm()` silently no-ops on auth-page schemas in Livewire tests — use `->set('data.*', ...)`; LoginRedirectTest was red since commit, fixed | 2026-07-04 |
 | [[gap-filament5-plugins-unavailable]] | low | foundation | foundation.scaffold | 2 of 4 Filament plugins still lack v5 (fullcalendar, tiptap — needed Phase 2+); shield + activitylog resolved via custom resources in core.rbac/core.audit | 2026-06-11 |
@@ -25,8 +25,8 @@ Bugs, spec issues, and missing details discovered during build sessions.
 | [[gap-feature-projects-task-import-export]] | medium | projects | projects.tasks | No task CSV/Excel import or export — blocks migrate-off-Asana/Monday on-ramp; only time/gantt export exists | 2026-07-03 |
 | [[gap-feature-legal-contract-search-tags]] | medium | legal | legal.contracts | No full-text search (scout) or tagging on contracts — repository only as findable as column filters; adoption killer | 2026-07-03 |
 | [[gap-feature-visitor-qr-checkin]] | low | workplace | workplace.visitors | No QR pre-reg→kiosk check-in (simple-qrcode); VMS table stakes + sidesteps encrypted-visitor in-memory lookup | 2026-07-03 |
-| [[gap-feature-core-bulk-invite]] | medium | core | core.invitations | Invites are one-at-a-time modal only; no bulk/CSV invite importer for onboarding 50–500 staff | 2026-07-03 |
-| [[gap-feature-foundation-email-suppression]] | medium | foundation | foundation.email | Bounce webhook flags hard bounces only; no complaint/soft-bounce suppression list (Gmail 0.3% / Microsoft 2025 enforcement) | 2026-07-03 |
+| [[gap-feature-core-bulk-invite]] | medium | core | core.invitations | **RESOLVED** — Bulk invite header action (paste CSV rows + default role, per-row guards + audit) | 2026-07-03 |
+| [[gap-feature-foundation-email-suppression]] | medium | foundation | foundation.email | **RESOLVED** — email_suppressions table: complaints immediate, soft bounces at 3, checked in FlowFlexMailable::send | 2026-07-03 |
 | [[gap-feature-analytics-public-dashboard-share]] | medium | analytics | analytics.dashboards | Sharing is intra-company only; no seatless tokened read-only link for external stakeholders (needs ADR) | 2026-07-03 |
 | [[gap-feature-ai-inbound-webhook-trigger]] | medium | ai | ai.workflows | Triggers are internal events + schedule only; no inbound external-webhook ("Catch Hook") to start a flow | 2026-07-03 |
 | [[gap-feature-dms-batch-template-generation]] | medium | dms | dms.templates | Generate-from-template is single-doc only; no batch mail-merge (one template × many records → many PDFs) | 2026-07-03 |

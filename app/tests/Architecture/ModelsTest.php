@@ -19,6 +19,7 @@ test('every tenant table migration carries a company_id foreignUlid', function (
         'companies', 'admins', 'cache', 'jobs', 'password_reset_tokens', 'sessions',
         'personal_access_tokens', 'permission', 'notifications', // sanctum/spatie/laravel infrastructure
         'module_catalog', // platform-level: one catalog for every tenant (module-system.md)
+        'email_suppressions', // platform-level: deliverability is address-global (foundation.email)
     ];
 
     foreach (glob(database_path('migrations/*_create_*_table.php')) as $file) {

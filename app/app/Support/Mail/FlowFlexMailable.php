@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Support\Mail;
 
+use App\Models\EmailSuppression;
 use App\Models\User;
 use App\Support\Services\CompanyContext;
 use Illuminate\Bus\Queueable;
@@ -51,19 +52,27 @@ abstract class FlowFlexMailable extends Mailable implements ShouldQueue
     }
 
     /**
-     * Suppression list: never send to an address flagged undeliverable by the
-     * bounce webhook. Runs at send time (inside the queued job, tenant context
-     * already restored) so late flags still suppress queued mail.
+     * Suppression: never send to an address on the platform suppression list
+     * (hard bounce / complaint / repeated soft bounce) or flagged undeliverable
+     * on a user account. Runs at send time (inside the queued job) so late
+     * flags still suppress queued mail.
      */
     /** @param  Mailer|Factory  $mailer */
     public function send($mailer): ?SentMessage
     {
+        $suppressed = EmailSuppression::query()
+            ->whereIn('email', array_column($this->to, 'address'))
+            ->whereNotNull('suppressed_at')
+            ->pluck('email')
+            ->all();
+
         $this->to = array_values(array_filter(
             $this->to,
-            fn (array $recipient): bool => ! User::query()
-                ->where('email', $recipient['address'])
-                ->where('email_deliverable', false)
-                ->exists(),
+            fn (array $recipient): bool => ! in_array($recipient['address'], $suppressed, true)
+                && ! User::query()
+                    ->where('email', $recipient['address'])
+                    ->where('email_deliverable', false)
+                    ->exists(),
         ));
 
         if ($this->to === []) {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Resources;
 
+use App\Actions\BulkInviteAction;
 use App\Actions\ResendInvitationAction;
 use App\Actions\RevokeInvitationAction;
 use App\Actions\SendInvitationAction;
@@ -14,6 +15,7 @@ use App\Services\BillingService;
 use App\Support\Services\CompanyContext;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -110,6 +112,52 @@ class InvitationResource extends Resource
                             Notification::make()->success()->title('Invitation sent')->send();
                         } catch (ValidationException $e) {
                             Notification::make()->danger()->title($e->getMessage())->send();
+                        }
+                    }),
+                Action::make('bulkInvite')
+                    ->label('Bulk invite')
+                    ->icon('heroicon-o-user-group')
+                    ->color('gray')
+                    ->modalHeading('Bulk invite')
+                    ->modalDescription('Paste rows from a CSV export — one address per line, optionally followed by a comma and a role.')
+                    ->visible(function (): bool {
+                        $user = Auth::user();
+
+                        return $user instanceof User && $user->can('core.invitations.send');
+                    })
+                    ->schema([
+                        Select::make('default_role')
+                            ->label('Default role')
+                            ->helperText('Used for rows without a role of their own.')
+                            ->options(fn (): array => Role::query()
+                                ->where('company_id', app(CompanyContext::class)->currentId())
+                                ->where('name', '!=', 'owner')
+                                ->pluck('name', 'name')
+                                ->all())
+                            ->required(),
+                        Textarea::make('rows')
+                            ->label('Recipients')
+                            ->placeholder("anna@company.nl\nbram@company.nl,manager")
+                            ->rows(8)
+                            ->required(),
+                    ])
+                    ->action(function (array $data): void {
+                        $result = BulkInviteAction::run($data['rows'], $data['default_role']);
+
+                        if ($result['sent'] > 0) {
+                            Notification::make()
+                                ->success()
+                                ->title("{$result['sent']} ".str('invitation')->plural($result['sent']).' sent')
+                                ->send();
+                        }
+
+                        if ($result['failures'] !== []) {
+                            Notification::make()
+                                ->warning()
+                                ->title(count($result['failures']).' '.str('row')->plural(count($result['failures'])).' skipped')
+                                ->body(implode("\n", array_slice($result['failures'], 0, 5)))
+                                ->persistent()
+                                ->send();
                         }
                     }),
             ])

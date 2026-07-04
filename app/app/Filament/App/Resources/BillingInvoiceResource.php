@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filament\App\Resources;
 
+use App\Actions\RenderInvoicePdfAction;
 use App\Models\BillingInvoice;
 use App\Models\User;
 use App\Services\BillingService;
 use Brick\Money\Money;
+use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
@@ -102,6 +104,16 @@ class BillingInvoiceResource extends Resource
                             ->label('Total')
                             ->formatStateUsing(fn (BillingInvoice $record): string => Money::ofMinor($record->total_cents, $record->currency)->formatToLocale('nl_NL')),
                     ]),
+                Action::make('downloadPdf')
+                    ->label('PDF')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(fn (BillingInvoice $record) => response()->streamDownload(
+                        function () use ($record): void {
+                            echo RenderInvoicePdfAction::run($record);
+                        },
+                        RenderInvoicePdfAction::number($record).'.pdf',
+                        ['Content-Type' => 'application/pdf'],
+                    )),
             ])
             ->emptyStateHeading('No invoices yet')
             ->emptyStateDescription('Your first invoice lands after the first full month with paid modules.');
