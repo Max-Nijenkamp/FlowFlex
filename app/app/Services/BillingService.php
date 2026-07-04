@@ -270,6 +270,23 @@ class BillingService implements BillingServiceInterface
         $invoice->update(['dunning_attempts' => 0, 'next_retry_at' => now()->addDays(4)]);
     }
 
+    /** Provisioning: activate every free core module for a new company. */
+    public function seedFreeCoreModules(Company $company): void
+    {
+        ModuleCatalogEntry::query()
+            ->where('per_user_monthly_price', 0)
+            ->where('is_active', true)
+            ->pluck('module_key')
+            ->each(function (string $key) use ($company): void {
+                CompanyModuleSubscription::query()->firstOrCreate(
+                    ['company_id' => $company->id, 'module_key' => $key, 'deactivated_at' => null],
+                    ['activated_at' => now()],
+                );
+            });
+
+        Cache::forget("company:{$company->id}:modules");
+    }
+
     public function suspend(string $companyId, string $reason): void
     {
         Company::query()->whereKey($companyId)->update(['subscription_status' => 'suspended']);

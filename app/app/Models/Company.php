@@ -52,6 +52,18 @@ class Company extends Model
         return $this->hasMany(User::class);
     }
 
+    /** @return HasMany<CompanyModuleSubscription, $this> */
+    public function moduleSubscriptions(): HasMany
+    {
+        return $this->hasMany(CompanyModuleSubscription::class);
+    }
+
+    /** @return HasMany<BillingInvoice, $this> */
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(BillingInvoice::class);
+    }
+
     protected function casts(): array
     {
         return [
