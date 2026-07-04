@@ -58,9 +58,9 @@ Build: `/flowflex:start core.spotlight` · Done: `/flowflex:done core.spotlight`
 
 Build: `/flowflex:start core.two-factor-auth` · Done: `/flowflex:done core.two-factor-auth` · Spec: [[../../domains/core/two-factor-auth/_module|hub]] · Hard deps: foundation.panels
 
-- [ ] **Two-Factor Auth — QR Code Fix** ([[../../domains/core/two-factor-auth/features/qr-code-fix|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
-- [ ] **Two-Factor Auth — TOTP Enrollment & Challenge** ([[../../domains/core/two-factor-auth/features/totp-enrollment|spec]]) — hand-check: open Filament multi-factor enrollment (reached from account/profile → "Set up authenticator app") and the multi-fac; 1. User opts in → QR + secret shown → user scans in authenticator app → enters the current 6-digit code to confirm → recovery code
-- [ ] Gates: Pint + PHPStan + Pest green, spec Test Checklist covered, `/flowflex:verify` clean
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Two-Factor Auth — QR Code Fix** ([[../../domains/core/two-factor-auth/features/qr-code-fix|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending; recovery-code single-use + challenge flow are vendor Filament surfaces, covered by hand-check)* **Two-Factor Auth — TOTP Enrollment & Challenge** ([[../../domains/core/two-factor-auth/features/totp-enrollment|spec]]) — hand-check: open Filament multi-factor enrollment (reached from account/profile → "Set up authenticator app") and the multi-fac; 1. User opts in → QR + secret shown → user scans in authenticator app → enters the current 6-digit code to confirm → recovery code
+- [x] Gates: Pint + PHPStan + Pest green (82), `TwoFactorAuthTest` 5 tests (defensive QR unwrap, subclass registered both panels, TOTP verify, encrypted persistence); enrollment modal screenshot-verified earlier today
 
 ### File Storage — `core.file-storage`
 

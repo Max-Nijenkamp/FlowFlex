@@ -7,7 +7,7 @@ namespace App\Providers\Filament;
 use App\Filament\Auth\EditProfile;
 use App\Filament\Auth\PanelLogin;
 use App\Filament\Auth\RequestPasswordReset;
-use Filament\Auth\MultiFactor\App\AppAuthentication;
+use App\Support\Filament\AppAuthenticationWithQrFix as AppAuthentication;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;

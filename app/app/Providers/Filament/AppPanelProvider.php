@@ -11,7 +11,7 @@ use App\Http\Middleware\EnsureSubscriptionActive;
 use App\Http\Middleware\RedirectToSetupWizard;
 use App\Http\Middleware\SetCompanyContext;
 use App\Http\Middleware\SetLocale;
-use Filament\Auth\MultiFactor\App\AppAuthentication;
+use App\Support\Filament\AppAuthenticationWithQrFix as AppAuthentication;
 use Filament\Enums\ThemeMode;
 use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
