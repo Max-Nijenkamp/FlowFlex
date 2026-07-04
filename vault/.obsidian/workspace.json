@@ -178,6 +178,8 @@
   },
   "active": "cc91f2af4b84a66c",
   "lastOpenFiles": [
+    "domains/support/tickets/_module.md",
+    "domains/support/sla/_module.md",
     "architecture/performance.md",
     "architecture/queue-jobs.md",
     "architecture/tech-stack.md",
@@ -203,8 +205,6 @@
     "domains/core/api-clients/features/token-lifecycle.md",
     "domains/core/_opportunities.md",
     "domains/core/billing-engine/_module.md",
-    "architecture/filament-patterns.md",
-    "domains/workplace/maintenance/architecture.md",
     "domains/analytics/dashboards/security.md.tmp.32676.82ecc1d9c6f8",
     "domains/analytics/dashboards/_module.md.tmp.32676.62e356779d45",
     "domains/legal/legal-contracts/_module.md.tmp.32676.bbfdfa1110df",

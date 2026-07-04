@@ -16,8 +16,11 @@ test('a stale /admin intended URL cannot hijack an /app login', function () {
 
     Filament::setCurrentPanel('app');
 
+    // set() not fillForm(): fillForm() silently no-ops on auth-page schemas
+    // (state stays null) — see gap-fillform-noop-auth-pages.
     Livewire::test(PanelLogin::class)
-        ->fillForm(['email' => $user->email, 'password' => 'secret123'])
+        ->set('data.email', $user->email)
+        ->set('data.password', 'secret123')
         ->call('authenticate')
         ->assertRedirect(url('/app'));
 });
@@ -30,7 +33,8 @@ test('an /app intended URL is still honored on /app login', function () {
     Filament::setCurrentPanel('app');
 
     Livewire::test(PanelLogin::class)
-        ->fillForm(['email' => $user->email, 'password' => 'secret123'])
+        ->set('data.email', $user->email)
+        ->set('data.password', 'secret123')
         ->call('authenticate')
         ->assertRedirect(url('/app/profile'));
 });

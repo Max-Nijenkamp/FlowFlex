@@ -13,6 +13,7 @@ use App\Http\Middleware\SetCompanyContext;
 use App\Http\Middleware\SetLocale;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Enums\ThemeMode;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -27,6 +28,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AppPanelProvider extends PanelProvider
@@ -54,8 +56,14 @@ class AppPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->renderHook(PanelsRenderHook::SIDEBAR_FOOTER, fn () => view('filament.chrome.sidebar-footer'))
-            ->renderHook(PanelsRenderHook::TOPBAR_START, fn () => view('filament.chrome.topbar-crumb'))
+            ->renderHook(PanelsRenderHook::SIDEBAR_LOGO_AFTER, fn () => view('filament.chrome.sidebar-toggle'))
             ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_BEFORE, fn () => view('filament.chrome.search-trigger'))
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn (): string => Filament::auth()->check()
+                    ? Blade::render("@livewire('spotlight')")
+                    : '',
+            )
             ->sidebarCollapsibleOnDesktop()
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')

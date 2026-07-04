@@ -15,6 +15,7 @@ Bugs, spec issues, and missing details discovered during build sessions.
 
 | ID | Severity | Domain | Module | Description | Discovered |
 |---|---|---|---|---|---|
+| [[gap-fillform-noop-auth-pages]] | low | foundation | foundation.panels | `fillForm()` silently no-ops on auth-page schemas in Livewire tests — use `->set('data.*', ...)`; LoginRedirectTest was red since commit, fixed | 2026-07-04 |
 | [[gap-filament5-plugins-unavailable]] | low | foundation | foundation.scaffold | 2 of 4 Filament plugins still lack v5 (fullcalendar, tiptap — needed Phase 2+); shield + activitylog resolved via custom resources in core.rbac/core.audit | 2026-06-11 |
 | [[gap-switchboard-expansion-spec-missing]] | low | All | frontend | §14–25 pages built in-system with *(assumed)* copy — regenerated design bundle never landed; diff + swap when it arrives | 2026-06-12 |
 | [[gap-feature-marketing-subscriber-import]] | medium | marketing | marketing.campaigns | No `core.data-import` importer for a marketing subscriber list — blocks the migrate-off-Mailchimp on-ramp (audiences only come from CRM segments) | 2026-07-03 |

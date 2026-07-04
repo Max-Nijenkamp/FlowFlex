@@ -20,8 +20,7 @@ Registered once in `AppServiceProvider::boot()` (apply to every panel, guard wit
 | Hook | What we inject | Support class |
 |---|---|---|
 | `SIDEBAR_LOGO_BEFORE` | light wordmark at sidebar head (`.ff-side-brand`) | inline |
-| `SIDEBAR_FOOTER` | "Your panels" switcher chips + user card | `App\Support\Filament\SidebarFooter` |
-| `TOPBAR_START` | panel breadcrumb (`HR & people / Employees`) | `App\Support\Filament\TopbarCrumb` |
+| `SIDEBAR_FOOTER` | collapse toggle + "Your panels" switcher chips + user card (account menu) | `filament.chrome.sidebar-footer` view |
 | `GLOBAL_SEARCH_BEFORE` | 320px search trigger w/ ⌘K → dispatches `ff-spotlight-open` | inline |
 | `BODY_END` | `@livewire('spotlight')` palette | `App\Livewire\Spotlight` |
 | `SIMPLE_LAYOUT_START` / `_END` | login brand mark + footer strip | inline |
@@ -56,17 +55,33 @@ Brand lives in the sidebar header, so **force the header visible** (Filament hid
 
 Gotcha: the native sidebar logo is `.fi-sidebar-header-logo-ctn` (a `div`), so `.fi-sidebar-header > a` selectors miss it. Always confirm against rendered markup.
 
-## 3. Panel switching = sidebar chips only
+## 3. Panel switching = sidebar chips only · account menu = sidebar user card
 
-Cross-panel navigation lives in the `SIDEBAR_FOOTER` chips (`SidebarFooter`, `canAccessPanel`-filtered), NOT in the profile dropdown. `userMenuItems(PanelSwitchItems::…)` was removed — two switchers is one too many.
+Cross-panel navigation lives in the `SIDEBAR_FOOTER` chips (`canAccessPanel`-filtered), NOT in the profile dropdown. `userMenuItems(PanelSwitchItems::…)` was removed — two switchers is one too many.
 
-## 4. Spotlight ⌘K
+The topbar user menu (`.fi-user-menu`) is hidden entirely (owner decision 2026-07-04 — it duplicated the sidebar user card). The sidebar user card is an Alpine popover trigger: Profile link (`filament()->getProfileUrl()`) + Sign out (POST `filament()->getLogoutUrl()`), opening upward (`.ff-user-menu-panel`).
 
-`App\Livewire\Spotlight` (BODY_END) — panel-scoped: nav (resources+pages, `canAccess`-filtered), quick-create, records via `$panel->getGlobalSearchProvider()`. Restore panel context with `Filament::setCurrentPanel()` (Livewire update requests don't run panel routing). Alpine gotcha: use **server-rendered stable `data-index`** for active-row tracking — `$el.querySelectorAll(...).indexOf($el)` resolves wrong in the teleported overlay and selects every row. Panels drop `globalSearchKeyBindings` (Spotlight owns mod+k). filament-patterns item 14.
+Owner decision 2026-07-04 (round 2): **no topbar crumb at all** — `TopbarCrumb`/`TOPBAR_START` removed; native page-header breadcrumbs (`.fi-breadcrumbs`) render on the pages themselves, styled faint 13px. The desktop collapse toggle (`.fi-topbar-collapse-sidebar-btn-ctn`) is hidden from the topbar too; a `.ff-side-toggle` button in the sidebar footer drives `$store.sidebar` instead (mobile hamburger untouched). Topbar carries ONLY: search trigger + bell.
+
+## 4. Spotlight ⌘K (BUILT 2026-07-04)
+
+`App\Livewire\Spotlight` + `resources/views/livewire/spotlight.blade.php` (BODY_END, auth-guarded, both panels) — panel-scoped: nav (resources+pages, `canAccess`-filtered), quick-create (`canCreate` + has create page), records via `$panel->getGlobalSearchProvider()` at ≥2 chars. Restore panel context with `Filament::setCurrentPanel()` (Livewire update requests don't run panel routing — `panelId` is a Livewire prop set at mount). Alpine gotcha: use **server-rendered stable `data-index`** for active-row tracking. Opens via `ff-spotlight-open` window event (trigger button) AND `meta+k`/`ctrl+k` window keydown bound in the component itself; the trigger's `<kbd>` label is per-OS (`⌘K` mac / `Ctrl K` win via `navigator.platform`). Styling `.ff-spotlight-*` plain CSS in the skin. filament-patterns item 14.
 
 ## 5. Brand-aware accents
 
 The skin never hardcodes a domain color — it rides Filament's `--primary-*` (set by each panel's `->colors()`). One skin file, every panel correct: active nav item, stat corner ticks, pagination, selection bar all use `var(--primary-500)`.
+
+## 6. Skin gotchas (hard-won 2026-07-04 — measure, don't guess)
+
+Debug method that found all of these: a Playwright `evaluate()` probe dumping `getBoundingClientRect()` + computed styles up the ancestor chain beats staring at screenshots. See `/flowflex:screenshot`.
+
+1. **`scrollbar-gutter: stable` skews narrow layouts.** `.fi-sidebar-nav` reserves ~15px right gutter permanently — in the 72px icon rail that pushed every nav item 7.5px left of the axis while padding/margin all measured 0. Fix: `scrollbar-gutter: auto` in the collapsed state.
+2. **Grid gaps cannot be cancelled by item margins.** A zero-height schema component still costs its row-gap(s); negative margins only shrink the track, never the gap. To make a conditionally-hidden element truly zero-footprint inside a Filament schema: don't give it its own schema row — attach it to the field via `->belowContent(...)`, then zero the field wrapper's own `row-gap` (`.fi-fo-field-content-col`, 8px) scoped with `:has()`, re-adding sibling spacing via margins.
+3. **`.fi-sc-text` renders as an inline `<span>`** — `text-align: center` needs `display: block` first.
+4. **Vendor collapsed-sidebar rules out-specific bare skin selectors** — prefix `.fi-body` when overriding icon-rail styles.
+5. **Smooth reveal without JS plugins**: `display: grid; grid-template-rows: 0fr → 1fr` + opacity + margin, transitions on all three, `prefers-reduced-motion` gated (used by the password checklist).
+6. **`fillForm()` silently no-ops on auth-page schemas in Livewire tests** — use `->set('data.*', ...)`; see gap-fillform-noop-auth-pages.
+7. **Playwright notification carryover**: asserting on `body.innerText` right after an action can match the *previous* action's success toast — assert on fresh state (URL, reload, or unique text) instead.
 
 ## Related
 

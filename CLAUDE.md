@@ -95,7 +95,7 @@ vault/
 
 ## FlowFlex Commands
 
-Nine commands. Four fetch from vault (`start`, `status`, `spec`, `patterns`), four write to vault (`sync`, `done`, `bug`, `decision`), one verifies the running stack (`verify`).
+Ten commands. Four fetch from vault (`start`, `status`, `spec`, `patterns`), four write to vault (`sync`, `done`, `bug`, `decision`), two exercise the running stack (`verify`, `screenshot`).
 
 ---
 
@@ -224,6 +224,14 @@ Examples:
 **Live HTTP smoke against docker. Run after every session touching panels, auth, middleware, or migrations.**
 
 Steps (full playbook in `.claude/commands/flowflex/verify.md`): docker up + migrate if needed → real curl login as test@test.nl (expect 409 = Inertia::location success) → page sweep 200s across /app + domain panels → **scripted Livewire `$refresh` POST** (catches the null-team 403 family — `architecture/patterns/tenant-context-pitfalls.md`). Any unexpected status = `/flowflex:bug`, module not done.
+
+---
+
+### `/flowflex:screenshot [url=/path] [dark] [mobile] [measure=selector]`
+
+**Playwright login + screenshot/measure against the docker stack (port 8080). The canonical visual check for panel/skin work; also a measurement-first CSS debugger (dumps rects + computed styles up the ancestor chain).**
+
+Full recipe with the known-good login selectors, template script, and gotcha list: `.claude/commands/flowflex/screenshot.md`. Skin gotcha catalogue: `architecture/patterns/filament-panel-chrome.md` §6.
 
 ---
 

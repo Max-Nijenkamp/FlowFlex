@@ -18,6 +18,171 @@
     --ff-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
+/* ---- Layout: sidebar owns the full left edge (pattern: filament-panel-chrome §2)
+   Filament renders the topbar ABOVE the sidebar+main row; the design wants a
+   248px full-height rail with the topbar and canvas offset beside it. Pin the
+   sidebar, offset the rest — desktop only, mobile keeps the vendor overlay. */
+@media (min-width: 1024px) {
+    .fi-body .fi-sidebar {
+        position: fixed;
+        inset-block: 0;
+        inset-inline-start: 0;
+        height: 100dvh;
+        width: 248px;
+        z-index: 35;
+    }
+
+    .fi-body .fi-topbar-ctn,
+    .fi-body .fi-main-ctn {
+        margin-inline-start: 248px;
+    }
+
+    /* collapsed icon rail — keep topbar/main aligned with the rail via :has() */
+    .fi-body:has(.fi-sidebar:not(.fi-sidebar-open)) .fi-topbar-ctn,
+    .fi-body:has(.fi-sidebar:not(.fi-sidebar-open)) .fi-main-ctn {
+        margin-inline-start: 4.5rem;
+    }
+
+    .fi-body:has(.fi-sidebar:not(.fi-sidebar-open)) .fi-sidebar {
+        width: 4.5rem;
+    }
+
+    .fi-sidebar-nav {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    /* icon rail: centered icons, no active spine offset */
+    .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-btn,
+    .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+        justify-content: center;
+        border-inline-start-width: 0;
+        border-radius: 8px;
+    }
+
+    /* icon rail header: brand hides, keep the toggle centered + reachable */
+    .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header {
+        justify-content: center;
+        padding-inline: 0;
+    }
+
+    .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-header-logo-ctn {
+        display: none;
+    }
+
+    /* icon rail: keep nav icons full size — flex squeeze shrinks them */
+    .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-icon,
+    .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-btn svg {
+        width: 1.25rem;
+        height: 1.25rem;
+        flex: none;
+    }
+
+    /* icon rail: true centering — vendor nav padding (24px) + groups margin
+       (-8px) leave items 7.5px left of the rail axis (measured 2026-07-04) */
+    .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-nav {
+        padding-inline: 0;
+        /* vendor reserves a ~15px scrollbar gutter — that's what pushed the
+           whole nav column ~7.5px left of the rail axis */
+        scrollbar-gutter: auto;
+    }
+
+    /* vendor pins .fi-sidebar-nav-groups to a fixed 56px in the icon rail
+       (higher specificity than a bare width:100%) — center that box and the
+       button inside it instead of fighting the width */
+    .fi-body .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-nav-groups {
+        margin-inline: auto;
+    }
+
+    .fi-body .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item-btn,
+    .fi-body .fi-sidebar:not(.fi-sidebar-open) .fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        margin-inline: auto;
+    }
+
+    /* icon rail: the account popover keeps its full width, flying out over
+       the canvas instead of squeezing into the 72px rail */
+    .fi-sidebar:not(.fi-sidebar-open) .ff-user-menu-panel {
+        inset-inline-start: 6px;
+        inset-inline-end: auto;
+        width: 230px;
+    }
+
+    .fi-sidebar:not(.fi-sidebar-open),
+    .fi-sidebar:not(.fi-sidebar-open) .ff-sidebar-foot {
+        overflow: visible;
+    }
+
+    /* icon rail footer: hide chips + user text */
+    .fi-sidebar:not(.fi-sidebar-open) .ff-panel-chips,
+    .fi-sidebar:not(.fi-sidebar-open) .ff-user-meta,
+    .fi-sidebar:not(.fi-sidebar-open) .ff-user-caret {
+        display: none;
+    }
+
+    .fi-sidebar:not(.fi-sidebar-open) .ff-user-card {
+        justify-content: center;
+        padding: 6px 0;
+    }
+}
+
+/* Brand lives in the sidebar header — force it visible (Filament hides it when
+   the topbar carries the logo) and hide the topbar duplicates + native search. */
+.fi-sidebar-header-ctn,
+.fi-sidebar-header {
+    display: flex !important;
+}
+
+.fi-topbar .fi-logo,
+.fi-topbar-logo-ctn,
+.fi-global-search-ctn,
+.fi-global-search {
+    display: none !important;
+}
+
+/* Sidebar header: brand row + mono panel label stacked (handoff .pn-side-brand
+   + .pn-side-panel) */
+.fi-sidebar-header {
+    min-height: 60px;
+    align-items: center;
+    padding: 14px 20px 12px;
+}
+
+.fi-sidebar-header .fi-sidebar-header-logo-ctn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.fi-sidebar-header .fi-logo {
+    font-family: 'Archivo', var(--font-family), sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* ---- Typography: Instrument Sans body, Archivo display ------------------- */
+.fi-body {
+    font-family: 'Instrument Sans', var(--font-family), ui-sans-serif, system-ui, sans-serif;
+}
+
+.fi-header-heading {
+    font-family: 'Archivo', var(--font-family), sans-serif;
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.fi-section-header-heading,
+.fi-modal-heading,
+.fi-wi-stats-overview-stat-value {
+    font-family: 'Archivo', var(--font-family), sans-serif;
+    letter-spacing: -0.02em;
+}
+
 /* ---- Canvas: warm paper, never pure white ------------------------------- */
 .fi-body {
     background-color: var(--ff-paper);
@@ -100,8 +265,6 @@
     font-size: 10px;
     letter-spacing: 0.22em;
     color: var(--ff-ink-faint);
-    margin-inline-start: 0.5rem;
-    align-self: center;
 }
 
 /* Dark mode: the design's ink rail */
@@ -222,11 +385,136 @@
     color: #ffffff;
 }
 
+/* User card = account menu trigger; popover opens upward above the card */
+.ff-user-menu {
+    position: relative;
+}
+
+.ff-user-menu-panel {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    inset-inline: 0;
+    background: var(--ff-card);
+    border: 1px solid var(--ff-line-strong);
+    border-radius: 10px;
+    box-shadow: 0 12px 24px -12px rgb(17 24 39 / 0.25), 0 1px 2px rgb(17 24 39 / 0.06);
+    padding: 4px;
+    z-index: 40;
+}
+
+.ff-user-menu-panel form {
+    display: contents;
+}
+
+/* Theme switcher row at the top of the account menu */
+.ff-theme-row {
+    display: flex;
+    gap: 4px;
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--ff-line);
+}
+
+.ff-theme-row button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    border-radius: 7px;
+    color: var(--ff-ink-faint);
+    cursor: pointer;
+}
+
+.ff-theme-row button:hover {
+    background: var(--ff-paper-deep);
+    color: var(--ff-ink);
+}
+
+.ff-theme-row button.ff-on {
+    background: color-mix(in srgb, var(--primary-400) 14%, transparent);
+    color: var(--primary-600);
+}
+
+.dark .ff-theme-row {
+    border-bottom-color: rgb(255 255 255 / 0.08);
+}
+
+.dark .ff-theme-row button {
+    color: rgb(255 255 255 / 0.45);
+}
+
+.dark .ff-theme-row button:hover {
+    background: rgb(255 255 255 / 0.06);
+    color: #ffffff;
+}
+
+.dark .ff-theme-row button.ff-on {
+    background: color-mix(in srgb, var(--primary-400) 18%, transparent);
+    color: var(--primary-400);
+}
+
+.ff-user-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ff-ink-soft);
+    text-align: start;
+    cursor: pointer;
+}
+
+.ff-user-menu-item svg {
+    flex: none;
+    color: var(--ff-ink-faint);
+}
+
+.ff-user-menu-item:hover {
+    background: var(--ff-paper-deep);
+    color: var(--ff-ink);
+}
+
+.dark .ff-user-menu-panel {
+    background: #111827;
+    border-color: rgb(255 255 255 / 0.1);
+}
+
+.dark .ff-user-menu-item {
+    color: rgb(255 255 255 / 0.62);
+}
+
+.dark .ff-user-menu-item:hover {
+    background: rgb(255 255 255 / 0.06);
+    color: #ffffff;
+}
+
 .ff-user-card {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding-block: 8px;
+    width: 100%;
+    padding: 8px;
+    border-radius: 9px;
+    text-align: start;
+    cursor: pointer;
+}
+
+.ff-user-card:hover {
+    background: var(--ff-paper-deep);
+}
+
+.dark .ff-user-card:hover {
+    background: rgb(255 255 255 / 0.06);
+}
+
+.ff-user-caret {
+    margin-inline-start: auto;
+    flex: none;
+    color: var(--ff-ink-faint);
 }
 
 .ff-user-ava {
@@ -275,29 +563,80 @@
     color: rgb(255 255 255 / 0.45);
 }
 
-/* ---- Topbar crumb (handoff .pn-crumb) -------------------------------------- */
-.ff-crumb {
+/* ---- Sidebar collapse toggle (header, pinned to the right edge) ------------ */
+.fi-sidebar-header {
+    position: relative;
+    width: 100%;
+}
+
+.ff-side-toggle-wrp {
+    position: absolute;
+    inset-inline-end: 12px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    font-weight: 500;
+}
+
+/* icon rail: center the toggle across the 4.5rem rail */
+@media (min-width: 1024px) {
+    .fi-sidebar:not(.fi-sidebar-open) .ff-side-toggle-wrp {
+        inset-inline: 0;
+        justify-content: center;
+    }
+}
+
+.ff-side-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
     color: var(--ff-ink-faint);
-    white-space: nowrap;
-    padding-inline-start: 4px;
+    cursor: pointer;
 }
 
-.ff-crumb-sep {
-    opacity: 0.6;
-}
-
-.ff-crumb-here {
+.ff-side-toggle:hover {
+    background: var(--ff-paper-deep);
     color: var(--ff-ink);
-    font-weight: 600;
 }
 
-.dark .ff-crumb-here {
+/* mobile overlay: show a plain X instead of the collapse glyph */
+.ff-toggle-desktop,
+.ff-toggle-mobile {
+    display: flex;
+    align-items: center;
+}
+
+@media (min-width: 1024px) {
+    .ff-toggle-mobile {
+        display: none;
+    }
+}
+
+@media (max-width: 1023px) {
+    .ff-toggle-desktop {
+        display: none;
+    }
+
+    .ff-side-toggle {
+        width: 34px;
+        height: 34px;
+    }
+}
+
+.dark .ff-side-toggle {
+    color: rgb(255 255 255 / 0.45);
+}
+
+.dark .ff-side-toggle:hover {
+    background: rgb(255 255 255 / 0.06);
     color: #ffffff;
+}
+
+[x-cloak] {
+    display: none !important;
 }
 
 /* ---- Search trigger (handoff .pn-search) ----------------------------------- */
@@ -343,9 +682,73 @@
 
 /* ---- Topbar (handoff .pn-top): warm 60px strip, hairline bottom ----------- */
 .fi-topbar {
+    height: 60px;
     background-color: rgb(251 250 248 / 0.95);
     backdrop-filter: blur(6px);
     border-bottom: 1px solid var(--ff-line);
+    box-shadow: none;
+}
+
+.fi-topbar-ctn {
+    box-shadow: none;
+}
+
+/* Crumb leads, search + bell + avatar trail — push the end group right even
+   though the (hidden) logo used to fill the middle. */
+.fi-topbar .fi-topbar-end {
+    margin-inline-start: auto;
+    align-items: center;
+    gap: 14px;
+}
+
+/* Account menu lives on the sidebar user card — kill the topbar duplicate.
+   Sidebar collapse/expand lives in the sidebar footer — kill the topbar
+   desktop toggle too (mobile hamburger stays for the overlay). */
+.fi-topbar .fi-user-menu,
+.fi-topbar-collapse-sidebar-btn-ctn {
+    display: none !important;
+}
+
+/* Breadcrumbs render on the page header (owner decision 2026-07-04 — the
+   topbar carries no crumb), styled to the handoff crumb spec. */
+.fi-breadcrumbs {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ff-ink-faint);
+}
+
+.fi-breadcrumbs a {
+    color: var(--ff-ink-faint);
+}
+
+.fi-breadcrumbs a:hover {
+    color: var(--ff-ink);
+}
+
+.dark .fi-breadcrumbs,
+.dark .fi-breadcrumbs a {
+    color: rgb(255 255 255 / 0.45);
+}
+
+/* Bell: 34px bordered square with card bg (handoff .pn-iconbtn) */
+.fi-topbar .fi-topbar-database-notifications-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    border: 1px solid var(--ff-line-strong);
+    background: var(--ff-card);
+    color: var(--ff-ink-soft);
+}
+
+.dark .fi-topbar .fi-topbar-database-notifications-btn {
+    border-color: rgb(255 255 255 / 0.1);
+    background: rgb(255 255 255 / 0.04);
+    color: rgb(255 255 255 / 0.6);
+}
+
+/* Sidebar toggle chevrons: quiet, not competing with the crumb */
+.fi-topbar .fi-topbar-collapse-sidebar-btn-ctn .fi-icon-btn {
+    color: var(--ff-ink-faint);
 }
 
 .dark .fi-topbar {
@@ -574,6 +977,273 @@
 /* Brand panel is dark in both modes — hairline it against the dark canvas */
 .dark .ff-auth-brand {
     border-right: 1px solid rgb(255 255 255 / 0.06);
+}
+
+/* ---- MFA setup/recovery wizard modal: center the whole flow ----------------
+   Vendor mixes left text with a centered QR — read as broken. Scoped via
+   :has(OTC input) so ordinary modal wizards stay left-aligned. Selectors
+   verified against rendered markup 2026-07-04. */
+.fi-modal-window .fi-sc-wizard:has(.fi-one-time-code-input-ctn) .fi-sc-text {
+    /* rendered as an inline <span> — must be block for text-align to bite */
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.fi-modal-window .fi-sc-wizard:has(.fi-one-time-code-input-ctn) .fi-sc-image {
+    margin-inline: auto;
+    border: 1px solid var(--ff-line-strong);
+    border-radius: 12px;
+    padding: 10px;
+    background: #ffffff;
+}
+
+.fi-modal-window .fi-sc-wizard:has(.fi-one-time-code-input-ctn) .fi-sc-flex {
+    justify-content: center;
+    align-items: center;
+}
+
+.fi-modal-window .fi-sc-wizard:has(.fi-one-time-code-input-ctn) .fi-one-time-code-input-ctn {
+    justify-content: center;
+    width: fit-content;
+    margin-inline: auto;
+}
+
+.fi-modal-window .fi-sc-wizard:has(.fi-one-time-code-input-ctn) .fi-fo-field-label-ctn {
+    justify-content: center;
+}
+
+.fi-modal-window .fi-sc-wizard:has(.fi-one-time-code-input-ctn) .fi-sc-unordered-list {
+    width: fit-content;
+    margin-inline: auto;
+    font-family: var(--ff-font-mono);
+}
+
+.fi-one-time-code-input-digit {
+    border-radius: 10px;
+}
+
+/* ---- Password requirements checklist (profile page) ------------------------
+   Collapsed by default; slides open (grid-rows trick) when the New password
+   field is focused or non-empty. */
+.ff-pw-checks-wrp {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+        grid-template-rows 0.25s cubic-bezier(0, 0, 0.2, 1),
+        margin-top 0.25s cubic-bezier(0, 0, 0.2, 1),
+        opacity 0.2s ease-out;
+}
+
+.ff-pw-checks-wrp.ff-open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    margin-top: 12px;
+}
+
+/* The field wrapper grid (.fi-fo-field-content-col) spends its 8px row-gap on
+   the belowContent slot even at 0 height, and grid gaps can't be cancelled by
+   item margins — zero the gap on this field and respace via margins instead. */
+.fi-fo-field-content-col:has(.ff-pw-checks-wrp) {
+    row-gap: 0;
+}
+
+/* keep other siblings (validation errors, hints) at the original 8px rhythm */
+.fi-fo-field-content-col:has(.ff-pw-checks-wrp) > :not(:first-child):not(:has(.ff-pw-checks-wrp)) {
+    margin-top: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ff-pw-checks-wrp {
+        transition: none;
+    }
+}
+
+.ff-pw-checks {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-height: 0;
+    overflow: hidden;
+    padding: 0 2px;
+}
+
+.ff-pw-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--ff-ink-faint);
+    transition: color 0.15s ease-out;
+}
+
+.ff-pw-check svg {
+    flex: none;
+}
+
+.ff-pw-check.ff-ok {
+    color: #0e8c61;
+}
+
+.dark .ff-pw-check {
+    color: rgb(255 255 255 / 0.4);
+}
+
+.dark .ff-pw-check.ff-ok {
+    color: #34d399;
+}
+
+/* ---- Spotlight ⌘K palette (.ff-spotlight-*, panel-chrome §4) --------------- */
+.ff-spotlight-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgb(14 19 32 / 0.45);
+    backdrop-filter: blur(2px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 12vh 16px 16px;
+}
+
+.ff-spotlight-panel {
+    width: 560px;
+    max-width: 100%;
+    background: var(--ff-card);
+    border: 1px solid var(--ff-line-strong);
+    border-radius: 14px;
+    box-shadow: 0 28px 56px -28px rgb(17 24 39 / 0.4), 0 2px 4px rgb(17 24 39 / 0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.ff-spotlight-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--ff-line);
+    color: var(--ff-ink-faint);
+}
+
+.ff-spotlight-input-row input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    color: var(--ff-ink);
+}
+
+.ff-spotlight-input-row input::placeholder {
+    color: var(--ff-ink-faint);
+}
+
+.ff-spotlight-input-row kbd,
+.ff-spotlight-foot kbd {
+    font-family: var(--ff-font-mono);
+    font-size: 10px;
+    border: 1px solid var(--ff-line);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: var(--ff-ink-faint);
+}
+
+.ff-spotlight-list {
+    max-height: 380px;
+    overflow-y: auto;
+    padding: 6px;
+}
+
+.ff-spotlight-group {
+    font-family: var(--ff-font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ff-ink-faint);
+    padding: 10px 10px 4px;
+}
+
+.ff-spotlight-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ff-ink-soft);
+}
+
+.ff-spotlight-row svg {
+    flex: none;
+    color: var(--ff-ink-faint);
+}
+
+.ff-spotlight-row.ff-active {
+    background: color-mix(in srgb, var(--primary-400) 14%, transparent);
+    color: var(--ff-ink);
+}
+
+.ff-spotlight-row.ff-active svg {
+    color: var(--primary-500);
+}
+
+.ff-spotlight-empty {
+    padding: 28px 16px;
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--ff-ink-faint);
+}
+
+.ff-spotlight-foot {
+    display: flex;
+    gap: 16px;
+    padding: 9px 16px;
+    border-top: 1px solid var(--ff-line);
+    font-size: 11.5px;
+    color: var(--ff-ink-faint);
+    background: var(--ff-paper);
+}
+
+.ff-spotlight-foot span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dark .ff-spotlight-panel {
+    background: #111827;
+    border-color: rgb(255 255 255 / 0.1);
+}
+
+.dark .ff-spotlight-input-row {
+    border-bottom-color: rgb(255 255 255 / 0.08);
+}
+
+.dark .ff-spotlight-input-row input {
+    color: #ffffff;
+}
+
+.dark .ff-spotlight-row {
+    color: rgb(255 255 255 / 0.62);
+}
+
+.dark .ff-spotlight-row.ff-active {
+    color: #ffffff;
+}
+
+.dark .ff-spotlight-foot {
+    background: rgb(255 255 255 / 0.03);
+    border-top-color: rgb(255 255 255 / 0.08);
+}
+
+.dark .ff-spotlight-input-row kbd,
+.dark .ff-spotlight-foot kbd {
+    border-color: rgb(255 255 255 / 0.12);
+    color: rgb(255 255 255 / 0.4);
 }
 
 /* ---- Dark mode: keep ink sidebar, deepen canvas --------------------------- */
