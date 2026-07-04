@@ -15,6 +15,7 @@ Bugs, spec issues, and missing details discovered during build sessions.
 
 | ID | Severity | Domain | Module | Description | Discovered |
 |---|---|---|---|---|---|
+| [[gap-invoice-pdf-missing]] | medium | core | core.billing-engine | Invoice PDF generation + download action not built (mail + list shipped without it) | 2026-07-04 |
 | [[gap-tests-wiped-dev-database]] | high | foundation | foundation.test-suite | **RESOLVED** — `artisan test --parallel` ran on real pgsql (non-forced phpunit `<env>`), migrate:fresh wiped dev data; fixed with `force="true"` + sqlite guard in TestCase | 2026-07-04 |
 | [[gap-fillform-noop-auth-pages]] | low | foundation | foundation.panels | `fillForm()` silently no-ops on auth-page schemas in Livewire tests — use `->set('data.*', ...)`; LoginRedirectTest was red since commit, fixed | 2026-07-04 |
 | [[gap-filament5-plugins-unavailable]] | low | foundation | foundation.scaffold | 2 of 4 Filament plugins still lack v5 (fullcalendar, tiptap — needed Phase 2+); shield + activitylog resolved via custom resources in core.rbac/core.audit | 2026-06-11 |
