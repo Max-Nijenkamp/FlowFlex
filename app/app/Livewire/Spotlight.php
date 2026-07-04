@@ -39,30 +39,44 @@ class Spotlight extends Component
         return $panel;
     }
 
+    /** Result caps per spec (keyboard-palette): nav 8 · quick-create 5 · 6 per search category. */
+    public const NAV_CAP = 8;
+
+    public const QUICK_CREATE_CAP = 5;
+
+    public const SEARCH_CATEGORY_CAP = 6;
+
     /** @return array<int, array{group: string, label: string, url: string, icon: string}> */
     public function getResultsProperty(): array
     {
         $panel = $this->panel();
         $query = trim($this->query);
+        $needle = mb_strtolower($query);
+        $matches = fn (string $label): bool => $needle === '' || str_contains(mb_strtolower($label), $needle);
 
-        /** @var list<array{group: string, label: string, url: string, icon: string}> $items */
-        $items = [];
+        /** @var list<array{group: string, label: string, url: string, icon: string}> $nav */
+        $nav = [];
+
+        /** @var list<array{group: string, label: string, url: string, icon: string}> $quickCreate */
+        $quickCreate = [];
 
         foreach ($panel->getPages() as $page) {
-            if (! $page::canAccess()) {
+            $label = (string) $page::getNavigationLabel();
+
+            if (! $page::canAccess() || ! $matches($label)) {
                 continue;
             }
 
-            $items[] = [
+            $nav[] = [
                 'group' => 'Pages',
-                'label' => (string) $page::getNavigationLabel(),
+                'label' => $label,
                 'url' => $page::getUrl(panel: $this->panelId),
                 'icon' => 'page',
             ];
         }
 
-        if (filled($profileUrl = $panel->getProfileUrl())) {
-            $items[] = [
+        if (filled($profileUrl = $panel->getProfileUrl()) && $matches('Profile')) {
+            $nav[] = [
                 'group' => 'Account',
                 'label' => 'Profile',
                 'url' => $profileUrl,
@@ -77,41 +91,43 @@ class Spotlight extends Component
 
             $label = (string) $resource::getNavigationLabel();
 
-            $items[] = [
-                'group' => 'Resources',
-                'label' => $label,
-                'url' => $resource::getUrl('index', panel: $this->panelId),
-                'icon' => 'list',
-            ];
+            if ($matches($label)) {
+                $nav[] = [
+                    'group' => 'Resources',
+                    'label' => $label,
+                    'url' => $resource::getUrl('index', panel: $this->panelId),
+                    'icon' => 'list',
+                ];
+            }
 
-            if ($resource::hasPage('create') && $resource::canCreate()) {
-                $items[] = [
+            $createLabel = 'New '.str($resource::getModelLabel())->lower();
+
+            if ($resource::hasPage('create') && $resource::canCreate() && $matches($createLabel)) {
+                $quickCreate[] = [
                     'group' => 'Quick create',
-                    'label' => 'New '.str($resource::getModelLabel())->lower(),
+                    'label' => $createLabel,
                     'url' => $resource::getUrl('create', panel: $this->panelId),
                     'icon' => 'plus',
                 ];
             }
         }
 
-        if ($query !== '') {
-            $needle = mb_strtolower($query);
-            $filtered = [];
-
-            foreach ($items as $item) {
-                if (str_contains(mb_strtolower($item['label']), $needle)) {
-                    $filtered[] = $item;
-                }
-            }
-
-            $items = $filtered;
-        }
+        $items = [
+            ...array_slice($nav, 0, self::NAV_CAP),
+            ...array_slice($quickCreate, 0, self::QUICK_CREATE_CAP),
+        ];
 
         if (mb_strlen($query) >= 2) {
             $records = $panel->getGlobalSearchProvider()?->getResults($query);
 
             foreach ($records?->getCategories() ?? [] as $category => $results) {
+                $categoryCount = 0;
+
                 foreach ($results as $result) {
+                    if (++$categoryCount > self::SEARCH_CATEGORY_CAP) {
+                        break;
+                    }
+
                     $items[] = [
                         'group' => (string) $category,
                         'label' => (string) $result->title,

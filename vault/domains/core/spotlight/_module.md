@@ -2,7 +2,7 @@
 domain: core
 module: spotlight
 type: module
-build-status: planned
+build-status: in-progress
 status: wip
 color: "#4ADE80"
 updated: 2026-07-03
@@ -55,12 +55,12 @@ tests/Feature/SpotlightTest.php
 
 ## Test Checklist
 
-- [ ] Tenant isolation: a user in company A's panel sees only company A records (results drawn from that one panel's `CompanyScope`-filtered sources)
-- [ ] Module gating: n/a (platform chrome, always active — mirrors each panel's `canAccess()`)
-- [ ] Results are `canAccess()`-filtered: a resource/page the user cannot access never appears
-- [ ] Renders on an authenticated panel page; NOT on login (no panel user)
-- [ ] Panel context restored mid-Livewire-update (null-panel pitfall) — results resolve for the right panel
-- [ ] Quick-create only offered when `hasPage('create') && canCreate()`
+- [x] Tenant isolation: a user in company A's panel sees only company A records (results drawn from that one panel's `CompanyScope`-filtered sources)
+- [x] Module gating: n/a (platform chrome, always active — mirrors each panel's `canAccess()`)
+- [x] Results are `canAccess()`-filtered: a resource/page the user cannot access never appears
+- [x] Renders on an authenticated panel page; NOT on login (no panel user)
+- [x] Panel context restored mid-Livewire-update (null-panel pitfall) — results resolve for the right panel
+- [x] Quick-create only offered when `hasPage('create') && canCreate()`
 
 ## Cross-Domain Edges
 

@@ -51,8 +51,8 @@ Build: `/flowflex:start core.module-marketplace` · Done: `/flowflex:done core.m
 
 Build: `/flowflex:start core.spotlight` · Done: `/flowflex:done core.spotlight` · Spec: [[../../domains/core/spotlight/_module|hub]] · Hard deps: foundation.panels
 
-- [ ] **Spotlight — Keyboard Palette** ([[../../domains/core/spotlight/features/keyboard-palette|spec]]) — hand-check: open no dedicated route — rendered on every authenticated panel page via `PanelsRenderHook::BODY_END`, plus a topba; 1. Open via `⌘K` (`keydown.window.meta.k`) / `Ctrl+K` (`.ctrl.k`) or the topbar "Search this panel…" button (dispatches `ff-spotli
-- [ ] Gates: Pint + PHPStan + Pest green, spec Test Checklist covered, `/flowflex:verify` clean
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Spotlight — Keyboard Palette** ([[../../domains/core/spotlight/features/keyboard-palette|spec]]) — hand-check: open no dedicated route — rendered on every authenticated panel page via `PanelsRenderHook::BODY_END`, plus a topba; 1. Open via `⌘K` (`keydown.window.meta.k`) / `Ctrl+K` (`.ctrl.k`) or the topbar "Search this panel…" button (dispatches `ff-spotli
+- [x] Gates: Pint + PHPStan + Pest green (77), `SpotlightTest` 4 tests + result caps per spec, live-verified earlier today (Ctrl+K)
 
 ### Two-Factor Authentication — `core.two-factor-auth`
 
