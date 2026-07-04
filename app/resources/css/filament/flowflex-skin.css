@@ -1130,6 +1130,16 @@
     gap: 4px;
     border-bottom: 1px solid var(--ff-line);
     padding: 0 4px;
+    /* vendor overflow:auto + 1px underline overflow = a scrollbar stub at the
+       right on classic Windows scrollbars ("weird indicator"). Tabs may still
+       pan horizontally on narrow screens — just never show a scrollbar. */
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+}
+
+.fi-tabs::-webkit-scrollbar {
+    display: none;
 }
 
 .dark .fi-tabs {
