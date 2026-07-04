@@ -35,6 +35,8 @@ class PermissionSeeder extends Seeder
         // core.billing-engine
         'core.billing.view',
         'core.billing.manage',
+        'core.billing.activate-module',
+        'core.billing.deactivate-module',
         // core.module-marketplace
         'core.marketplace.view',
         'core.marketplace.manage',

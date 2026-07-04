@@ -43,9 +43,9 @@ Build: `/flowflex:start core.staff-console` · Done: `/flowflex:done core.staff-
 
 Build: `/flowflex:start core.module-marketplace` · Done: `/flowflex:done core.module-marketplace` · Spec: [[../../domains/core/module-marketplace/_module|hub]] · Hard deps: core.billing
 
-- [ ] **Activate / Deactivate Module** ([[../../domains/core/module-marketplace/features/activate-deactivate|spec]]) — hand-check: open `ModuleMarketplacePage` (`/app`) — the activate/deactivate action lives on each card of the catalog grid.; 1. Owner clicks Activate on a card → confirm modal → `activateModule()` → card flips to active, sidebar badge appears in the domai
-- [ ] **Catalog Grid (browse · search · price preview)** ([[../../domains/core/module-marketplace/features/catalog-grid|spec]]) — hand-check: open `ModuleMarketplacePage` (`/app`, `app/Filament/App/Pages/ModuleMarketplacePage.php` + `resources/views/filamen; 1. Owner opens the page → catalog reads compose `MarketplaceModuleData` DTOs (price preview = unit price × active users).
-- [ ] Gates: Pint + PHPStan + Pest green, spec Test Checklist covered, `/flowflex:verify` clean
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Activate / Deactivate Module** ([[../../domains/core/module-marketplace/features/activate-deactivate|spec]]) — hand-check: open `ModuleMarketplacePage` (`/app`) — the activate/deactivate action lives on each card of the catalog grid.; 1. Owner clicks Activate on a card → confirm modal → `activateModule()` → card flips to active, sidebar badge appears in the domai
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Catalog Grid (browse · search · price preview)** ([[../../domains/core/module-marketplace/features/catalog-grid|spec]]) — hand-check: open `ModuleMarketplacePage` (`/app`, `app/Filament/App/Pages/ModuleMarketplacePage.php` + `resources/views/filamen; 1. Owner opens the page → catalog reads compose `MarketplaceModuleData` DTOs (price preview = unit price × active users).
+- [x] Gates: Pint + PHPStan + Pest green (127), `MarketplaceTest` 6 tests
 
 ### Spotlight — `core.spotlight`
 

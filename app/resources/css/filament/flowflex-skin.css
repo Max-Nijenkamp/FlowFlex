@@ -1145,6 +1145,41 @@
     max-width: 640px;
 }
 
+/* ---- Module marketplace grid (switchboard cards) --------------------------- */
+.ff-mkt { display: flex; flex-direction: column; gap: 26px; }
+.ff-mkt-search {
+    width: 320px; padding: 9px 12px; font-size: 13.5px;
+    border: 1px solid var(--ff-line-strong); border-radius: 9px; background: var(--ff-card);
+}
+.ff-mkt-search:focus { outline: none; border-color: var(--primary-500); }
+.ff-mkt-domain-label {
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--ff-font-mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ff-ink-faint); margin-bottom: 10px;
+}
+.ff-mkt-square { width: 10px; height: 10px; border-radius: 3px; }
+.ff-mkt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.ff-mkt-card {
+    background: var(--ff-card); border: 1px dashed var(--ff-line-strong);
+    border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px;
+}
+.ff-mkt-card.ff-on { border-style: solid; }
+.ff-mkt-card header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ff-mkt-card h3 { font-size: 14.5px; font-weight: 600; }
+.ff-mkt-pill {
+    font-family: var(--ff-font-mono); font-size: 10px; font-weight: 700;
+    padding: 2px 8px; border-radius: 999px; background: var(--ff-paper-deep); color: var(--ff-ink-faint);
+}
+.ff-mkt-pill.ff-active { background: color-mix(in srgb, var(--primary-400) 18%, transparent); color: var(--primary-600); }
+.ff-mkt-pill.ff-incl { background: #e5f5ee; color: #0e8c61; }
+.ff-mkt-key { font-family: var(--ff-font-mono); font-size: 11px; color: var(--ff-ink-faint); }
+.ff-mkt-price { font-family: var(--ff-font-mono); font-size: 12.5px; color: var(--ff-ink-soft); }
+.ff-mkt-actions { margin-top: 8px; }
+.ff-mkt-empty { color: var(--ff-ink-faint); font-size: 14px; }
+.dark .ff-mkt-card { background: #111827; border-color: rgb(255 255 255 / 0.12); }
+.dark .ff-mkt-search { background: rgb(255 255 255 / 0.04); border-color: rgb(255 255 255 / 0.1); color: #fff; }
+.dark .ff-mkt-card h3 { color: #fff; }
+
 /* ---- Spotlight ⌘K palette (.ff-spotlight-*, panel-chrome §4) --------------- */
 .ff-spotlight-overlay {
     position: fixed;
