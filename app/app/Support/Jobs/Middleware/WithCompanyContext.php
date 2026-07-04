@@ -15,6 +15,15 @@ use App\Support\Services\CompanyContext;
  */
 class WithCompanyContext
 {
+    /** Listener-friendly entry: queued listeners call this first in handle(). */
+    public static function restore(string $companyId): void
+    {
+        $company = Company::query()->withoutGlobalScope(CompanyScope::class)->findOrFail($companyId);
+
+        app(CompanyContext::class)->set($company);
+        setPermissionsTeamId($company->id);
+    }
+
     public function handle(mixed $job, callable $next): void
     {
         $companyId = $job->event->company_id ?? $job->company_id ?? null;

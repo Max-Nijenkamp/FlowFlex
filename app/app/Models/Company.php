@@ -23,6 +23,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $trial_ends_at
  * @property Carbon|null $setup_completed_at
  * @property int|null $audit_retention_days
+ * @property string|null $stripe_customer_id
  */
 class Company extends Model
 {
@@ -42,6 +43,7 @@ class Company extends Model
         'trial_ends_at',
         'setup_completed_at',
         'audit_retention_days',
+        'stripe_customer_id',
     ];
 
     /** @return HasMany<User, $this> */
@@ -55,6 +57,7 @@ class Company extends Model
         return [
             'trial_ends_at' => 'datetime',
             'setup_completed_at' => 'datetime',
+            'stripe_customer_id' => 'encrypted',
         ];
     }
 }

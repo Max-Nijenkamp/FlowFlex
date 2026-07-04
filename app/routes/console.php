@@ -21,3 +21,13 @@ Schedule::command('audit:prune')
     ->dailyAt('04:30')
     ->withoutOverlapping()
     ->onOneServer();
+
+Schedule::command('billing:generate-invoices')
+    ->monthlyOn(1, '01:00')
+    ->withoutOverlapping()
+    ->onOneServer();
+
+Schedule::command('billing:process-dunning')
+    ->dailyAt('06:00')
+    ->withoutOverlapping()
+    ->onOneServer();

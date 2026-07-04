@@ -14,7 +14,7 @@ Parent: [[_module]] · See also [[architecture]] · [[security]]
 
 Tables: `company_module_subscriptions`, `billing_invoices`, `billing_invoice_lines` (migrations confirmed), `module_catalog` (Sushi, no migration), plus `companies.stripe_customer_id` (text/encrypted).
 
-## module_catalog — `calebporzio/sushi` static array (no migration)
+## module_catalog — real table (2026-07-04 build correction: was specced as Sushi; a DB table lets staff manage the catalog + prices without deploys; seeded by ModuleCatalogSeeder)
 
 | Column | Type | Notes |
 |---|---|---|

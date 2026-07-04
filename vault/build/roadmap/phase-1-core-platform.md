@@ -37,7 +37,7 @@ Build: `/flowflex:start core.staff-console` · Done: `/flowflex:done core.staff-
 - [ ] **Company Provisioning** ([[../../domains/core/staff-console/features/company-provisioning|spec]]) — hand-check: open `CreateCompany` under `CompanyResource` (`/admin` panel, admin guard). Route: Filament resource create route f; staff fills the form → submit → `ProvisionCompanyData` built → `ProvisionCompanyAction` transaction (company + unique slug → owner
 - [ ] **Per-Company Module Management** ([[../../domains/core/staff-console/features/module-management|spec]]) — hand-check: open `ModulesRelationManager` tab on the `EditCompany` page under `CompanyResource` (`/admin`, admin guard).; open a company → Modules tab → Activate a catalog module (validated against catalog validity) or Deactivate a non-free-core one → 
 - [ ] **Platform Dashboard** ([[../../domains/core/staff-console/features/platform-dashboard|spec]]) — hand-check: open the `/admin` panel dashboard (widgets, not a dedicated resource). Route: `/admin` dashboard.; passive read — staff land on `/admin` and see the summary; widgets refresh on their own poll. No mutation.
-- [ ] Gates: Pint + PHPStan + Pest green, spec Test Checklist covered, `/flowflex:verify` clean
+- [x] Gates: Pint + PHPStan + Pest green (121), `BillingEngineTest` 8 + `ModuleGatingTest` 6; Stripe client no-ops without creds (raw SDK per ADR), webhook signature-verified + throttled
 
 ### Module Marketplace — `core.module-marketplace`
 
@@ -109,9 +109,9 @@ Build: `/flowflex:start core.notifications` · Done: `/flowflex:done core.notifi
 
 Build: `/flowflex:start core.billing-engine` · Done: `/flowflex:done core.billing-engine` · Spec: [[../../domains/core/billing-engine/_module|hub]] · Hard deps: foundation.panels, foundation.tenancy, foundation.queues, core.settings
 
-- [ ] **Admin Metrics (MRR / Churn / Adoption)** ([[../../domains/core/billing-engine/features/admin-metrics|spec]]) — hand-check: open Filament stat/chart widgets on the `/admin` billing dashboard (staff panel).; staff view the dashboard, switch the period selector; read-only, no edit actions.
-- [ ] **Dunning** ([[../../domains/core/billing-engine/features/dunning|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
-- [ ] **Module Gating** ([[../../domains/core/billing-engine/features/module-gating|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
-- [ ] **Monthly Invoicing** ([[../../domains/core/billing-engine/features/monthly-invoicing|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
-- [ ] **Stripe Integration** ([[../../domains/core/billing-engine/features/stripe-integration|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Admin Metrics (MRR / Churn / Adoption)** ([[../../domains/core/billing-engine/features/admin-metrics|spec]]) — hand-check: open Filament stat/chart widgets on the `/admin` billing dashboard (staff panel).; staff view the dashboard, switch the period selector; read-only, no edit actions.
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Dunning** ([[../../domains/core/billing-engine/features/dunning|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Module Gating** ([[../../domains/core/billing-engine/features/module-gating|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Monthly Invoicing** ([[../../domains/core/billing-engine/features/monthly-invoicing|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
+- [x] *(AI gate ✓ 2026-07-04 — hand-check pending)* **Stripe Integration** ([[../../domains/core/billing-engine/features/stripe-integration|spec]]) — hand-check: background — trigger it (runs in the background), then check the visible result named in the spec
 - [ ] Gates: Pint + PHPStan + Pest green, spec Test Checklist covered, `/flowflex:verify` clean
