@@ -14,9 +14,10 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Url;
 
 /**
- * Team leave calendar (hr.leave/team-calendar). Custom month grid —
- * saade/filament-fullcalendar has no Filament 5 build (ADR custom-over-
- * missing-plugins). Approved + pending leave per day, coloured by type.
+ * Team leave calendar (hr.leave/team-calendar). Custom month + week
+ * views — saade/filament-fullcalendar has no Filament 5 build (ADR
+ * custom-over-missing-plugins). Approved leave solid, pending striped;
+ * the week view marks today with a live clock.
  */
 class LeaveCalendarPage extends Page
 {
@@ -35,7 +36,13 @@ class LeaveCalendarPage extends Page
     protected string $view = 'filament.hr.pages.leave-calendar';
 
     #[Url]
+    public string $view_mode = 'month';
+
+    #[Url]
     public string $month = '';
+
+    #[Url]
+    public string $week = ''; // Monday of the shown week (Y-m-d)
 
     public static function canAccess(): bool
     {
@@ -51,24 +58,45 @@ class LeaveCalendarPage extends Page
         abort_unless(static::canAccess(), 403);
 
         $this->month = $this->month !== '' ? $this->month : now()->format('Y-m');
+        $this->week = $this->week !== '' ? $this->week : now()->startOfWeek()->toDateString();
+
+        if (! in_array($this->view_mode, ['month', 'week'], true)) {
+            $this->view_mode = 'month';
+        }
     }
 
-    public function previousMonth(): void
+    public function setViewMode(string $mode): void
     {
-        $this->month = Carbon::parse($this->month.'-01')->subMonthNoOverflow()->format('Y-m');
+        $this->view_mode = in_array($mode, ['month', 'week'], true) ? $mode : 'month';
     }
 
-    public function nextMonth(): void
+    public function previous(): void
     {
-        $this->month = Carbon::parse($this->month.'-01')->addMonthNoOverflow()->format('Y-m');
+        if ($this->view_mode === 'week') {
+            $this->week = Carbon::parse($this->week)->subWeek()->toDateString();
+        } else {
+            $this->month = Carbon::parse($this->month.'-01')->subMonthNoOverflow()->format('Y-m');
+        }
     }
 
-    /** @return array<string, mixed> */
-    protected function getViewData(): array
+    public function next(): void
     {
-        $start = Carbon::parse($this->month.'-01');
-        $end = $start->copy()->endOfMonth();
+        if ($this->view_mode === 'week') {
+            $this->week = Carbon::parse($this->week)->addWeek()->toDateString();
+        } else {
+            $this->month = Carbon::parse($this->month.'-01')->addMonthNoOverflow()->format('Y-m');
+        }
+    }
 
+    public function today(): void
+    {
+        $this->month = now()->format('Y-m');
+        $this->week = now()->startOfWeek()->toDateString();
+    }
+
+    /** @return Collection<int, LeaveRequest> */
+    private function requestsBetween(Carbon $start, Carbon $end): Collection
+    {
         /** @var Collection<int, LeaveRequest> $requests */
         $requests = LeaveRequest::query()
             ->with(['employee', 'leaveType'])
@@ -77,31 +105,95 @@ class LeaveCalendarPage extends Page
             ->where('end_date', '>=', $start->toDateString())
             ->get();
 
-        // day-of-month => list of {name, color, pending}
+        return $requests;
+    }
+
+    /** @return array{name: string, type: string, color: string, pending: bool} */
+    private function eventFor(LeaveRequest $request): array
+    {
+        return [
+            'name' => $request->employee()->first()->full_name ?? '—',
+            'type' => $request->leaveType()->first()->name ?? '',
+            'color' => $request->leaveType()->first()->color ?? '#4ADE80',
+            'pending' => (string) $request->status === 'submitted',
+        ];
+    }
+
+    /** @return array<string, mixed> */
+    protected function getViewData(): array
+    {
+        if ($this->view_mode === 'week') {
+            return $this->weekData();
+        }
+
+        return $this->monthData();
+    }
+
+    /** @return array<string, mixed> */
+    private function monthData(): array
+    {
+        $start = Carbon::parse($this->month.'-01');
+        $end = $start->copy()->endOfMonth();
+
         $byDay = [];
-        foreach ($requests as $request) {
+        foreach ($this->requestsBetween($start, $end) as $request) {
             $cursor = $request->start_date->copy()->max($start);
             $last = $request->end_date->copy()->min($end);
 
             while ($cursor->lessThanOrEqualTo($last)) {
                 if (! $cursor->isWeekend()) {
-                    $byDay[$cursor->day][] = [
-                        'name' => $request->employee()->first()->full_name ?? '—',
-                        'type' => $request->leaveType()->first()->name ?? '',
-                        'color' => $request->leaveType()->first()->color ?? '#4ADE80',
-                        'pending' => (string) $request->status === 'submitted',
-                    ];
+                    $byDay[$cursor->day][] = $this->eventFor($request);
                 }
                 $cursor->addDay();
             }
         }
 
         return [
-            'monthLabel' => $start->format('F Y'),
+            'mode' => 'month',
+            'rangeLabel' => $start->format('F Y'),
             'daysInMonth' => $start->daysInMonth,
-            'firstWeekday' => (int) $start->dayOfWeekIso, // 1 = Monday
+            'firstWeekday' => (int) $start->dayOfWeekIso,
             'byDay' => $byDay,
             'today' => now()->format('Y-m') === $this->month ? now()->day : null,
+        ];
+    }
+
+    /** @return array<string, mixed> */
+    private function weekData(): array
+    {
+        $start = Carbon::parse($this->week)->startOfWeek();
+        $end = $start->copy()->addDays(6);
+
+        $requests = $this->requestsBetween($start, $end);
+
+        $days = [];
+        $cursor = $start->copy();
+
+        while ($cursor->lessThanOrEqualTo($end)) {
+            $events = [];
+
+            foreach ($requests as $request) {
+                if ($request->start_date->lessThanOrEqualTo($cursor) && $request->end_date->greaterThanOrEqualTo($cursor)) {
+                    $events[] = $this->eventFor($request);
+                }
+            }
+
+            $days[] = [
+                'date' => $cursor->copy(),
+                'label' => $cursor->format('D d'),
+                'isToday' => $cursor->isToday(),
+                'isWeekend' => $cursor->isWeekend(),
+                'events' => $events,
+            ];
+
+            $cursor->addDay();
+        }
+
+        return [
+            'mode' => 'week',
+            'rangeLabel' => $start->format('d M').' — '.$end->format('d M Y'),
+            'days' => $days,
+            'now' => now(),
         ];
     }
 }

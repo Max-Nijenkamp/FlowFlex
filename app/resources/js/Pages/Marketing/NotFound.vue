@@ -19,12 +19,13 @@ defineOptions({ layout: MarketingLayout })
                 <span class="ff-state off">OFF</span>
             </span>
             <h1 class="mt-6" style="font-size: clamp(72px, 14vw, 120px); line-height: 1">404</h1>
-            <p class="ff-lede mx-auto mt-4 text-center">
-                This page is switched off — or it never existed.
+            <p class="mx-auto mt-4 max-w-[380px] text-center text-[17px] leading-relaxed" style="color: var(--ink-soft)">
+                This page is switched off — or it never existed. Your data is fine; it's just this URL that flows
+                nowhere.
             </p>
             <div class="ff-hero-ctas justify-center">
-                <Link href="/" class="ff-btn primary lg">Back home</Link>
-                <Link href="/contact" class="ff-btn outline lg">Contact us</Link>
+                <Link href="/" class="ff-btn primary">Back to home</Link>
+                <Link href="/contact" class="ff-btn outline">Contact us</Link>
             </div>
             <p class="ff-hero-meta mt-10">error 404 · everything else flows</p>
         </div>

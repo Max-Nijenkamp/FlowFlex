@@ -233,11 +233,26 @@
     .ff-chain-row .route { display: none; }
 }
 
-/* animated pulse paths */
+/* animated pulse paths — THE Switchboard+ signature: data flowing along
+   rails into the board. Ink rails on light surfaces, white inside Flow bands. */
 .ff-paths path { fill: none; stroke-width: 1.5; }
-.ff-paths .rail { stroke: rgba(255,255,255,0.07); }
+.ff-paths .rail { stroke: rgba(17,24,39,0.1); }
+.ff-flow .ff-paths .rail { stroke: rgba(255,255,255,0.07); }
 .ff-paths .pulse { stroke-dasharray: 26 200; stroke-linecap: round; animation: ffdash 4.5s linear infinite; }
 @keyframes ffdash { to { stroke-dashoffset: -226; } }
+
+/* flow-band node dots breathe — the current is live, staggered per row */
+.ff-node-dot { --node-glow: 109,106,246; animation: ffnode 3.2s ease-in-out infinite; }
+.ff-chain-row.alt .ff-node-dot { --node-glow: 56,189,248; }
+.ff-chain-row:nth-child(2) .ff-node-dot { animation-delay: 0.5s; }
+.ff-chain-row:nth-child(3) .ff-node-dot { animation-delay: 1s; }
+.ff-chain-row:nth-child(4) .ff-node-dot { animation-delay: 1.5s; }
+.ff-chain-row:nth-child(5) .ff-node-dot { animation-delay: 2s; }
+.ff-chain-row:nth-child(6) .ff-node-dot { animation-delay: 2.5s; }
+@keyframes ffnode {
+    0%, 100% { box-shadow: 0 0 8px rgba(var(--node-glow), 0.55); }
+    50% { box-shadow: 0 0 18px rgba(var(--node-glow), 1); }
+}
 
 /* ── coverage table ──────────────────────────────────────────── */
 .ff-table { margin-top: 52px; border: 1px solid var(--line-strong); border-radius: 14px; overflow: hidden; background: var(--card); box-shadow: 0 1px 2px rgba(17,24,39,0.03); }
@@ -333,6 +348,7 @@ a.ff-trow:hover { background: var(--indigo-soft); }
 @media (prefers-reduced-motion: reduce) {
     .ff-strip-track { animation: none; }
     .ff-paths .pulse { animation: none; }
+    .ff-node-dot { animation: none; }
     .ff-reveal { opacity: 1; transform: none; transition: none; }
     .ff-sw, .ff-sw::after, .ff-btn { transition: none; }
 }

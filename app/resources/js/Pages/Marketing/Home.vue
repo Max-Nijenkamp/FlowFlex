@@ -60,11 +60,27 @@ const coverage = domains.slice(0, 12)
                     </p>
                     <div class="ff-hero-ctas">
                         <Link href="/pricing" class="ff-btn primary lg">Build your price</Link>
-                        <Link href="/product" class="ff-btn outline lg">See the modules</Link>
+                        <Link href="/modules" class="ff-btn outline lg">See the modules</Link>
                     </div>
                     <p class="ff-hero-meta">teams of 50–500 · no tiers · no lock-in · data portable</p>
                 </div>
-                <div class="ff-board">
+                <div class="relative">
+                    <!-- Flow pulses: data streaming into the switchboard (brand signature) -->
+                    <svg
+                        class="ff-paths pointer-events-none absolute -top-14 -left-24 hidden h-[calc(100%+7rem)] w-[calc(100%+12rem)] lg:block"
+                        viewBox="0 0 640 480"
+                        fill="none"
+                        preserveAspectRatio="none"
+                        aria-hidden="true"
+                    >
+                        <path class="rail" d="M0 96 C 140 96 180 58 320 58 S 560 96 640 128" />
+                        <path class="pulse" style="stroke: #4F46E5" d="M0 96 C 140 96 180 58 320 58 S 560 96 640 128" />
+                        <path class="rail" d="M0 240 C 150 240 210 208 330 224 S 560 288 640 288" />
+                        <path class="pulse" style="stroke: #38BDF8; animation-delay: 1.4s" d="M0 240 C 150 240 210 208 330 224 S 560 288 640 288" />
+                        <path class="rail" d="M0 400 C 140 400 200 432 330 416 S 560 384 640 400" />
+                        <path class="pulse" style="stroke: #4F46E5; animation-delay: 2.7s" d="M0 400 C 140 400 200 432 330 416 S 560 384 640 400" />
+                    </svg>
+                    <div class="ff-board relative">
                     <div class="ff-board-head">
                         <span class="t">Your modules</span>
                         <span class="mono" style="font-size: 11px; color: var(--ink-faint)">{{ users }} users</span>
@@ -87,6 +103,7 @@ const coverage = domains.slice(0, 12)
                     <div class="ff-board-total">
                         <span class="f">{{ euro(perUser) }}/user × {{ users }} users</span>
                         <span class="v">€{{ Math.round(total) }}<em>/month</em></span>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -148,7 +165,7 @@ const coverage = domains.slice(0, 12)
                         <div class="nm">{{ t.name }}</div>
                         <div class="pr">{{ t.price }}</div>
                     </div>
-                    <Link href="/product" class="ff-tile ghost">+ 65 more modules</Link>
+                    <Link href="/modules" class="ff-tile ghost">+ 65 more modules</Link>
                 </div>
             </Reveal>
         </div>

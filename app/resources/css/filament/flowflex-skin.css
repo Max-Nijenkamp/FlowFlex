@@ -18,6 +18,20 @@
     --ff-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
+/* Dark palette: every ff-token flips here so custom pages inherit dark
+   mode for free instead of needing per-component .dark rules (owner
+   report 2026-07-05: trial balance + calendar unreadable in dark). */
+.dark {
+    --ff-paper: #0b101c;
+    --ff-paper-deep: #101828;
+    --ff-card: #111827;
+    --ff-ink: #f3f4f6;
+    --ff-ink-soft: rgb(255 255 255 / 0.66);
+    --ff-ink-faint: rgb(255 255 255 / 0.38);
+    --ff-line: rgb(255 255 255 / 0.08);
+    --ff-line-strong: rgb(255 255 255 / 0.17);
+}
+
 /* ---- Layout: sidebar owns the full left edge (pattern: filament-panel-chrome §2)
    Filament renders the topbar ABOVE the sidebar+main row; the design wants a
    248px full-height rail with the topbar and canvas offset beside it. Pin the
@@ -269,9 +283,10 @@
     color: var(--ff-ink-faint);
 }
 
-/* Dark mode: the design's ink rail */
+/* Dark mode: the design's ink rail (fixed color — --ff-ink is TEXT ink and
+   flips light in dark mode) */
 .dark .fi-sidebar {
-    background-color: var(--ff-ink);
+    background-color: var(--ff-flow-bg);
     border-right-color: rgb(255 255 255 / 0.08);
 }
 
@@ -312,7 +327,7 @@
 
 .dark .fi-sidebar-header-ctn,
 .dark .fi-sidebar-header {
-    background-color: var(--ff-ink);
+    background-color: var(--ff-flow-bg);
     color: #ffffff;
     border-bottom-color: rgb(255 255 255 / 0.08);
 }
@@ -1637,12 +1652,47 @@
 /* ---- Trial balance + reconciliation + leave calendar + onboarding ----------- */
 .ff-tb, .ff-recon, .ff-cal, .ff-onb { display: flex; flex-direction: column; gap: 14px; }
 
-.ff-tb-toolbar, .ff-cal-toolbar { display: flex; align-items: center; gap: 12px; }
-.ff-tb-toolbar label { font-size: 12.5px; color: var(--ff-ink-soft); display: flex; align-items: center; gap: 6px; }
-.ff-tb-toolbar input[type="date"] {
+.ff-tb-toolbar, .ff-cal-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+/* shared preset chips (trial balance periods, calendar view modes) */
+.ff-chips {
+    display: inline-flex; gap: 4px; padding: 4px; flex-wrap: wrap;
+    background: var(--ff-paper-deep); border: 1px solid var(--ff-line);
+    border-radius: 11px;
+}
+.ff-chip {
+    padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+    color: var(--ff-ink-soft); border: 1px solid transparent;
+    transition: background-color 0.13s ease, color 0.13s ease, border-color 0.13s ease, box-shadow 0.13s ease;
+}
+.ff-chip:hover { color: var(--ff-ink); border-color: var(--ff-line-strong); }
+.ff-chip.ff-on {
+    background: var(--ff-card); color: var(--ff-ink);
+    border-color: var(--ff-line-strong); box-shadow: 0 1px 2px rgb(17 24 39 / 0.06);
+}
+
+.ff-tb-range { display: flex; align-items: center; gap: 10px; }
+.ff-tb-range label { font-size: 12.5px; color: var(--ff-ink-soft); display: flex; align-items: center; gap: 6px; }
+.ff-tb-range input[type="date"] {
     padding: 7px 10px; font-size: 13px; border-radius: 8px;
     border: 1px solid var(--ff-line-strong); background: var(--ff-card);
+    color: var(--ff-ink); color-scheme: light dark;
+    transition: border-color 0.13s ease, box-shadow 0.13s ease;
 }
+.ff-tb-range input[type="date"]:hover { border-color: var(--primary-500); }
+.ff-tb-range input[type="date"]:focus { outline: none; border-color: var(--primary-500); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-500) 14%, transparent); }
+
+/* headline stats above the table */
+.ff-tb-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.ff-tb-stat {
+    background: var(--ff-card); border: 1px solid var(--ff-line-strong);
+    border-radius: 13px; padding: 14px 18px; display: flex; flex-direction: column; gap: 3px;
+    box-shadow: 0 1px 2px rgb(17 24 39 / 0.04);
+    transition: border-color 0.13s ease;
+}
+.ff-tb-stat:hover { border-color: var(--primary-500); }
+.ff-tb-stat-label { font-family: var(--ff-font-mono); font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ff-ink-faint); }
+.ff-tb-stat-value { font-family: 'Archivo', var(--font-family), sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; color: var(--ff-ink); font-variant-numeric: tabular-nums; }
 .ff-tb-check {
     margin-left: auto; font-family: var(--ff-font-mono); font-size: 10.5px;
     letter-spacing: 0.12em; padding: 4px 10px; border-radius: 999px;
@@ -1665,6 +1715,16 @@
 .ff-tb-table tfoot td { font-weight: 700; border-bottom: none; }
 .ff-tb-table .ff-num { text-align: right; font-variant-numeric: tabular-nums; }
 .ff-tb-code { font-family: var(--ff-font-mono); font-size: 12px; color: var(--ff-ink-soft); }
+.ff-tb-table .ff-tb-type td {
+    font-family: var(--ff-font-mono); font-size: 10px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--primary-600, var(--primary-500));
+    background: color-mix(in srgb, var(--primary-500) 6%, var(--ff-card)) !important;
+    padding-top: 13px;
+}
+.ff-tb-table .ff-tb-subtotal td {
+    font-weight: 600; color: var(--ff-ink-soft); font-size: 12px;
+    background: var(--ff-paper-deep) !important; border-bottom: 2px solid var(--ff-line-strong);
+}
 .ff-tb-empty { text-align: center; color: var(--ff-ink-faint); padding: 28px 0 !important; }
 
 /* reconciliation two-panel matcher */
@@ -1723,6 +1783,69 @@
 }
 .ff-cal-more { font-size: 10.5px; color: var(--ff-ink-faint); }
 
+.ff-cal-navgroup { display: inline-flex; gap: 6px; }
+.ff-cal-today { font-size: 12px; font-weight: 600; }
+.ff-cal-modes { margin-left: 4px; }
+
+/* week view: 7 tall day columns, today carries a live clock chip */
+.ff-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; align-items: stretch; }
+.ff-week-col {
+    background: var(--ff-card); border: 1px solid var(--ff-line-strong);
+    border-radius: 13px; padding: 12px; min-height: 260px;
+    display: flex; flex-direction: column; gap: 10px;
+    transition: border-color 0.13s ease, box-shadow 0.13s ease;
+}
+.ff-week-col:hover { border-color: var(--ff-ink-faint); }
+.ff-week-col.ff-weekend { background: var(--ff-paper-deep); opacity: 0.85; }
+.ff-week-col.ff-today {
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-500) 14%, transparent);
+}
+.ff-week-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.ff-week-day {
+    font-family: var(--ff-font-mono); font-size: 10.5px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--ff-ink-soft);
+}
+.ff-week-col.ff-today .ff-week-day { color: var(--primary-600, var(--primary-500)); }
+.ff-week-now {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--ff-font-mono); font-size: 10px; font-weight: 600;
+    color: var(--primary-600, var(--primary-500));
+    border: 1px solid color-mix(in srgb, var(--primary-500) 40%, transparent);
+    border-radius: 999px; padding: 2px 8px;
+    background: color-mix(in srgb, var(--primary-500) 8%, transparent);
+}
+.ff-week-now-dot {
+    width: 6px; height: 6px; border-radius: 999px; background: var(--primary-500);
+    animation: ff-now-pulse 2s ease-in-out infinite;
+}
+@keyframes ff-now-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .ff-week-now-dot { animation: none; }
+}
+.ff-week-events { display: flex; flex-direction: column; gap: 7px; }
+.ff-week-event {
+    border-radius: 9px; padding: 7px 10px; color: #fff;
+    background: var(--ev-c, #4ADE80);
+    display: flex; flex-direction: column; gap: 1px;
+    transition: transform 0.13s ease, box-shadow 0.13s ease;
+}
+.ff-week-event:hover { transform: translateY(-1px); box-shadow: 0 6px 12px -6px rgb(17 24 39 / 0.3); }
+.ff-week-event.ff-pending {
+    background: repeating-linear-gradient(45deg, var(--ev-c), var(--ev-c) 7px, color-mix(in srgb, var(--ev-c) 60%, #fff) 7px, color-mix(in srgb, var(--ev-c) 60%, #fff) 14px);
+}
+.ff-week-event-name { font-size: 12px; font-weight: 700; }
+.ff-week-event-type { font-size: 10.5px; opacity: 0.9; }
+.ff-week-empty { font-size: 12px; color: var(--ff-ink-faint); text-align: center; padding-top: 14px; }
+
+@media (max-width: 1100px) {
+    .ff-week { grid-template-columns: repeat(2, 1fr); }
+    .ff-tb-stats { grid-template-columns: 1fr; }
+}
+
 /* onboarding checklist */
 .ff-onb-progress { display: flex; align-items: center; gap: 12px; }
 .ff-onb-bar { flex: 1; height: 8px; border-radius: 999px; background: var(--ff-paper-deep); overflow: hidden; }
@@ -1749,10 +1872,7 @@
 .ff-onb-sub { font-size: 11.5px; color: var(--ff-ink-faint); }
 .ff-onb-actions { display: flex; gap: 7px; }
 
-.dark .ff-tb-board, .dark .ff-recon-row, .dark .ff-onb-row, .dark .ff-cal-cell { background: #111827; }
-.dark .ff-cal-cell.ff-blank, .dark .ff-cal-head { background: rgb(255 255 255 / 0.03); }
-.dark .ff-tb-table tbody tr:nth-child(even) td { background: rgb(255 255 255 / 0.03); }
-.dark .ff-recon-match, .dark .ff-recon-undo, .dark .ff-onb-do, .dark .ff-onb-skip, .dark .ff-cal-nav { background: #111827; border-color: rgb(255 255 255 / 0.14); color: rgb(255 255 255 / 0.8); }
+/* dark handled by the .dark ff-token palette at the top of this file */
 
 /* ---- Audit entry modal (description-list styling) --------------------------- */
 .ff-audit { display: flex; flex-direction: column; gap: 18px; }
