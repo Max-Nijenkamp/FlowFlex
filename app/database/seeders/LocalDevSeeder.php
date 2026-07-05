@@ -95,11 +95,9 @@ class LocalDevSeeder extends Seeder
             ->where('email', 'test@test.nl')
             ->first();
 
+        // Dev convenience: EVERY catalog module is on for the demo company,
+        // so all domain panels are walkable without marketplace clicking.
         foreach (ModuleCatalogSeeder::CATALOG as $key => $entry) {
-            if ($entry['price'] !== 0) {
-                continue;
-            }
-
             CompanyModuleSubscription::query()->firstOrCreate(
                 ['company_id' => $company->id, 'module_key' => $key, 'deactivated_at' => null],
                 ['activated_at' => now(), 'activated_by' => $demoOwner?->id],

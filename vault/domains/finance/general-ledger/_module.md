@@ -4,7 +4,7 @@ module: general-ledger
 type: module
 module-key: finance.ledger
 priority: v1-core
-build-status: planned
+build-status: in-progress
 status: wip
 depends-on: [core.billing, core.rbac, core.settings]
 soft-depends: [finance.invoicing, finance.expenses, hr.payroll]
@@ -15,7 +15,7 @@ tables: [fin_accounts, fin_journal_entries, fin_journal_lines, fin_fiscal_period
 permission-prefix: finance.ledger
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-07-03
+updated: 2026-07-05
 ---
 
 # General Ledger

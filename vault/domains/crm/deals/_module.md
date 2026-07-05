@@ -2,10 +2,10 @@
 domain: crm
 module: deals
 type: module
-build-status: planned
+build-status: in-progress
 status: wip
 color: "#4ADE80"
-updated: 2026-06-20
+updated: 2026-07-05
 ---
 
 # Deals

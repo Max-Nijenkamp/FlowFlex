@@ -4,7 +4,7 @@ module: invoicing
 type: module
 module-key: finance.invoicing
 priority: v1-core
-build-status: planned
+build-status: in-progress
 status: wip
 depends-on: [finance.ledger, core.billing, core.rbac, core.settings, foundation.queues]
 soft-depends: [crm.deals, crm.contacts, finance.tax, finance.ar, finance.currency]
@@ -15,7 +15,7 @@ tables: [fin_invoices, fin_invoice_lines, fin_payments, fin_customers]
 permission-prefix: finance.invoicing
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-07-03
+updated: 2026-07-05
 ---
 
 # Invoicing

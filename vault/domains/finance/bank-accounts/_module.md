@@ -4,7 +4,7 @@ module: bank-accounts
 type: module
 module-key: finance.bank
 priority: v1-core
-build-status: planned
+build-status: in-progress
 status: wip
 depends-on: [finance.ledger, core.billing, core.rbac, core.files]
 soft-depends: [finance.invoicing, finance.expenses]
@@ -15,7 +15,7 @@ tables: [fin_bank_accounts, fin_bank_transactions]
 permission-prefix: finance.bank
 encrypted-fields: ["fin_bank_accounts.iban", "fin_bank_accounts.account_number"]
 color: "#4ADE80"
-updated: 2026-07-03
+updated: 2026-07-05
 ---
 
 # Bank Accounts

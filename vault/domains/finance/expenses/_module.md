@@ -4,7 +4,7 @@ module: expenses
 type: module
 module-key: finance.expenses
 priority: v1-core
-build-status: planned
+build-status: in-progress
 status: wip
 depends-on: [finance.ledger, core.billing, core.rbac, core.files, core.notifications]
 soft-depends: [hr.profiles, hr.payroll, finance.ap]
@@ -15,7 +15,7 @@ tables: [fin_expenses, fin_expense_categories, fin_expense_reports]
 permission-prefix: finance.expenses
 encrypted-fields: []
 color: "#4ADE80"
-updated: 2026-07-03
+updated: 2026-07-05
 ---
 
 # Expenses

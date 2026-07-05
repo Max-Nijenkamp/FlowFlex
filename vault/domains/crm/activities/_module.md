@@ -2,10 +2,10 @@
 domain: crm
 module: activities
 type: module
-build-status: planned
+build-status: in-progress
 status: wip
 color: "#4ADE80"
-updated: 2026-07-03
+updated: 2026-07-05
 ---
 
 # Activities
