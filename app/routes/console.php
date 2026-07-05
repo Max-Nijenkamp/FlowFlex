@@ -46,3 +46,8 @@ Schedule::command('finance:mark-overdue-invoices')
     ->dailyAt('06:30')
     ->withoutOverlapping()
     ->onOneServer();
+
+Schedule::command('hr:run-leave-accrual')
+    ->yearlyOn(1, 1, '02:00')
+    ->withoutOverlapping()
+    ->onOneServer();

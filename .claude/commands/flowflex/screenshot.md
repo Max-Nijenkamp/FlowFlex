@@ -78,3 +78,5 @@ This is how the collapsed-rail off-center bug (vendor `scrollbar-gutter: stable`
 - **"element intercepts pointer events" on sidebar-header children**: the absolutely-positioned collapse toggle (`.ff-side-toggle-wrp`) overlays new header content — check its rect before blaming the target.
 - App demo logins: `test@test.nl` / `test1234` (owner). Admin panel: same, or `admin@flowflex.nl` / `password`. `migrate:fresh --seed` restores them.
 - Sidebar collapse state persists in localStorage per context — reset by clicking the toggle before screenshotting the expanded state.
+- **Every click times out "waiting for element to be … stable"** after a navigation = rendering is frozen (rAF stopped). Probe `requestAnimationFrame` liveness and A/B with `page.emulateMedia({ reducedMotion: 'reduce' })`. Known cause: `@view-transition { navigation: auto }` + Livewire redirects — banned, see panel-chrome §6.12.
+- **Intermittent 500s "Class …Resource\Pages\… not found"** while another session builds a module = stale optimized composer classmap. Fix: `docker compose exec -T app composer dump-autoload` (then the storage perms line above).

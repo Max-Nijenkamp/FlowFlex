@@ -45,7 +45,7 @@ The hub abstraction works either way; it is the launcher/router.
 
 | Artifact | Kind ([[../../../architecture/ui-strategy]] row) | Blueprint / Tweaks | Notes |
 |---|---|---|---|
-| `workspace-switcher` sidebar modal (chrome, no page) | n/a — panel chrome, not a screen (ADR [[../../../decisions/decision-2026-07-04-hub-modal-not-page\|hub-modal-not-page]]) | trigger pinned above nav via `SIDEBAR_NAV_START`; modal rows = activated modules ∩ user access permissions via `App\Support\Services\WorkspacePanels`; current workspace always listed + marked CURRENT; hover borders per row | replaced `WorkspaceHubPage` 2026-07-04 |
+| `workspace-switcher` sidebar modal (chrome, no page) | n/a — panel chrome, not a screen (ADR [[../../../decisions/decision-2026-07-04-hub-modal-not-page\|hub-modal-not-page]]) | trigger in the sidebar footer above the user card (included by `sidebar-footer` view; moved from `SIDEBAR_NAV_START` and replaced the "Your panels" chips 2026-07-05); modal rows = activated modules ∩ user access permissions via `App\Support\Services\WorkspacePanels`; current workspace always listed + marked CURRENT; per-row domain-color tints (`--ws-c`), owner foot strip → marketplace; rows dim on click while the panel loads | replaced `WorkspaceHubPage` 2026-07-04 |
 
 **Access contract (mandatory):** `WorkspaceHubPage` is a custom page and MUST state its gate explicitly — Filament does not auto-gate custom pages:
 `canAccess() = Auth::user()->can('core.hub.view')` on the **web** guard only (admin/staff never reach the hub — they land on the staff console)

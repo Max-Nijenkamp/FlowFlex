@@ -129,6 +129,7 @@ class PermissionSeeder extends Seeder
         'hr.employees.update',
         'hr.employees.delete',
         'hr.employees.offboard',
+        'hr.employees.view-sensitive',
         // hr.leave
         'hr.leave.view-any',
         'hr.leave.view',

@@ -20,7 +20,7 @@ Registered once in `AppServiceProvider::boot()` (apply to every panel, guard wit
 | Hook | What we inject | Support class |
 |---|---|---|
 | `SIDEBAR_LOGO_BEFORE` | light wordmark at sidebar head (`.ff-side-brand`) | inline |
-| `SIDEBAR_FOOTER` | collapse toggle + "Your panels" switcher chips + user card (account menu) | `filament.chrome.sidebar-footer` view |
+| `SIDEBAR_FOOTER` | collapse toggle + workspace switcher (trigger + modal, replaces the old "Your panels" chips 2026-07-05) + user card (account menu) | `filament.chrome.sidebar-footer` view (includes `workspace-switcher`) |
 | `GLOBAL_SEARCH_BEFORE` | 320px search trigger w/ ⌘K → dispatches `ff-spotlight-open` | inline |
 | `BODY_END` | `@livewire('spotlight')` palette | `App\Livewire\Spotlight` |
 | `SIMPLE_LAYOUT_START` / `_END` | login brand mark + footer strip | inline |
@@ -55,9 +55,9 @@ Brand lives in the sidebar header, so **force the header visible** (Filament hid
 
 Gotcha: the native sidebar logo is `.fi-sidebar-header-logo-ctn` (a `div`), so `.fi-sidebar-header > a` selectors miss it. Always confirm against rendered markup.
 
-## 3. Panel switching = sidebar chips only · account menu = sidebar user card
+## 3. Panel switching = footer workspace switcher only · account menu = sidebar user card
 
-Cross-panel navigation lives in the `SIDEBAR_FOOTER` chips (`canAccessPanel`-filtered), NOT in the profile dropdown. `userMenuItems(PanelSwitchItems::…)` was removed — two switchers is one too many.
+Cross-panel navigation lives in the workspace switcher in the `SIDEBAR_FOOTER` (trigger above the user card opens the selection modal; `WorkspacePanels`-filtered), NOT in the profile dropdown. `userMenuItems(PanelSwitchItems::…)` was removed — two switchers is one too many. The "Your panels" chips and the `SIDEBAR_NAV_START` trigger were folded into this single footer switcher (owner request 2026-07-05); each modal row carries its domain color as `--ws-c` for tinted tiles/hover/current states, and clicking a row dims the others instantly (`ff-leaving`) while the navigation runs behind the motion.
 
 The topbar user menu (`.fi-user-menu`) is hidden entirely (owner decision 2026-07-04 — it duplicated the sidebar user card). The sidebar user card is an Alpine popover trigger: Profile link (`filament()->getProfileUrl()`) + Sign out (POST `filament()->getLogoutUrl()`), opening upward (`.ff-user-menu-panel`).
 
@@ -84,8 +84,9 @@ Debug method that found all of these: a Playwright `evaluate()` probe dumping `g
 7. **Playwright notification carryover**: asserting on `body.innerText` right after an action can match the *previous* action's success toast — assert on fresh state (URL, reload, or unique text) instead.
 8. **Overlay scrollbars hide scrollbar bugs.** Headless Chromium (and many dev setups) paints overlay scrollbars = invisible; the user's classic-Windows scrollbars paint real stubs. The recurring "weird icon top-right of every tabs bar" was the vendor tabs nav (`overflow: auto`) overflowing by exactly the skin's 1px underline border -> a 1px-tall vertical scrollbar stub. Fix: `overflow-y: hidden` + `scrollbar-width: none` + `::-webkit-scrollbar { display: none }` on `.fi-tabs`. Reproduce scrollbar-class bugs with `chromium.launch({ args: ['--disable-features=OverlayScrollbar'] })` and measure `offsetWidth - clientWidth` on the suspect box.
 9. **Schemas `Tabs` vendor-centers its nav.** `.fi-sc-tabs` flex-centers a content-width `.fi-tabs` — underline tabs need `display:flex; flex-direction:column; align-items:stretch` on the wrapper + `width:100%` on the nav.
-10. **Render-hook placement facts (measured):** `SIDEBAR_LOGO_AFTER` children land as direct `.fi-sidebar-header` children (siblings of `.fi-sidebar-header-logo-ctn`, which is a column flex). Multiple `->renderHook()` calls on the same slot stack in registration order. `SIDEBAR_NAV_START` renders above the nav groups — home of the workspace-switcher trigger. Modals launched from sidebar chrome: Alpine `x-teleport="body"` for the overlay, `x-on:keydown.escape.window` to close (workspace-switcher blade is the template).
+10. **Render-hook placement facts (measured):** `SIDEBAR_LOGO_AFTER` children land as direct `.fi-sidebar-header` children (siblings of `.fi-sidebar-header-logo-ctn`, which is a column flex). Multiple `->renderHook()` calls on the same slot stack in registration order. `SIDEBAR_NAV_START` renders above the nav groups (the workspace-switcher trigger lived there until 2026-07-05; it's now in the footer view). Modals launched from sidebar chrome: Alpine `x-teleport="body"` for the overlay, `x-on:keydown.escape.window` to close (workspace-switcher blade is the template).
 11. **The sidebar-header toggle is absolutely positioned** (`.ff-side-toggle-wrp`) — anything that makes the header taller parks the toggle over new content and it steals pointer events. Playwright "element intercepts pointer events" on a header child = check the toggle overlay first.
+12. **`@view-transition { navigation: auto }` permanently freezes the incoming page** after Livewire's `window.location` redirects — the cross-document transition never activates, rendering suspends, `requestAnimationFrame` stops firing forever (verified headless AND headed Chromium, 2026-07-05; Playwright symptom: every click times out "waiting for element to be … stable"). For panel→panel one-system feel use the `.fi-main-ctn` entrance fade (`ff-page-in`, reduced-motion gated) instead — chrome holds still, canvas crossfades through the shared paper background. Diagnostic when clicks hang: probe `requestAnimationFrame` liveness, and A/B with `page.emulateMedia({ reducedMotion: 'reduce' })`.
 
 ## Related
 

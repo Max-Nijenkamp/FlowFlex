@@ -1166,28 +1166,19 @@
     background: color-mix(in srgb, var(--primary-400) 6%, transparent);
 }
 
-/* Cross-document view transition: panel→panel navigation crossfades instead
-   of white-flashing, so switching workspaces feels like one system. The old
-   page stays painted while the new panel loads (request runs behind the
-   motion — perceived-performance rule 3). Chromium-only; others ignore. */
-@view-transition {
-    navigation: auto;
+/* Page entrance: main content (not the sidebar chrome) fades in on every
+   full page load, so panel→panel switches read as one system — the chrome
+   holds still, the canvas crossfades through the shared paper background.
+   NOTE: do NOT use @view-transition { navigation: auto } for this — it
+   permanently freezes rendering (rAF stops) after Livewire's
+   window.location redirects, verified 2026-07-05. */
+.fi-main-ctn {
+    animation: ff-page-in 0.22s cubic-bezier(0, 0, 0.2, 1);
 }
 
-::view-transition-old(root) {
-    animation-duration: 0.1s;
-    animation-timing-function: ease-in;
-}
-
-::view-transition-new(root) {
-    animation-duration: 0.22s;
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    @view-transition {
-        navigation: none;
-    }
+@keyframes ff-page-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* popover pop-in (user menu) */
@@ -1203,7 +1194,8 @@
 
 @media (prefers-reduced-motion: reduce) {
     .fi-sc-tabs-tab.fi-active,
-    .ff-spotlight-overlay .ff-spotlight-panel {
+    .ff-spotlight-overlay .ff-spotlight-panel,
+    .fi-main-ctn {
         animation: none;
     }
 
@@ -1557,6 +1549,126 @@
 .dark .ff-board-card { background: #111827; border-color: rgb(255 255 255 / 0.1); }
 .dark .ff-board-card-name { color: #fff; }
 .dark .ff-board-filter { background: #111827; border-color: rgb(255 255 255 / 0.12); color: #fff; }
+
+/* ---- Trial balance + reconciliation + leave calendar + onboarding ----------- */
+.ff-tb, .ff-recon, .ff-cal, .ff-onb { display: flex; flex-direction: column; gap: 14px; }
+
+.ff-tb-toolbar, .ff-cal-toolbar { display: flex; align-items: center; gap: 12px; }
+.ff-tb-toolbar label { font-size: 12.5px; color: var(--ff-ink-soft); display: flex; align-items: center; gap: 6px; }
+.ff-tb-toolbar input[type="date"] {
+    padding: 7px 10px; font-size: 13px; border-radius: 8px;
+    border: 1px solid var(--ff-line-strong); background: var(--ff-card);
+}
+.ff-tb-check {
+    margin-left: auto; font-family: var(--ff-font-mono); font-size: 10.5px;
+    letter-spacing: 0.12em; padding: 4px 10px; border-radius: 999px;
+    border: 1px solid #DC2626; color: #DC2626;
+}
+.ff-tb-check.ff-ok { border-color: #16A34A; color: #16A34A; }
+
+.ff-tb-board {
+    background: var(--ff-card); border: 1px solid var(--ff-line-strong);
+    border-radius: 14px; overflow: hidden; box-shadow: 0 1px 2px rgb(17 24 39 / 0.04);
+}
+.ff-tb-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ff-tb-table th {
+    font-family: var(--ff-font-mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ff-ink-faint); text-align: left;
+    padding: 11px 16px; border-bottom: 1px solid var(--ff-line);
+}
+.ff-tb-table td { padding: 10px 16px; border-bottom: 1px solid var(--ff-line); }
+.ff-tb-table tbody tr:nth-child(even) td { background: var(--ff-paper-deep); }
+.ff-tb-table tfoot td { font-weight: 700; border-bottom: none; }
+.ff-tb-table .ff-num { text-align: right; font-variant-numeric: tabular-nums; }
+.ff-tb-code { font-family: var(--ff-font-mono); font-size: 12px; color: var(--ff-ink-soft); }
+.ff-tb-empty { text-align: center; color: var(--ff-ink-faint); padding: 28px 0 !important; }
+
+/* reconciliation two-panel matcher */
+.ff-recon { flex-direction: row; align-items: flex-start; gap: 18px; }
+.ff-recon-col { flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ff-recon-title {
+    font-family: var(--ff-font-mono); font-size: 10.5px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ff-ink-faint);
+}
+.ff-recon-list { display: flex; flex-direction: column; gap: 8px; }
+.ff-recon-row {
+    display: flex; align-items: center; gap: 10px; text-align: left; width: 100%;
+    background: var(--ff-card); border: 1px solid var(--ff-line);
+    border-radius: 10px; padding: 10px 13px; font-size: 12.5px;
+    transition: border-color 0.13s ease, background-color 0.13s ease;
+}
+.ff-recon-row:hover { border-color: var(--ff-line-strong); }
+.ff-recon-row.ff-selected { border-color: var(--primary-500); background: color-mix(in srgb, var(--primary-500) 7%, transparent); }
+.ff-recon-row.ff-done { opacity: 0.75; }
+.ff-recon-desc { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ff-ink); }
+.ff-recon-meta { color: var(--ff-ink-faint); font-size: 11.5px; white-space: nowrap; }
+.ff-recon-amount { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+.ff-recon-amount.ff-neg { color: #DC2626; }
+.ff-recon-empty { font-size: 13px; color: var(--ff-ink-faint); }
+.ff-recon-match, .ff-recon-undo, .ff-onb-do, .ff-onb-skip, .ff-cal-nav {
+    padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+    border: 1px solid var(--ff-line-strong); background: var(--ff-card);
+    transition: border-color 0.13s ease, background-color 0.13s ease;
+}
+.ff-recon-match:hover, .ff-onb-do:hover { border-color: var(--primary-500); color: var(--primary-600, var(--primary-500)); }
+.ff-recon-undo:hover, .ff-onb-skip:hover { border-color: #DC2626; color: #DC2626; }
+
+/* leave calendar month grid */
+.ff-cal-month { font-family: 'Archivo', var(--font-family), sans-serif; font-size: 17px; font-weight: 700; min-width: 150px; text-align: center; }
+.ff-cal-hint { margin-left: auto; font-size: 12px; color: var(--ff-ink-faint); }
+.ff-cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px;
+    background: var(--ff-line); border: 1px solid var(--ff-line-strong);
+    border-radius: 14px; overflow: hidden;
+}
+.ff-cal-head {
+    background: var(--ff-paper-deep); padding: 8px 10px;
+    font-family: var(--ff-font-mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ff-ink-faint);
+}
+.ff-cal-cell { background: var(--ff-card); min-height: 92px; padding: 8px 9px; display: flex; flex-direction: column; gap: 4px; }
+.ff-cal-cell.ff-blank { background: var(--ff-paper-deep); }
+.ff-cal-cell.ff-today { box-shadow: inset 0 0 0 2px var(--primary-500); }
+.ff-cal-day { font-size: 11.5px; color: var(--ff-ink-faint); }
+.ff-cal-event {
+    font-size: 11px; padding: 2px 7px; border-radius: 6px; color: #fff;
+    background: var(--ev-c, #4ADE80); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ff-cal-event.ff-pending {
+    background: repeating-linear-gradient(45deg, var(--ev-c), var(--ev-c) 6px, color-mix(in srgb, var(--ev-c) 60%, #fff) 6px, color-mix(in srgb, var(--ev-c) 60%, #fff) 12px);
+}
+.ff-cal-more { font-size: 10.5px; color: var(--ff-ink-faint); }
+
+/* onboarding checklist */
+.ff-onb-progress { display: flex; align-items: center; gap: 12px; }
+.ff-onb-bar { flex: 1; height: 8px; border-radius: 999px; background: var(--ff-paper-deep); overflow: hidden; }
+.ff-onb-bar span { display: block; height: 100%; border-radius: 999px; background: var(--primary-500); transition: width 0.3s ease; }
+.ff-onb-pct { font-size: 12.5px; color: var(--ff-ink-soft); white-space: nowrap; }
+.ff-onb-list { display: flex; flex-direction: column; gap: 8px; }
+.ff-onb-row {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--ff-card); border: 1px solid var(--ff-line);
+    border-radius: 11px; padding: 12px 14px;
+    transition: border-color 0.13s ease;
+}
+.ff-onb-row:hover { border-color: var(--ff-line-strong); }
+.ff-onb-row.ff-done { opacity: 0.7; }
+.ff-onb-check {
+    flex: none; width: 24px; height: 24px; border-radius: 999px;
+    border: 1.5px solid var(--ff-line-strong); display: flex; align-items: center;
+    justify-content: center; font-size: 13px; color: #fff;
+}
+.ff-onb-check.ff-on { background: #16A34A; border-color: #16A34A; }
+.ff-onb-check.ff-skip { background: var(--ff-ink-faint); border-color: var(--ff-ink-faint); }
+.ff-onb-meta { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.ff-onb-title { font-size: 13.5px; font-weight: 600; color: var(--ff-ink); }
+.ff-onb-sub { font-size: 11.5px; color: var(--ff-ink-faint); }
+.ff-onb-actions { display: flex; gap: 7px; }
+
+.dark .ff-tb-board, .dark .ff-recon-row, .dark .ff-onb-row, .dark .ff-cal-cell { background: #111827; }
+.dark .ff-cal-cell.ff-blank, .dark .ff-cal-head { background: rgb(255 255 255 / 0.03); }
+.dark .ff-tb-table tbody tr:nth-child(even) td { background: rgb(255 255 255 / 0.03); }
+.dark .ff-recon-match, .dark .ff-recon-undo, .dark .ff-onb-do, .dark .ff-onb-skip, .dark .ff-cal-nav { background: #111827; border-color: rgb(255 255 255 / 0.14); color: rgb(255 255 255 / 0.8); }
 
 /* ---- Audit entry modal (description-list styling) --------------------------- */
 .ff-audit { display: flex; flex-direction: column; gap: 18px; }
