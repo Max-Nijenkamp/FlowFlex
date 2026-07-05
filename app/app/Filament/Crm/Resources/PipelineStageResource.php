@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Crm\Resources;
 
+use App\Models\Crm\Pipeline;
 use App\Models\Crm\PipelineStage;
 use App\Models\User;
 use App\Services\BillingService;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
@@ -17,6 +19,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 
@@ -52,6 +55,11 @@ class PipelineStageResource extends Resource
                 ->columnSpanFull()
                 ->columns(2)
                 ->schema([
+                    Select::make('pipeline_id')
+                        ->label('Pipeline')
+                        ->options(fn (): array => Pipeline::query()->get()->sortBy('name')->pluck('name', 'id')->all())
+                        ->default(fn (): ?string => Pipeline::query()->where('is_default', true)->first()?->id)
+                        ->required(),
                     TextInput::make('name')->required()->maxLength(80),
                     TextInput::make('probability_default')
                         ->label('Default probability (%)')
@@ -66,6 +74,7 @@ class PipelineStageResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('pipeline.name')->label('Pipeline')->badge()->color('gray'),
                 TextColumn::make('name'),
                 TextColumn::make('probability_default')
                     ->label('Probability')
@@ -76,6 +85,11 @@ class PipelineStageResource extends Resource
             ])
             ->defaultSort('order')
             ->reorderable('order')
+            ->filters([
+                SelectFilter::make('pipeline_id')
+                    ->label('Pipeline')
+                    ->options(fn (): array => Pipeline::query()->get()->sortBy('name')->pluck('name', 'id')->all()),
+            ])
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make()

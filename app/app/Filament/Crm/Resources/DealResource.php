@@ -76,9 +76,7 @@ class DealResource extends Resource
                         ->dehydrateStateUsing(fn (string|int|float|null $state): int => (int) round(((float) ($state ?? 0)) * 100)),
                     Select::make('stage_id')
                         ->label('Stage')
-                        ->options(fn (): array => PipelineStage::query()
-                            ->where('is_won', false)->where('is_lost', false)
-                            ->orderBy('order')->pluck('name', 'id')->all())
+                        ->options(fn (): array => self::stageOptionsByPipeline())
                         ->required(),
                     Select::make('contact_id')
                         ->label('Primary contact')
@@ -131,7 +129,7 @@ class DealResource extends Resource
                 SelectFilter::make('status')->options(['open' => 'Open', 'won' => 'Won', 'lost' => 'Lost']),
                 SelectFilter::make('stage_id')
                     ->label('Stage')
-                    ->options(fn (): array => PipelineStage::query()->orderBy('order')->pluck('name', 'id')->all()),
+                    ->options(fn (): array => self::stageOptionsByPipeline(includeClosed: true)),
                 SelectFilter::make('owner_id')
                     ->label('Owner')
                     ->options(fn (): array => User::query()->get()->mapWithKeys(
@@ -160,6 +158,27 @@ class DealResource extends Resource
             ])
             ->emptyStateHeading('No deals yet')
             ->emptyStateDescription('Create a deal or add one straight from the pipeline board.');
+    }
+
+    /**
+     * Optgrouped stage options: pipeline name → its stages in order
+     * (ADR custom-pipelines — stages only mean something inside their
+     * pipeline).
+     *
+     * @return array<string, array<string, string>>
+     */
+    public static function stageOptionsByPipeline(bool $includeClosed = false): array
+    {
+        return PipelineStage::query()
+            ->when(! $includeClosed, fn ($query) => $query->where('is_won', false)->where('is_lost', false))
+            ->with('pipeline:id,name')
+            ->get()
+            ->sortBy('order')
+            ->groupBy(fn (PipelineStage $stage): string => $stage->pipeline()->first()->name ?? 'Pipeline')
+            ->map(fn ($stages) => $stages->mapWithKeys(
+                fn (PipelineStage $stage): array => [$stage->id => $stage->name],
+            )->all())
+            ->all();
     }
 
     public static function closeDealAction(): Action
