@@ -67,7 +67,7 @@ const detailPages = ['hr', 'finance', 'crm', 'projects']
     <section class="ff-hero ff-grid-bg" style="padding-bottom: 64px">
         <div class="wrap">
             <span class="ff-kicker"><span class="sq"></span>Module catalogue</span>
-            <h1 style="max-width: 700px">Every switch<br />on the board.</h1>
+            <h1 style="max-width: 700px">Every <span class="u">switch</span><br />on the board.</h1>
             <p class="ff-lede">
                 73 modules across 16 departments. Same database, same pricing model — flip any of them on from your
                 billing page.

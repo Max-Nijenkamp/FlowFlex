@@ -35,6 +35,8 @@ Skin vocabulary referenced throughout is defined once in [[../../frontend/design
 
 Row #3. Reference: `projects.kanban`, `crm.pipeline`.
 
+> **Shipped reference implementation (2026-07-05): `App\Livewire\Crm\PipelineBoard`** — build new boards from it, owner-approved after three review rounds. Hard rules it established: (1) the board owns the remaining viewport height (`calc(100dvh - offset)`) and **each column scrolls its own card stack** (thin scrollbar) — a long stage must never push the page; (2) drop-target columns light up on dragover (accent border + ring + tint) and the dragged card ghosts at ~35% — HTML5 drag + two Alpine refs (`dragging`, `over`) is enough, no lib; (3) cards lift on hover with an accent spine, drag grip, owner-initials chip, entity chip and days-in-stage; (4) **scope switchers (pipeline picker) are dropdown pills, not tab bars** — tabs don't scale past ~4 entries (owner call); (5) per-column mono count pill + running € total; (6) quick-add is an in-column dashed input with hover/focus rings.
+
 - **Regions** — *board header* (title crumb + filter bar + view-scope selector + optional presence avatars) · *column rail* (horizontal, scroll-x) · *column* = header (name + mono count pill + add affordance) over a *card stack* · *card* = title, one meta line (assignee / due / value, mono), left accent edge in the column's or domain color, drag handle.
 - **Skin/tokens** — paper canvas; columns are `--color-card` with `--color-line-strong` borders; column headers ink text + mono count; card accent edge = domain accent (`--primary-500`); OFF/blocked cards at 45% opacity per Switchboard OFF-row rule.
 - **States** — *board first-use*: first-use empty ("Create your first deal") centered over the rail. *Empty column*: quiet inline "Nothing in {stage}" + card-shaped add slot, never a full empty-state block. *Filtered-out*: board-level filtered-out state naming the active filter + Clear. *Error*: board-level error with Retry. *Loading*: column-and-card skeleton (3 columns × 3 card blocks, `animate-pulse`) — never a spinner.
@@ -45,7 +47,9 @@ Row #3. Reference: `projects.kanban`, `crm.pipeline`.
 
 ## Calendar
 
-Row #4. Package `saade/filament-fullcalendar`. Reference: `hr.leave`, `hr.shifts`, `events.events`.
+Row #4. Package `saade/filament-fullcalendar` — **no Filament 5 release; calendars are custom-built** (ADR custom-over-missing-plugins). Reference: `hr.leave`, `hr.shifts`, `events.events`.
+
+> **Shipped reference implementation (2026-07-05): `LeaveCalendarPage` + `filament.hr.pages.leave-calendar`** — the owner's bar is "looks like Microsoft Teams"; simple day-column grids were rejected twice. What Teams-grade means here: **Month** = full-week rows including dimmed adjacent-month lead-in/out days, weekday header band, weekend tint, today as a filled accent day-chip, colored event bars with a darker left edge + "+N more" overflow. **Week** = day headers with big date numbers (today circled), an **all-day banner row** for all-day events (leave lives there), and a scrollable **24h hour grid** (mono gutter, hour + half-hour rules, auto-scrolled to 07:00) with a **live red now-line** — Alpine recomputes `top%` + HH:MM chip every 30s, pulse dot on today's column. Toolbar = prev/Today/next + Month/Week `ff-chip` toggle; all state URL-addressable.
 
 - **Regions** — *toolbar* (prev/next/today + month/week/day view toggle + title) · *grid* (day cells or time-grid) · *event chip* (title + mono time, domain-accent fill or left border) · optional *legend* (event-type squares, 9–11px per design-system).
 - **Skin/tokens** — paper grid, `--color-line` hairline cells, today cell tinted `--primary-50`; event chips use domain accent; mono for all times and the toolbar title.

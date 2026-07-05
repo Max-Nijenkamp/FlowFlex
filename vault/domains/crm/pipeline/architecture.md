@@ -40,6 +40,8 @@ Not in the domain event map — UI sync only. See [[../../../architecture/websoc
 
 ---
 
+> **As built 2026-07-05:** `PipelineResource` (Settings) creates unlimited pipelines — per team/person/motion — each optionally seeded with the standard stage set; exactly one default per company; delete guarded against held deals and the default. `PipelineStageResource` is pipeline-scoped (selector + column + filter, per-pipeline ordering). The board (`PipelineBoardPage` + `App\Livewire\Crm\PipelineBoard`) shows one pipeline at a time via a **dropdown pill switcher** (`?pipeline=` URL param), fills the viewport height with per-column card scrolling, and carries the full drag-affordance set — see [[../../../architecture/patterns/page-blueprints#Kanban]] reference-implementation rules. Deal stage selects optgroup per pipeline.
+
 ## Filament Artifacts
 
 **Nav group:** Pipeline

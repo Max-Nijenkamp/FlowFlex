@@ -89,6 +89,9 @@
 }
 .ff-hero-dark .ff-kicker .sq { background: var(--sky); }
 .ff-hero-dark .ff-paths .rail { stroke: rgba(255,255,255,0.1); }
+/* white cards floating on the dark surface keep their ink type */
+.ff-hero-dark .ff-board, .ff-hero-dark .ff-receipt { color: var(--ink); }
+.ff-hero-dark .ff-board { border-color: rgba(255,255,255,0.16); box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 32px 64px -24px rgba(0,0,0,0.55); }
 .ff-btn.ghost-dark { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.28); }
 .ff-btn.ghost-dark:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.45); }
 

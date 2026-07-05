@@ -51,6 +51,8 @@ stateDiagram-v2
     approved --> [*]: after start_date
 ```
 
+> **As built 2026-07-05:** `LeaveCalendarPage` is the Teams-style custom calendar (fullcalendar has no Filament 5 build): month = full-week grid w/ dimmed adjacent-month days + event bars; week = all-day banner row over a scrollable 24h hour grid with a live now-line. Canonical calendar composition: [[../../../architecture/patterns/page-blueprints#Calendar]].
+
 ## Filament Artifacts
 
 **Nav group:** Leave

@@ -47,8 +47,8 @@ const coverage = domains.slice(0, 12)
         />
     </Head>
 
-    <!-- Hero -->
-    <section class="ff-hero ff-grid-bg">
+    <!-- Hero — dark flow surface: the switchboard glows where the current lives -->
+    <section class="ff-hero ff-hero-dark">
         <div class="wrap">
             <div class="grid items-center gap-11 lg:gap-16 lg:[grid-template-columns:1.05fr_1fr]">
                 <div>
@@ -60,7 +60,7 @@ const coverage = domains.slice(0, 12)
                     </p>
                     <div class="ff-hero-ctas">
                         <Link href="/pricing" class="ff-btn primary lg">Build your price</Link>
-                        <Link href="/modules" class="ff-btn outline lg">See the modules</Link>
+                        <Link href="/modules" class="ff-btn ghost-dark lg">See the modules</Link>
                     </div>
                     <p class="ff-hero-meta">teams of 50–500 · no tiers · no lock-in · data portable</p>
                 </div>
@@ -191,6 +191,24 @@ const coverage = domains.slice(0, 12)
                 <p class="mono mt-4" style="font-size: 12px; color: var(--ink-faint)">
                     + 4 more departments · all on the same database
                 </p>
+
+                <!-- Proof: a real voice, mid-page where the skeptic scrolls -->
+                <div class="ff-quote">
+                    <blockquote>
+                        "I found the patchwork during an annual cost review. Thirteen logins, nine invoices, and
+                        nobody could tell me why. <em>Now I have one number, and I can defend it.</em>"
+                    </blockquote>
+                    <div class="mt-5 flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <span class="flex h-10 w-10 items-center justify-center rounded-full font-bold text-white" style="background: #6366F1; font-family: var(--font-display)">T</span>
+                            <span>
+                                <span class="block text-[14.5px] font-bold">Tom de Vries</span>
+                                <span class="text-[13px]" style="color: var(--ink-faint)">Operations director, Veldkamp Logistics — 9 tools → 1</span>
+                            </span>
+                        </div>
+                        <Link href="/customers/veldkamp-logistics" class="ff-arrlink" style="font-size: 14px">Read their switch <span class="arr">→</span></Link>
+                    </div>
+                </div>
             </Reveal>
         </div>
     </section>

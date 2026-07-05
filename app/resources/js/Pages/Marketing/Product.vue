@@ -27,6 +27,13 @@ const upcoming = domains.slice(4, 14)
                 Every module below ships today. Each one is a switch on your billing page — not a sales call, not an
                 implementation project.
             </p>
+            <div class="mono mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px]" style="color: var(--ink-faint)">
+                <span v-for="d in productDomains" :key="d.key" class="flex items-center gap-2">
+                    <span class="h-[9px] w-[9px] rounded-[3px]" :style="{ background: domainColors[d.key] }"></span>{{ d.name }}
+                </span>
+                <span style="color: var(--line-strong)">·</span>
+                <span>live today</span>
+            </div>
         </div>
     </section>
 
