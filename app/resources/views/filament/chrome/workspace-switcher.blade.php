@@ -1,6 +1,7 @@
-{{-- Workspace switcher (owner decision 2026-07-04): no hub page — a menu
-     entry at the top of the sidebar opens a modal for panel selection. The
-     workspace you're in is always listed and marked as the current one. --}}
+{{-- Workspace switcher (owner decision 2026-07-04): no hub page — a modal for
+     panel selection. Moved 2026-07-05 from SIDEBAR_NAV_START into the sidebar
+     footer, replacing the "Your panels" chips (two switchers is one too many).
+     The workspace you're in is always listed and marked as the current one. --}}
 @php
     use App\Support\Services\WorkspacePanels;
 
@@ -9,14 +10,18 @@
     $isOwner = $canView && WorkspacePanels::isOwner();
     $currentPanel = filament()->getId();
     $triggerLabel = WorkspacePanels::DOMAINS[$currentPanel]['name'] ?? 'Workspace';
+    $triggerColor = WorkspacePanels::DOMAINS[$currentPanel]['color'] ?? '#38BDF8';
+    $count = $tiles->count() + 1;
 @endphp
 
 @if ($canView)
-<div class="ff-ws" x-data="{ open: false }" x-on:keydown.escape.window="open = false">
-    <button type="button" class="ff-ws-trigger" x-on:click="open = true" title="Switch workspace">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" width="20" height="20"><rect x="3" y="3" width="6" height="6" rx="1.5"></rect><rect x="11" y="3" width="6" height="6" rx="1.5"></rect><rect x="3" y="11" width="6" height="6" rx="1.5"></rect><rect x="11" y="11" width="6" height="6" rx="1.5"></rect></svg>
+<div class="ff-ws" x-data="{ open: false, switching: false }" x-on:keydown.escape.window="open = false"
+    x-on:pageshow.window="switching = false">
+    <span class="ff-ws-label">Your workspaces</span>
+    <button type="button" class="ff-ws-trigger" x-on:click="open = true; switching = false" title="Switch workspace">
+        <span class="ff-ws-dot" style="background: {{ $triggerColor }}"></span>
         <span class="ff-ws-trigger-label">{{ $triggerLabel }}</span>
-        <span class="ff-ws-trigger-hint">Switch</span>
+        <svg class="ff-ws-caret" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M6.5 8 10 4.5 13.5 8M6.5 12 10 15.5 13.5 12"></path></svg>
     </button>
 
     <template x-teleport="body">
@@ -25,34 +30,44 @@
             x-transition:leave="ff-pop-leave" x-transition:leave-start="ff-pop-to" x-transition:leave-end="ff-pop-from">
             <div class="ff-ws-modal" role="dialog" aria-label="Switch workspace">
                 <div class="ff-ws-head">
-                    <h2>Switch workspace</h2>
+                    <div class="ff-ws-head-meta">
+                        <h2>Switch workspace</h2>
+                        <span class="ff-ws-sub">{{ $count }} {{ str('workspace')->plural($count) }} active</span>
+                    </div>
                     <button type="button" class="ff-ws-close" x-on:click="open = false" title="Close">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" width="15" height="15"><path d="M5 5l10 10M15 5L5 15"></path></svg>
                     </button>
                 </div>
 
-                <div class="ff-ws-list">
+                {{-- Clicking a row starts the leave-feedback instantly; the
+                     navigation request runs behind it (perceived-performance
+                     rule 3). Anchor clicks bubble up to here. --}}
+                <div class="ff-ws-list" x-on:click="switching = true" x-bind:class="{ 'ff-leaving': switching }">
                     {{-- The core workspace — always listed --}}
-                    <a href="{{ url('/app') }}" @class(['ff-ws-row', 'ff-current' => $currentPanel === 'app'])>
-                        <span class="ff-ws-square" style="background: #38BDF8"></span>
+                    <a href="{{ url('/app') }}" style="--ws-c: #38BDF8" @class(['ff-ws-row', 'ff-current' => $currentPanel === 'app'])>
+                        <span class="ff-ws-tile"><span class="ff-ws-square"></span></span>
                         <span class="ff-ws-meta">
                             <span class="ff-ws-name">Workspace</span>
                             <span class="ff-ws-blurb">Dashboard, team, billing &amp; settings</span>
                         </span>
                         @if ($currentPanel === 'app')
                             <span class="ff-ws-current-tag">Current</span>
+                        @else
+                            <svg class="ff-ws-go" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M7.5 5 12.5 10 7.5 15"></path></svg>
                         @endif
                     </a>
 
                     @foreach ($tiles as $tile)
-                        <a href="{{ $tile['url'] }}" @class(['ff-ws-row', 'ff-current' => $currentPanel === $tile['key']])>
-                            <span class="ff-ws-square" style="background: {{ $tile['color'] }}"></span>
+                        <a href="{{ $tile['url'] }}" style="--ws-c: {{ $tile['color'] }}" @class(['ff-ws-row', 'ff-current' => $currentPanel === $tile['key']])>
+                            <span class="ff-ws-tile"><span class="ff-ws-square"></span></span>
                             <span class="ff-ws-meta">
                                 <span class="ff-ws-name">{{ $tile['name'] }}</span>
                                 <span class="ff-ws-blurb">{{ $tile['blurb'] }}</span>
                             </span>
                             @if ($currentPanel === $tile['key'])
                                 <span class="ff-ws-current-tag">Current</span>
+                            @else
+                                <svg class="ff-ws-go" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" width="15" height="15"><path d="M7.5 5 12.5 10 7.5 15"></path></svg>
                             @endif
                         </a>
                     @endforeach
@@ -66,6 +81,11 @@
                         @else
                             <p>Ask your workspace admin to switch on the modules your team needs.</p>
                         @endif
+                    </div>
+                @elseif ($isOwner)
+                    <div class="ff-ws-foot">
+                        <span>Need another workspace?</span>
+                        <a href="{{ url('/app/module-marketplace-page') }}">Open the marketplace</a>
                     </div>
                 @endif
             </div>

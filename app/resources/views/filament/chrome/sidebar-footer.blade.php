@@ -13,36 +13,14 @@
 
     $profileUrl = filament()->getProfileUrl();
     $logoutUrl = filament()->getLogoutUrl();
-
-    // "Your panels" chips: the panels this user can actually enter.
-    $chips = [];
-    foreach (filament()->getPanels() as $panel) {
-        if ($user?->canAccessPanel($panel)) {
-            $chips[] = [
-                'id' => $panel->getId(),
-                'label' => mb_strtoupper(mb_substr($panel->getId(), 0, 2)),
-                'url' => $panel->getUrl(),
-                'active' => $panel->getId() === filament()->getId(),
-            ];
-        }
-    }
 @endphp
 
 <div class="ff-sidebar-foot">
-    @if (count($chips) > 1)
-        <div class="ff-panel-chips">
-            <span class="ff-panel-chips-label">Your panels</span>
-            <div class="ff-panel-chips-row">
-                @foreach ($chips as $chip)
-                    <a
-                        href="{{ $chip['url'] }}"
-                        @class(['ff-panel-chip', 'ff-on' => $chip['active']])
-                        title="{{ $chip['id'] }}"
-                    >{{ $chip['label'] }}</a>
-                @endforeach
-            </div>
-        </div>
-    @endif
+    {{-- Workspace switcher trigger + modal (replaces the "Your panels" chips —
+         one switcher, owner request 2026-07-05). Guards itself via canView(). --}}
+    @unless ($isStaff)
+        @include('filament.chrome.workspace-switcher')
+    @endunless
 
     {{-- User card doubles as the account menu (topbar user menu is hidden —
          profile and sign-out live here, per the handoff sidebar footer). --}}

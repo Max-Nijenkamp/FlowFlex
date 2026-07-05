@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Providers\AppServiceProvider;
 use App\Providers\BillingServiceProvider;
 use App\Providers\Crm\CrmServiceProvider;
+use App\Providers\Finance\FinanceServiceProvider;
 use App\Providers\Filament\AdminPanelProvider;
 use App\Providers\Filament\AppPanelProvider;
 use App\Providers\Filament\CrmPanelProvider;
@@ -16,6 +17,7 @@ return [
     AppServiceProvider::class,
     BillingServiceProvider::class,
     CrmServiceProvider::class,
+    FinanceServiceProvider::class,
     AdminPanelProvider::class,
     AppPanelProvider::class,
     CrmPanelProvider::class,

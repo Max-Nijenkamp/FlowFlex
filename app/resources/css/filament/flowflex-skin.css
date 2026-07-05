@@ -115,8 +115,10 @@
         overflow: visible;
     }
 
-    /* icon rail footer: hide chips + user text */
-    .fi-sidebar:not(.fi-sidebar-open) .ff-panel-chips,
+    /* icon rail footer: hide workspace-switcher text + user text */
+    .fi-sidebar:not(.fi-sidebar-open) .ff-ws-label,
+    .fi-sidebar:not(.fi-sidebar-open) .ff-ws-trigger-label,
+    .fi-sidebar:not(.fi-sidebar-open) .ff-ws-caret,
     .fi-sidebar:not(.fi-sidebar-open) .ff-user-meta,
     .fi-sidebar:not(.fi-sidebar-open) .ff-user-caret {
         display: none;
@@ -332,57 +334,6 @@
 
 .dark .ff-sidebar-foot {
     border-top-color: rgb(255 255 255 / 0.08);
-}
-
-.ff-panel-chips-label {
-    display: block;
-    font-family: var(--ff-font-mono);
-    font-size: 9.5px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ff-ink-faint);
-    margin-bottom: 7px;
-}
-
-.dark .ff-panel-chips-label {
-    color: rgb(255 255 255 / 0.38);
-}
-
-.ff-panel-chips-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 12px;
-}
-
-.ff-panel-chip {
-    width: 26px;
-    height: 26px;
-    border-radius: 7px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--ff-font-mono);
-    font-size: 10px;
-    font-weight: 700;
-    background: var(--ff-paper-deep);
-    color: var(--ff-ink-faint);
-}
-
-.ff-panel-chip.ff-on {
-    outline: 1.5px solid var(--primary-500);
-    background: color-mix(in srgb, var(--primary-400) 20%, transparent);
-    color: var(--ff-ink);
-}
-
-.dark .ff-panel-chip {
-    background: rgb(255 255 255 / 0.07);
-    color: rgb(255 255 255 / 0.55);
-}
-
-.dark .ff-panel-chip.ff-on {
-    outline-color: var(--primary-400);
-    color: #ffffff;
 }
 
 /* User card = account menu trigger; popover opens upward above the card */
@@ -1202,7 +1153,6 @@
 
 /* ---- Motion pass: consistent micro-transitions ----------------------------- */
 .fi-sidebar-item-btn,
-.ff-panel-chip,
 .ff-side-toggle,
 .ff-user-card,
 .ff-user-menu-item,
@@ -1214,6 +1164,30 @@
 
 .ff-mkt-row:hover {
     background: color-mix(in srgb, var(--primary-400) 6%, transparent);
+}
+
+/* Cross-document view transition: panel→panel navigation crossfades instead
+   of white-flashing, so switching workspaces feels like one system. The old
+   page stays painted while the new panel loads (request runs behind the
+   motion — perceived-performance rule 3). Chromium-only; others ignore. */
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root) {
+    animation-duration: 0.1s;
+    animation-timing-function: ease-in;
+}
+
+::view-transition-new(root) {
+    animation-duration: 0.22s;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    @view-transition {
+        navigation: none;
+    }
 }
 
 /* popover pop-in (user menu) */
@@ -1239,11 +1213,22 @@
     }
 }
 
-/* ---- Workspace switcher (menu trigger + modal panel selection) --------------
-   Replaces the hub page (owner decision 2026-07-04). Current workspace is
-   always listed + marked active; every row gets a hover border. */
+/* ---- Workspace switcher (sidebar-footer trigger + modal panel selection) ----
+   Replaces the hub page (owner decision 2026-07-04) and the footer "Your
+   panels" chips (owner request 2026-07-05). Trigger sits above the user card
+   and mirrors its layout; each modal row carries its domain color in --ws-c. */
 .ff-ws {
-    padding: 0 24px 4px;
+    margin-bottom: 12px;
+}
+
+.ff-ws-label {
+    display: block;
+    font-family: var(--ff-font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ff-ink-faint);
+    margin-bottom: 7px;
 }
 
 .ff-ws-trigger {
@@ -1252,46 +1237,40 @@
     gap: 9px;
     width: 100%;
     padding: 8px 10px;
-    border-radius: 8px;
-    border: 1px solid var(--ff-line);
-    background: var(--ff-paper-deep);
-    font-size: 13.5px;
-    font-weight: 500;
-    color: var(--ff-ink-soft);
-    transition: border-color 0.13s ease, background-color 0.13s ease, color 0.13s ease;
+    border-radius: 9px;
+    border: 1px solid var(--ff-line-strong);
+    background: var(--ff-card);
+    box-shadow: 0 1px 2px rgb(17 24 39 / 0.04);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ff-ink);
+    transition: border-color 0.13s ease, background-color 0.13s ease;
 }
 
 .ff-ws-trigger:hover {
-    border-color: var(--ff-line-strong);
-    color: var(--ff-ink);
+    border-color: var(--primary-500);
+    background: var(--ff-paper-deep);
 }
 
-.ff-ws-trigger svg { color: var(--ff-ink-faint); flex: none; }
+.ff-ws-dot { width: 10px; height: 10px; border-radius: 3px; flex: none; }
 
-.ff-ws-trigger-label { flex: 1; text-align: left; }
-
-.ff-ws-trigger-hint {
-    font-family: var(--ff-font-mono);
-    font-size: 9.5px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ff-ink-faint);
-    border: 1px solid var(--ff-line);
-    border-radius: 5px;
-    padding: 2px 6px;
+.ff-ws-trigger-label {
+    flex: 1;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* icon rail: squares icon only */
+.ff-ws-caret { color: var(--ff-ink-faint); flex: none; }
+
+/* icon rail: current-domain square only, centered */
 @media (min-width: 1024px) {
-    .fi-sidebar:not(.fi-sidebar-open) .ff-ws { padding: 0 0 4px; }
+    .fi-sidebar:not(.fi-sidebar-open) .ff-ws { margin-bottom: 8px; }
     .fi-sidebar:not(.fi-sidebar-open) .ff-ws-trigger {
         width: 40px; height: 40px; margin-inline: auto;
         justify-content: center; padding: 0;
-        border-color: transparent; background: transparent;
     }
-    .fi-sidebar:not(.fi-sidebar-open) .ff-ws-trigger:hover { background: var(--ff-paper-deep); }
-    .fi-sidebar:not(.fi-sidebar-open) .ff-ws-trigger-label,
-    .fi-sidebar:not(.fi-sidebar-open) .ff-ws-trigger-hint { display: none; }
 }
 
 .ff-ws-overlay {
@@ -1308,20 +1287,35 @@
 
 .ff-ws-modal {
     width: 100%;
-    max-width: 460px;
+    max-width: 480px;
     background: var(--ff-card);
     border: 1px solid var(--ff-line-strong);
     border-radius: 16px;
-    box-shadow: 0 24px 48px -12px rgb(17 24 39 / 0.28);
+    box-shadow: 0 28px 56px -28px rgb(17 24 39 / 0.22), 0 24px 48px -12px rgb(17 24 39 / 0.28);
     overflow: hidden;
+}
+
+/* brand flare: the domain palette as a hairline strip across the modal top
+   (cross-domain flow, same family as the marketing Flow band) */
+.ff-ws-modal::before {
+    content: "";
+    display: block;
+    height: 3px;
+    background: linear-gradient(90deg, #38BDF8, #8B5CF6, #F43F5E, #F97316, #10B981, #6366F1);
 }
 
 .ff-ws-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px 20px 13px;
+    padding: 16px 20px 14px;
     border-bottom: 1px solid var(--ff-line);
+}
+
+.ff-ws-head-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
 }
 
 .ff-ws-head h2 {
@@ -1329,6 +1323,14 @@
     font-size: 16px;
     font-weight: 700;
     letter-spacing: -0.02em;
+}
+
+.ff-ws-sub {
+    font-family: var(--ff-font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ff-ink-faint);
 }
 
 .ff-ws-close {
@@ -1352,29 +1354,62 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 11px 14px;
-    border-radius: 11px;
+    padding: 10px 12px;
+    border-radius: 12px;
     border: 1px solid var(--ff-line);
-    transition: border-color 0.13s ease, background-color 0.13s ease;
+    transition: border-color 0.13s ease, background-color 0.13s ease, opacity 0.15s ease-out;
 }
 
+/* leave feedback: the moment a row is clicked the others recede — the clicked
+   (hovered) row stays lit while the new panel loads behind the motion */
+.ff-ws-list.ff-leaving .ff-ws-row { opacity: 0.4; }
+.ff-ws-list.ff-leaving .ff-ws-row:hover { opacity: 1; }
+
 .ff-ws-row:hover {
-    border-color: var(--ff-line-strong);
-    background: var(--ff-paper-deep);
+    border-color: color-mix(in srgb, var(--ws-c) 55%, transparent);
+    background: color-mix(in srgb, var(--ws-c) 5%, transparent);
 }
 
 .ff-ws-row.ff-current {
-    border-color: color-mix(in srgb, var(--primary-500) 45%, transparent);
-    background: color-mix(in srgb, var(--primary-500) 7%, transparent);
+    border-color: color-mix(in srgb, var(--ws-c) 50%, transparent);
+    background: color-mix(in srgb, var(--ws-c) 8%, transparent);
 }
 
 .ff-ws-row.ff-current:hover {
-    border-color: var(--primary-500);
+    border-color: var(--ws-c);
 }
 
-.ff-ws-square { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+/* domain tile: soft tint of the row color, square inside (3px radius, never
+   a circle — design-system domain-color rule) */
+.ff-ws-tile {
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    background: color-mix(in srgb, var(--ws-c) 13%, transparent);
+}
+
+.ff-ws-square { width: 10px; height: 10px; border-radius: 3px; flex: none; background: var(--ws-c); }
 
 .ff-ws-meta { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
+
+/* chevron slides in on hover (non-current rows) */
+.ff-ws-go {
+    flex: none;
+    color: var(--ff-ink-faint);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.13s ease-out, transform 0.13s ease-out;
+}
+
+.ff-ws-row:hover .ff-ws-go {
+    opacity: 1;
+    transform: translateX(0);
+    color: color-mix(in srgb, var(--ws-c) 70%, var(--ff-ink));
+}
 
 .ff-ws-name {
     font-family: 'Archivo', var(--font-family), sans-serif;
@@ -1392,8 +1427,8 @@
     font-size: 9.5px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--primary-600, var(--primary-500));
-    border: 1px solid color-mix(in srgb, var(--primary-500) 45%, transparent);
+    color: color-mix(in srgb, var(--ws-c) 72%, #111827);
+    border: 1px solid color-mix(in srgb, var(--ws-c) 45%, transparent);
     border-radius: 999px;
     padding: 3px 8px;
 }
@@ -1406,13 +1441,43 @@
     background: var(--primary-500); color: #fff; font-size: 13px; font-weight: 600;
 }
 
-.dark .ff-ws-trigger { background: rgb(255 255 255 / 0.04); border-color: rgb(255 255 255 / 0.08); color: rgb(255 255 255 / 0.62); }
-.dark .ff-ws-trigger:hover { border-color: rgb(255 255 255 / 0.2); color: #fff; }
+/* owner foot strip: recessed, marketplace shortcut */
+.ff-ws-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 20px;
+    border-top: 1px solid var(--ff-line);
+    background: var(--ff-paper-deep);
+    font-size: 12.5px;
+    color: var(--ff-ink-soft);
+}
+
+.ff-ws-foot a {
+    font-weight: 600;
+    color: var(--primary-600, var(--primary-500));
+    transition: color 0.13s ease;
+}
+
+.ff-ws-foot a:hover { color: var(--ff-ink); }
+
+.dark .ff-ws-label { color: rgb(255 255 255 / 0.38); }
+.dark .ff-ws-trigger { background: rgb(255 255 255 / 0.05); border-color: rgb(255 255 255 / 0.12); color: #fff; box-shadow: none; }
+.dark .ff-ws-trigger:hover { border-color: var(--primary-400); background: rgb(255 255 255 / 0.08); }
 .dark .ff-ws-modal { background: #111827; border-color: rgb(255 255 255 / 0.1); }
 .dark .ff-ws-head { border-bottom-color: rgb(255 255 255 / 0.08); }
 .dark .ff-ws-row { border-color: rgb(255 255 255 / 0.1); }
-.dark .ff-ws-row:hover { border-color: rgb(255 255 255 / 0.24); background: rgb(255 255 255 / 0.04); }
+.dark .ff-ws-row:hover { border-color: color-mix(in srgb, var(--ws-c) 60%, transparent); background: color-mix(in srgb, var(--ws-c) 9%, transparent); }
+.dark .ff-ws-row.ff-current { background: color-mix(in srgb, var(--ws-c) 13%, transparent); }
+.dark .ff-ws-tile { background: color-mix(in srgb, var(--ws-c) 22%, transparent); }
 .dark .ff-ws-name { color: #fff; }
+.dark .ff-ws-current-tag { color: color-mix(in srgb, var(--ws-c) 78%, #ffffff); }
+.dark .ff-ws-go { color: rgb(255 255 255 / 0.45); }
+.dark .ff-ws-row:hover .ff-ws-go { color: color-mix(in srgb, var(--ws-c) 70%, #ffffff); }
+.dark .ff-ws-foot { background: rgb(255 255 255 / 0.03); border-top-color: rgb(255 255 255 / 0.08); }
+.dark .ff-ws-foot a { color: var(--primary-400); }
+.dark .ff-ws-foot a:hover { color: #fff; }
 .dark .ff-ws-close:hover { background: rgb(255 255 255 / 0.06); }
 
 /* ---- Pipeline kanban board (crm.pipeline, ui-strategy #3) -------------------- */

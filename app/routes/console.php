@@ -36,3 +36,13 @@ Schedule::command('crm:send-activity-reminders')
     ->hourly()
     ->withoutOverlapping()
     ->onOneServer();
+
+Schedule::command('finance:generate-recurring-invoices')
+    ->dailyAt('05:00')
+    ->withoutOverlapping()
+    ->onOneServer();
+
+Schedule::command('finance:mark-overdue-invoices')
+    ->dailyAt('06:30')
+    ->withoutOverlapping()
+    ->onOneServer();

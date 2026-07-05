@@ -101,6 +101,8 @@ class PermissionSeeder extends Seeder
         'finance.ledger.view',
         'finance.ledger.post-manual',
         'finance.ledger.manage-periods',
+        'finance.ledger.reverse',
+        'finance.ledger.manage-accounts',
         // finance.invoicing
         'finance.invoices.view-any',
         'finance.invoices.view',
@@ -109,6 +111,7 @@ class PermissionSeeder extends Seeder
         'finance.invoices.send',
         'finance.invoices.void',
         'finance.invoices.record-payment',
+        'finance.invoices.manage-customers',
         // finance.bank
         'finance.bank.view',
         'finance.bank.manage',
