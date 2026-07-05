@@ -77,8 +77,30 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
 
     public function canAccessPanel(Panel $panel): bool
     {
-        // Tenant users belong to /app only; /admin is the admin guard's.
-        return $panel->getId() === 'app';
+        // /admin is the admin guard's; /app is home for every tenant user;
+        // domain panels gate on the seeded access.{domain} permission.
+        return match ($panel->getId()) {
+            'admin' => false,
+            'app' => true,
+            default => $this->canAccessDomainPanel($panel->getId()),
+        };
+    }
+
+    /**
+     * Filament checks panel access inside its Authenticate middleware —
+     * BEFORE SetCompanyContext runs — so the permission team id must be
+     * set here or every domain-panel check fails closed (the null-team
+     * family, tenant-context-pitfalls.md).
+     */
+    private function canAccessDomainPanel(string $domain): bool
+    {
+        if ($this->company_id === null) {
+            return false;
+        }
+
+        setPermissionsTeamId($this->company_id);
+
+        return $this->can("access.{$domain}");
     }
 
     public function getAppAuthenticationSecret(): ?string

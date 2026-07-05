@@ -34,7 +34,12 @@ class ModuleCatalogSeeder extends Seeder
         'finance.ledger' => ['domain' => 'finance', 'name' => 'General ledger', 'price' => 500],
         'finance.invoicing' => ['domain' => 'finance', 'name' => 'Invoicing', 'price' => 500],
         'crm.contacts' => ['domain' => 'crm', 'name' => 'Contacts & accounts', 'price' => 400],
-        'crm.deals' => ['domain' => 'crm', 'name' => 'Deals & pipeline', 'price' => 400],
+        'crm.deals' => ['domain' => 'crm', 'name' => 'Deals', 'price' => 400],
+        'crm.pipeline' => ['domain' => 'crm', 'name' => 'Pipeline board', 'price' => 100],
+        'crm.activities' => ['domain' => 'crm', 'name' => 'Activities & tasks', 'price' => 200],
+        'finance.bank' => ['domain' => 'finance', 'name' => 'Bank accounts', 'price' => 300],
+        'finance.expenses' => ['domain' => 'finance', 'name' => 'Expenses', 'price' => 300],
+        'hr.onboarding' => ['domain' => 'hr', 'name' => 'Onboarding', 'price' => 300],
     ];
 
     public function run(): void

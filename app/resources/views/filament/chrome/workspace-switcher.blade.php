@@ -7,13 +7,15 @@
     $canView = WorkspacePanels::canView();
     $tiles = $canView ? WorkspacePanels::tiles() : collect();
     $isOwner = $canView && WorkspacePanels::isOwner();
+    $currentPanel = filament()->getId();
+    $triggerLabel = WorkspacePanels::DOMAINS[$currentPanel]['name'] ?? 'Workspace';
 @endphp
 
 @if ($canView)
 <div class="ff-ws" x-data="{ open: false }" x-on:keydown.escape.window="open = false">
     <button type="button" class="ff-ws-trigger" x-on:click="open = true" title="Switch workspace">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" width="20" height="20"><rect x="3" y="3" width="6" height="6" rx="1.5"></rect><rect x="11" y="3" width="6" height="6" rx="1.5"></rect><rect x="3" y="11" width="6" height="6" rx="1.5"></rect><rect x="11" y="11" width="6" height="6" rx="1.5"></rect></svg>
-        <span class="ff-ws-trigger-label">Workspace</span>
+        <span class="ff-ws-trigger-label">{{ $triggerLabel }}</span>
         <span class="ff-ws-trigger-hint">Switch</span>
     </button>
 
@@ -30,23 +32,28 @@
                 </div>
 
                 <div class="ff-ws-list">
-                    {{-- The workspace you're in — always listed, always current --}}
-                    <a href="{{ url('/app') }}" class="ff-ws-row ff-current">
+                    {{-- The core workspace — always listed --}}
+                    <a href="{{ url('/app') }}" @class(['ff-ws-row', 'ff-current' => $currentPanel === 'app'])>
                         <span class="ff-ws-square" style="background: #38BDF8"></span>
                         <span class="ff-ws-meta">
                             <span class="ff-ws-name">Workspace</span>
                             <span class="ff-ws-blurb">Dashboard, team, billing &amp; settings</span>
                         </span>
-                        <span class="ff-ws-current-tag">Current</span>
+                        @if ($currentPanel === 'app')
+                            <span class="ff-ws-current-tag">Current</span>
+                        @endif
                     </a>
 
                     @foreach ($tiles as $tile)
-                        <a href="{{ $tile['url'] }}" class="ff-ws-row">
+                        <a href="{{ $tile['url'] }}" @class(['ff-ws-row', 'ff-current' => $currentPanel === $tile['key']])>
                             <span class="ff-ws-square" style="background: {{ $tile['color'] }}"></span>
                             <span class="ff-ws-meta">
                                 <span class="ff-ws-name">{{ $tile['name'] }}</span>
                                 <span class="ff-ws-blurb">{{ $tile['blurb'] }}</span>
                             </span>
+                            @if ($currentPanel === $tile['key'])
+                                <span class="ff-ws-current-tag">Current</span>
+                            @endif
                         </a>
                     @endforeach
                 </div>

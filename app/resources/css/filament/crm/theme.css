@@ -1,0 +1,11 @@
+@import url('https://fonts.bunny.net/css?family=archivo:600,700|instrument-sans:400,500,600,700|jetbrains-mono:400,500&display=swap');
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+@import '../flowflex-skin.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+:root {
+    --ff-panel-label: 'CRM';
+    --font-family: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+}

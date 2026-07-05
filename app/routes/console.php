@@ -31,3 +31,8 @@ Schedule::command('billing:process-dunning')
     ->dailyAt('06:00')
     ->withoutOverlapping()
     ->onOneServer();
+
+Schedule::command('crm:send-activity-reminders')
+    ->hourly()
+    ->withoutOverlapping()
+    ->onOneServer();

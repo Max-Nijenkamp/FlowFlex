@@ -1415,6 +1415,84 @@
 .dark .ff-ws-name { color: #fff; }
 .dark .ff-ws-close:hover { background: rgb(255 255 255 / 0.06); }
 
+/* ---- Pipeline kanban board (crm.pipeline, ui-strategy #3) -------------------- */
+.ff-board { display: flex; flex-direction: column; gap: 14px; }
+
+.ff-board-toolbar { display: flex; align-items: center; gap: 14px; }
+
+.ff-board-filter {
+    padding: 8px 12px; font-size: 13px; border-radius: 9px;
+    border: 1px solid var(--ff-line-strong); background: var(--ff-card);
+}
+
+.ff-board-hint { font-size: 12px; color: var(--ff-ink-faint); }
+
+.ff-board-columns {
+    display: flex; gap: 14px; align-items: flex-start;
+    overflow-x: auto; padding-bottom: 10px;
+}
+
+.ff-board-col {
+    flex: 0 0 268px; display: flex; flex-direction: column; gap: 9px;
+    background: var(--ff-paper-deep); border: 1px solid var(--ff-line);
+    border-radius: 13px; padding: 12px;
+    transition: border-color 0.13s ease, background-color 0.13s ease;
+}
+
+.ff-board-col.ff-won { border-top: 3px solid #16A34A; }
+.ff-board-col.ff-lost { border-top: 3px solid #DC2626; }
+
+.ff-board-col-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+
+.ff-board-col-name {
+    font-family: var(--ff-font-mono); font-size: 10.5px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ff-ink-soft);
+}
+
+.ff-board-col-meta { font-size: 11px; color: var(--ff-ink-faint); white-space: nowrap; }
+
+.ff-board-quickadd input {
+    width: 100%; padding: 7px 10px; font-size: 12.5px;
+    border: 1px dashed var(--ff-line-strong); border-radius: 8px;
+    background: transparent; color: var(--ff-ink);
+    transition: border-color 0.13s ease, background-color 0.13s ease;
+}
+
+.ff-board-quickadd input:focus { outline: none; border-style: solid; border-color: var(--primary-500); background: var(--ff-card); }
+
+.ff-board-cards { display: flex; flex-direction: column; gap: 8px; min-height: 40px; }
+
+.ff-board-card {
+    display: flex; flex-direction: column; gap: 3px;
+    background: var(--ff-card); border: 1px solid var(--ff-line);
+    border-radius: 10px; padding: 11px 12px; cursor: grab;
+    box-shadow: 0 1px 2px rgb(17 24 39 / 0.05);
+    transition: border-color 0.13s ease, transform 0.13s ease, box-shadow 0.13s ease;
+}
+
+.ff-board-card:hover {
+    border-color: var(--ff-line-strong);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px -6px rgb(17 24 39 / 0.16);
+}
+
+.ff-board-card:active { cursor: grabbing; }
+
+.ff-board-card-name { font-size: 13.5px; font-weight: 600; color: var(--ff-ink); }
+.ff-board-card-value { font-size: 13px; font-weight: 600; color: var(--primary-600, var(--primary-500)); }
+.ff-board-card-meta { font-size: 11.5px; color: var(--ff-ink-soft); }
+.ff-board-card-days { font-size: 10.5px; color: var(--ff-ink-faint); }
+
+.ff-board-empty {
+    font-size: 12px; color: var(--ff-ink-faint); text-align: center;
+    padding: 14px 0; border: 1px dashed var(--ff-line); border-radius: 9px;
+}
+
+.dark .ff-board-col { background: rgb(255 255 255 / 0.03); border-color: rgb(255 255 255 / 0.08); }
+.dark .ff-board-card { background: #111827; border-color: rgb(255 255 255 / 0.1); }
+.dark .ff-board-card-name { color: #fff; }
+.dark .ff-board-filter { background: #111827; border-color: rgb(255 255 255 / 0.12); color: #fff; }
+
 /* ---- Audit entry modal (description-list styling) --------------------------- */
 .ff-audit { display: flex; flex-direction: column; gap: 18px; }
 
