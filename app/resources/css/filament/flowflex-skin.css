@@ -1488,31 +1488,39 @@
 .dark .ff-ws-close:hover { background: rgb(255 255 255 / 0.06); }
 
 /* ---- Pipeline kanban board (crm.pipeline, ui-strategy #3) -------------------- */
-.ff-board { display: flex; flex-direction: column; gap: 14px; }
+/* the board owns the rest of the viewport; columns scroll individually
+   so long stages never push the page (owner report: deals fell off) */
+.ff-board {
+    display: flex; flex-direction: column; gap: 14px;
+    height: calc(100dvh - 215px);
+    min-height: 480px;
+}
 
 .ff-board-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
-/* pipeline switcher tabs */
-.ff-board-pipes {
-    display: inline-flex; gap: 4px; padding: 4px;
-    background: var(--ff-paper-deep); border: 1px solid var(--ff-line);
-    border-radius: 11px;
+/* pipeline switcher dropdown */
+.ff-board-pipesel {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: var(--ff-card); border: 1px solid var(--ff-line-strong);
+    border-radius: 10px; padding: 0 4px 0 13px;
+    box-shadow: 0 1px 2px rgb(17 24 39 / 0.05);
+    transition: border-color 0.13s ease, box-shadow 0.13s ease;
 }
-
-.ff-board-pipe {
-    padding: 6px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600;
-    color: var(--ff-ink-soft); border: 1px solid transparent;
-    transition: background-color 0.13s ease, color 0.13s ease, border-color 0.13s ease, box-shadow 0.13s ease;
+.ff-board-pipesel:hover { border-color: var(--primary-500); }
+.ff-board-pipesel:focus-within {
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-500) 14%, transparent);
 }
-
-.ff-board-pipe:hover { color: var(--ff-ink); border-color: var(--ff-line-strong); }
-
-.ff-board-pipe.ff-on {
-    background: var(--ff-card); color: var(--ff-ink);
-    border-color: var(--ff-line-strong); box-shadow: 0 1px 2px rgb(17 24 39 / 0.06);
+.ff-board-pipesel-dot {
+    width: 8px; height: 8px; border-radius: 999px; background: var(--primary-500); flex: none;
 }
-
-.ff-board-pipe.ff-solo { cursor: default; }
+.ff-board-pipesel select {
+    border: none; background: transparent; color: var(--ff-ink);
+    font-family: 'Archivo', var(--font-family), sans-serif;
+    font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em;
+    padding: 9px 6px 9px 0; cursor: pointer;
+}
+.ff-board-pipesel select:focus { outline: none; }
 
 .ff-board-filter {
     padding: 8px 12px; font-size: 13px; border-radius: 9px;
@@ -1525,12 +1533,14 @@
 .ff-board-hint { font-size: 12px; color: var(--ff-ink-faint); }
 
 .ff-board-columns {
-    display: flex; gap: 14px; align-items: flex-start;
-    overflow-x: auto; padding-bottom: 10px;
+    display: flex; gap: 14px; align-items: stretch;
+    overflow-x: auto; padding-bottom: 6px;
+    flex: 1; min-height: 0;
 }
 
 .ff-board-col {
-    flex: 0 0 276px; display: flex; flex-direction: column; gap: 9px;
+    flex: 0 0 300px; display: flex; flex-direction: column; gap: 9px;
+    max-height: 100%; min-height: 0;
     background: var(--ff-paper-deep); border: 1px solid var(--ff-line-strong);
     border-top: 3px solid var(--ff-ink-faint);
     border-radius: 13px; padding: 12px;
@@ -1572,7 +1582,14 @@
 .ff-board-quickadd input:hover { border-color: var(--ff-ink-faint); background: var(--ff-card); }
 .ff-board-quickadd input:focus { outline: none; border-style: solid; border-color: var(--primary-500); background: var(--ff-card); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-500) 14%, transparent); }
 
-.ff-board-cards { display: flex; flex-direction: column; gap: 8px; min-height: 48px; }
+.ff-board-cards {
+    display: flex; flex-direction: column; gap: 8px; min-height: 48px;
+    flex: 1; overflow-y: auto; padding-right: 3px;
+    scrollbar-width: thin;
+}
+.ff-board-cards::-webkit-scrollbar { width: 6px; }
+.ff-board-cards::-webkit-scrollbar-thumb { background: var(--ff-line-strong); border-radius: 999px; }
+.ff-board-cards::-webkit-scrollbar-track { background: transparent; }
 
 .ff-board-card {
     position: relative;
@@ -1640,9 +1657,6 @@
 
 .ff-board-col.ff-dragover .ff-board-empty { border-color: var(--primary-500); color: var(--primary-600, var(--primary-500)); }
 
-.dark .ff-board-pipes { background: rgb(255 255 255 / 0.04); border-color: rgb(255 255 255 / 0.08); }
-.dark .ff-board-pipe { color: rgb(255 255 255 / 0.6); }
-.dark .ff-board-pipe.ff-on { background: #111827; color: #fff; border-color: rgb(255 255 255 / 0.16); }
 .dark .ff-board-col { background: rgb(255 255 255 / 0.03); border-color: rgb(255 255 255 / 0.1); }
 .dark .ff-board-card { background: #111827; border-color: rgb(255 255 255 / 0.12); }
 .dark .ff-board-card-name, .dark .ff-board-card-value { color: #fff; }

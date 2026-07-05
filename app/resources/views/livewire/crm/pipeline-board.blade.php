@@ -1,19 +1,13 @@
 <div class="ff-board" x-data="{ dragging: null, over: null }">
     <div class="ff-board-toolbar">
-        @if ($pipelines->count() > 1)
-            <div class="ff-board-pipes">
+        <label class="ff-board-pipesel">
+            <span class="ff-board-pipesel-dot"></span>
+            <select wire:model.live="pipelineId">
                 @foreach ($pipelines as $pipe)
-                    <button
-                        type="button"
-                        wire:key="pipe-{{ $pipe->id }}"
-                        wire:click="selectPipeline('{{ $pipe->id }}')"
-                        @class(['ff-board-pipe', 'ff-on' => $pipeline?->id === $pipe->id])
-                    >{{ $pipe->name }}</button>
+                    <option value="{{ $pipe->id }}">{{ $pipe->name }}{{ $pipe->is_default ? ' (default)' : '' }}</option>
                 @endforeach
-            </div>
-        @else
-            <span class="ff-board-pipe ff-on ff-solo">{{ $pipeline?->name }}</span>
-        @endif
+            </select>
+        </label>
 
         <select wire:model.live="ownerFilter" class="ff-board-filter">
             <option value="">All owners</option>

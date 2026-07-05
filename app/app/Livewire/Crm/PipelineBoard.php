@@ -36,9 +36,8 @@ class PipelineBoard extends Component
     /** @var array<string, string> quick-add input per stage id */
     public array $quickAdd = [];
 
-    public function selectPipeline(string $pipelineId): void
+    public function updatedPipelineId(): void
     {
-        $this->pipelineId = $pipelineId;
         $this->quickAdd = [];
     }
 
