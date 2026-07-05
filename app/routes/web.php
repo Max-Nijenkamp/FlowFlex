@@ -25,6 +25,16 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->name('contact.store');
 Route::get('/terms', fn () => Inertia::render('Marketing/Terms'))->name('terms');
 Route::get('/privacy', fn () => Inertia::render('Marketing/Privacy'))->name('privacy');
+Route::get('/modules', fn () => Inertia::render('Marketing/Modules'))->name('modules');
+Route::get('/switch', fn () => Inertia::render('Marketing/SwitchOver'))->name('switch');
+Route::get('/trust', fn () => Inertia::render('Marketing/Trust'))->name('trust');
+Route::get('/changelog', fn () => Inertia::render('Marketing/Changelog'))->name('changelog');
+Route::get('/calculator', fn () => Inertia::render('Marketing/Calculator'))->name('calculator');
+Route::get('/customers/veldkamp-logistics', fn () => Inertia::render('Marketing/CaseStudy'))->name('case-study');
+Route::get('/help', fn () => Inertia::render('Marketing/Help'))->name('help');
+Route::get('/status', fn () => Inertia::render('Marketing/Status', [
+    'checkedAt' => now()->timezone('Europe/Amsterdam')->format('d M Y · H:i').' CEST',
+]))->name('status');
 
 // Workspace login entry point: the panel login carries the designed screen
 // (login parity, frontend/design-system.md) — the marketing "Sign in" links

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
 import MarketingLayout from '../../Components/Layout/MarketingLayout.vue'
 import CtaBand from '../../Components/Marketing/CtaBand.vue'
 import Reveal from '../../Components/UI/Reveal.vue'

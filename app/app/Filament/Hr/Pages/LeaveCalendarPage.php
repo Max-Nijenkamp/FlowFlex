@@ -14,10 +14,11 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Url;
 
 /**
- * Team leave calendar (hr.leave/team-calendar). Custom month + week
- * views — saade/filament-fullcalendar has no Filament 5 build (ADR
- * custom-over-missing-plugins). Approved leave solid, pending striped;
- * the week view marks today with a live clock.
+ * Team leave calendar (hr.leave/team-calendar), Teams/Outlook-style:
+ * month = full-week grid with adjacent-month days dimmed and event
+ * bars; week = all-day banner row above a scrollable 24h hour grid
+ * with a live current-time line. Custom build — fullcalendar has no
+ * Filament 5 release (ADR custom-over-missing-plugins).
  */
 class LeaveCalendarPage extends Page
 {
@@ -122,43 +123,68 @@ class LeaveCalendarPage extends Page
     /** @return array<string, mixed> */
     protected function getViewData(): array
     {
-        if ($this->view_mode === 'week') {
-            return $this->weekData();
-        }
-
-        return $this->monthData();
+        return $this->view_mode === 'week' ? $this->weekData() : $this->monthData();
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * Teams-style month: full weeks including dimmed adjacent-month
+     * days; events keyed per date.
+     *
+     * @return array<string, mixed>
+     */
     private function monthData(): array
     {
-        $start = Carbon::parse($this->month.'-01');
-        $end = $start->copy()->endOfMonth();
+        $monthStart = Carbon::parse($this->month.'-01');
+        $gridStart = $monthStart->copy()->startOfWeek();
+        $gridEnd = $monthStart->copy()->endOfMonth()->endOfWeek();
 
-        $byDay = [];
-        foreach ($this->requestsBetween($start, $end) as $request) {
-            $cursor = $request->start_date->copy()->max($start);
-            $last = $request->end_date->copy()->min($end);
+        $byDate = [];
+        foreach ($this->requestsBetween($gridStart, $gridEnd) as $request) {
+            $cursor = $request->start_date->copy()->max($gridStart);
+            $last = $request->end_date->copy()->min($gridEnd);
 
             while ($cursor->lessThanOrEqualTo($last)) {
                 if (! $cursor->isWeekend()) {
-                    $byDay[$cursor->day][] = $this->eventFor($request);
+                    $byDate[$cursor->toDateString()][] = $this->eventFor($request);
                 }
                 $cursor->addDay();
             }
         }
 
+        $weeks = [];
+        $cursor = $gridStart->copy();
+
+        while ($cursor->lessThanOrEqualTo($gridEnd)) {
+            $week = [];
+
+            for ($dayIndex = 0; $dayIndex < 7; $dayIndex++) {
+                $week[] = [
+                    'day' => $cursor->day,
+                    'date' => $cursor->toDateString(),
+                    'inMonth' => $cursor->month === $monthStart->month,
+                    'isToday' => $cursor->isToday(),
+                    'isWeekend' => $cursor->isWeekend(),
+                    'events' => $byDate[$cursor->toDateString()] ?? [],
+                ];
+                $cursor->addDay();
+            }
+
+            $weeks[] = $week;
+        }
+
         return [
             'mode' => 'month',
-            'rangeLabel' => $start->format('F Y'),
-            'daysInMonth' => $start->daysInMonth,
-            'firstWeekday' => (int) $start->dayOfWeekIso,
-            'byDay' => $byDay,
-            'today' => now()->format('Y-m') === $this->month ? now()->day : null,
+            'rangeLabel' => $monthStart->format('F Y'),
+            'weeks' => $weeks,
         ];
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * Teams-style week: all-day banner row (leave is all-day) above a
+     * 24h hour grid; the blade draws the live time line.
+     *
+     * @return array<string, mixed>
+     */
     private function weekData(): array
     {
         $start = Carbon::parse($this->week)->startOfWeek();
@@ -179,8 +205,9 @@ class LeaveCalendarPage extends Page
             }
 
             $days[] = [
-                'date' => $cursor->copy(),
-                'label' => $cursor->format('D d'),
+                'dayName' => $cursor->format('D'),
+                'dayNumber' => $cursor->day,
+                'date' => $cursor->toDateString(),
                 'isToday' => $cursor->isToday(),
                 'isWeekend' => $cursor->isWeekend(),
                 'events' => $events,
@@ -193,7 +220,7 @@ class LeaveCalendarPage extends Page
             'mode' => 'week',
             'rangeLabel' => $start->format('d M').' — '.$end->format('d M Y'),
             'days' => $days,
-            'now' => now(),
+            'todayIndex' => now()->betweenIncluded($start, $end->copy()->endOfDay()) ? (int) now()->dayOfWeekIso - 1 : null,
         ];
     }
 }
